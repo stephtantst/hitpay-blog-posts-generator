@@ -708,6 +708,73 @@
       gap: 6px;
     }
     .feedback-success.visible { display: flex; align-items: center; justify-content: center; }
+    .feedback-popover-footer {
+      border-top: 1px solid var(--border);
+      padding: 9px 16px;
+    }
+    .feedback-view-all {
+      background: none; border: none;
+      font-size: 12px; color: var(--text-muted);
+      cursor: pointer; padding: 0;
+      transition: color 0.12s;
+    }
+    .feedback-view-all:hover { color: var(--accent); }
+
+    /* ── Feedback list modal ─────────────────────────── */
+    .feedback-list-modal {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center; justify-content: center;
+    }
+    .feedback-list-modal.open { display: flex; }
+    .feedback-list-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 560px; max-width: 94vw;
+      max-height: 80vh;
+      display: flex; flex-direction: column;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+    }
+    .feedback-list-header {
+      display: flex; align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .feedback-list-title { font-size: 14px; font-weight: 700; flex: 1; }
+    .feedback-list-close {
+      background: none; border: none; color: var(--text-muted);
+      font-size: 18px; cursor: pointer; line-height: 1; padding: 2px 4px;
+    }
+    .feedback-list-close:hover { color: var(--text); }
+    .feedback-list-body { overflow-y: auto; flex: 1; }
+    .feedback-entry {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .feedback-entry:last-child { border-bottom: none; }
+    .feedback-entry-meta {
+      display: flex; gap: 10px; align-items: center;
+      margin-bottom: 6px;
+    }
+    .feedback-entry-email {
+      font-size: 12px; font-weight: 600; color: var(--text);
+    }
+    .feedback-entry-date {
+      font-size: 11px; color: var(--text-dim);
+    }
+    .feedback-entry-msg {
+      font-size: 13px; color: var(--text-dim);
+      white-space: pre-wrap; line-height: 1.55;
+    }
+    .feedback-list-empty {
+      padding: 40px 20px;
+      text-align: center;
+      font-size: 13px; color: var(--text-muted);
+    }
 
     /* ── Overview pane ─────────────────────────────── */
     .overview-pane {
@@ -1140,6 +1207,20 @@
         <button class="btn btn-primary" id="feedbackSubmitBtn" onclick="submitFeedback()">Send</button>
       </div>
       <div class="feedback-success" id="feedbackSuccess">✓ Thanks — feedback received!</div>
+      <div class="feedback-popover-footer">
+        <button class="feedback-view-all" onclick="openFeedbackList()">View all feedback →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback list modal -->
+  <div class="feedback-list-modal" id="feedbackListModal" onclick="if(event.target===this) closeFeedbackList()">
+    <div class="feedback-list-box">
+      <div class="feedback-list-header">
+        <span class="feedback-list-title">All Feedback</span>
+        <button class="feedback-list-close" onclick="closeFeedbackList()">✕</button>
+      </div>
+      <div class="feedback-list-body" id="feedbackListBody"></div>
     </div>
   </div>
   <div id="userInfo" style="display:flex;align-items:center;gap:8px;margin-left:12px;"></div>
@@ -2023,6 +2104,35 @@ async function submitFeedback() {
     btn.disabled = false;
     btn.textContent = 'Send';
   }
+}
+
+async function openFeedbackList() {
+  closeFeedbackPopover();
+  const modal = document.getElementById('feedbackListModal');
+  const body = document.getElementById('feedbackListBody');
+  body.innerHTML = '<div class="feedback-list-empty">Loading…</div>';
+  modal.classList.add('open');
+  try {
+    const res = await fetch('/api/feedback');
+    const entries = await res.json();
+    if (!entries.length) {
+      body.innerHTML = '<div class="feedback-list-empty">No feedback submitted yet.</div>';
+      return;
+    }
+    body.innerHTML = entries.map(e => `
+      <div class="feedback-entry">
+        <div class="feedback-entry-meta">
+          <span class="feedback-entry-email">${escHtml(e.user_email)}</span>
+          <span class="feedback-entry-date">${fmtDatetime(e.submitted_at)}</span>
+        </div>
+        <div class="feedback-entry-msg">${escHtml(e.message)}</div>
+      </div>`).join('');
+  } catch {
+    body.innerHTML = '<div class="feedback-list-empty">Failed to load feedback.</div>';
+  }
+}
+function closeFeedbackList() {
+  document.getElementById('feedbackListModal').classList.remove('open');
 }
 
 // ── Info panel ────────────────────────────────────────────────────────────────
