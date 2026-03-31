@@ -18,5 +18,5 @@ DB_PATH = "/tmp/posts.db" if _on_vercel else "posts.db"
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
 SECRET_KEY = os.getenv("SECRET_KEY", "change-me-please-set-in-env")
-BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")
+BASE_URL = os.getenv("BASE_URL", "http://localhost:8000").strip().rstrip("/")
 ALLOWED_DOMAIN = "hit-pay.com"
