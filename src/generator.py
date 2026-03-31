@@ -109,7 +109,7 @@ Cross-border activation: partner providers process activation within 3–5 busin
 
 ## Blog Post Format
 Write for SMBs growing their business. The post must:
-- Be 900–1200 words of actual content
+- Be 900–1200 words of actual content (excluding the FAQ section)
 - Have a compelling, empathetic intro that immediately names the reader's core problem
 - Include 3–5 H2 sections with practical, actionable insights
 - Use H3 sparingly for sub-points
@@ -117,6 +117,44 @@ Write for SMBs growing their business. The post must:
 - End with a concrete, practical takeaway — not a sales CTA
 - NOT include an H1 title (added separately by the CMS)
 - NOT include a "by HitPay" or "Published by" line
+
+## AEO Optimisation (AI Answer Engine — apply to every article without exception)
+
+### Structure requirements
+1. **Quick answer paragraph** — immediately after the intro hook, write a 2–3 sentence paragraph that directly answers the article's primary query in plain language. This is the most likely text to be extracted by Google AI Overviews, Perplexity, ChatGPT, and Claude. Make it a standalone, self-contained answer.
+
+2. **H2 and H3 as natural-language questions** — rewrite every section heading as a question a user would actually type or speak. Examples:
+   - ✅ "What payment methods does a Singapore POS system need to support?"
+   - ❌ "Payment Methods Overview"
+
+3. **FAQ section (REQUIRED)** — close every article with a dedicated `## Frequently Asked Questions` section containing at least 5 questions. Requirements:
+   - At least one question targeting each relevant market (SG, MY, PH)
+   - At least one beginner-level question
+   - At least one comparison-intent question (e.g. "HitPay vs X — which is better for…")
+   - Each answer must be a complete standalone sentence or paragraph — AI engines may extract the answer without the question, so it must make sense in isolation
+   - Format: `### Question here?\nAnswer here.`
+
+4. **Numbered lists for processes** — whenever a process, setup flow, or decision is described, format it as a numbered list with one action per step. Do not describe processes in prose — numbered steps are far more likely to be cited by AI engines.
+
+5. **At least one structured comparison** — include a markdown table or clearly formatted side-by-side that an AI engine can lift as a discrete data unit (e.g. a comparison table of payment methods, fees, or features).
+
+### Content signal requirements
+- Every factual claim must include a specific, extractable data point: a number, a rate, a timeframe, or a licence reference. Vague qualitative statements ("fast", "easy", "affordable") are not citable and will not be extracted.
+- Named entities must appear in full on first use: payment method names, regulatory bodies, licence numbers, company names. Do not abbreviate on first mention.
+- Do not open any extractable sentence or FAQ answer with "I" or "We".
+- Do not use rhetorical questions in body copy — they confuse answer engine parsers.
+
+### Schema block (REQUIRED at end of content)
+After the FAQ section, append a `[SCHEMA]` block listing which schema types apply:
+- `FAQPage` — required on every article
+- `HowTo` — add if the article contains a step-by-step process
+- `Product` or `SoftwareApplication` — add if HitPay features are described
+- `Review` — add only if merchant quotes are knowledge-base verified
+
+Format exactly as:
+```
+[SCHEMA: FAQPage, HowTo]
+```
 
 ## Competitor Comparisons
 When the post compares HitPay against competitors, HitPay must always be the clear, standout winner. Follow these rules precisely:
@@ -153,7 +191,7 @@ Return ONLY a valid JSON object with exactly these fields (no markdown code fenc
   "slug": "url-friendly-slug-here",
   "categories": ["Primary Category", "Secondary Category"],
   "tags": ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6"],
-  "content": "Full markdown content here — 900–1200 words, H2/H3 structure, no H1, 5 internal backlinks"
+  "content": "Full markdown content: 900–1200 words body + quick answer paragraph + H2/H3 as questions + FAQ section (5+ Qs) + [SCHEMA] block. No H1. 5 internal backlinks."
 }
 """
 
