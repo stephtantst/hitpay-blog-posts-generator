@@ -8,19 +8,19 @@ ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 HITPAY_MCP_URL = "https://hitpay-knowledge-mcp.vercel.app/api/mcp"
 CLAUDE_MODEL = "claude-opus-4-6"
 
-# Storage paths — priority: Railway volume (/data) > Vercel /tmp > local
+# Supabase PostgreSQL connection string
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+# Storage paths for markdown post files
 _on_vercel = bool(os.getenv("VERCEL"))
 _railway_volume = os.path.isdir("/data")
 
 if _railway_volume:
     POSTS_DIR = "/data/posts"
-    DB_PATH = "/data/posts.db"
 elif _on_vercel:
     POSTS_DIR = "/tmp/posts"
-    DB_PATH = "/tmp/posts.db"
 else:
     POSTS_DIR = "posts"
-    DB_PATH = "posts.db"
 
 # Google OAuth — create credentials at console.cloud.google.com
 # Authorized redirect URI must be set to: {BASE_URL}/auth/callback

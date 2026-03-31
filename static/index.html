@@ -1129,8 +1129,6 @@
     }
     .board-card:hover { border-color: var(--accent); }
     .board-card.card-selected { border-color: var(--accent); background: rgba(79,142,247,0.07); }
-    .board-card.dragging { opacity: 0.4; }
-    .board-cards.drag-over { background: rgba(79,142,247,0.08); outline: 2px dashed var(--accent); outline-offset: -2px; border-radius: 6px; }
     .board-card-cb { position: absolute; top: 10px; right: 10px; cursor: pointer; }
     .board-card-title {
       font-size: 13px;
@@ -1320,7 +1318,7 @@
         <li><span class="info-tag">🔵 Ready to Publish</span> — reviewed and approved</li>
         <li><span class="info-tag">✅ Published</span> — live on the blog</li>
       </ul>
-      <p>Posts can be moved between statuses via the board view (drag and drop) or the status dropdown in the editor.</p>
+      <p>Posts can be moved between statuses via the status dropdown in the editor.</p>
     </div>
 
   </div>
@@ -2243,7 +2241,7 @@ function renderOverview() {
     : posts.filter(p => p.status === overviewStatusFilter);
 
   if (overviewView === 'list') renderListView(filtered);
-  else renderBoardView(filtered);
+  else renderBoardView([...posts]); // Board is already grouped by status; apply filter only in list view
 }
 
 // ── Datetime helpers ──────────────────────────────────────────────────────────
@@ -2361,7 +2359,7 @@ function renderBoardView(filtered) {
       const sorted = getSortedPosts(colPosts);
       cardsEl.innerHTML = sorted.map(p => {
         const sel = selectedPostIds.has(p.id);
-        return `<div class="board-card ${sel ? 'card-selected' : ''}" id="bcard-${p.id}" draggable="true">
+        return `<div class="board-card ${sel ? 'card-selected' : ''}" id="bcard-${p.id}">
           <input class="board-card-cb" type="checkbox" ${sel ? 'checked' : ''}
             onchange="toggleSelect(${p.id}, this.checked); event.stopPropagation()"
             onclick="event.stopPropagation()" />
@@ -2374,34 +2372,6 @@ function renderBoardView(filtered) {
       }).join('');
     }
 
-    // Wire up drag events on cards
-    cardsEl.querySelectorAll('.board-card').forEach(card => {
-      card.addEventListener('dragstart', e => {
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/plain', card.id.replace('bcard-', ''));
-        setTimeout(() => card.classList.add('dragging'), 0);
-      });
-      card.addEventListener('dragend', () => card.classList.remove('dragging'));
-    });
-
-    // Wire up drop zone on the column
-    cardsEl.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; });
-    cardsEl.addEventListener('dragenter', e => { e.preventDefault(); cardsEl.classList.add('drag-over'); });
-    cardsEl.addEventListener('dragleave', e => { if (!cardsEl.contains(e.relatedTarget)) cardsEl.classList.remove('drag-over'); });
-    cardsEl.addEventListener('drop', async e => {
-      e.preventDefault();
-      cardsEl.classList.remove('drag-over');
-      const postId = parseInt(e.dataTransfer.getData('text/plain'));
-      if (!postId) return;
-      const post = posts.find(p => p.id === postId);
-      if (!post || post.status === status) return;
-      await fetch(`/api/posts/${postId}/status`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status }),
-      });
-      await loadPosts();
-    });
   });
 }
 
