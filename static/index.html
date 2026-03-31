@@ -1894,10 +1894,13 @@ async function openPost(id) {
   // Status
   updateStatusUI(currentPost.status);
 
+  // Lifecycle (show immediately with created_at; enriched by audit log below)
+  renderLifecycle([]);
+
   // Sidebar highlight
   renderPostList();
 
-  // Audit log
+  // Audit log (also updates lifecycle with status transition timestamps)
   await loadAuditLog(id);
 }
 
@@ -2007,8 +2010,7 @@ function updateStatusUI(status) {
 // ── Audit Log ─────────────────────────────────────────────────────────────────
 async function loadAuditLog(postId) {
   const res = await fetch(`/api/posts/${postId}/audit-log`);
-  if (!res.ok) return;
-  const entries = await res.json();
+  const entries = res.ok ? await res.json() : [];
 
   // ── Audit history ──
   const section = document.getElementById('auditSection');
