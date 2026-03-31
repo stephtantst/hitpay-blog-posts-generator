@@ -750,12 +750,36 @@
       font-size: 18px; cursor: pointer; line-height: 1; padding: 2px 4px;
     }
     .feedback-list-close:hover { color: var(--text); }
+    .feedback-list-tabs {
+      display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0;
+      padding: 0 20px; gap: 0;
+    }
+    .feedback-list-tab {
+      background: none; border: none; border-bottom: 2px solid transparent;
+      padding: 9px 14px; font-size: 12.5px; font-weight: 600;
+      color: var(--text-muted); cursor: pointer; margin-bottom: -1px;
+    }
+    .feedback-list-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
     .feedback-list-body { overflow-y: auto; flex: 1; }
     .feedback-entry {
       padding: 14px 20px;
       border-bottom: 1px solid var(--border);
     }
     .feedback-entry:last-child { border-bottom: none; }
+    .login-entry {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 20px; border-bottom: 1px solid var(--border);
+    }
+    .login-entry:last-child { border-bottom: none; }
+    .login-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; flex-shrink: 0;
+    }
+    .login-name { font-size: 12.5px; font-weight: 600; color: var(--text); }
+    .login-email { font-size: 11px; color: var(--text-muted); }
+    .login-time { font-size: 11px; color: var(--text-dim); margin-left: auto; white-space: nowrap; }
     .feedback-entry-meta {
       display: flex; gap: 10px; align-items: center;
       margin-bottom: 6px;
@@ -1253,8 +1277,12 @@
   <div class="feedback-list-modal" id="feedbackListModal" onclick="if(event.target===this) closeFeedbackList()">
     <div class="feedback-list-box">
       <div class="feedback-list-header">
-        <span class="feedback-list-title">All Feedback</span>
+        <span class="feedback-list-title">Team Activity</span>
         <button class="feedback-list-close" onclick="closeFeedbackList()">✕</button>
+      </div>
+      <div class="feedback-list-tabs">
+        <button class="feedback-list-tab active" id="tabFeedback" onclick="switchActivityTab('feedback')">Feedback</button>
+        <button class="feedback-list-tab" id="tabLogins" onclick="switchActivityTab('logins')">Login Activity</button>
       </div>
       <div class="feedback-list-body" id="feedbackListBody"></div>
     </div>
@@ -2460,15 +2488,27 @@ async function submitFeedback() {
   }
 }
 
+let _activityTab = 'feedback';
+
 async function openFeedbackList() {
   closeFeedbackPopover();
-  const modal = document.getElementById('feedbackListModal');
+  document.getElementById('feedbackListModal').classList.add('open');
+  await switchActivityTab('feedback');
+}
+
+async function switchActivityTab(tab) {
+  _activityTab = tab;
+  document.getElementById('tabFeedback').classList.toggle('active', tab === 'feedback');
+  document.getElementById('tabLogins').classList.toggle('active', tab === 'logins');
+  if (tab === 'feedback') await loadFeedbackTab();
+  else await loadLoginsTab();
+}
+
+async function loadFeedbackTab() {
   const body = document.getElementById('feedbackListBody');
   body.innerHTML = '<div class="feedback-list-empty">Loading…</div>';
-  modal.classList.add('open');
   try {
-    const res = await fetch('/api/feedback');
-    const entries = await res.json();
+    const entries = await fetch('/api/feedback').then(r => r.json());
     if (!entries.length) {
       body.innerHTML = '<div class="feedback-list-empty">No feedback submitted yet.</div>';
       return;
@@ -2485,6 +2525,32 @@ async function openFeedbackList() {
     body.innerHTML = '<div class="feedback-list-empty">Failed to load feedback.</div>';
   }
 }
+
+async function loadLoginsTab() {
+  const body = document.getElementById('feedbackListBody');
+  body.innerHTML = '<div class="feedback-list-empty">Loading…</div>';
+  try {
+    const entries = await fetch('/api/logins').then(r => r.json());
+    if (!entries.length) {
+      body.innerHTML = '<div class="feedback-list-empty">No logins recorded yet.</div>';
+      return;
+    }
+    body.innerHTML = entries.map(e => {
+      const initials = (e.name || e.email).split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+      return `<div class="login-entry">
+        <div class="login-avatar">${escHtml(initials)}</div>
+        <div>
+          <div class="login-name">${escHtml(e.name || e.email)}</div>
+          <div class="login-email">${escHtml(e.email)}</div>
+        </div>
+        <div class="login-time">${fmtDatetime(e.logged_in_at)}</div>
+      </div>`;
+    }).join('');
+  } catch {
+    body.innerHTML = '<div class="feedback-list-empty">Failed to load login activity.</div>';
+  }
+}
+
 function closeFeedbackList() {
   document.getElementById('feedbackListModal').classList.remove('open');
 }

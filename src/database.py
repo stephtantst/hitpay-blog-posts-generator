@@ -53,6 +53,21 @@ def list_feedback() -> list:
     return _rows_to_dicts(conn, rows)
 
 
+def log_login(email: str, name: str):
+    conn = get_connection()
+    conn.run(
+        "INSERT INTO login_log (email, name) VALUES (:email, :name)",
+        email=email,
+        name=name,
+    )
+
+
+def list_logins() -> list:
+    conn = get_connection()
+    rows = conn.run("SELECT * FROM login_log ORDER BY logged_in_at DESC LIMIT 200")
+    return _rows_to_dicts(conn, rows)
+
+
 def log_audit(post_id, user_email: str, action: str, details: dict = None):
     conn = get_connection()
     if action == "edited":

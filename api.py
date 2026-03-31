@@ -32,8 +32,10 @@ from src.database import (
     get_post_by_slug,
     init_db,
     list_feedback,
+    list_logins,
     list_posts,
     log_audit,
+    log_login,
     save_feedback,
     save_post,
     update_post_fields,
@@ -148,6 +150,10 @@ async def auth_callback(
 
     request.session["email"] = email
     request.session["name"] = user.get("name", "")
+    try:
+        log_login(email, user.get("name", ""))
+    except Exception:
+        pass  # Never block login due to logging failure
     return RedirectResponse("/")
 
 
@@ -544,6 +550,11 @@ async def api_submit_feedback(body: FeedbackRequest, user_email: str = Depends(r
 @app.get("/api/feedback")
 def api_list_feedback(_: str = Depends(require_auth)):
     return list_feedback()
+
+
+@app.get("/api/logins")
+def api_list_logins(_: str = Depends(require_auth)):
+    return list_logins()
 
 
 @app.post("/api/test-post")
