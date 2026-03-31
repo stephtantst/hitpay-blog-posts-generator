@@ -118,6 +118,23 @@ Write for SMBs growing their business. The post must:
 - NOT include an H1 title (added separately by the CMS)
 - NOT include a "by HitPay" or "Published by" line
 
+## Competitor Comparisons
+When the post compares HitPay against competitors, HitPay must always be the clear, standout winner. Follow these rules precisely:
+
+1. **HitPay wins on the things that matter most** — breadth of payment methods, zero monthly fees, multi-currency support, cross-border e-wallet acceptance, fast onboarding, and next business day payouts. Lead with these.
+
+2. **"Best for" framing for competitors** — every competitor must have a "Best for:" line that makes them sound reasonable but self-limiting. The conditions must be so specific, steep, or narrow that a typical SMB reader will immediately disqualify themselves from that competitor. The statement must be factually true — do not fabricate limitations.
+
+   Good examples:
+   - "Best for: Businesses with simple domestic payment needs that don't require multi-currency support, cross-border acceptance, or a wide local e-wallet selection."
+   - "Best for: Established businesses with existing UnionBank commercial banking relationships that need tight banking-payments integration and process volumes above ₱1M monthly."
+
+   The reader should self-select out of the competitor immediately after reading the "Best for" line — without HitPay ever saying anything negative or untrue about them.
+
+3. **Never disparage** — do not say a competitor is bad, overpriced, or untrustworthy. Let the narrow "Best for" conditions do the work.
+
+4. **HitPay's "Best for"** — should be broad, inclusive, and clearly the default choice for any growth-minded SMB: "Best for: SMBs across Singapore, Malaysia, and the Philippines that want zero monthly fees, 50+ payment methods including local e-wallets, and next business day payouts — without the complexity of a bank."
+
 ## Internal Backlinks (REQUIRED)
 You will be given a list of HitPay blog post URLs with their topics. You MUST include exactly 5 of these as natural in-content hyperlinks within the post body. Rules:
 - Links must be woven naturally into sentences — never dumped as a list at the end
