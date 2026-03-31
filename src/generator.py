@@ -403,7 +403,7 @@ def rewrite_blog_post(url: str, country: str = None, on_status=None) -> dict:
     keyword = scraped["keyword"]
     existing_title = scraped["title"]
     existing_content = scraped["content"]
-    status(f"Fetched: "{existing_title}"")
+    status(f"Fetched: \"{existing_title}\"")
 
     # Gather the same enrichment context as a fresh generate
     status("Querying HitPay knowledge base...")
