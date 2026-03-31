@@ -1772,6 +1772,15 @@ function setStatusFilter(btn) {
   btn.classList.add('active');
   statusFilter = btn.dataset.status;
   renderPostList();
+
+  // Sync the overview filter chips and re-render board/list view
+  overviewStatusFilter = statusFilter;
+  const matchingChip = document.querySelector(`#overviewChips .chip[data-status="${statusFilter}"]`);
+  if (matchingChip) {
+    document.querySelectorAll('#overviewChips .chip').forEach(c => c.classList.remove('active'));
+    matchingChip.classList.add('active');
+  }
+  if (document.getElementById('overviewPane').style.display !== 'none') renderOverview();
 }
 
 function renderPostList() {
@@ -2427,6 +2436,16 @@ function setOverviewFilter(btn) {
   document.querySelectorAll('#overviewChips .chip').forEach(c => c.classList.remove('active'));
   btn.classList.add('active');
   overviewStatusFilter = btn.dataset.status;
+
+  // Sync sidebar tabs
+  statusFilter = overviewStatusFilter;
+  const matchingTab = document.querySelector(`.status-tab[data-status="${statusFilter}"]`);
+  if (matchingTab) {
+    document.querySelectorAll('.status-tab').forEach(t => t.classList.remove('active'));
+    matchingTab.classList.add('active');
+    renderPostList();
+  }
+
   selectedPostIds.clear();
   updateBulkBar();
   renderOverview();
