@@ -45,8 +45,37 @@ def init_db():
         conn.commit()
     except Exception:
         pass  # Column already exists
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS feedback (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_email TEXT NOT NULL,
+            message TEXT NOT NULL,
+            submitted_at TEXT DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
     conn.commit()
     conn.close()
+
+
+def save_feedback(user_email: str, message: str) -> int:
+    conn = get_connection()
+    cursor = conn.execute(
+        "INSERT INTO feedback (user_email, message) VALUES (?, ?)",
+        (user_email, message)
+    )
+    fid = cursor.lastrowid
+    conn.commit()
+    conn.close()
+    return fid
+
+
+def list_feedback() -> list:
+    conn = get_connection()
+    rows = conn.execute(
+        "SELECT * FROM feedback ORDER BY submitted_at DESC"
+    ).fetchall()
+    conn.close()
+    return [dict(row) for row in rows]
 
 
 def log_audit(post_id, user_email: str, action: str, details: dict = None):

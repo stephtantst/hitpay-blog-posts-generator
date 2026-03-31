@@ -630,6 +630,85 @@
     .nav-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
     .nav-btn:hover:not(.active) { color: var(--text); }
 
+    /* ── Feedback popover ───────────────────────────── */
+    .feedback-btn {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text-muted);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.15s, color 0.15s;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .feedback-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .feedback-popover-wrap { position: relative; }
+    .feedback-popover {
+      display: none;
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      width: 320px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+      z-index: 800;
+      overflow: hidden;
+    }
+    .feedback-popover.open { display: block; }
+    .feedback-popover-header {
+      padding: 13px 16px 0;
+      font-size: 13px; font-weight: 700;
+      color: var(--text);
+    }
+    .feedback-popover-sub {
+      padding: 4px 16px 10px;
+      font-size: 12px; color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .feedback-popover-user {
+      padding: 10px 16px 4px;
+      font-size: 11px; color: var(--text-dim);
+    }
+    .feedback-textarea {
+      width: 100%;
+      box-sizing: border-box;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: var(--font);
+      padding: 9px 11px;
+      resize: vertical;
+      min-height: 90px;
+      outline: none;
+      margin: 0 16px;
+      width: calc(100% - 32px);
+      transition: border-color 0.15s;
+      line-height: 1.55;
+    }
+    .feedback-textarea:focus { border-color: var(--accent); }
+    .feedback-popover-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 10px 16px 14px;
+    }
+    .feedback-success {
+      display: none;
+      padding: 20px 16px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--green);
+      gap: 6px;
+    }
+    .feedback-success.visible { display: flex; align-items: center; justify-content: center; }
+
     /* ── Overview pane ─────────────────────────────── */
     .overview-pane {
       flex: 1;
@@ -1049,6 +1128,20 @@
   <div class="header-spacer"></div>
   <span class="save-indicator" id="saveIndicator">✓ Saved</span>
   <button class="info-btn" onclick="openInfoPanel()" title="How this tool works">i</button>
+  <div class="feedback-popover-wrap" id="feedbackWrap">
+    <button class="feedback-btn" onclick="toggleFeedbackPopover(event)" title="Send feedback">✦</button>
+    <div class="feedback-popover" id="feedbackPopover">
+      <div class="feedback-popover-header">Share feedback</div>
+      <div class="feedback-popover-sub">Bug, idea, or anything on your mind.</div>
+      <div class="feedback-popover-user" id="feedbackUser"></div>
+      <textarea class="feedback-textarea" id="feedbackText" placeholder="What's on your mind?" rows="4"></textarea>
+      <div class="feedback-popover-actions">
+        <button class="btn btn-cancel" onclick="closeFeedbackPopover()">Cancel</button>
+        <button class="btn btn-primary" id="feedbackSubmitBtn" onclick="submitFeedback()">Send</button>
+      </div>
+      <div class="feedback-success" id="feedbackSuccess">✓ Thanks — feedback received!</div>
+    </div>
+  </div>
   <div id="userInfo" style="display:flex;align-items:center;gap:8px;margin-left:12px;"></div>
 </header>
 
@@ -1885,6 +1978,50 @@ async function startGenerate() {
     addLog('✗ ' + err.message, 'log-error');
     btn.disabled = false;
     btn.textContent = 'Generate Post';
+  }
+}
+
+// ── Feedback popover ──────────────────────────────────────────────────────────
+function toggleFeedbackPopover(e) {
+  e.stopPropagation();
+  const pop = document.getElementById('feedbackPopover');
+  const isOpen = pop.classList.contains('open');
+  if (isOpen) { closeFeedbackPopover(); return; }
+  // Populate user label
+  const userEl = document.getElementById('feedbackUser');
+  if (currentUser) userEl.textContent = 'Submitting as ' + currentUser.email;
+  // Reset state
+  document.getElementById('feedbackText').value = '';
+  document.getElementById('feedbackSuccess').classList.remove('visible');
+  document.getElementById('feedbackSubmitBtn').disabled = false;
+  document.getElementById('feedbackSubmitBtn').textContent = 'Send';
+  pop.classList.add('open');
+}
+function closeFeedbackPopover() {
+  document.getElementById('feedbackPopover').classList.remove('open');
+}
+document.addEventListener('click', e => {
+  if (!document.getElementById('feedbackWrap').contains(e.target)) closeFeedbackPopover();
+});
+async function submitFeedback() {
+  const text = document.getElementById('feedbackText').value.trim();
+  if (!text) { document.getElementById('feedbackText').focus(); return; }
+  const btn = document.getElementById('feedbackSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  try {
+    const res = await fetch('/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text }),
+    });
+    if (!res.ok) throw new Error('Failed');
+    document.getElementById('feedbackText').value = '';
+    document.getElementById('feedbackSuccess').classList.add('visible');
+    setTimeout(closeFeedbackPopover, 1800);
+  } catch {
+    btn.disabled = false;
+    btn.textContent = 'Send';
   }
 }
 

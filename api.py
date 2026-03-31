@@ -31,8 +31,10 @@ from src.database import (
     get_post,
     get_post_by_slug,
     init_db,
+    list_feedback,
     list_posts,
     log_audit,
+    save_feedback,
     save_post,
     update_post_fields,
     update_post_status,
@@ -452,6 +454,23 @@ async def api_generate(body: GenerateRequest, user_email: str = Depends(require_
             yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
 
     return StreamingResponse(stream(), media_type="text/event-stream")
+
+
+class FeedbackRequest(BaseModel):
+    message: str
+
+
+@app.post("/api/feedback")
+async def api_submit_feedback(body: FeedbackRequest, user_email: str = Depends(require_auth)):
+    if not body.message.strip():
+        raise HTTPException(400, "Message cannot be empty")
+    fid = save_feedback(user_email, body.message.strip())
+    return {"id": fid}
+
+
+@app.get("/api/feedback")
+def api_list_feedback(_: str = Depends(require_auth)):
+    return list_feedback()
 
 
 @app.post("/api/test-post")
