@@ -1347,6 +1347,7 @@
         <button class="new-post-arrow" onclick="toggleNewPostMenu(event)" title="More options">▾</button>
         <div class="new-post-menu" id="newPostMenu">
           <button class="new-post-menu-item" onclick="openGenerateModal(); closeNewPostMenu()">Generate Post</button>
+          <button class="new-post-menu-item" onclick="openRewriteModal(); closeNewPostMenu()">Rewrite Existing Post</button>
           <button class="new-post-menu-item" onclick="createTestPost(); closeNewPostMenu()">Create Test Post</button>
         </div>
       </div>
@@ -1418,6 +1419,7 @@
         <button class="generate-arrow" onclick="toggleGenerateMenu(event)" title="More options">▾</button>
         <div class="generate-menu" id="generateMenu">
           <button class="generate-menu-item" onclick="openGenerateModal(); closeGenerateMenu()">Generate Post</button>
+          <button class="generate-menu-item" onclick="openRewriteModal(); closeGenerateMenu()">Rewrite Existing Post</button>
           <button class="generate-menu-item" onclick="createTestPost(); closeGenerateMenu()">Create Test Post</button>
         </div>
       </div>
@@ -1586,6 +1588,36 @@
       <button class="btn btn-cancel" onclick="closeGenerateModal()">Cancel</button>
       <button class="btn btn-primary" id="generateBtn" onclick="startGenerate()">
         Generate Post
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Rewrite Modal -->
+<div class="modal-overlay" id="rewriteModal">
+  <div class="modal">
+    <div class="modal-title">Rewrite Existing Post</div>
+    <div class="modal-sub">Paste a HitPay blog URL. The post will be fetched and fully rewritten with AEO, GEO, and competitor optimisation applied.</div>
+    <label class="modal-field-label">Blog Post URL</label>
+    <input
+      class="modal-input"
+      id="rewriteUrlInput"
+      type="url"
+      placeholder="https://hitpayapp.com/blog/..."
+      onkeydown="if(event.key==='Enter') startRewrite()"
+    />
+    <label class="modal-field-label">Market (optional)</label>
+    <select class="modal-select" id="rewriteCountry">
+      <option value="">All Markets (no specific focus)</option>
+      <option value="SG">🇸🇬 Singapore</option>
+      <option value="MY">🇲🇾 Malaysia</option>
+      <option value="PH">🇵🇭 Philippines</option>
+    </select>
+    <div class="progress-log" id="rewriteLog"></div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="closeRewriteModal()">Cancel</button>
+      <button class="btn btn-primary" id="rewriteBtn" onclick="startRewrite()">
+        Rewrite Post
       </button>
     </div>
   </div>
@@ -2057,6 +2089,91 @@ async function startGenerate() {
     addLog('✗ ' + err.message, 'log-error');
     btn.disabled = false;
     btn.textContent = 'Generate Post';
+  }
+}
+
+// ── Rewrite Modal ─────────────────────────────────────────────────────────────
+function openRewriteModal() {
+  document.getElementById('rewriteUrlInput').value = '';
+  document.getElementById('rewriteCountry').value = '';
+  document.getElementById('rewriteLog').innerHTML = '';
+  document.getElementById('rewriteLog').classList.remove('visible');
+  document.getElementById('rewriteBtn').disabled = false;
+  document.getElementById('rewriteBtn').textContent = 'Rewrite Post';
+  document.getElementById('rewriteModal').classList.add('open');
+  setTimeout(() => document.getElementById('rewriteUrlInput').focus(), 150);
+}
+
+function closeRewriteModal() {
+  document.getElementById('rewriteModal').classList.remove('open');
+}
+
+async function startRewrite() {
+  const url = document.getElementById('rewriteUrlInput').value.trim();
+  if (!url) { document.getElementById('rewriteUrlInput').focus(); return; }
+
+  const btn = document.getElementById('rewriteBtn');
+  const log = document.getElementById('rewriteLog');
+  btn.disabled = true;
+  btn.textContent = 'Rewriting…';
+  log.innerHTML = '';
+  log.classList.add('visible');
+
+  const addLog = (msg, cls = '') => {
+    const line = document.createElement('div');
+    line.className = `log-line ${cls}`;
+    line.textContent = msg;
+    log.appendChild(line);
+    log.scrollTop = log.scrollHeight;
+  };
+
+  addLog('→ Starting…');
+
+  try {
+    const country = document.getElementById('rewriteCountry').value || null;
+    const res = await fetch('/api/rewrite', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url, country }),
+    });
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let newPostId = null;
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = JSON.parse(line.slice(6));
+        if (data.type === 'status') addLog('→ ' + data.message);
+        else if (data.type === 'done') {
+          addLog('✓ Done! Opening post…', 'log-done');
+          newPostId = data.post_id;
+        } else if (data.type === 'error') {
+          addLog('✗ ' + data.message, 'log-error');
+        }
+      }
+    }
+
+    await loadPosts();
+    if (newPostId) {
+      closeRewriteModal();
+      await openPost(newPostId);
+    }
+    btn.disabled = false;
+    btn.textContent = 'Rewrite Post';
+  } catch (err) {
+    addLog('✗ ' + err.message, 'log-error');
+    btn.disabled = false;
+    btn.textContent = 'Rewrite Post';
   }
 }
 

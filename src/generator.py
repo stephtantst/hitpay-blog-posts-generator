@@ -352,6 +352,162 @@ Return the JSON object now."""
     return post_data
 
 
+def _scrape_blog_url(url: str) -> dict:
+    """Fetch a HitPay blog page and return {title, keyword, content} as plain text."""
+    import httpx
+    from bs4 import BeautifulSoup
+
+    resp = httpx.get(url, timeout=20, follow_redirects=True, headers={
+        "User-Agent": "Mozilla/5.0 (compatible; HitPayRewriter/1.0)"
+    })
+    resp.raise_for_status()
+
+    soup = BeautifulSoup(resp.text, "lxml")
+
+    # Remove nav, footer, scripts, styles
+    for tag in soup(["script", "style", "nav", "footer", "header", "aside"]):
+        tag.decompose()
+
+    # Try to find the article title
+    title = ""
+    for sel in ["h1", "article h2", ".post-title", ".entry-title", "title"]:
+        el = soup.select_one(sel)
+        if el:
+            title = el.get_text(strip=True)
+            break
+
+    # Try to find the main article body
+    body_el = soup.select_one("article") or soup.select_one("main") or soup.body
+    content = body_el.get_text(separator="\n", strip=True) if body_el else soup.get_text(separator="\n", strip=True)
+
+    # Derive keyword from title (strip common suffixes)
+    keyword = title or url.split("/")[-1].replace("-", " ").strip()
+
+    return {"title": title, "keyword": keyword, "content": content}
+
+
+def rewrite_blog_post(url: str, country: str = None, on_status=None) -> dict:
+    """Scrape an existing blog post URL and rewrite it with all optimisation directives.
+
+    Args:
+        url: Public URL of the existing HitPay blog post
+        country: Optional market code (SG/MY/PH) to lock the rewrite to a market
+        on_status: Optional callback(message: str) for progress updates
+    """
+    def status(msg):
+        if on_status:
+            on_status(msg)
+
+    status("Fetching existing blog post...")
+    scraped = _scrape_blog_url(url)
+    keyword = scraped["keyword"]
+    existing_title = scraped["title"]
+    existing_content = scraped["content"]
+    status(f"Fetched: "{existing_title}"")
+
+    # Gather the same enrichment context as a fresh generate
+    status("Querying HitPay knowledge base...")
+    mcp_context = _gather_mcp_context(keyword, status)
+
+    status("Loading relevant product documentation...")
+    product_docs = _load_relevant_docs(keyword)
+    if product_docs:
+        status("Found relevant sections in product docs")
+
+    status("Loading competitor research...")
+    country_name = COUNTRY_CONTEXT[country]["name"] if country and country in COUNTRY_CONTEXT else None
+    competitors = get_relevant_competitors(keyword, market=country_name)
+    competitor_context = format_for_prompt(competitors) if competitors else ""
+    if competitors:
+        status(f"Found data for {len(competitors)} relevant competitors")
+
+    blog_links = _load_blog_links()
+    links_section = ""
+    if blog_links:
+        links_section = "\n## HitPay Blog Post URLs — Use 5 as Internal Backlinks\n"
+        links_section += "Pick the 5 most relevant to your post. Link naturally in-content.\n\n"
+        for link in blog_links:
+            topics_str = ", ".join(link.get("topics", []))
+            links_section += f"- [{link['title']}]({link['url']}) — relevant for: {topics_str}\n"
+
+    country_section = ""
+    if country and country in COUNTRY_CONTEXT:
+        ctx = COUNTRY_CONTEXT[country]
+        avoid_list = "\n".join(f"  - {r}" for r in ctx["avoid"])
+        country_section = f"""
+## Country Focus: {ctx['flag']} {ctx['name']} ({country}) — STRICT REQUIREMENT
+This post must be written EXCLUSIVELY for the {ctx['name']} market.
+
+Local payment methods to reference: {ctx['local_methods']}
+Cross-border methods available to {ctx['name']} merchants: {ctx['cross_border']}
+Currency: {ctx['currency']}
+Payout: {ctx['payout']}
+Place name examples: {ctx['places']}
+
+FACT CHECK — Do NOT include these market mismatches:
+{avoid_list}
+
+Before returning your JSON, verify every payment method name, currency, and place name is correct for {ctx['name']}. Correct any mismatches.
+"""
+        status(f"Country focus set to {ctx['flag']} {ctx['name']}")
+
+    status("Rewriting blog post with Claude Opus...")
+    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+
+    docs_section = f"\n## HitPay Product Documentation — Feature & Flow Accuracy\n{product_docs}\n" if product_docs else ""
+
+    user_prompt = f"""You are rewriting an existing HitPay blog post. The goal is to produce a significantly improved version of the same article using all system prompt directives (AEO optimisation, GEO rules, competitor comparisons, internal backlinks, etc.).
+
+## Existing Article to Rewrite
+URL: {url}
+Title: {existing_title}
+
+--- EXISTING CONTENT START ---
+{existing_content[:6000]}
+--- EXISTING CONTENT END ---
+
+Keep the same core topic and keyword focus: "{keyword}"
+Preserve any accurate facts, data points, or useful examples from the original.
+Remove outdated information, weak sections, and anything that violates the system prompt rules.
+Fully apply all AEO, GEO, and competitor comparison directives from the system prompt.
+{country_section}
+## HitPay Knowledge Base — Use for Factual Accuracy
+{mcp_context}
+{docs_section}
+{competitor_context}
+{links_section}
+Ground your rewrite in the knowledge base and product documentation above. Do not invent facts or statistics not present in these sources or the system prompt.
+
+Remember: include exactly 5 internal backlinks from the URL list above, woven naturally into the content.
+
+Return the JSON object now."""
+
+    response = client.messages.create(
+        model=CLAUDE_MODEL,
+        max_tokens=4096,
+        system=BLOG_SYSTEM_PROMPT,
+        messages=[{"role": "user", "content": user_prompt}]
+    )
+
+    raw = response.content[0].text.strip()
+    raw = re.sub(r'^```(?:json)?\s*', '', raw)
+    raw = re.sub(r'\s*```$', '', raw)
+    raw = raw.strip()
+
+    post_data = json.loads(raw)
+    post_data["date"] = date.today().isoformat()
+    post_data["keyword"] = keyword
+    post_data["country"] = country or ""
+    post_data["status"] = "writing"
+
+    if not post_data.get("slug"):
+        post_data["slug"] = slugify(post_data["title"])
+    else:
+        post_data["slug"] = slugify(post_data["slug"])
+
+    return post_data
+
+
 def _gather_mcp_context(keyword: str, status_cb=None) -> str:
     """Query HitPay MCP to gather relevant knowledge for the keyword."""
     parts = []

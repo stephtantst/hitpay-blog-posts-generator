@@ -39,7 +39,7 @@ from src.database import (
     update_post_fields,
     update_post_status,
 )
-from src.generator import generate_blog_post
+from src.generator import generate_blog_post, rewrite_blog_post
 from src.post_writer import (
     export_bulk_to_csv,
     export_to_csv,
@@ -446,6 +446,55 @@ async def api_generate(body: GenerateRequest, user_email: str = Depends(require_
             log_audit(post_id, user_email, "created", {
                 "keyword": body.keyword,
                 "country": body.country or "",
+            })
+
+            yield f"data: {json.dumps({'type': 'done', 'post_id': post_id, 'title': post_data['title']})}\n\n"
+
+        except Exception as e:
+            yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
+
+    return StreamingResponse(stream(), media_type="text/event-stream")
+
+
+class RewriteRequest(BaseModel):
+    url: str
+    country: str | None = None
+
+
+@app.post("/api/rewrite")
+async def api_rewrite(body: RewriteRequest, user_email: str = Depends(require_auth)):
+    """Scrape an existing blog post URL and rewrite it with all optimisation directives. Streams via SSE."""
+
+    async def stream():
+        messages: list[str] = []
+        loop = asyncio.get_event_loop()
+
+        def on_status(msg: str):
+            messages.append(msg)
+
+        try:
+            yield f"data: {json.dumps({'type': 'status', 'message': 'Starting rewrite...'})}\n\n"
+
+            post_data = await loop.run_in_executor(
+                None, lambda: rewrite_blog_post(body.url, country=body.country, on_status=on_status)
+            )
+
+            for msg in messages:
+                yield f"data: {json.dumps({'type': 'status', 'message': msg})}\n\n"
+
+            existing = get_post_by_slug(post_data["slug"])
+            if existing:
+                import time
+                post_data["slug"] = f"{post_data['slug']}-rewrite-{int(time.time())}"
+
+            file_path = write_post_file(post_data)
+            post_id = save_post(post_data, file_path)
+            post_data["id"] = post_id
+
+            log_audit(post_id, user_email, "created", {
+                "keyword": post_data.get("keyword", ""),
+                "country": body.country or "",
+                "source_url": body.url,
             })
 
             yield f"data: {json.dumps({'type': 'done', 'post_id': post_id, 'title': post_data['title']})}\n\n"
