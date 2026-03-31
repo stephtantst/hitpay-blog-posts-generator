@@ -1191,6 +1191,29 @@
     .audit-entry:last-child { border-bottom: none; }
     .audit-action { font-size: 12px; font-weight: 500; color: var(--text); }
     .audit-meta { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+    /* Lifecycle timeline */
+    .lifecycle-timeline { display: flex; flex-direction: column; }
+    .lc-step { display: flex; align-items: flex-start; gap: 10px; }
+    .lc-rail { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+    .lc-dot {
+      width: 10px; height: 10px; border-radius: 50%; margin-top: 3px; flex-shrink: 0;
+      border: 2px solid var(--border); background: var(--surface2);
+    }
+    .lc-dot.done { border-color: currentColor; background: currentColor; }
+    .lc-dot.writing    { color: #d97706; }
+    .lc-dot.ready      { color: #2563eb; }
+    .lc-dot.published  { color: #16a34a; }
+    .lc-connector { width: 2px; flex: 1; min-height: 18px; background: var(--border); margin: 2px 0; }
+    .lc-connector.done { background: #d1d5db; }
+    .lc-body { flex: 1; padding-bottom: 4px; }
+    .lc-label { font-size: 11.5px; font-weight: 600; color: var(--text); }
+    .lc-label.pending { color: var(--text-dim); font-weight: 500; }
+    .lc-time { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+    .lc-delta {
+      display: inline-block; font-size: 10.5px; color: var(--text-dim);
+      margin: 3px 0 3px 20px; font-style: italic;
+    }
   </style>
 </head>
 <body>
@@ -1560,6 +1583,12 @@
         <button class="btn-status" data-status="ready_to_publish" onclick="changeStatus('ready_to_publish')">🔵  Mark as Ready to Publish</button>
         <button class="btn-status" data-status="published" onclick="changeStatus('published')">✅  Mark as Published</button>
       </div>
+    </div>
+
+    <!-- Lifecycle -->
+    <div class="meta-section" id="lifecycleSection" style="display:none;">
+      <div class="meta-section-title">Lifecycle</div>
+      <div class="lifecycle-timeline" id="lifecycleTimeline"></div>
     </div>
 
     <!-- Actions -->
@@ -1980,19 +2009,86 @@ async function loadAuditLog(postId) {
   const res = await fetch(`/api/posts/${postId}/audit-log`);
   if (!res.ok) return;
   const entries = await res.json();
+
+  // ── Audit history ──
   const section = document.getElementById('auditSection');
   const el = document.getElementById('auditLog');
-  if (!entries.length) { section.style.display = 'none'; return; }
-  section.style.display = 'block';
-  const actionLabel = { created: 'Created', edited: 'Edited', status_changed: 'Status changed', deleted: 'Deleted' };
-  el.innerHTML = entries.slice(0, 15).map(e => {
-    const details = e.details ? JSON.parse(e.details) : {};
-    let detail = '';
-    if (e.action === 'status_changed' && details.to) detail = ` → ${details.to.replace(/_/g, ' ')}`;
-    else if (e.action === 'edited' && details.fields) detail = `: ${details.fields.slice(0,3).join(', ')}${details.fields.length > 3 ? '…' : ''}`;
-    else if (e.action === 'created' && details.keyword) detail = `: "${details.keyword}"${details.country ? ' (' + details.country + ')' : ''}`;
-    return `<div class="audit-entry"><div class="audit-action">${actionLabel[e.action] || e.action}${escHtml(detail)}</div><div class="audit-meta">${escHtml(e.user_email)} · ${fmtDatetime(e.timestamp)}</div></div>`;
-  }).join('');
+  if (!entries.length) { section.style.display = 'none'; }
+  else {
+    section.style.display = 'block';
+    const actionLabel = { created: 'Created', edited: 'Edited', status_changed: 'Status changed', deleted: 'Deleted' };
+    el.innerHTML = entries.slice(0, 15).map(e => {
+      const details = e.details ? JSON.parse(e.details) : {};
+      let detail = '';
+      if (e.action === 'status_changed' && details.to) detail = ` → ${details.to.replace(/_/g, ' ')}`;
+      else if (e.action === 'edited' && details.fields) detail = `: ${details.fields.slice(0,3).join(', ')}${details.fields.length > 3 ? '…' : ''}`;
+      else if (e.action === 'created' && details.keyword) detail = `: "${details.keyword}"${details.country ? ' (' + details.country + ')' : ''}`;
+      return `<div class="audit-entry"><div class="audit-action">${actionLabel[e.action] || e.action}${escHtml(detail)}</div><div class="audit-meta">${escHtml(e.user_email)} · ${fmtDatetime(e.timestamp)}</div></div>`;
+    }).join('');
+  }
+
+  // ── Lifecycle timeline ──
+  renderLifecycle(entries);
+}
+
+function renderLifecycle(entries) {
+  const section = document.getElementById('lifecycleSection');
+  const el = document.getElementById('lifecycleTimeline');
+
+  // Extract first occurrence of each status transition (entries are DESC; reverse to get oldest first)
+  const asc = [...entries].reverse();
+  const createdAt  = currentPost?.created_at  ? new Date(currentPost.created_at.includes('T') ? currentPost.created_at : currentPost.created_at.replace(' ', 'T') + 'Z') : null;
+  const readyEntry = asc.find(e => e.action === 'status_changed' && JSON.parse(e.details || '{}').to === 'ready_to_publish');
+  const pubEntry   = asc.find(e => e.action === 'status_changed' && JSON.parse(e.details || '{}').to === 'published');
+  const readyAt    = readyEntry ? new Date(readyEntry.timestamp.includes('T') ? readyEntry.timestamp : readyEntry.timestamp.replace(' ', 'T') + 'Z') : null;
+  const pubAt      = pubEntry   ? new Date(pubEntry.timestamp.includes('T')   ? pubEntry.timestamp   : pubEntry.timestamp.replace(' ', 'T')   + 'Z') : null;
+
+  if (!createdAt) { section.style.display = 'none'; return; }
+  section.style.display = '';
+
+  function fmtDelta(ms) {
+    const mins  = Math.floor(ms / 60000);
+    const hours = Math.floor(mins / 60);
+    const days  = Math.floor(hours / 24);
+    if (days > 0)  return `${days}d ${hours % 24}h`;
+    if (hours > 0) return `${hours}h ${mins % 60}m`;
+    return `${mins}m`;
+  }
+
+  const steps = [
+    { key: 'writing',           label: '✏️ Writing',           cls: 'writing',   ts: createdAt },
+    { key: 'ready_to_publish',  label: '🔵 Ready to Publish',  cls: 'ready',     ts: readyAt  },
+    { key: 'published',         label: '✅ Published',          cls: 'published', ts: pubAt    },
+  ];
+
+  let html = '';
+  steps.forEach((step, i) => {
+    const done    = !!step.ts;
+    const dotDone = done ? 'done' : '';
+    const lblCls  = done ? '' : 'pending';
+    const timeStr = done ? fmtDatetime(step.ts.toISOString()) : '—';
+
+    // Delta connector between steps
+    if (i > 0) {
+      const prevTs = steps[i - 1].ts;
+      const connDone = prevTs && done ? 'done' : '';
+      const delta = prevTs && done ? `<span class="lc-delta">${fmtDelta(step.ts - prevTs)}</span>` : '';
+      html += `<div style="display:flex;align-items:flex-start;gap:10px;">
+        <div class="lc-rail"><div class="lc-connector ${connDone}"></div></div>
+        <div style="flex:1;">${delta}</div>
+      </div>`;
+    }
+
+    html += `<div class="lc-step">
+      <div class="lc-rail"><div class="lc-dot ${step.cls} ${dotDone}"></div></div>
+      <div class="lc-body">
+        <div class="lc-label ${lblCls}">${step.label}</div>
+        <div class="lc-time">${timeStr}</div>
+      </div>
+    </div>`;
+  });
+
+  el.innerHTML = html;
 }
 
 // ── Delete ────────────────────────────────────────────────────────────────────
