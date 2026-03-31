@@ -454,5 +454,30 @@ async def api_generate(body: GenerateRequest, user_email: str = Depends(require_
     return StreamingResponse(stream(), media_type="text/event-stream")
 
 
+@app.post("/api/test-post")
+async def api_test_post(user_email: str = Depends(require_auth)):
+    """Create a placeholder test post instantly (no AI generation)."""
+    import time
+    ts = int(time.time())
+    post_data = {
+        "title": f"Test Post {ts}",
+        "slug": f"test-post-{ts}",
+        "keyword": "[TEST]",
+        "country": "",
+        "status": "writing",
+        "date": __import__("datetime").date.today().isoformat(),
+        "meta_title": "",
+        "meta_description": "",
+        "overview": "This is a placeholder test post.",
+        "categories": [],
+        "tags": [],
+        "content": "This is a test post created for prototype testing purposes.\n\nReplace this content with your actual post body.",
+    }
+    file_path = write_post_file(post_data)
+    post_id = save_post(post_data, file_path)
+    log_audit(post_id, user_email, "created", {"keyword": "[TEST]", "country": ""})
+    return {"post_id": post_id}
+
+
 if __name__ == "__main__":
     uvicorn.run("api:app", host="127.0.0.1", port=8000, reload=True)
