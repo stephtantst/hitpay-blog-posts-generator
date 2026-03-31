@@ -7,8 +7,11 @@ load_dotenv()
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 HITPAY_MCP_URL = "https://hitpay-knowledge-mcp.vercel.app/api/mcp"
 CLAUDE_MODEL = "claude-opus-4-6"
-POSTS_DIR = "posts"
-DB_PATH = "posts.db"
+
+# On Vercel the filesystem is read-only; use /tmp for writable storage
+_on_vercel = bool(os.getenv("VERCEL"))
+POSTS_DIR = "/tmp/posts" if _on_vercel else "posts"
+DB_PATH = "/tmp/posts.db" if _on_vercel else "posts.db"
 
 # Google OAuth — create credentials at console.cloud.google.com
 # Authorized redirect URI must be set to: {BASE_URL}/auth/callback

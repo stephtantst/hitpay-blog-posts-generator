@@ -56,7 +56,10 @@ GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
 async def lifespan(app: FastAPI):
     init_db()
     for d in ["writing", "ready_to_publish", "published", "exports"]:
-        Path(POSTS_DIR, d).mkdir(parents=True, exist_ok=True)
+        try:
+            Path(POSTS_DIR, d).mkdir(parents=True, exist_ok=True)
+        except OSError:
+            pass
     yield
 
 
