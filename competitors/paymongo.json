@@ -1,0 +1,167 @@
+{
+  "id": "paymongo",
+  "name": "PayMongo",
+  "base_url": "https://www.paymongo.com",
+  "markets": [
+    "Philippines"
+  ],
+  "last_updated": "2026-03-30",
+  "pricing": {
+    "monthly_fee": "₱349/month for PayMongo Storefront; ₱120,000/mo platform fee for Protect",
+    "setup_fee": "FREE",
+    "transaction_fees": {
+      "cards": "3.125% + ₱13.39",
+      "qr_ph_instore": "1.34%",
+      "qr_ph_online": "1.34%",
+      "gcash": "2.23%",
+      "maya": "1.79%",
+      "grabpay": "1.96%",
+      "shopeepay": "1.70%",
+      "direct_online_banking": "0.71% or ₱13.39",
+      "bnpl": "1.34%",
+      "instant_settlement": "Up to 2% (QR PH, Bank transfer); Up to 3% (Cards, BNPL)",
+      "payouts": "₱10 per transaction (via InstaPay or PesoNET)",
+      "fraud_detection_protect": "₱2.90–₱2.45 per screen (tiered)",
+      "notes": "All prices exclusive of VAT"
+    },
+    "pricing_model": "pay-as-you-go / custom"
+  },
+  "payment_methods": {
+    "singapore": [],
+    "malaysia": [],
+    "philippines": [
+      "Cards",
+      "GCash",
+      "QR Ph payments",
+      "QR Ph (in-store)",
+      "QR Ph (online)",
+      "Visa",
+      "Mastercard",
+      "Maya",
+      "GrabPay",
+      "ShopeePay",
+      "SPayLater",
+      "MariBank",
+      "BDO",
+      "UnionBank",
+      "BPI",
+      "Landbank",
+      "Metrobank",
+      "BillEase",
+      "QRPh",
+      "BillEase BNPL",
+      "Major Philippine online banks"
+    ],
+    "global": [
+      "Cards"
+    ]
+  },
+  "features": [
+    "Payment Links",
+    "Pages",
+    "Plug-Ins",
+    "Express Cards",
+    "API",
+    "QR Ph Standee",
+    "QR Ph Soundbox",
+    "Mobile App",
+    "Wallet",
+    "Capital",
+    "Seeds",
+    "Issuing",
+    "Real-time payment tracking",
+    "PCI-DSS Level 1 compliance",
+    "HTTPS encryption",
+    "HSTS protection",
+    "Tokenization",
+    "Plugins & Pages",
+    "PayMongo Storefront (AI-powered storefront builder)",
+    "Extra AI Credits for Storefront generation",
+    "API Payments (custom checkout via PayMongo API)",
+    "Protect (Multi-rail fraud screening)",
+    "Instant Settlement",
+    "Payouts (individual and bulk)",
+    "Prism (Advanced analytics dashboard)",
+    "PayMongo Capital (Flexible financing)",
+    "payment processing",
+    "disbursements",
+    "lending",
+    "subscription payment solutions",
+    "fast and reliable payment processing",
+    "Fraud detection",
+    "3D Secure authentication",
+    "Automated customer receipts",
+    "Real-time dashboard tracking",
+    "Platform-native installation",
+    "Automatic updates",
+    "No custom code required",
+    "No migration required",
+    "Unified dashboard with other PayMongo products"
+  ],
+  "target_segment": [
+    "SME",
+    "startup",
+    "developer",
+    "fast-growing disruptors",
+    "enterprise",
+    "small businesses",
+    "businesses with large payments volume",
+    "established brand"
+  ],
+  "integrations": [
+    "Shopify",
+    "e-commerce builders",
+    "WooCommerce",
+    "Magento"
+  ],
+  "compliance": [
+    "PCI-DSS Level 1",
+    "PCI DSS Level 1",
+    "BSP-regulated"
+  ],
+  "unique_selling_points": [
+    "Full suite of financial tools in one place",
+    "Tailor-fit funding based on transaction history",
+    "Instant audio feedback on payments",
+    "No-code payment pages",
+    "Seamless API integration",
+    "No setup fees, monthly fees or hidden fees (Standard plan)",
+    "Fair and transparent pricing",
+    "Multi-rail fraud screening",
+    "AI-powered storefront builder",
+    "Instant settlement option",
+    "Flexible financing via PayMongo Capital",
+    "Recognized by VISA as 'Most Innovative Payment Facilitator' of 2024",
+    "Over 12,000 merchants using the platform",
+    "Expanding beyond payments into comprehensive digital financial services",
+    "Supported by major investors like Y Combinator and Stripe",
+    "No custom code or developer required",
+    "No store migration needed",
+    "Install in minutes with automatic updates",
+    "All payment methods handled by single plugin",
+    "Real-time payment tracking with no manual reconciliation"
+  ],
+  "positioning": "Powerful financial tools for fast-growing disruptors offering the full suite of financial tools: accept payments, manage transactions, fund your business, and so much more—all in one place",
+  "payout_speed": "Receive funds after a day",
+  "markets_served": [
+    "Philippines"
+  ],
+  "sources": [
+    {
+      "url": "https://www.paymongo.com",
+      "scraped_at": "2026-03-30"
+    },
+    {
+      "url": "https://www.paymongo.com/pricing",
+      "scraped_at": "2026-03-30"
+    },
+    {
+      "url": "https://www.paymongo.com/about",
+      "scraped_at": "2026-03-30"
+    },
+    {
+      "url": "https://www.paymongo.com/plugins",
+      "scraped_at": "2026-03-30"
+    }
+  ]
+}

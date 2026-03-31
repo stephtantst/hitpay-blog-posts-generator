@@ -1,0 +1,177 @@
+{
+  "id": "xendit",
+  "name": "Xendit",
+  "base_url": "https://www.xendit.co",
+  "markets": [
+    "Philippines",
+    "Indonesia",
+    "Malaysia",
+    "Thailand",
+    "Vietnam"
+  ],
+  "last_updated": "2026-03-30",
+  "pricing": {
+    "monthly_fee": null,
+    "setup_fee": null,
+    "transaction_fees": {
+      "cards": null,
+      "local_methods": null,
+      "notes": null
+    },
+    "pricing_model": null
+  },
+  "payment_methods": {
+    "singapore": [],
+    "malaysia": [
+      "FPX",
+      "Cards",
+      "Touch 'n Go",
+      "GrabPay",
+      "ShopeePay",
+      "WeChatPay",
+      "AliPay",
+      "DuitNow QR",
+      "Instalment Payments",
+      "BNPL",
+      "Subscription Payments"
+    ],
+    "philippines": [
+      "e-wallets",
+      "direct debit",
+      "bank cards"
+    ],
+    "global": [
+      "QR Codes",
+      "E-wallets",
+      "Virtual Accounts (Bank Transfers)",
+      "Direct Debit",
+      "Cards",
+      "Retail Outlets / Over-the-counter",
+      "PayLater",
+      "150+ popular online payment methods",
+      "international bank cards",
+      "QRIS",
+      "100+ payment methods"
+    ],
+    "notes": "100+ payment methods across Southeast Asia"
+  },
+  "features": [
+    "Payment links",
+    "QR codes",
+    "No-code creation",
+    "Single or multiple-use payment requests",
+    "Send via WhatsApp and Viber",
+    "Pre-built UI or customizable checkout",
+    "Customizable payment terms",
+    "Automated reminders",
+    "Instant payment recognition",
+    "Localized instructions",
+    "Automated notifications",
+    "Real-time notifications",
+    "Branded payment pages",
+    "Logo customization",
+    "Brand color customization",
+    "API for full automation",
+    "Dashboard creation",
+    "Tokenization for recurring payments",
+    "Fraud detection system",
+    "Refunds",
+    "Settlement and reconciliation",
+    "Recurring/subscription billing",
+    "Payment links and QR codes",
+    "SMS, email, and social app sharing",
+    "Offline/in-person payments",
+    "Partner account management",
+    "Transaction monitoring",
+    "Direct partner charging",
+    "Customizable billing schedules with anchor dates and intervals",
+    "Retry rules configuration",
+    "Customer notifications",
+    "Multiple payment method binding (up to 5)",
+    "Smart retry logic",
+    "Built-in retry for declined transactions",
+    "E-wallet recurring payments",
+    "Direct debit automatic payments",
+    "Bank card recurring payments",
+    "Payment Links",
+    "Subscriptions",
+    "Instalments",
+    "Batch Payouts",
+    "Automated Payouts",
+    "Fraud Detection",
+    "XenPlatform for marketplaces",
+    "0% Credit Card Instalment Plan up to 60 months",
+    "Payment Links with optimized payment UI",
+    "Auto-debit payment flows",
+    "Virtual accounts for bank transfers",
+    "Recurring payments with auto-debit and scheduling"
+  ],
+  "target_segment": [
+    "subscription businesses",
+    "SME",
+    "enterprise",
+    "startup"
+  ],
+  "integrations": [],
+  "compliance": [
+    "PCI DSS",
+    "Licensed by Bank Negara Malaysia"
+  ],
+  "unique_selling_points": [
+    "Improved credit card acceptance rates by 198%",
+    "3x Faster API Performance Than Before",
+    "100+ payment methods network",
+    "Up to 30% increased acceptance rates for card payments",
+    "Low chargeback rates with in-house fraud detection",
+    "12,000+ convenience store access for over-the-counter payments",
+    "Automated updates according to latest payment trends",
+    "First in Southeast Asia to enable true recurring billing across e-wallets, direct debit, and bank cards",
+    "150+ alternative payment channels in Southeast Asia with single integration",
+    "Support for major local e-wallets for recurring payments",
+    "0% interest instalment plans up to 60 months - first and only service of its kind in Malaysia",
+    "100+ payment methods across SEA",
+    "Multiple market-firsts including payout API with batch disbursement, recurring payments with auto-debit, digitalizing bank transfers through virtual accounts"
+  ],
+  "positioning": "A payment platform that helps global wellness platforms improve their credit card acceptance rates.",
+  "payout_speed": "timely payments every day of the year, including holidays",
+  "markets_served": [
+    "Philippines",
+    "Indonesia",
+    "Malaysia",
+    "Thailand",
+    "Vietnam",
+    "Southeast Asia",
+    "Singapore",
+    "Hong Kong"
+  ],
+  "sources": [
+    {
+      "url": "https://www.xendit.co",
+      "scraped_at": "2026-03-30"
+    },
+    {
+      "url": "https://www.xendit.co/en-ph/",
+      "scraped_at": "2026-03-30"
+    },
+    {
+      "url": "https://www.xendit.co/en-ph/pricing/",
+      "scraped_at": "2026-03-30"
+    },
+    {
+      "url": "https://www.xendit.co/en-ph/products/payment-links/",
+      "scraped_at": "2026-03-30"
+    },
+    {
+      "url": "https://www.xendit.co/en-ph/products/recurring/",
+      "scraped_at": "2026-03-30"
+    },
+    {
+      "url": "https://www.xendit.co/en-id/",
+      "scraped_at": "2026-03-30"
+    },
+    {
+      "url": "https://www.xendit.co/en-my/",
+      "scraped_at": "2026-03-30"
+    }
+  ]
+}

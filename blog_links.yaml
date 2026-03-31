@@ -1,0 +1,56 @@
+# HitPay Blog Post Reference Links
+# Add new posts here as they're published — the generator uses this list for internal backlinks.
+# Format: url, title, description (used to match relevance)
+
+posts:
+  - url: https://hitpayapp.com/blog/online-payment-singapore
+    title: Online Payment Methods in Singapore
+    topics: [online payments, singapore, paynow, grabpay, ecommerce, checkout]
+
+  - url: https://hitpayapp.com/blog/payment-gateway-singapore
+    title: Payment Gateway Singapore Guide
+    topics: [payment gateway, singapore, paynow, grabpay, visa, mastercard, integration]
+
+  - url: https://hitpayapp.com/blog/stripe-alternatives-singapore
+    title: Stripe Alternatives in Singapore
+    topics: [payment gateway, stripe, singapore, comparison, paynow, pos, invoicing]
+
+  - url: https://hitpayapp.com/blog/top-payment-gateway-providers-singapore
+    title: Top Payment Gateway Providers in Singapore
+    topics: [payment gateway, singapore, comparison, paynow, grabpay, providers]
+
+  - url: https://hitpayapp.com/blog/qr-code-payments
+    title: QR Code Payments — How They Work and How to Accept Them
+    topics: [qr code, paynow, duitnow, qr ph, gcash, contactless, scan to pay]
+
+  - url: https://hitpayapp.com/blog/singapore-pos-system
+    title: Singapore POS System Guide
+    topics: [pos system, singapore, point of sale, retail, F&B, paynow, grabpay, hardware]
+
+  - url: https://hitpayapp.com/blog/hitpay-paynow-fees
+    title: HitPay PayNow Fees
+    topics: [paynow, fees, pricing, singapore, transaction rate, cost]
+
+  - url: https://hitpayapp.com/blog/upi-gateway
+    title: UPI Gateway — How It Works
+    topics: [upi, india, cross-border, singapore, indian tourists, qr code]
+
+  - url: https://hitpayapp.com/blog/payment-gateway-philippines
+    title: Payment Gateway Philippines Guide
+    topics: [philippines, payment gateway, gcash, maya, qr ph, instapay, pesonet]
+
+  - url: https://hitpayapp.com/blog/how-to-generate-qr-ph
+    title: How to Generate QR Ph for Your Business
+    topics: [qr ph, philippines, gcash, maya, qr code, bsp, generate]
+
+  - url: https://hitpayapp.com/hitpay-customer-service
+    title: HitPay Customer Service and Support
+    topics: [support, customer service, live chat, whatsapp, help center, troubleshooting]
+
+  - url: https://hitpayapp.com/what-is-hitpay
+    title: What Is HitPay?
+    topics: [hitpay, overview, payment platform, sme, southeast asia, features]
+
+  - url: https://hitpayapp.com/blog/how-to-connect-paynow-to-retail-pos
+    title: How to Connect PayNow to Your Retail POS
+    topics: [paynow, pos, retail, singapore, qr code, setup]

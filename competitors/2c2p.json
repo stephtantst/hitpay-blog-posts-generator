@@ -1,0 +1,129 @@
+{
+  "id": "2c2p",
+  "name": "2C2P",
+  "base_url": "https://2c2p.com",
+  "markets": [
+    "Southeast Asia",
+    "Singapore",
+    "Malaysia",
+    "Philippines",
+    "Thailand",
+    "Vietnam"
+  ],
+  "last_updated": "2026-03-30",
+  "pricing": {
+    "monthly_fee": null,
+    "setup_fee": null,
+    "transaction_fees": null,
+    "pricing_model": null
+  },
+  "payment_methods": {
+    "singapore": [
+      "Mastercard",
+      "Visa"
+    ],
+    "malaysia": [
+      "Mastercard",
+      "Visa"
+    ],
+    "philippines": [
+      "Mastercard",
+      "Visa"
+    ],
+    "global": [
+      "cards",
+      "digital wallets",
+      "over-the-counter at over 600,000 locations across Asia",
+      "instalment payment options",
+      "Cards",
+      "Digital Wallets",
+      "BNPL",
+      "Buy Now Pay Later",
+      "Crypto",
+      "IPP Banks & Schemes",
+      "Offline QR Payment",
+      "Online QR Payment",
+      "123 Network",
+      "Over-the-counter at more than 600,000 locations across Asia",
+      "international and local payment providers",
+      "card schemes",
+      "financial institutions"
+    ]
+  },
+  "features": [
+    "Accept any type of payment",
+    "Pay by instalments",
+    "Issuing - Customise and issue wallets and cards",
+    "Payout & Remittance - large transfers and complex settlements domestically and across borders",
+    "Over 400 payment options",
+    "Refunds supported",
+    "3DS supported",
+    "Chargebacks supported",
+    "Multiple transaction currencies",
+    "Multiple settlement currencies",
+    "Access to every payment option with one integration",
+    "One point of integration for multiple payment options",
+    "Accept payments",
+    "Make payments"
+  ],
+  "target_segment": [
+    "SME",
+    "enterprise",
+    "businesses of all sizes",
+    "platform"
+  ],
+  "integrations": [],
+  "compliance": [],
+  "unique_selling_points": [
+    "Over 600,000 over-the-counter payment locations across Asia",
+    "Network extends to regions with low card penetration",
+    "Over-the-counter payment capabilities",
+    "Instalment payment options for big ticket items",
+    "Customizable wallet and card issuing",
+    "Cross-border payout and remittance capabilities",
+    "Most comprehensive payments platform in Southeast Asia",
+    "Over 400 payment options",
+    "Over-the-counter payments at 600,000+ locations across Asia",
+    "Full-suite payments platform",
+    "Aggregated international and local payment providers onto single platform",
+    "One integration for every payment option"
+  ],
+  "positioning": "Every payment solution for every business need",
+  "payout_speed": "T+1 to T+3",
+  "markets_served": [
+    "Southeast Asia",
+    "Singapore",
+    "Malaysia",
+    "Philippines",
+    "Thailand",
+    "Vietnam",
+    "Asia",
+    "regions with low card penetration",
+    "Australia",
+    "Cambodia",
+    "Europe",
+    "Hong Kong",
+    "India",
+    "Indonesia",
+    "Japan",
+    "Korea",
+    "Myanmar",
+    "Taiwan",
+    "United Kingdom",
+    "emerging markets"
+  ],
+  "sources": [
+    {
+      "url": "https://2c2p.com",
+      "scraped_at": "2026-03-30"
+    },
+    {
+      "url": "https://2c2p.com/payment-methods",
+      "scraped_at": "2026-03-30"
+    },
+    {
+      "url": "https://2c2p.com/about-us",
+      "scraped_at": "2026-03-30"
+    }
+  ]
+}

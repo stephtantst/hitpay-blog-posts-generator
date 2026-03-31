@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HitPay Blog Generator</title>
+  <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css" />
+  <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2d3148;
+      --accent: #4f8ef7;
+      --accent-hover: #3a7af5;
+      --green: #22c55e;
+      --yellow: #facc15;
+      --blue: #60a5fa;
+      --red: #f87171;
+      --text: #e2e8f0;
+      --text-muted: #8892a4;
+      --text-dim: #4a5568;
+      --sidebar-w: 270px;
+      --meta-w: 320px;
+      --header-h: 52px;
+      --radius: 8px;
+      --font: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    body { font-family: var(--font); background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+    /* ── Header ─────────────────────────────────────── */
+    header {
+      height: var(--header-h);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 12px;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; letter-spacing: -0.3px; color: var(--text); }
+    .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
+    .header-spacer { flex: 1; }
+    .save-indicator { font-size: 12px; color: var(--text-muted); opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.visible { opacity: 1; }
+
+    /* ── Layout ─────────────────────────────────────── */
+    .layout {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar ─────────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .sidebar-top {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .btn-generate {
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn-generate:hover { background: var(--accent-hover); }
+    .search-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 7px 10px;
+      font-size: 13px;
+      color: var(--text);
+      width: 100%;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-box:focus { border-color: var(--accent); }
+    .search-box::placeholder { color: var(--text-dim); }
+
+    /* Status tabs */
+    .status-tabs {
+      display: flex;
+      gap: 2px;
+      padding: 8px 12px 0;
+    }
+    .status-tab {
+      flex: 1;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 2px 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .status-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* Post list */
+    .post-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 0;
+    }
+    .post-list::-webkit-scrollbar { width: 4px; }
+    .post-list::-webkit-scrollbar-track { background: transparent; }
+    .post-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .post-item {
+      padding: 10px 14px;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: background 0.1s, border-color 0.1s;
+    }
+    .post-item:hover { background: var(--surface2); }
+    .post-item.active { background: var(--surface2); border-left-color: var(--accent); }
+    .post-item-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 4px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .post-item-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .status-dot.writing { background: var(--yellow); }
+    .status-dot.ready_to_publish { background: var(--blue); }
+    .status-dot.published { background: var(--green); }
+    .post-item-date { font-size: 11px; color: var(--text-dim); }
+
+    .empty-state {
+      padding: 32px 16px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* ── Editor area ─────────────────────────────────── */
+    .editor-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .editor-header {
+      padding: 16px 20px 0;
+      flex-shrink: 0;
+    }
+    .title-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.4px;
+      line-height: 1.3;
+      resize: none;
+      font-family: var(--font);
+    }
+    .title-input::placeholder { color: var(--text-dim); }
+
+    .editor-wrapper {
+      flex: 1;
+      overflow: hidden;
+      padding: 12px 20px 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* EasyMDE overrides */
+    .EasyMDEContainer { display: flex; flex-direction: column; height: 100%; }
+    .EasyMDEContainer .CodeMirror { flex: 1; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); font-size: 14px; line-height: 1.7; }
+    .EasyMDEContainer .CodeMirror-scroll { height: 100%; }
+    .EasyMDEContainer .editor-toolbar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius) var(--radius) 0 0; border-bottom: none; }
+    .EasyMDEContainer .editor-toolbar button { color: var(--text-muted); }
+    .EasyMDEContainer .editor-toolbar button:hover, .EasyMDEContainer .editor-toolbar button.active { background: var(--surface2); color: var(--text); }
+    .EasyMDEContainer .editor-toolbar i.separator { border-color: var(--border); }
+    .EasyMDEContainer .editor-preview { background: var(--surface); color: var(--text); }
+    .EasyMDEContainer .editor-preview h1,.EasyMDEContainer .editor-preview h2,.EasyMDEContainer .editor-preview h3 { color: var(--text); border-color: var(--border); }
+    .EasyMDEContainer .editor-preview p { color: var(--text); }
+    .EasyMDEContainer .editor-statusbar { background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); border-radius: 0 0 var(--radius) var(--radius); border-top: none; }
+    .CodeMirror-cursor { border-left-color: var(--accent) !important; }
+
+    /* No post selected */
+    .no-post-state {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
+      color: var(--text-muted);
+    }
+    .no-post-state .icon { font-size: 40px; opacity: 0.3; }
+    .no-post-state p { font-size: 14px; }
+
+    /* ── Metadata panel ───────────────────────────────── */
+    .meta-panel {
+      width: var(--meta-w);
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    .meta-panel::-webkit-scrollbar { width: 4px; }
+    .meta-panel::-webkit-scrollbar-track { background: transparent; }
+    .meta-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .meta-section {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .meta-section-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+    }
+
+    .field-group { margin-bottom: 12px; }
+    .field-group:last-child { margin-bottom: 0; }
+    .field-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .field-label .char-count { font-weight: 400; color: var(--text-dim); }
+    .field-label .char-count.warn { color: var(--yellow); }
+    .field-label .char-count.over { color: var(--red); }
+
+    .field-input, .field-textarea {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 7px 9px;
+      font-size: 12.5px;
+      color: var(--text);
+      font-family: var(--font);
+      outline: none;
+      transition: border-color 0.15s;
+      resize: none;
+    }
+    .field-input:focus, .field-textarea:focus { border-color: var(--accent); }
+    .field-textarea { min-height: 70px; line-height: 1.5; }
+
+    /* Tag input */
+    .tag-input-wrap {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 7px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      cursor: text;
+      min-height: 36px;
+      transition: border-color 0.15s;
+    }
+    .tag-input-wrap:focus-within { border-color: var(--accent); }
+    .tag-chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 11px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .tag-chip .remove {
+      cursor: pointer;
+      color: var(--text-dim);
+      font-size: 13px;
+      line-height: 1;
+      transition: color 0.1s;
+    }
+    .tag-chip .remove:hover { color: var(--red); }
+    .tag-input-field {
+      background: none;
+      border: none;
+      outline: none;
+      font-size: 12px;
+      color: var(--text);
+      min-width: 80px;
+      flex: 1;
+      padding: 2px 3px;
+      font-family: var(--font);
+    }
+
+    /* Status */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .status-badge.writing { background: rgba(250,204,21,0.15); color: var(--yellow); }
+    .status-badge.ready_to_publish { background: rgba(96,165,250,0.15); color: var(--blue); }
+    .status-badge.published { background: rgba(34,197,94,0.15); color: var(--green); }
+
+    .status-actions { display: flex; flex-direction: column; gap: 6px; }
+    .btn-status {
+      padding: 7px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      background: var(--surface2);
+      color: var(--text-muted);
+      transition: all 0.15s;
+      text-align: left;
+    }
+    .btn-status:hover { border-color: var(--accent); color: var(--text); }
+    .btn-status.current { display: none; }
+
+    /* Action buttons */
+    .action-buttons { display: flex; flex-direction: column; gap: 8px; }
+    .btn {
+      padding: 9px 12px;
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: var(--font);
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-danger { background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+    .btn-danger:hover { background: rgba(248,113,113,0.2); }
+
+    /* ── Generate Modal ───────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 520px;
+      max-width: 90vw;
+      padding: 28px;
+      transform: translateY(12px);
+      transition: transform 0.2s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
+    .modal-input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 11px 13px;
+      font-size: 14px;
+      color: var(--text);
+      font-family: var(--font);
+      outline: none;
+      margin-bottom: 16px;
+      transition: border-color 0.15s;
+    }
+    .modal-input:focus { border-color: var(--accent); }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+    .btn-cancel { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
+    .btn-cancel:hover { color: var(--text); }
+
+    /* Progress log */
+    .progress-log {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      max-height: 140px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+      display: none;
+      line-height: 1.7;
+    }
+    .progress-log.visible { display: block; }
+    .progress-log .log-line { padding: 1px 0; }
+    .progress-log .log-done { color: var(--green); }
+    .progress-log .log-error { color: var(--red); }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      z-index: 200;
+      transform: translateY(12px);
+      opacity: 0;
+      transition: all 0.25s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { border-color: var(--green); color: var(--green); }
+    .toast.error { border-color: var(--red); color: var(--red); }
+
+    /* Modal select / label */
+    .modal-select {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 11px 13px;
+      font-size: 14px;
+      color: var(--text);
+      font-family: var(--font);
+      outline: none;
+      margin-bottom: 16px;
+      transition: border-color 0.15s;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238892a4' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+    }
+    .modal-select:focus { border-color: var(--accent); }
+    .modal-select option { background: var(--surface2); }
+    .modal-field-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    /* ── Header nav ─────────────────────────────────── */
+    .header-nav {
+      display: flex;
+      gap: 2px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 3px;
+      margin: 0 8px;
+    }
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: -0.1px;
+    }
+    .nav-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+    .nav-btn:hover:not(.active) { color: var(--text); }
+
+    /* ── Overview pane ─────────────────────────────── */
+    .overview-pane {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg);
+    }
+    .overview-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+      gap: 12px;
+    }
+    .overview-toolbar-left { display: flex; align-items: center; gap: 10px; flex: 1; }
+    .overview-toolbar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .filter-chips { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--text); }
+    .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .chip-count {
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 1px 6px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .chip.active .chip-count { background: rgba(255,255,255,0.25); }
+    .view-switch {
+      display: flex;
+      gap: 2px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 3px;
+    }
+    .view-switch-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 11px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .view-switch-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+    .btn-new-post {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-new-post:hover { background: var(--accent-hover); }
+
+    /* Bulk bar */
+    .bulk-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 20px;
+      background: rgba(79,142,247,0.12);
+      border-bottom: 1px solid rgba(79,142,247,0.3);
+      flex-shrink: 0;
+    }
+    .bulk-bar-count { font-size: 13px; font-weight: 600; color: var(--accent); flex: 1; }
+    .btn-bulk {
+      background: var(--accent);
+      border: none;
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-bulk:hover { background: var(--accent-hover); }
+    .btn-bulk-clear {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-bulk-clear:hover { border-color: var(--accent); color: var(--text); }
+
+    /* ── List view ─────────────────────────────────── */
+    .overview-content { flex: 1; overflow-y: auto; }
+    .posts-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .posts-table th {
+      text-align: left;
+      padding: 9px 14px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .posts-table th.sortable { cursor: pointer; }
+    .posts-table th.sortable:hover { color: var(--text-muted); }
+    .posts-table th.sort-active { color: var(--accent); }
+    .sort-arrow { margin-left: 3px; font-size: 9px; }
+    .posts-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .posts-table tr:hover td { background: var(--surface); }
+    .posts-table tr.row-selected td { background: rgba(79,142,247,0.06); }
+    .post-row-title {
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text);
+      display: block;
+      max-width: 340px;
+    }
+    .post-row-title:hover { color: var(--accent); }
+    .post-row-kw {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 2px;
+      max-width: 340px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .market-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .dt-cell { font-size: 11.5px; color: var(--text-muted); white-space: nowrap; }
+    .dt-cell-dim { font-size: 11px; color: var(--text-dim); white-space: nowrap; }
+
+    /* Status badge in table */
+    .tbl-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .tbl-status.writing { background: rgba(250,204,21,0.12); color: var(--yellow); }
+    .tbl-status.ready_to_publish { background: rgba(96,165,250,0.12); color: var(--blue); }
+    .tbl-status.published { background: rgba(34,197,94,0.12); color: var(--green); }
+    .tbl-status-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+    /* ── Board view ─────────────────────────────────── */
+    .board-wrap {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .board-columns {
+      display: flex;
+      gap: 14px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      flex: 1;
+      align-items: flex-start;
+    }
+    .board-col {
+      flex: 1;
+      min-width: 240px;
+      max-width: 380px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100vh - 160px);
+    }
+    .board-col-writing  { border-top: 2px solid var(--yellow); }
+    .board-col-ready    { border-top: 2px solid var(--blue); }
+    .board-col-published{ border-top: 2px solid var(--green); }
+    .board-col-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      flex-shrink: 0;
+    }
+    .board-col-count {
+      margin-left: auto;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: 10px;
+    }
+    .board-cards {
+      overflow-y: auto;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .board-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: border-color 0.12s;
+      position: relative;
+    }
+    .board-card:hover { border-color: var(--accent); }
+    .board-card.card-selected { border-color: var(--accent); background: rgba(79,142,247,0.07); }
+    .board-card-cb { position: absolute; top: 10px; right: 10px; cursor: pointer; }
+    .board-card-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 7px;
+      padding-right: 22px;
+    }
+    .board-card-foot {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .board-card-date { font-size: 11px; color: var(--text-dim); }
+    .board-empty {
+      padding: 20px 14px;
+      font-size: 12px;
+      color: var(--text-dim);
+      text-align: center;
+    }
+
+    /* Loading skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, var(--surface2) 25%, var(--surface) 50%, var(--surface2) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 4px;
+      height: 14px;
+      margin-bottom: 8px;
+    }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    /* ── Login Overlay ──────────────────────────────── */
+    #loginOverlay { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+    .login-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 44px 40px; text-align: center; max-width: 380px; width: 90%; }
+    .login-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+    .login-sub { color: var(--text-muted); font-size: 13px; margin-bottom: 32px; line-height: 1.6; }
+    .btn-google { display: inline-flex; align-items: center; gap: 10px; background: #fff; color: #1f1f1f; border-radius: 8px; padding: 11px 22px; font-size: 14px; font-weight: 500; text-decoration: none; border: 1px solid #ddd; transition: box-shadow 0.15s; }
+    .btn-google:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+    .login-error { margin-top: 16px; color: var(--red); font-size: 13px; }
+    /* ── Audit Log ──────────────────────────────────── */
+    .audit-entry { padding: 7px 0; border-bottom: 1px solid var(--border); }
+    .audit-entry:last-child { border-bottom: none; }
+    .audit-action { font-size: 12px; font-weight: 500; color: var(--text); }
+    .audit-meta { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    HitPay Blog
+  </div>
+  <div class="header-nav">
+    <button class="nav-btn active" id="navOverview" onclick="switchView('overview')">Overview</button>
+    <button class="nav-btn" id="navEditor" onclick="switchView('editor')">Editor</button>
+  </div>
+  <div class="header-spacer"></div>
+  <span class="save-indicator" id="saveIndicator">✓ Saved</span>
+  <div id="userInfo" style="display:flex;align-items:center;gap:8px;margin-left:12px;"></div>
+</header>
+
+<!-- Overview Pane -->
+<div id="overviewPane" class="overview-pane">
+
+  <!-- Toolbar -->
+  <div class="overview-toolbar">
+    <div class="overview-toolbar-left">
+      <div class="filter-chips" id="overviewChips">
+        <button class="chip active" data-status="all" onclick="setOverviewFilter(this)">All <span class="chip-count" id="chip-all">0</span></button>
+        <button class="chip" data-status="writing" onclick="setOverviewFilter(this)">✏️ Writing <span class="chip-count" id="chip-writing">0</span></button>
+        <button class="chip" data-status="ready_to_publish" onclick="setOverviewFilter(this)">🔵 Ready <span class="chip-count" id="chip-ready_to_publish">0</span></button>
+        <button class="chip" data-status="published" onclick="setOverviewFilter(this)">✅ Published <span class="chip-count" id="chip-published">0</span></button>
+      </div>
+    </div>
+    <div class="overview-toolbar-right">
+      <div class="view-switch">
+        <button class="view-switch-btn active" id="vsw-list" onclick="setOverviewView('list')">☰ List</button>
+        <button class="view-switch-btn" id="vsw-board" onclick="setOverviewView('board')">⊞ Board</button>
+      </div>
+      <button class="btn-new-post" onclick="openGenerateModal()">＋ New Post</button>
+    </div>
+  </div>
+
+  <!-- Bulk action bar (visible when ≥1 selected) -->
+  <div class="bulk-bar" id="bulkBar" style="display:none;">
+    <span class="bulk-bar-count" id="bulkCount">0 selected</span>
+    <button class="btn-bulk" onclick="bulkExportSelected()">↓ Export CSV for Framer</button>
+    <button class="btn-bulk-clear" onclick="clearSelection()">✕ Clear selection</button>
+  </div>
+
+  <!-- Overview content area -->
+  <div class="overview-content" id="overviewContent">
+
+    <!-- List view -->
+    <div id="listView">
+      <table class="posts-table">
+        <thead>
+          <tr>
+            <th style="width:36px; padding-right:6px;">
+              <input type="checkbox" id="selectAllCb" onchange="toggleSelectAll(this)" title="Select all" />
+            </th>
+            <th class="sortable sort-active" id="th-title" onclick="sortBy('title')">Title <span class="sort-arrow" id="sa-title">↓</span></th>
+            <th class="sortable" id="th-status" onclick="sortBy('status')">Status <span class="sort-arrow" id="sa-status"></span></th>
+            <th class="sortable" id="th-country" onclick="sortBy('country')">Market <span class="sort-arrow" id="sa-country"></span></th>
+            <th class="sortable" id="th-created_at" onclick="sortBy('created_at')">Created <span class="sort-arrow" id="sa-created_at"></span></th>
+            <th class="sortable" id="th-updated_at" onclick="sortBy('updated_at')">Updated <span class="sort-arrow" id="sa-updated_at"></span></th>
+            <th class="sortable" id="th-date" onclick="sortBy('date')">Publish Date <span class="sort-arrow" id="sa-date"></span></th>
+            <th style="width:70px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="listBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Board view (hidden by default) -->
+    <div id="boardView" style="display:none;" class="board-wrap">
+      <div class="board-columns">
+        <div class="board-col board-col-writing">
+          <div class="board-col-header">✏️ Writing <span class="board-col-count" id="bcount-writing">0</span></div>
+          <div class="board-cards" id="bcards-writing"></div>
+        </div>
+        <div class="board-col board-col-ready">
+          <div class="board-col-header">🔵 Ready to Publish <span class="board-col-count" id="bcount-ready_to_publish">0</span></div>
+          <div class="board-cards" id="bcards-ready_to_publish"></div>
+        </div>
+        <div class="board-col board-col-published">
+          <div class="board-col-header">✅ Published <span class="board-col-count" id="bcount-published">0</span></div>
+          <div class="board-cards" id="bcards-published"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Layout -->
+<div class="layout" id="editorPane" style="display:none;">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <button class="btn-generate" onclick="openGenerateModal()">
+        <span>＋</span> New Post
+      </button>
+      <input class="search-box" id="searchBox" type="text" placeholder="Search posts…" oninput="renderPostList()" />
+    </div>
+    <div class="status-tabs">
+      <button class="status-tab active" data-status="all" onclick="setStatusFilter(this)">All</button>
+      <button class="status-tab" data-status="writing" onclick="setStatusFilter(this)">Draft</button>
+      <button class="status-tab" data-status="ready_to_publish" onclick="setStatusFilter(this)">Ready</button>
+      <button class="status-tab" data-status="published" onclick="setStatusFilter(this)">Live</button>
+    </div>
+    <div class="post-list" id="postList"></div>
+  </aside>
+
+  <!-- Editor -->
+  <main class="editor-area" id="editorArea">
+    <div class="no-post-state" id="noPostState">
+      <div class="icon">✦</div>
+      <p>Select a post or generate a new one</p>
+    </div>
+    <div id="editorContent" style="display:none; flex:1; flex-direction:column; overflow:hidden;">
+      <div class="editor-header">
+        <textarea
+          id="titleInput"
+          class="title-input"
+          rows="1"
+          placeholder="Post title…"
+          oninput="autoResize(this); markDirty()"
+        ></textarea>
+      </div>
+      <div class="editor-wrapper" id="editorWrapper"></div>
+    </div>
+  </main>
+
+  <!-- Metadata panel -->
+  <aside class="meta-panel" id="metaPanel" style="display:none;">
+
+    <!-- SEO -->
+    <div class="meta-section">
+      <div class="meta-section-title">SEO</div>
+
+      <div class="field-group">
+        <div class="field-label">
+          Slug
+        </div>
+        <input class="field-input" id="fSlug" type="text" oninput="markDirty()" />
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">
+          Meta Title
+          <span class="char-count" id="metaTitleCount">0 / 60</span>
+        </div>
+        <input class="field-input" id="fMetaTitle" type="text" maxlength="70" oninput="updateCharCount('fMetaTitle','metaTitleCount',60); markDirty()" />
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">
+          Meta Description
+          <span class="char-count" id="metaDescCount">0 / 160</span>
+        </div>
+        <textarea class="field-textarea" id="fMetaDesc" rows="3" oninput="updateCharCount('fMetaDesc','metaDescCount',160); markDirty()"></textarea>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Overview</div>
+        <textarea class="field-textarea" id="fOverview" rows="3" oninput="markDirty()"></textarea>
+      </div>
+    </div>
+
+    <!-- Taxonomy -->
+    <div class="meta-section">
+      <div class="meta-section-title">Taxonomy</div>
+
+      <div class="field-group">
+        <div class="field-label">Market</div>
+        <select class="field-input" id="fCountry" onchange="markDirty()" style="cursor:pointer;">
+          <option value="">All Markets</option>
+          <option value="SG">🇸🇬 Singapore</option>
+          <option value="MY">🇲🇾 Malaysia</option>
+          <option value="PH">🇵🇭 Philippines</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Categories</div>
+        <div class="tag-input-wrap" id="categoriesWrap" onclick="focusTagInput('catInput')">
+          <input class="tag-input-field" id="catInput" placeholder="Add category…" onkeydown="tagKeydown(event,'catInput','categories')" />
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Tags</div>
+        <div class="tag-input-wrap" id="tagsWrap" onclick="focusTagInput('tagInput')">
+          <input class="tag-input-field" id="tagInput" placeholder="Add tag…" onkeydown="tagKeydown(event,'tagInput','tags')" />
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Published Date</div>
+        <input class="field-input" id="fDate" type="date" oninput="markDirty()" />
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="meta-section">
+      <div class="meta-section-title">Status</div>
+      <div id="statusBadge" class="status-badge writing">✏️ Writing</div>
+      <div class="status-actions">
+        <button class="btn-status" data-status="writing" onclick="changeStatus('writing')">✏️  Mark as Writing</button>
+        <button class="btn-status" data-status="ready_to_publish" onclick="changeStatus('ready_to_publish')">🔵  Mark as Ready to Publish</button>
+        <button class="btn-status" data-status="published" onclick="changeStatus('published')">✅  Mark as Published</button>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="meta-section">
+      <div class="meta-section-title">Actions</div>
+      <div class="action-buttons">
+        <button class="btn btn-primary" id="saveBtn" onclick="savePost()">
+          <span>↑</span> Save Changes
+        </button>
+        <button class="btn btn-secondary" onclick="openAiEditModal()">
+          ✦  AI Edit
+        </button>
+        <button class="btn btn-secondary" onclick="exportPost()">
+          ↓  Export CSV for Framer
+        </button>
+        <button class="btn btn-danger" onclick="deletePost()">
+          ✕  Delete Post
+        </button>
+      </div>
+    </div>
+
+    <!-- Audit Log -->
+    <div class="meta-section" id="auditSection" style="display:none;">
+      <div class="meta-section-title">History</div>
+      <div id="auditLog"></div>
+    </div>
+
+  </aside>
+</div>
+
+<!-- Generate Modal -->
+<div class="modal-overlay" id="generateModal">
+  <div class="modal">
+    <div class="modal-title">Generate New Post</div>
+    <div class="modal-sub">Enter a keyword or topic. Select a market for country-accurate payment methods and context.</div>
+    <label class="modal-field-label">Keyword / Topic</label>
+    <input
+      class="modal-input"
+      id="keywordInput"
+      type="text"
+      placeholder="e.g. payment methods for F&B businesses"
+      onkeydown="if(event.key==='Enter') startGenerate()"
+    />
+    <label class="modal-field-label">Market</label>
+    <select class="modal-select" id="generateCountry">
+      <option value="">All Markets (no specific focus)</option>
+      <option value="SG">🇸🇬 Singapore</option>
+      <option value="MY">🇲🇾 Malaysia</option>
+      <option value="PH">🇵🇭 Philippines</option>
+    </select>
+    <div class="progress-log" id="progressLog"></div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="closeGenerateModal()">Cancel</button>
+      <button class="btn btn-primary" id="generateBtn" onclick="startGenerate()">
+        Generate Post
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- AI Edit Modal -->
+<div class="modal-overlay" id="aiEditModal">
+  <div class="modal">
+    <div class="modal-title">AI Edit</div>
+    <div class="modal-sub" id="aiEditSub">Apply a targeted edit to the current post.</div>
+    <div id="aiSelectionWrap" style="display:none;">
+      <label class="modal-field-label">Selected text</label>
+      <textarea class="modal-input" id="aiSelectionInput" rows="4" style="resize:vertical; font-size:12.5px; line-height:1.5;"></textarea>
+    </div>
+    <label class="modal-field-label">Edit instruction</label>
+    <textarea
+      class="modal-input"
+      id="aiInstruction"
+      rows="3"
+      style="resize:vertical;"
+      placeholder="e.g. Remove mention of Maya, replace with GCash&#10;e.g. Add a sentence about HitPay's cross-border payment support&#10;e.g. Change Singapore references to Philippines"
+      onkeydown="if((event.metaKey||event.ctrlKey)&&event.key==='Enter') applyAiEdit()"
+    ></textarea>
+    <div class="progress-log" id="aiEditLog"></div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="closeAiEditModal()">Cancel</button>
+      <button class="btn btn-primary" id="aiEditBtn" onclick="applyAiEdit()">Apply Edit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Login Overlay -->
+<div id="loginOverlay" style="display:none;">
+  <div class="login-card">
+    <div class="login-title">HitPay Blog</div>
+    <div class="login-sub">Sign in with your HitPay Google account.<br/>Access is restricted to @hit-pay.com accounts.</div>
+    <a href="/auth/login" class="btn-google">
+      <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/>
+        <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
+        <path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
+        <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+      </svg>
+      Sign in with Google
+    </a>
+    <div class="login-error" id="loginError" style="display:none;"></div>
+  </div>
+</div>
+
+<script>
+// ── State ─────────────────────────────────────────────────────────────────────
+let posts = [];
+let currentPost = null;
+let mde = null;
+let isDirty = false;
+let statusFilter = 'all';
+let tagData = { categories: [], tags: [] };
+let saveTimeout = null;
+// Overview state
+let currentView = 'overview';
+let overviewView = 'list';
+let overviewStatusFilter = 'all';
+let selectedPostIds = new Set();
+let sortField = 'created_at';
+let sortDir = 'desc';
+let currentUser = null;
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+async function init() {
+  const meRes = await fetch('/auth/me');
+  if (meRes.status === 401) {
+    document.getElementById('loginOverlay').style.display = 'flex';
+    const params = new URLSearchParams(window.location.search);
+    const errCode = params.get('auth_error');
+    if (errCode) {
+      const errEl = document.getElementById('loginError');
+      errEl.style.display = 'block';
+      errEl.textContent = errCode === 'domain'
+        ? 'Access denied. Only @hit-pay.com accounts are allowed.'
+        : 'Sign in failed. Please try again.';
+      window.history.replaceState({}, '', '/');
+    }
+    return;
+  }
+  currentUser = await meRes.json();
+  renderUserInfo();
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('auth_error')) window.history.replaceState({}, '', '/');
+  await loadPosts();
+  initEditor();
+  switchView('overview');
+}
+
+function renderUserInfo() {
+  const el = document.getElementById('userInfo');
+  if (!el || !currentUser) return;
+  el.innerHTML = `<span style="font-size:12px;color:var(--text-muted);">${escHtml(currentUser.email)}</span><a href="/auth/logout" style="font-size:12px;color:var(--text-dim);text-decoration:none;margin-left:8px;padding:3px 8px;border:1px solid var(--border);border-radius:4px;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text-dim)'">Sign out</a>`;
+}
+
+async function loadPosts() {
+  const res = await fetch('/api/posts');
+  posts = await res.json();
+  renderPostList();
+  renderOverview();
+}
+
+// ── Sidebar ───────────────────────────────────────────────────────────────────
+function setStatusFilter(btn) {
+  document.querySelectorAll('.status-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  statusFilter = btn.dataset.status;
+  renderPostList();
+}
+
+function renderPostList() {
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  const filtered = posts.filter(p => {
+    const statusOk = statusFilter === 'all' || p.status === statusFilter;
+    const searchOk = !q || p.title.toLowerCase().includes(q) || (p.keyword||'').toLowerCase().includes(q);
+    return statusOk && searchOk;
+  });
+
+  const list = document.getElementById('postList');
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty-state">No posts yet.<br/>Click <strong>New Post</strong> to get started.</div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(p => `
+    <div class="post-item${currentPost && currentPost.id === p.id ? ' active' : ''}"
+         onclick="openPost(${p.id})">
+      <div class="post-item-title">${escHtml(p.title)}</div>
+      <div class="post-item-meta">
+        <div class="status-dot ${p.status}"></div>
+        <span class="post-item-date">${p.date || ''}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── Open Post ─────────────────────────────────────────────────────────────────
+async function openPost(id) {
+  if (isDirty && currentPost) {
+    if (!confirm('You have unsaved changes. Open another post without saving?')) return;
+  }
+  switchView('editor');
+
+  const res = await fetch(`/api/posts/${id}`);
+  if (!res.ok) { showToast('Failed to load post', 'error'); return; }
+  currentPost = await res.json();
+  isDirty = false;
+
+  document.getElementById('noPostState').style.display = 'none';
+  const content = document.getElementById('editorContent');
+  content.style.display = 'flex';
+  document.getElementById('metaPanel').style.display = 'flex';
+
+  // Title
+  const titleInput = document.getElementById('titleInput');
+  titleInput.value = currentPost.title || '';
+  autoResize(titleInput);
+
+  // Editor content
+  if (mde) mde.value(currentPost.content || '');
+
+  // Meta fields
+  document.getElementById('fSlug').value = currentPost.slug || '';
+  document.getElementById('fMetaTitle').value = currentPost.meta_title || '';
+  document.getElementById('fMetaDesc').value = currentPost.meta_description || '';
+  document.getElementById('fOverview').value = currentPost.overview || '';
+  document.getElementById('fDate').value = currentPost.date || '';
+  document.getElementById('fCountry').value = currentPost.country || '';
+
+  updateCharCount('fMetaTitle', 'metaTitleCount', 60);
+  updateCharCount('fMetaDesc', 'metaDescCount', 160);
+
+  // Tags
+  tagData.categories = currentPost.categories || [];
+  tagData.tags = currentPost.tags || [];
+  renderTags('categories');
+  renderTags('tags');
+
+  // Status
+  updateStatusUI(currentPost.status);
+
+  // Sidebar highlight
+  renderPostList();
+
+  // Audit log
+  await loadAuditLog(id);
+}
+
+// ── Editor ────────────────────────────────────────────────────────────────────
+function initEditor() {
+  const wrapper = document.getElementById('editorWrapper');
+  const textarea = document.createElement('textarea');
+  textarea.id = 'mdeTextarea';
+  wrapper.appendChild(textarea);
+
+  mde = new EasyMDE({
+    element: textarea,
+    spellChecker: false,
+    autosave: { enabled: false },
+    toolbar: [
+      'bold', 'italic', 'heading', '|',
+      'quote', 'unordered-list', 'ordered-list', '|',
+      'link', 'horizontal-rule', '|',
+      'preview', 'side-by-side', 'fullscreen', '|',
+      'guide'
+    ],
+    status: ['lines', 'words'],
+    minHeight: '300px',
+  });
+
+  mde.codemirror.on('change', () => markDirty());
+}
+
+// ── Save ──────────────────────────────────────────────────────────────────────
+function markDirty() {
+  isDirty = true;
+  // Debounced auto-save
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => {
+    if (isDirty && currentPost) savePost(true);
+  }, 3000);
+}
+
+async function savePost(silent = false) {
+  if (!currentPost) return;
+
+  const body = {
+    title: document.getElementById('titleInput').value,
+    slug: document.getElementById('fSlug').value,
+    meta_title: document.getElementById('fMetaTitle').value,
+    meta_description: document.getElementById('fMetaDesc').value,
+    overview: document.getElementById('fOverview').value,
+    date: document.getElementById('fDate').value,
+    country: document.getElementById('fCountry').value,
+    categories: tagData.categories,
+    tags: tagData.tags,
+    content: mde ? mde.value() : '',
+  };
+
+  const res = await fetch(`/api/posts/${currentPost.id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+
+  if (res.ok) {
+    isDirty = false;
+    currentPost = { ...currentPost, ...body };
+
+    const indicator = document.getElementById('saveIndicator');
+    indicator.classList.add('visible');
+    setTimeout(() => indicator.classList.remove('visible'), 2000);
+
+    if (!silent) showToast('Saved', 'success');
+    await loadPosts();
+  } else {
+    showToast('Save failed', 'error');
+  }
+}
+
+// ── Status ────────────────────────────────────────────────────────────────────
+async function changeStatus(newStatus) {
+  if (!currentPost) return;
+
+  const res = await fetch(`/api/posts/${currentPost.id}/status`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status: newStatus }),
+  });
+
+  if (res.ok) {
+    currentPost.status = newStatus;
+    updateStatusUI(newStatus);
+    await loadPosts();
+    showToast(`Status → ${newStatus.replace(/_/g, ' ')}`, 'success');
+  } else {
+    showToast('Status update failed', 'error');
+  }
+}
+
+function updateStatusUI(status) {
+  const badge = document.getElementById('statusBadge');
+  const labels = { writing: '✏️ Writing', ready_to_publish: '🔵 Ready to Publish', published: '✅ Published' };
+  badge.className = `status-badge ${status}`;
+  badge.textContent = labels[status] || status;
+
+  document.querySelectorAll('.btn-status').forEach(btn => {
+    btn.classList.toggle('current', btn.dataset.status === status);
+  });
+}
+
+// ── Audit Log ─────────────────────────────────────────────────────────────────
+async function loadAuditLog(postId) {
+  const res = await fetch(`/api/posts/${postId}/audit-log`);
+  if (!res.ok) return;
+  const entries = await res.json();
+  const section = document.getElementById('auditSection');
+  const el = document.getElementById('auditLog');
+  if (!entries.length) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+  const actionLabel = { created: 'Created', edited: 'Edited', status_changed: 'Status changed', deleted: 'Deleted' };
+  el.innerHTML = entries.slice(0, 15).map(e => {
+    const details = e.details ? JSON.parse(e.details) : {};
+    let detail = '';
+    if (e.action === 'status_changed' && details.to) detail = ` → ${details.to.replace(/_/g, ' ')}`;
+    else if (e.action === 'edited' && details.fields) detail = `: ${details.fields.slice(0,3).join(', ')}${details.fields.length > 3 ? '…' : ''}`;
+    else if (e.action === 'created' && details.keyword) detail = `: "${details.keyword}"${details.country ? ' (' + details.country + ')' : ''}`;
+    return `<div class="audit-entry"><div class="audit-action">${actionLabel[e.action] || e.action}${escHtml(detail)}</div><div class="audit-meta">${escHtml(e.user_email)} · ${fmtDatetime(e.timestamp)}</div></div>`;
+  }).join('');
+}
+
+// ── Delete ────────────────────────────────────────────────────────────────────
+async function deletePost() {
+  if (!currentPost) return;
+  if (!confirm(`Delete "${currentPost.title}"? This cannot be undone.`)) return;
+
+  const res = await fetch(`/api/posts/${currentPost.id}`, { method: 'DELETE' });
+  if (res.ok) {
+    currentPost = null;
+    isDirty = false;
+    document.getElementById('editorContent').style.display = 'none';
+    document.getElementById('metaPanel').style.display = 'none';
+    document.getElementById('noPostState').style.display = 'flex';
+    await loadPosts();
+    showToast('Post deleted', 'success');
+  } else {
+    showToast('Delete failed', 'error');
+  }
+}
+
+// ── Export ────────────────────────────────────────────────────────────────────
+function exportPost() {
+  if (!currentPost) return;
+  window.open(`/api/posts/${currentPost.id}/export`, '_blank');
+}
+
+// ── Tags ──────────────────────────────────────────────────────────────────────
+function renderTags(type) {
+  const wrapId = type === 'categories' ? 'categoriesWrap' : 'tagsWrap';
+  const inputId = type === 'categories' ? 'catInput' : 'tagInput';
+  const wrap = document.getElementById(wrapId);
+  const input = document.getElementById(inputId);
+
+  // Remove existing chips
+  wrap.querySelectorAll('.tag-chip').forEach(c => c.remove());
+
+  tagData[type].forEach(tag => {
+    const chip = document.createElement('div');
+    chip.className = 'tag-chip';
+    chip.innerHTML = `${escHtml(tag)} <span class="remove" onclick="removeTag('${type}','${escHtml(tag)}')">×</span>`;
+    wrap.insertBefore(chip, input);
+  });
+}
+
+function tagKeydown(e, inputId, type) {
+  const input = document.getElementById(inputId);
+  if ((e.key === 'Enter' || e.key === ',') && input.value.trim()) {
+    e.preventDefault();
+    const val = input.value.trim().replace(/,$/, '');
+    if (val && !tagData[type].includes(val)) {
+      tagData[type].push(val);
+      renderTags(type);
+      markDirty();
+    }
+    input.value = '';
+  } else if (e.key === 'Backspace' && !input.value && tagData[type].length) {
+    tagData[type].pop();
+    renderTags(type);
+    markDirty();
+  }
+}
+
+function removeTag(type, tag) {
+  tagData[type] = tagData[type].filter(t => t !== tag);
+  renderTags(type);
+  markDirty();
+}
+
+function focusTagInput(id) {
+  document.getElementById(id).focus();
+}
+
+// ── Generate Modal ────────────────────────────────────────────────────────────
+function openGenerateModal() {
+  document.getElementById('keywordInput').value = '';
+  document.getElementById('generateCountry').value = '';
+  document.getElementById('progressLog').innerHTML = '';
+  document.getElementById('progressLog').classList.remove('visible');
+  document.getElementById('generateBtn').disabled = false;
+  document.getElementById('generateBtn').textContent = 'Generate Post';
+  document.getElementById('generateModal').classList.add('open');
+  setTimeout(() => document.getElementById('keywordInput').focus(), 150);
+}
+
+function closeGenerateModal() {
+  document.getElementById('generateModal').classList.remove('open');
+}
+
+async function startGenerate() {
+  const keyword = document.getElementById('keywordInput').value.trim();
+  if (!keyword) { document.getElementById('keywordInput').focus(); return; }
+
+  const btn = document.getElementById('generateBtn');
+  const log = document.getElementById('progressLog');
+  btn.disabled = true;
+  btn.textContent = 'Generating…';
+  log.innerHTML = '';
+  log.classList.add('visible');
+
+  const addLog = (msg, cls = '') => {
+    const line = document.createElement('div');
+    line.className = `log-line ${cls}`;
+    line.textContent = msg;
+    log.appendChild(line);
+    log.scrollTop = log.scrollHeight;
+  };
+
+  addLog('→ Starting…');
+
+  try {
+    const country = document.getElementById('generateCountry').value || null;
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ keyword, country }),
+    });
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let newPostId = null;
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = JSON.parse(line.slice(6));
+        if (data.type === 'status') addLog('→ ' + data.message);
+        else if (data.type === 'done') {
+          addLog('✓ Done! Opening post…', 'log-done');
+          newPostId = data.post_id;
+        } else if (data.type === 'error') {
+          addLog('✗ ' + data.message, 'log-error');
+        }
+      }
+    }
+
+    await loadPosts();
+    if (newPostId) {
+      closeGenerateModal();
+      await openPost(newPostId);
+    }
+    btn.disabled = false;
+    btn.textContent = 'Generate Post';
+  } catch (err) {
+    addLog('✗ ' + err.message, 'log-error');
+    btn.disabled = false;
+    btn.textContent = 'Generate Post';
+  }
+}
+
+// ── Utilities ─────────────────────────────────────────────────────────────────
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+function updateCharCount(inputId, countId, limit) {
+  const input = document.getElementById(inputId);
+  const count = document.getElementById(countId);
+  const len = input.value.length;
+  count.textContent = `${len} / ${limit}`;
+  count.className = 'char-count' + (len > limit ? ' over' : len > limit * 0.85 ? ' warn' : '');
+  markDirty();
+}
+
+function showToast(msg, type = 'success') {
+  const toast = document.getElementById('toast');
+  toast.textContent = (type === 'success' ? '✓ ' : '✕ ') + msg;
+  toast.className = `toast ${type} show`;
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── View Switching ────────────────────────────────────────────────────────────
+function switchView(view) {
+  currentView = view;
+  document.getElementById('overviewPane').style.display = view === 'overview' ? 'flex' : 'none';
+  document.getElementById('editorPane').style.display  = view === 'editor'   ? 'flex' : 'none';
+  document.getElementById('navOverview').classList.toggle('active', view === 'overview');
+  document.getElementById('navEditor').classList.toggle('active', view === 'editor');
+  if (view === 'overview') renderOverview();
+}
+
+// ── Overview ──────────────────────────────────────────────────────────────────
+function setOverviewFilter(btn) {
+  document.querySelectorAll('#overviewChips .chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  overviewStatusFilter = btn.dataset.status;
+  selectedPostIds.clear();
+  updateBulkBar();
+  renderOverview();
+}
+
+function setOverviewView(v) {
+  overviewView = v;
+  document.getElementById('vsw-list').classList.toggle('active', v === 'list');
+  document.getElementById('vsw-board').classList.toggle('active', v === 'board');
+  document.getElementById('listView').style.display  = v === 'list'  ? 'block' : 'none';
+  document.getElementById('boardView').style.display = v === 'board' ? 'flex'  : 'none';
+  renderOverview();
+}
+
+function renderOverview() {
+  // Update chip counts
+  const counts = { all: posts.length, writing: 0, ready_to_publish: 0, published: 0 };
+  posts.forEach(p => { if (counts[p.status] !== undefined) counts[p.status]++; });
+  document.getElementById('chip-all').textContent           = counts.all;
+  document.getElementById('chip-writing').textContent       = counts.writing;
+  document.getElementById('chip-ready_to_publish').textContent = counts.ready_to_publish;
+  document.getElementById('chip-published').textContent     = counts.published;
+
+  const filtered = overviewStatusFilter === 'all'
+    ? [...posts]
+    : posts.filter(p => p.status === overviewStatusFilter);
+
+  if (overviewView === 'list') renderListView(filtered);
+  else renderBoardView(filtered);
+}
+
+// ── Datetime helpers ──────────────────────────────────────────────────────────
+function fmtDatetime(str) {
+  if (!str) return '—';
+  // SQLite CURRENT_TIMESTAMP is "YYYY-MM-DD HH:MM:SS" UTC
+  const d = new Date(str.includes('T') ? str : str.replace(' ', 'T') + 'Z');
+  if (isNaN(d)) return str;
+  return d.toLocaleString('en-SG', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+function fmtDate(str) {
+  if (!str) return '—';
+  const d = new Date(str);
+  if (isNaN(d)) return str;
+  return d.toLocaleDateString('en-SG', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+const MARKET_LABEL = { SG: '🇸🇬 SG', MY: '🇲🇾 MY', PH: '🇵🇭 PH' };
+function marketLabel(c) { return MARKET_LABEL[c] || (c ? c : '—'); }
+
+const STATUS_LABEL = { writing: '✏️ Writing', ready_to_publish: '🔵 Ready', published: '✅ Published' };
+
+// ── List view ─────────────────────────────────────────────────────────────────
+function sortBy(field) {
+  if (sortField === field) {
+    sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortField = field;
+    sortDir = field === 'title' ? 'asc' : 'desc';
+  }
+  renderOverview();
+}
+
+function getSortedPosts(arr) {
+  return [...arr].sort((a, b) => {
+    let av = a[sortField] || '', bv = b[sortField] || '';
+    if (typeof av === 'string') av = av.toLowerCase();
+    if (typeof bv === 'string') bv = bv.toLowerCase();
+    if (av < bv) return sortDir === 'asc' ? -1 : 1;
+    if (av > bv) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+}
+
+function updateSortHeaders() {
+  const fields = ['title', 'status', 'country', 'created_at', 'updated_at', 'date'];
+  fields.forEach(f => {
+    const th = document.getElementById(`th-${f}`);
+    const sa = document.getElementById(`sa-${f}`);
+    if (!th || !sa) return;
+    if (f === sortField) {
+      th.classList.add('sort-active');
+      sa.textContent = sortDir === 'asc' ? '↑' : '↓';
+    } else {
+      th.classList.remove('sort-active');
+      sa.textContent = '';
+    }
+  });
+}
+
+function renderListView(filtered) {
+  updateSortHeaders();
+  const sorted = getSortedPosts(filtered);
+  const tbody = document.getElementById('listBody');
+
+  if (sorted.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" style="padding:32px; text-align:center; color:var(--text-dim); font-size:13px;">No posts found</td></tr>`;
+    return;
+  }
+
+  // Update select-all checkbox state
+  const selectAllCb = document.getElementById('selectAllCb');
+  const visibleIds = sorted.map(p => p.id);
+  const allSelected = visibleIds.length > 0 && visibleIds.every(id => selectedPostIds.has(id));
+  selectAllCb.checked = allSelected;
+  selectAllCb.indeterminate = !allSelected && visibleIds.some(id => selectedPostIds.has(id));
+
+  tbody.innerHTML = sorted.map(p => {
+    const sel = selectedPostIds.has(p.id);
+    return `<tr class="${sel ? 'row-selected' : ''}" id="row-${p.id}">
+      <td style="padding-right:6px;">
+        <input type="checkbox" ${sel ? 'checked' : ''} onchange="toggleSelect(${p.id}, this.checked)" />
+      </td>
+      <td>
+        <span class="post-row-title" onclick="openPost(${p.id})">${escHtml(p.title)}</span>
+        ${p.keyword ? `<div class="post-row-kw">${escHtml(p.keyword)}</div>` : ''}
+      </td>
+      <td><span class="tbl-status ${p.status}"><span class="tbl-status-dot"></span>${STATUS_LABEL[p.status] || p.status}</span></td>
+      <td>${p.country ? `<span class="market-badge">${marketLabel(p.country)}</span>` : '<span style="color:var(--text-dim);font-size:11px;">—</span>'}</td>
+      <td class="dt-cell">${fmtDatetime(p.created_at)}</td>
+      <td class="dt-cell">${fmtDatetime(p.updated_at)}</td>
+      <td class="dt-cell-dim">${fmtDate(p.date)}</td>
+      <td>
+        <button onclick="openPost(${p.id})" title="Open in editor"
+          style="background:none;border:1px solid var(--border);border-radius:5px;color:var(--text-muted);padding:3px 9px;font-size:11px;cursor:pointer;"
+          onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+          onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Edit</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Board view ────────────────────────────────────────────────────────────────
+function renderBoardView(filtered) {
+  const cols = { writing: [], ready_to_publish: [], published: [] };
+  filtered.forEach(p => { if (cols[p.status]) cols[p.status].push(p); });
+
+  Object.entries(cols).forEach(([status, colPosts]) => {
+    const countEl = document.getElementById(`bcount-${status}`);
+    const cardsEl = document.getElementById(`bcards-${status}`);
+    if (!countEl || !cardsEl) return;
+    countEl.textContent = colPosts.length;
+    if (colPosts.length === 0) {
+      cardsEl.innerHTML = `<div class="board-empty">No posts</div>`;
+      return;
+    }
+    const sorted = getSortedPosts(colPosts);
+    cardsEl.innerHTML = sorted.map(p => {
+      const sel = selectedPostIds.has(p.id);
+      return `<div class="board-card ${sel ? 'card-selected' : ''}" id="bcard-${p.id}">
+        <input class="board-card-cb" type="checkbox" ${sel ? 'checked' : ''}
+          onchange="toggleSelect(${p.id}, this.checked); event.stopPropagation()"
+          onclick="event.stopPropagation()" />
+        <div class="board-card-title" onclick="openPost(${p.id})">${escHtml(p.title)}</div>
+        <div class="board-card-foot">
+          ${p.country ? `<span class="market-badge">${marketLabel(p.country)}</span>` : ''}
+          <span class="board-card-date">${fmtDatetime(p.created_at)}</span>
+        </div>
+      </div>`;
+    }).join('');
+  });
+}
+
+// ── Selection & Bulk Export ───────────────────────────────────────────────────
+function toggleSelect(id, checked) {
+  if (checked) selectedPostIds.add(id);
+  else selectedPostIds.delete(id);
+  updateBulkBar();
+  // Sync row/card highlight without full re-render
+  const row = document.getElementById(`row-${id}`);
+  if (row) row.className = checked ? 'row-selected' : '';
+  const card = document.getElementById(`bcard-${id}`);
+  if (card) card.className = `board-card ${checked ? 'card-selected' : ''}`;
+  // Sync select-all checkbox
+  const all = document.getElementById('selectAllCb');
+  if (all) {
+    const visible = [...document.querySelectorAll('#listBody tr')].map(r => parseInt(r.id.split('-')[1])).filter(Boolean);
+    all.checked = visible.length > 0 && visible.every(id => selectedPostIds.has(id));
+    all.indeterminate = !all.checked && visible.some(id => selectedPostIds.has(id));
+  }
+}
+
+function toggleSelectAll(cb) {
+  const rows = [...document.querySelectorAll('#listBody tr[id]')];
+  rows.forEach(r => {
+    const id = parseInt(r.id.split('-')[1]);
+    if (!id) return;
+    if (cb.checked) selectedPostIds.add(id);
+    else selectedPostIds.delete(id);
+    r.className = cb.checked ? 'row-selected' : '';
+    const rowCb = r.querySelector('input[type=checkbox]');
+    if (rowCb) rowCb.checked = cb.checked;
+  });
+  updateBulkBar();
+}
+
+function updateBulkBar() {
+  const bar = document.getElementById('bulkBar');
+  const count = selectedPostIds.size;
+  bar.style.display = count > 0 ? 'flex' : 'none';
+  document.getElementById('bulkCount').textContent = `${count} post${count !== 1 ? 's' : ''} selected`;
+}
+
+function clearSelection() {
+  selectedPostIds.clear();
+  updateBulkBar();
+  renderOverview();
+}
+
+async function bulkExportSelected() {
+  if (selectedPostIds.size === 0) return;
+  const ids = [...selectedPostIds];
+  const res = await fetch('/api/posts/bulk-export', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ post_ids: ids }),
+  });
+  if (res.ok) {
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `bulk-export-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast(`Exported ${ids.length} post${ids.length !== 1 ? 's' : ''}`, 'success');
+  } else {
+    showToast('Export failed', 'error');
+  }
+}
+
+// ── AI Edit Modal ─────────────────────────────────────────────────────────────
+let _aiEditSelection = '';
+
+function openAiEditModal() {
+  if (!currentPost) return;
+
+  _aiEditSelection = mde ? mde.codemirror.getSelection() : '';
+
+  const selWrap = document.getElementById('aiSelectionWrap');
+  const sub = document.getElementById('aiEditSub');
+
+  if (_aiEditSelection) {
+    document.getElementById('aiSelectionInput').value = _aiEditSelection;
+    selWrap.style.display = 'block';
+    sub.textContent = 'Editing selected text only — Claude applies the instruction to your selection. Token-efficient.';
+  } else {
+    selWrap.style.display = 'none';
+    sub.textContent = 'No text selected — Claude applies the instruction to the full post content.';
+  }
+
+  document.getElementById('aiInstruction').value = '';
+  document.getElementById('aiEditLog').innerHTML = '';
+  document.getElementById('aiEditLog').classList.remove('visible');
+  document.getElementById('aiEditBtn').disabled = false;
+  document.getElementById('aiEditBtn').textContent = 'Apply Edit';
+  document.getElementById('aiEditModal').classList.add('open');
+  setTimeout(() => document.getElementById('aiInstruction').focus(), 150);
+}
+
+function closeAiEditModal() {
+  document.getElementById('aiEditModal').classList.remove('open');
+}
+
+async function applyAiEdit() {
+  if (!currentPost) return;
+  const instruction = document.getElementById('aiInstruction').value.trim();
+  if (!instruction) { document.getElementById('aiInstruction').focus(); return; }
+
+  const hasSelection = document.getElementById('aiSelectionWrap').style.display !== 'none';
+  const selection = hasSelection ? document.getElementById('aiSelectionInput').value.trim() : null;
+
+  const btn = document.getElementById('aiEditBtn');
+  const log = document.getElementById('aiEditLog');
+  btn.disabled = true;
+  btn.textContent = 'Applying…';
+  log.innerHTML = '';
+  log.classList.add('visible');
+
+  const addLog = (msg, cls = '') => {
+    const line = document.createElement('div');
+    line.className = `log-line ${cls}`;
+    line.textContent = msg;
+    log.appendChild(line);
+    log.scrollTop = log.scrollHeight;
+  };
+
+  addLog(selection ? '→ Editing selection with Claude…' : '→ Editing full post with Claude…');
+
+  try {
+    const res = await fetch(`/api/posts/${currentPost.id}/ai-edit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ instruction, selection: selection || null }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      addLog('✗ ' + (err.detail || 'Edit failed'), 'log-error');
+      btn.disabled = false;
+      btn.textContent = 'Apply Edit';
+      return;
+    }
+
+    const data = await res.json();
+
+    if (data.edited_selection && mde) {
+      // Replace only the selection in the editor
+      mde.codemirror.replaceSelection(data.edited_selection);
+      addLog('✓ Selection updated', 'log-done');
+    } else if (data.edited_content && mde) {
+      // Replace full content
+      mde.value(data.edited_content);
+      addLog('✓ Post updated', 'log-done');
+    }
+
+    markDirty();
+    setTimeout(() => {
+      closeAiEditModal();
+      showToast('AI edit applied', 'success');
+    }, 800);
+
+  } catch (err) {
+    addLog('✗ ' + err.message, 'log-error');
+    btn.disabled = false;
+    btn.textContent = 'Apply Edit';
+  }
+}
+
+// Keyboard shortcut: Cmd/Ctrl+S to save
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+    e.preventDefault();
+    if (currentPost) savePost();
+  }
+  if (e.key === 'Escape') { closeGenerateModal(); closeAiEditModal(); }
+});
+
+// Start
+init();
+</script>
+</body>
+</html>

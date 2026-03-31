@@ -1,0 +1,67 @@
+{
+  "id": "maya",
+  "name": "Maya Business",
+  "base_url": "https://www.maya.ph",
+  "markets": [
+    "Philippines"
+  ],
+  "last_updated": "2026-03-30",
+  "pricing": {},
+  "payment_methods": {
+    "singapore": [],
+    "malaysia": [],
+    "philippines": [
+      "QR code transfer",
+      "Phone number transfer",
+      "@username transfer",
+      "InstaPay",
+      "Banks",
+      "Self-service kiosks",
+      "Debit cards",
+      "Credit cards"
+    ],
+    "global": []
+  },
+  "features": [
+    "Digital wallet",
+    "Money transfer via QR code",
+    "Money transfer via phone number",
+    "Money transfer via @username",
+    "Cryptocurrency trading (buy, sell, send, receive)",
+    "Stock trading",
+    "Physical and virtual card",
+    "Cash withdrawal",
+    "Savings account",
+    "Credit line (up to ₱30,000)",
+    "Personal loan",
+    "Credit card",
+    "Rewards program",
+    "Referral program",
+    "Multi-currency support",
+    "Remittance receiving"
+  ],
+  "target_segment": [
+    "consumer"
+  ],
+  "integrations": [],
+  "compliance": [],
+  "unique_selling_points": [
+    "#1 Digital Bank App in monthly active users",
+    "Money transfer using @username",
+    "Sign up with just 1 ID and no minimum balance",
+    "Free physical card with @username",
+    "Up to 15% interest p.a. with Maya Savings",
+    "Access to over a dozen currencies for crypto"
+  ],
+  "positioning": "Maya gives the safety of a bank and convenience of a wallet.",
+  "payout_speed": "Approval in seconds",
+  "markets_served": [
+    "Philippines"
+  ],
+  "sources": [
+    {
+      "url": "https://www.maya.ph",
+      "scraped_at": "2026-03-30"
+    }
+  ]
+}

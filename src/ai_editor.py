@@ -1,0 +1,65 @@
+"""AI-powered targeted editing for blog post content."""
+
+import anthropic
+from config import ANTHROPIC_API_KEY, CLAUDE_MODEL
+
+_EDIT_SYSTEM = """You are a precise content editor for HitPay's blog. Apply targeted edits to blog post markdown content.
+
+Rules:
+- Apply ONLY the requested change — do not rewrite, restructure, or improve anything else
+- Preserve the author's voice, tone, and markdown formatting exactly
+- Keep all internal backlinks (markdown link syntax) in place unless explicitly asked to change them
+- Never add marketing jargon ("seamlessly", "unlock", "game-changer", etc.)
+- Return ONLY the edited content — no preamble, no explanation, no code fences"""
+
+
+def ai_edit_selection(selection: str, instruction: str) -> str:
+    """Apply a targeted edit to a highlighted selection.
+
+    Token-efficient: only sends the selected text to Claude, not the full post.
+
+    Args:
+        selection: The highlighted text from the editor
+        instruction: What to change (e.g. "remove mention of Maya")
+    """
+    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+    response = client.messages.create(
+        model=CLAUDE_MODEL,
+        max_tokens=2048,
+        system=_EDIT_SYSTEM,
+        messages=[{
+            "role": "user",
+            "content": (
+                f"Apply this edit to the following text:\n\n"
+                f"INSTRUCTION: {instruction}\n\n"
+                f"TEXT:\n---\n{selection}\n---\n\n"
+                f"Return only the edited text, preserving all markdown formatting."
+            )
+        }]
+    )
+    return response.content[0].text.strip()
+
+
+def ai_edit_full(content: str, instruction: str) -> str:
+    """Apply a targeted edit to the full post content.
+
+    Args:
+        content: Full markdown body of the post (no frontmatter)
+        instruction: What to change across the post
+    """
+    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+    response = client.messages.create(
+        model=CLAUDE_MODEL,
+        max_tokens=4096,
+        system=_EDIT_SYSTEM,
+        messages=[{
+            "role": "user",
+            "content": (
+                f"Apply this edit to the following blog post:\n\n"
+                f"INSTRUCTION: {instruction}\n\n"
+                f"FULL CONTENT:\n---\n{content}\n---\n\n"
+                f"Return only the complete edited content, preserving all markdown formatting and internal links."
+            )
+        }]
+    )
+    return response.content[0].text.strip()

@@ -1,0 +1,202 @@
+{
+  "id": "paypal",
+  "name": "PayPal",
+  "base_url": "https://www.paypal.com",
+  "markets": [
+    "Global",
+    "Singapore",
+    "Malaysia",
+    "Philippines"
+  ],
+  "last_updated": "2026-03-30",
+  "pricing": {
+    "monthly_fee": "No monthly fees",
+    "setup_fee": "No setup fees",
+    "transaction_fees": {
+      "cards": null,
+      "local_methods": null,
+      "notes": "Only pay when you get paid"
+    },
+    "pricing_model": "per-transaction"
+  },
+  "payment_methods": {
+    "singapore": [
+      "PayPal",
+      "Credit cards",
+      "Debit cards",
+      "Apple Pay",
+      "credit and debit cards",
+      "credit or debit card",
+      "email address",
+      "mobile number"
+    ],
+    "malaysia": [],
+    "philippines": [
+      "Credit cards",
+      "Debit cards",
+      "PayPal"
+    ],
+    "global": [
+      "PayPal",
+      "Major credit cards",
+      "Major debit cards",
+      "Apple Pay",
+      "credit and debit cards",
+      "preferred payment methods around the world",
+      "credit or debit card",
+      "email address",
+      "mobile number",
+      "PayPal account",
+      "Major credit and debit cards",
+      "Other payment methods"
+    ]
+  },
+  "features": [
+    "Pay easy, fast, and secure",
+    "Checkout with a few clicks",
+    "Confidently send payments",
+    "Create a PayPal.Me payment link",
+    "Simplified online checkout",
+    "Shop with your PayPal account at millions of brands worldwide",
+    "PayPal Buyer Protection",
+    "Send payments for goods and services",
+    "Pay local businesses",
+    "Pay individuals for projects",
+    "Get paid quickly with a link",
+    "Personalized PayPal.Me link",
+    "Data encrypted",
+    "Safe, private, secure",
+    "Spend, send and manage transactions",
+    "Mobile app available",
+    "Accept payments online",
+    "Accept payments in person",
+    "Track sales",
+    "Learn about shoppers",
+    "Manage risk",
+    "Send invoices",
+    "Check latest sales",
+    "Business insights",
+    "Payment links",
+    "QR codes",
+    "Button codes",
+    "Generate shareable payment links",
+    "Generate QR codes",
+    "Generate button codes",
+    "Online Checkout",
+    "Invoicing",
+    "Payment Links",
+    "Links & Buttons",
+    "Recurring payments",
+    "QR Code generation",
+    "Fraud prevention tools",
+    "Seller Protection on eligible purchases",
+    "Send local or international payments",
+    "Send from home or on the go",
+    "Send via email address or mobile number",
+    "Secure payment sending",
+    "Track spending easily",
+    "Transaction notifications",
+    "Buyer Protection for eligible transactions",
+    "Earn reward points on payments",
+    "Mobile app for sending payments anytime, anywhere",
+    "Single place to track all transactions",
+    "Data encryption",
+    "Mobile app",
+    "Online signup",
+    "Pay for goods and services",
+    "Send and Receive Payments",
+    "Accept payments online and in person"
+  ],
+  "target_segment": [
+    "SME",
+    "startup",
+    "businesses of all sizes",
+    "enterprise",
+    "platform"
+  ],
+  "integrations": [
+    "All major ecommerce platforms",
+    "Accounting software",
+    "Inventory management software",
+    "Marketing automation software",
+    "ecommerce platforms",
+    "accounting tools",
+    "inventory management",
+    "marketing tools",
+    "operations tools",
+    "Major ecommerce platforms"
+  ],
+  "compliance": [],
+  "unique_selling_points": [
+    "PayPal Buyer Protection",
+    "Encrypted data keeping sensitive financial info safe",
+    "PayPal.Me personalized payment links",
+    "Available at millions of brands worldwide",
+    "No monthly or setup fees",
+    "Customers don't need PayPal account to pay",
+    "Available on all major ecommerce platforms",
+    "All-in-one payment solution provider",
+    "Customers don't need PayPal to pay",
+    "Only pay when you get paid",
+    "Support for businesses of all sizes",
+    "Fraud prevention tools to save time and money",
+    "Built-in Seller Protection on eligible purchases",
+    "Available in major ecommerce platforms",
+    "Accept payments without a website or shop",
+    "Free to send payments (recipient covers fee)",
+    "Financial information securely encrypted",
+    "Buyer Protection on eligible transactions",
+    "Earn reward points on payments",
+    "Mobile app availability",
+    "Data encryption for financial security",
+    "PayPal.Me payment link for easy collection",
+    "Shop at millions of brands worldwide",
+    "Data encrypted, keeping sensitive financial info safe",
+    "PayPal.Me payment link simplifies getting paid",
+    "All-in-one solution provider",
+    "Can be added to existing credit card processors"
+  ],
+  "positioning": "Your way to pay, with PayPal - spend, send and manage your transactions with ease and security in one place.",
+  "payout_speed": "Get paid fast",
+  "markets_served": [
+    "Global",
+    "Singapore",
+    "Malaysia",
+    "Philippines",
+    "International"
+  ],
+  "sources": [
+    {
+      "url": "https://www.paypal.com/sg/home",
+      "scraped_at": "2026-03-30"
+    },
+    {
+      "url": "https://www.paypal.com/sg/business",
+      "scraped_at": "2026-03-30"
+    },
+    {
+      "url": "https://www.paypal.com/sg/webapps/mpp/merchant",
+      "scraped_at": "2026-03-30"
+    },
+    {
+      "url": "https://www.paypal.com/sg/webapps/mpp/accept-payments-online",
+      "scraped_at": "2026-03-30"
+    },
+    {
+      "url": "https://www.paypal.com/sg/webapps/mpp/send-money-online",
+      "scraped_at": "2026-03-30"
+    },
+    {
+      "url": "https://www.paypal.com/my/home",
+      "scraped_at": "2026-03-30"
+    },
+    {
+      "url": "https://www.paypal.com/ph/home",
+      "scraped_at": "2026-03-30"
+    },
+    {
+      "url": "https://www.paypal.com/ph/business",
+      "scraped_at": "2026-03-30"
+    }
+  ]
+}
