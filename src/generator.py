@@ -10,6 +10,43 @@ from src.mcp_client import search_knowledge, get_changelog, get_news
 from src.competitor_db import get_relevant_competitors, format_for_prompt
 
 
+def _load_relevant_docs(keyword: str, max_chars: int = 30000) -> str:
+    """Pull sections from hitpay_docs.md that are relevant to the keyword."""
+    docs_path = Path(__file__).parent.parent / "hitpay_docs.md"
+    if not docs_path.exists():
+        return ""
+
+    with open(docs_path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    # Split into sections by ## headers
+    raw_sections = re.split(r'\n(?=## )', content)
+
+    # Score each section by how many keyword terms appear in it
+    terms = [t.lower() for t in re.split(r'\W+', keyword) if len(t) > 2]
+    scored = []
+    for section in raw_sections:
+        text_lower = section.lower()
+        score = sum(text_lower.count(t) for t in terms)
+        if score > 0:
+            scored.append((score, section))
+
+    scored.sort(key=lambda x: x[0], reverse=True)
+
+    parts = []
+    total = 0
+    for _, section in scored:
+        if total + len(section) > max_chars:
+            break
+        parts.append(section.strip())
+        total += len(section)
+
+    if not parts:
+        return ""
+
+    return "\n\n---\n\n".join(parts)
+
+
 def _load_blog_links() -> list[dict]:
     """Load the HitPay blog post reference links from blog_links.yaml."""
     links_path = Path(__file__).parent.parent / "blog_links.yaml"
@@ -164,6 +201,12 @@ def generate_blog_post(keyword: str, country: str = None, on_status=None) -> dic
     status("Querying HitPay knowledge base...")
     mcp_context = _gather_mcp_context(keyword, status)
 
+    # Step 1c: Load relevant product docs
+    status("Loading relevant product documentation...")
+    product_docs = _load_relevant_docs(keyword)
+    if product_docs:
+        status("Found relevant sections in product docs")
+
     # Step 1b: Load relevant competitor data
     status("Loading competitor research...")
     country_name = COUNTRY_CONTEXT[country]["name"] if country and country in COUNTRY_CONTEXT else None
@@ -208,13 +251,16 @@ Before returning your JSON, verify every payment method name, currency, and plac
     status("Generating blog post with Claude Opus...")
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
+    docs_section = f"\n## HitPay Product Documentation — Feature & Flow Accuracy\n{product_docs}\n" if product_docs else ""
+
     user_prompt = f"""Write a blog post about: "{keyword}"
 {country_section}
 ## HitPay Knowledge Base — Use for Factual Accuracy
 {mcp_context}
+{docs_section}
 {competitor_context}
 {links_section}
-Ground your post in the knowledge base above. If the knowledge base contains specific features, merchant use cases, or product details relevant to this topic, incorporate them naturally. Do not invent facts or statistics not present in the knowledge base or the system prompt.
+Ground your post in the knowledge base and product documentation above. If they contain specific features, merchant use cases, flows, or product details relevant to this topic, incorporate them naturally. Do not invent facts or statistics not present in these sources or the system prompt.
 
 Remember: include exactly 5 internal backlinks from the URL list above, woven naturally into the content.
 
