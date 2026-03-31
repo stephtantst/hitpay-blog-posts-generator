@@ -183,6 +183,9 @@ def _serialise(post: dict) -> dict:
 
 def _serialise_with_content(post: dict) -> dict:
     post = _serialise(post)
+    # Prefer content stored in DB; fall back to file for local legacy posts
+    if post.get("content"):
+        return post
     file_path = post.get("file_path", "")
     post["content"] = read_post_content(file_path) if file_path and os.path.exists(file_path) else ""
     return post
@@ -245,6 +248,7 @@ def api_update_post(post_id: int, body: UpdatePostRequest, user_email: str = Dep
     if body.content is not None:
         word_count = len(body.content.split())
         db_fields["word_count"] = word_count
+        db_fields["content"] = body.content
         changed_fields.append("content")
 
     if db_fields:
