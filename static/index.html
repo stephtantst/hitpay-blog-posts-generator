@@ -1273,8 +1273,22 @@
 
     <div class="info-section">
       <div class="info-section-title">What it does</div>
-      <p>HitPay Blog Generator is an internal content tool for the HitPay marketing team. It uses Claude AI to write SEO-optimised, market-accurate blog posts for Southeast Asia — then lets you manage the full editorial workflow from draft to publication.</p>
-      <p>Posts are written for three markets: <span class="info-tag">🇸🇬 SG</span> <span class="info-tag">🇲🇾 MY</span> <span class="info-tag">🇵🇭 PH</span> — or all three at once if no market is selected. Finished posts export as CSV for direct import into Framer CMS.</p>
+      <p>HitPay Blog Generator is an internal content tool for the marketing team. It uses Claude AI to produce SEO- and AEO-optimised, market-accurate blog posts for Southeast Asia — then manages the full editorial workflow from draft to publication.</p>
+      <p>Posts are written for three markets: <span class="info-tag">🇸🇬 SG</span> <span class="info-tag">🇲🇾 MY</span> <span class="info-tag">🇵🇭 PH</span> — or all three at once if no market is selected. You can <strong>generate</strong> a post from a keyword, or <strong>rewrite</strong> an existing post by URL. Finished posts export as CSV for Framer CMS.</p>
+    </div>
+
+    <hr class="info-divider" />
+
+    <div class="info-section">
+      <div class="info-section-title">Two creation modes</div>
+      <div class="info-step">
+        <div class="info-step-num">✦</div>
+        <div class="info-step-body"><strong>Generate New Post</strong> — enter a keyword or topic. The AI researches, structures, and writes a full post from scratch with all optimisations applied. Tagged <span class="info-tag">New</span> in the post list.</div>
+      </div>
+      <div class="info-step">
+        <div class="info-step-num">↺</div>
+        <div class="info-step-body"><strong>Rewrite Existing Post</strong> — paste any blog post URL. The AI scrapes the existing content, then rewrites it with improved structure, SEO, AEO optimisation, and updated HitPay positioning. The source URL is stored and shown in the editor sidebar. Tagged <span class="info-tag">Rewrite</span>.</div>
+      </div>
     </div>
 
     <hr class="info-divider" />
@@ -1283,19 +1297,19 @@
       <div class="info-section-title">Data sources used during generation</div>
       <div class="info-step">
         <div class="info-step-num">1</div>
-        <div class="info-step-body"><strong>HitPay MCP server</strong> — queries the internal knowledge base across three categories: <span class="info-tag">general</span> <span class="info-tag">product</span> <span class="info-tag">guide</span>. Returns up to 11 results per generation run for factual grounding on HitPay features, flows, and merchant use cases.</div>
+        <div class="info-step-body"><strong>HitPay MCP server</strong> — queries the internal knowledge base across <span class="info-tag">general</span> <span class="info-tag">product</span> <span class="info-tag">guide</span> categories (up to 11 results). Grounds the AI in accurate HitPay features, flows, and merchant use cases.</div>
       </div>
       <div class="info-step">
         <div class="info-step-num">2</div>
-        <div class="info-step-body"><strong>Product documentation</strong> — <span class="info-tag">hitpay_docs.md</span> is split into sections and scored by keyword relevance. The top matching sections (up to 30,000 chars) are injected so the AI can reference accurate feature names, flows, and pricing.</div>
+        <div class="info-step-body"><strong>Product documentation</strong> — <span class="info-tag">hitpay_docs.md</span> is split into sections and scored by keyword relevance. The top sections (up to 30,000 chars) are injected for accurate feature names, flows, and pricing.</div>
       </div>
       <div class="info-step">
         <div class="info-step-num">3</div>
-        <div class="info-step-body"><strong>Competitor research database</strong> — <span class="info-tag">competitors/*.json</span> stores profiled payment competitors (features, markets, weaknesses). Relevant profiles are matched by keyword and market, then given to the AI as positioning context.</div>
+        <div class="info-step-body"><strong>Competitor research database</strong> — <span class="info-tag">competitors/*.json</span> profiles payment competitors by features, markets, and weaknesses. Relevant profiles are matched by keyword and market for positioning context.</div>
       </div>
       <div class="info-step">
         <div class="info-step-num">4</div>
-        <div class="info-step-body"><strong>Internal blog link index</strong> — <span class="info-tag">blog_links.yaml</span> lists all published HitPay blog post URLs with topic tags. The AI picks exactly 5 relevant links and weaves them as natural in-content hyperlinks — never as a list.</div>
+        <div class="info-step-body"><strong>Internal blog link index</strong> — <span class="info-tag">blog_links.yaml</span> lists all published HitPay posts by topic. The AI picks exactly 5 relevant URLs and weaves them as natural in-content hyperlinks — never as a list.</div>
       </div>
     </div>
 
@@ -1303,17 +1317,33 @@
 
     <div class="info-section">
       <div class="info-section-title">What the AI is instructed to do</div>
-      <p>Every post is generated with a detailed system prompt. Key rules baked in:</p>
+      <p>Every post is generated with a detailed system prompt. Key rules:</p>
       <ul>
-        <li><strong>Lead with the reader's problem</strong> — not HitPay's features. The product gets mentioned in 1–2 sections at most.</li>
-        <li><strong>900–1,200 words</strong> with 3–5 H2 sections and sparingly-used H3s. No H1 (added by CMS).</li>
-        <li><strong>No marketing language</strong> — words like "seamlessly", "revolutionise", "game-changer", and "cutting-edge" are explicitly banned.</li>
-        <li><strong>Market-accurate payment methods</strong> — the AI receives a per-market list of valid local and cross-border methods, plus a fact-check list of methods it must <em>not</em> attribute to the wrong market (e.g. PayNow is SG-only).</li>
-        <li><strong>Specific local references</strong> — district and city names are required per market (Tanjong Pagar, Bangsar, BGC).</li>
-        <li><strong>No fabricated stats or testimonials</strong> — all claims must come from the knowledge base or system prompt.</li>
-        <li><strong>Exactly 5 internal backlinks</strong> woven naturally into the content using descriptive anchor text.</li>
+        <li><strong>Lead with the reader's problem</strong> — not HitPay's features. Product gets mentioned in 1–2 sections at most.</li>
+        <li><strong>900–1,200 words</strong>, 3–5 H2 sections, sparingly-used H3s. No H1 (CMS adds it).</li>
+        <li><strong>No marketing language</strong> — "seamlessly", "revolutionise", "game-changer", "cutting-edge" are explicitly banned.</li>
+        <li><strong>Market-accurate payment methods</strong> — per-market lists of valid methods, plus a fact-check list of cross-market misattributions to avoid (e.g. PayNow is SG-only).</li>
+        <li><strong>Local specificity</strong> — district and city names required per market (Tanjong Pagar, Bangsar, BGC).</li>
+        <li><strong>No fabricated stats or testimonials</strong> — all claims must come from the knowledge base.</li>
+        <li><strong>Exactly 5 internal backlinks</strong> woven naturally using descriptive anchor text.</li>
         <li><strong>Payout messaging</strong> — always "next business day in SG, MY &amp; PH", never just "T+1".</li>
-        <li><strong>Output format</strong> — the AI returns a single JSON object with <span class="info-tag">title</span> <span class="info-tag">slug</span> <span class="info-tag">meta_title</span> <span class="info-tag">meta_description</span> <span class="info-tag">overview</span> <span class="info-tag">categories</span> <span class="info-tag">tags</span> <span class="info-tag">content</span>.</li>
+        <li><strong>Competitor comparisons</strong> — factual, non-disparaging. Acknowledge competitor strengths, then show where HitPay wins on relevant dimensions (fees, ease of onboarding, payout speed, local support). No fake data.</li>
+      </ul>
+    </div>
+
+    <hr class="info-divider" />
+
+    <div class="info-section">
+      <div class="info-section-title">AEO — AI Answer Engine Optimisation</div>
+      <p>Every post is structured to rank in AI-generated answers (Google AI Overviews, Perplexity, ChatGPT, Claude). Rules applied automatically:</p>
+      <ul>
+        <li><strong>Direct answer in the first paragraph</strong> — answers the core question within 40–60 words so AI engines can extract it as a snippet.</li>
+        <li><strong>H2/H3 headings as questions</strong> — "What is…", "How does…", "Which… is best for…" — the format AI engines use to pull FAQ-style answers.</li>
+        <li><strong>Mandatory FAQ section</strong> — 4–6 Q&A pairs at the end, each with a concise 2–3 sentence answer.</li>
+        <li><strong>Numbered and bulleted lists</strong> — for any step-by-step processes or comparisons, improving extractability.</li>
+        <li><strong>Comparison tables</strong> — when comparing HitPay to alternatives, uses Markdown tables AI engines can parse.</li>
+        <li><strong>Cited data points</strong> — real numbers (fees, limits, timelines) stated plainly so they can be quoted.</li>
+        <li><strong>[SCHEMA] block</strong> — each post includes a JSON-LD schema block (FAQPage or HowTo) for structured data markup.</li>
       </ul>
     </div>
 
@@ -1327,36 +1357,41 @@
       </div>
       <div class="info-step">
         <div class="info-step-num">2</div>
-        <div class="info-step-body">Score and load relevant product doc sections from <span class="info-tag">hitpay_docs.md</span></div>
+        <div class="info-step-body">Score and inject relevant doc sections from <span class="info-tag">hitpay_docs.md</span></div>
       </div>
       <div class="info-step">
         <div class="info-step-num">3</div>
-        <div class="info-step-body">Match and load competitor profiles by keyword + market</div>
+        <div class="info-step-body">Match competitor profiles by keyword + market from <span class="info-tag">competitors/*.json</span></div>
       </div>
       <div class="info-step">
         <div class="info-step-num">4</div>
-        <div class="info-step-body">Build internal blog link reference from <span class="info-tag">blog_links.yaml</span></div>
+        <div class="info-step-body">Build internal backlink reference from <span class="info-tag">blog_links.yaml</span></div>
       </div>
       <div class="info-step">
         <div class="info-step-num">5</div>
-        <div class="info-step-body">Send all context + keyword + market focus to <span class="info-tag">claude-opus</span> with the full system prompt</div>
+        <div class="info-step-body"><em>Rewrite only:</em> scrape the source URL, extract title and body text</div>
       </div>
       <div class="info-step">
         <div class="info-step-num">6</div>
-        <div class="info-step-body">Parse JSON response → save to database + markdown file → open in editor</div>
+        <div class="info-step-body">Send all context to <span class="info-tag">claude-opus</span> with the full system prompt (SEO + AEO + competitor rules)</div>
+      </div>
+      <div class="info-step">
+        <div class="info-step-num">7</div>
+        <div class="info-step-body">Parse JSON response → save to Supabase + open in editor</div>
       </div>
     </div>
 
     <hr class="info-divider" />
 
     <div class="info-section">
-      <div class="info-section-title">Workflow statuses</div>
+      <div class="info-section-title">Editorial workflow</div>
       <ul>
-        <li><span class="info-tag">✏️ Writing</span> — draft in progress</li>
-        <li><span class="info-tag">🔵 Ready to Publish</span> — reviewed and approved</li>
-        <li><span class="info-tag">✅ Published</span> — live on the blog</li>
+        <li><span class="info-tag">✏️ Writing</span> — draft in progress. Edit freely in the markdown editor.</li>
+        <li><span class="info-tag">🔵 Ready to Publish</span> — reviewed and approved for publishing.</li>
+        <li><span class="info-tag">✅ Published</span> — live on the blog.</li>
       </ul>
-      <p>Posts can be moved between statuses via the status dropdown in the editor.</p>
+      <p>The <strong>Lifecycle</strong> section in each post's sidebar records when it moved through each stage, and shows elapsed time between steps — so the team can track content pipeline speed.</p>
+      <p>Use <strong>AI Edit</strong> to send a selected passage (or the full post) back to Claude with a specific instruction, without regenerating the whole article.</p>
     </div>
 
   </div>
