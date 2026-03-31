@@ -499,6 +499,7 @@ Return the JSON object now."""
     post_data["keyword"] = keyword
     post_data["country"] = country or ""
     post_data["status"] = "writing"
+    post_data["source_url"] = url
 
     if not post_data.get("slug"):
         post_data["slug"] = slugify(post_data["title"])

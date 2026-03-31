@@ -96,9 +96,9 @@ def save_post(post_data: dict, file_path: str) -> int:
     rows = conn.run(
         """
         INSERT INTO posts (title, slug, keyword, country, status, date, meta_title,
-                           meta_description, overview, categories, tags, file_path, word_count, content)
+                           meta_description, overview, categories, tags, file_path, word_count, content, source_url)
         VALUES (:title, :slug, :keyword, :country, :status, :date, :meta_title,
-                :meta_description, :overview, :categories, :tags, :file_path, :word_count, :content)
+                :meta_description, :overview, :categories, :tags, :file_path, :word_count, :content, :source_url)
         RETURNING id
         """,
         title=post_data["title"],
@@ -115,6 +115,7 @@ def save_post(post_data: dict, file_path: str) -> int:
         file_path=file_path,
         word_count=len(post_data.get("content", "").split()),
         content=post_data.get("content", ""),
+        source_url=post_data.get("source_url", ""),
     )
     return rows[0][0]
 
