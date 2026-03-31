@@ -1540,6 +1540,16 @@
       </div>
     </div>
 
+    <!-- Source URL (rewrite posts only) -->
+    <div class="meta-section" id="sourceSection" style="display:none;">
+      <div class="meta-section-title">Source</div>
+      <div class="field-group">
+        <div class="field-label">Rewritten from</div>
+        <a id="sourceUrlLink" href="#" target="_blank" rel="noopener"
+          style="display:block;font-size:11.5px;color:var(--accent);word-break:break-all;line-height:1.4;"></a>
+      </div>
+    </div>
+
     <!-- Status -->
     <div class="meta-section">
       <div class="meta-section-title">Status</div>
@@ -1830,6 +1840,17 @@ async function openPost(id) {
   tagData.tags = currentPost.tags || [];
   renderTags('categories');
   renderTags('tags');
+
+  // Source URL (rewrite posts)
+  const sourceSection = document.getElementById('sourceSection');
+  const sourceUrlLink = document.getElementById('sourceUrlLink');
+  if (currentPost.source_url) {
+    sourceUrlLink.href = currentPost.source_url;
+    sourceUrlLink.textContent = currentPost.source_url;
+    sourceSection.style.display = '';
+  } else {
+    sourceSection.style.display = 'none';
+  }
 
   // Status
   updateStatusUI(currentPost.status);
