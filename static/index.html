@@ -10,19 +10,19 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --surface2: #22263a;
-      --border: #2d3148;
-      --accent: #4f8ef7;
-      --accent-hover: #3a7af5;
-      --green: #22c55e;
-      --yellow: #facc15;
-      --blue: #60a5fa;
-      --red: #f87171;
-      --text: #e2e8f0;
-      --text-muted: #8892a4;
-      --text-dim: #4a5568;
+      --bg: #f5f6fa;
+      --surface: #ffffff;
+      --surface2: #eef0f5;
+      --border: #d8dce8;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --green: #16a34a;
+      --yellow: #b45309;
+      --blue: #2563eb;
+      --red: #dc2626;
+      --text: #111827;
+      --text-muted: #6b7280;
+      --text-dim: #9ca3af;
       --sidebar-w: 270px;
       --meta-w: 320px;
       --header-h: 52px;
@@ -445,9 +445,9 @@
       font-weight: 600;
       margin-bottom: 10px;
     }
-    .status-badge.writing { background: rgba(250,204,21,0.15); color: var(--yellow); }
-    .status-badge.ready_to_publish { background: rgba(96,165,250,0.15); color: var(--blue); }
-    .status-badge.published { background: rgba(34,197,94,0.15); color: var(--green); }
+    .status-badge.writing { background: #fef3c7; color: #92400e; }
+    .status-badge.ready_to_publish { background: #dbeafe; color: #1e40af; }
+    .status-badge.published { background: #dcfce7; color: #166534; }
 
     .status-actions { display: flex; flex-direction: column; gap: 6px; }
     .btn-status {
@@ -627,7 +627,7 @@
       transition: all 0.15s;
       letter-spacing: -0.1px;
     }
-    .nav-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+    .nav-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     .nav-btn:hover:not(.active) { color: var(--text); }
 
     /* ── Feedback popover ───────────────────────────── */
@@ -655,7 +655,7 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 10px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
       z-index: 800;
       overflow: hidden;
     }
@@ -736,7 +736,7 @@
       width: 560px; max-width: 94vw;
       max-height: 80vh;
       display: flex; flex-direction: column;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.12);
     }
     .feedback-list-header {
       display: flex; align-items: center;
@@ -841,7 +841,7 @@
       cursor: pointer;
       transition: all 0.15s;
     }
-    .view-switch-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+    .view-switch-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
     .btn-new-post {
       background: var(--accent);
       color: #fff;
@@ -881,7 +881,7 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       min-width: 160px;
       z-index: 200;
       overflow: hidden;
@@ -928,7 +928,7 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       z-index: 200;
       overflow: hidden;
     }
@@ -1055,9 +1055,9 @@
       font-weight: 600;
       white-space: nowrap;
     }
-    .tbl-status.writing { background: rgba(250,204,21,0.12); color: var(--yellow); }
-    .tbl-status.ready_to_publish { background: rgba(96,165,250,0.12); color: var(--blue); }
-    .tbl-status.published { background: rgba(34,197,94,0.12); color: var(--green); }
+    .tbl-status.writing { background: #fef3c7; color: #92400e; }
+    .tbl-status.ready_to_publish { background: #dbeafe; color: #1e40af; }
+    .tbl-status.published { background: #dcfce7; color: #166534; }
     .tbl-status-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 
     /* ── Board view ─────────────────────────────────── */
