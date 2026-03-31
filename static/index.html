@@ -1358,6 +1358,7 @@
   <div class="bulk-bar" id="bulkBar" style="display:none;">
     <span class="bulk-bar-count" id="bulkCount">0 selected</span>
     <button class="btn-bulk" onclick="bulkExportSelected()">↓ Export CSV for Framer</button>
+    <button class="btn-bulk" style="background:var(--red);" onclick="bulkDeleteSelected()">✕ Delete Selected</button>
     <button class="btn-bulk-clear" onclick="clearSelection()">✕ Clear selection</button>
   </div>
 
@@ -1645,6 +1646,18 @@
     <div class="modal-actions">
       <button class="btn btn-cancel" onclick="closeAiEditModal()">Cancel</button>
       <button class="btn btn-primary" id="aiEditBtn" onclick="applyAiEdit()">Apply Edit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <div class="modal-title" style="color:var(--red);">Delete Post</div>
+    <div class="modal-sub" id="deleteModalMsg"></div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-danger" id="deleteConfirmBtn" onclick="confirmDelete()">Delete</button>
     </div>
   </div>
 </div>
@@ -1937,22 +1950,68 @@ async function loadAuditLog(postId) {
 }
 
 // ── Delete ────────────────────────────────────────────────────────────────────
-async function deletePost() {
-  if (!currentPost) return;
-  if (!confirm(`Delete "${currentPost.title}"? This cannot be undone.`)) return;
+let _pendingDelete = null; // { type: 'single' | 'bulk' }
 
-  const res = await fetch(`/api/posts/${currentPost.id}`, { method: 'DELETE' });
-  if (res.ok) {
-    currentPost = null;
-    isDirty = false;
-    document.getElementById('editorContent').style.display = 'none';
-    document.getElementById('metaPanel').style.display = 'none';
-    document.getElementById('noPostState').style.display = 'flex';
-    await loadPosts();
-    showToast('Post deleted', 'success');
-  } else {
-    showToast('Delete failed', 'error');
+function openDeleteModal(msg, pendingContext) {
+  document.getElementById('deleteModalMsg').textContent = msg;
+  _pendingDelete = pendingContext;
+  document.getElementById('deleteModal').classList.add('open');
+}
+
+function closeDeleteModal() {
+  document.getElementById('deleteModal').classList.remove('open');
+  _pendingDelete = null;
+}
+
+async function confirmDelete() {
+  if (!_pendingDelete) return;
+  closeDeleteModal();
+
+  if (_pendingDelete.type === 'single') {
+    const res = await fetch(`/api/posts/${_pendingDelete.id}`, { method: 'DELETE' });
+    if (res.ok) {
+      currentPost = null;
+      isDirty = false;
+      document.getElementById('editorContent').style.display = 'none';
+      document.getElementById('metaPanel').style.display = 'none';
+      document.getElementById('noPostState').style.display = 'flex';
+      await loadPosts();
+      showToast('Post deleted', 'success');
+    } else {
+      showToast('Delete failed', 'error');
+    }
+  } else if (_pendingDelete.type === 'bulk') {
+    const res = await fetch('/api/posts/bulk-delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ post_ids: _pendingDelete.ids }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      clearSelection();
+      await loadPosts();
+      showToast(`Deleted ${data.deleted} post${data.deleted !== 1 ? 's' : ''}`, 'success');
+    } else {
+      showToast('Bulk delete failed', 'error');
+    }
   }
+}
+
+function deletePost() {
+  if (!currentPost) return;
+  openDeleteModal(
+    `Delete "${currentPost.title}"? This cannot be undone.`,
+    { type: 'single', id: currentPost.id }
+  );
+}
+
+function bulkDeleteSelected() {
+  const count = selectedPostIds.size;
+  if (count === 0) return;
+  openDeleteModal(
+    `Delete ${count} selected post${count !== 1 ? 's' : ''}? This cannot be undone.`,
+    { type: 'bulk', ids: [...selectedPostIds] }
+  );
 }
 
 // ── Export ────────────────────────────────────────────────────────────────────

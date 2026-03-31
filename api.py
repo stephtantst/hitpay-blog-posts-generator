@@ -380,6 +380,26 @@ def api_bulk_export(body: BulkExportRequest, _: str = Depends(require_auth)):
     return FileResponse(csv_path, media_type="text/csv", filename=filename)
 
 
+# ── Bulk Delete ──────────────────────────────────────────────────────────────
+
+@app.post("/api/posts/bulk-delete")
+def api_bulk_delete(body: BulkExportRequest, user_email: str = Depends(require_auth)):
+    if not body.post_ids:
+        raise HTTPException(400, "No post IDs provided")
+    deleted = 0
+    for pid in body.post_ids:
+        post = get_post(pid)
+        if not post:
+            continue
+        file_path = post.get("file_path", "")
+        log_audit(pid, user_email, "deleted", {"title": post.get("title", "")})
+        delete_post(pid)
+        if file_path and os.path.exists(file_path):
+            os.remove(file_path)
+        deleted += 1
+    return {"ok": True, "deleted": deleted}
+
+
 # ── AI Edit ───────────────────────────────────────────────────────────────────
 
 class AiEditRequest(BaseModel):
