@@ -1965,10 +1965,11 @@ function closeDeleteModal() {
 
 async function confirmDelete() {
   if (!_pendingDelete) return;
+  const pending = _pendingDelete;
   closeDeleteModal();
 
-  if (_pendingDelete.type === 'single') {
-    const res = await fetch(`/api/posts/${_pendingDelete.id}`, { method: 'DELETE' });
+  if (pending.type === 'single') {
+    const res = await fetch(`/api/posts/${pending.id}`, { method: 'DELETE' });
     if (res.ok) {
       currentPost = null;
       isDirty = false;
@@ -1980,11 +1981,11 @@ async function confirmDelete() {
     } else {
       showToast('Delete failed', 'error');
     }
-  } else if (_pendingDelete.type === 'bulk') {
+  } else if (pending.type === 'bulk') {
     const res = await fetch('/api/posts/bulk-delete', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ post_ids: _pendingDelete.ids }),
+      body: JSON.stringify({ post_ids: pending.ids }),
     });
     if (res.ok) {
       const data = await res.json();
