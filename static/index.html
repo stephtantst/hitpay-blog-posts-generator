@@ -50,6 +50,95 @@
     .save-indicator { font-size: 12px; color: var(--text-muted); opacity: 0; transition: opacity 0.3s; }
     .save-indicator.visible { opacity: 1; }
 
+    /* ── Info button & panel ─────────────────────────── */
+    .info-btn {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.15s, color 0.15s;
+      flex-shrink: 0;
+      font-family: Georgia, serif;
+    }
+    .info-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .info-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 900;
+    }
+    .info-overlay.open { display: block; }
+    .info-panel {
+      position: fixed;
+      top: 0; right: -480px;
+      width: 460px;
+      max-width: 96vw;
+      height: 100vh;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      z-index: 901;
+      display: flex; flex-direction: column;
+      transition: right 0.25s cubic-bezier(0.4,0,0.2,1);
+      overflow: hidden;
+    }
+    .info-panel.open { right: 0; }
+    .info-panel-header {
+      display: flex; align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      gap: 10px;
+    }
+    .info-panel-title { font-size: 14px; font-weight: 700; flex: 1; }
+    .info-panel-close {
+      background: none; border: none; color: var(--text-muted);
+      font-size: 18px; cursor: pointer; line-height: 1; padding: 2px 4px;
+    }
+    .info-panel-close:hover { color: var(--text); }
+    .info-panel-body {
+      flex: 1; overflow-y: auto;
+      padding: 20px;
+      font-size: 13px; line-height: 1.65;
+    }
+    .info-section { margin-bottom: 24px; }
+    .info-section-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .info-section p { color: var(--text-dim); margin: 0 0 8px; }
+    .info-section ul { margin: 0 0 8px; padding-left: 18px; color: var(--text-dim); }
+    .info-section li { margin-bottom: 5px; }
+    .info-tag {
+      display: inline-block;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 7px;
+      font-size: 11px;
+      font-family: 'Menlo', 'Monaco', monospace;
+      color: var(--text);
+      margin: 2px 2px 2px 0;
+    }
+    .info-step {
+      display: flex; gap: 10px; margin-bottom: 10px;
+    }
+    .info-step-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--surface2); border: 1px solid var(--border);
+      font-size: 11px; font-weight: 700; color: var(--text-muted);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .info-step-body { color: var(--text-dim); }
+    .info-step-body strong { color: var(--text); }
+    .info-divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
     /* ── Layout ─────────────────────────────────────── */
     .layout {
       display: flex;
@@ -959,8 +1048,109 @@
   </div>
   <div class="header-spacer"></div>
   <span class="save-indicator" id="saveIndicator">✓ Saved</span>
+  <button class="info-btn" onclick="openInfoPanel()" title="How this tool works">i</button>
   <div id="userInfo" style="display:flex;align-items:center;gap:8px;margin-left:12px;"></div>
 </header>
+
+<!-- Info overlay + panel -->
+<div class="info-overlay" id="infoOverlay" onclick="closeInfoPanel()"></div>
+<div class="info-panel" id="infoPanel">
+  <div class="info-panel-header">
+    <span class="info-panel-title">How this tool works</span>
+    <button class="info-panel-close" onclick="closeInfoPanel()">✕</button>
+  </div>
+  <div class="info-panel-body">
+
+    <div class="info-section">
+      <div class="info-section-title">What it does</div>
+      <p>HitPay Blog Generator is an internal content tool for the HitPay marketing team. It uses Claude AI to write SEO-optimised, market-accurate blog posts for Southeast Asia — then lets you manage the full editorial workflow from draft to publication.</p>
+      <p>Posts are written for three markets: <span class="info-tag">🇸🇬 SG</span> <span class="info-tag">🇲🇾 MY</span> <span class="info-tag">🇵🇭 PH</span> — or all three at once if no market is selected. Finished posts export as CSV for direct import into Framer CMS.</p>
+    </div>
+
+    <hr class="info-divider" />
+
+    <div class="info-section">
+      <div class="info-section-title">Data sources used during generation</div>
+      <div class="info-step">
+        <div class="info-step-num">1</div>
+        <div class="info-step-body"><strong>HitPay MCP server</strong> — queries the internal knowledge base across three categories: <span class="info-tag">general</span> <span class="info-tag">product</span> <span class="info-tag">guide</span>. Returns up to 11 results per generation run for factual grounding on HitPay features, flows, and merchant use cases.</div>
+      </div>
+      <div class="info-step">
+        <div class="info-step-num">2</div>
+        <div class="info-step-body"><strong>Product documentation</strong> — <span class="info-tag">hitpay_docs.md</span> is split into sections and scored by keyword relevance. The top matching sections (up to 30,000 chars) are injected so the AI can reference accurate feature names, flows, and pricing.</div>
+      </div>
+      <div class="info-step">
+        <div class="info-step-num">3</div>
+        <div class="info-step-body"><strong>Competitor research database</strong> — <span class="info-tag">competitors/*.json</span> stores profiled payment competitors (features, markets, weaknesses). Relevant profiles are matched by keyword and market, then given to the AI as positioning context.</div>
+      </div>
+      <div class="info-step">
+        <div class="info-step-num">4</div>
+        <div class="info-step-body"><strong>Internal blog link index</strong> — <span class="info-tag">blog_links.yaml</span> lists all published HitPay blog post URLs with topic tags. The AI picks exactly 5 relevant links and weaves them as natural in-content hyperlinks — never as a list.</div>
+      </div>
+    </div>
+
+    <hr class="info-divider" />
+
+    <div class="info-section">
+      <div class="info-section-title">What the AI is instructed to do</div>
+      <p>Every post is generated with a detailed system prompt. Key rules baked in:</p>
+      <ul>
+        <li><strong>Lead with the reader's problem</strong> — not HitPay's features. The product gets mentioned in 1–2 sections at most.</li>
+        <li><strong>900–1,200 words</strong> with 3–5 H2 sections and sparingly-used H3s. No H1 (added by CMS).</li>
+        <li><strong>No marketing language</strong> — words like "seamlessly", "revolutionise", "game-changer", and "cutting-edge" are explicitly banned.</li>
+        <li><strong>Market-accurate payment methods</strong> — the AI receives a per-market list of valid local and cross-border methods, plus a fact-check list of methods it must <em>not</em> attribute to the wrong market (e.g. PayNow is SG-only).</li>
+        <li><strong>Specific local references</strong> — district and city names are required per market (Tanjong Pagar, Bangsar, BGC).</li>
+        <li><strong>No fabricated stats or testimonials</strong> — all claims must come from the knowledge base or system prompt.</li>
+        <li><strong>Exactly 5 internal backlinks</strong> woven naturally into the content using descriptive anchor text.</li>
+        <li><strong>Payout messaging</strong> — always "next business day in SG, MY &amp; PH", never just "T+1".</li>
+        <li><strong>Output format</strong> — the AI returns a single JSON object with <span class="info-tag">title</span> <span class="info-tag">slug</span> <span class="info-tag">meta_title</span> <span class="info-tag">meta_description</span> <span class="info-tag">overview</span> <span class="info-tag">categories</span> <span class="info-tag">tags</span> <span class="info-tag">content</span>.</li>
+      </ul>
+    </div>
+
+    <hr class="info-divider" />
+
+    <div class="info-section">
+      <div class="info-section-title">Generation pipeline (in order)</div>
+      <div class="info-step">
+        <div class="info-step-num">1</div>
+        <div class="info-step-body">Query HitPay MCP knowledge base (general + product + guide)</div>
+      </div>
+      <div class="info-step">
+        <div class="info-step-num">2</div>
+        <div class="info-step-body">Score and load relevant product doc sections from <span class="info-tag">hitpay_docs.md</span></div>
+      </div>
+      <div class="info-step">
+        <div class="info-step-num">3</div>
+        <div class="info-step-body">Match and load competitor profiles by keyword + market</div>
+      </div>
+      <div class="info-step">
+        <div class="info-step-num">4</div>
+        <div class="info-step-body">Build internal blog link reference from <span class="info-tag">blog_links.yaml</span></div>
+      </div>
+      <div class="info-step">
+        <div class="info-step-num">5</div>
+        <div class="info-step-body">Send all context + keyword + market focus to <span class="info-tag">claude-opus</span> with the full system prompt</div>
+      </div>
+      <div class="info-step">
+        <div class="info-step-num">6</div>
+        <div class="info-step-body">Parse JSON response → save to database + markdown file → open in editor</div>
+      </div>
+    </div>
+
+    <hr class="info-divider" />
+
+    <div class="info-section">
+      <div class="info-section-title">Workflow statuses</div>
+      <ul>
+        <li><span class="info-tag">✏️ Writing</span> — draft in progress</li>
+        <li><span class="info-tag">🔵 Ready to Publish</span> — reviewed and approved</li>
+        <li><span class="info-tag">✅ Published</span> — live on the blog</li>
+      </ul>
+      <p>Posts can be moved between statuses via the board view (drag and drop) or the status dropdown in the editor.</p>
+    </div>
+
+  </div>
+</div>
 
 <!-- Overview Pane -->
 <div id="overviewPane" class="overview-pane">
@@ -1696,6 +1886,16 @@ async function startGenerate() {
     btn.disabled = false;
     btn.textContent = 'Generate Post';
   }
+}
+
+// ── Info panel ────────────────────────────────────────────────────────────────
+function openInfoPanel() {
+  document.getElementById('infoPanel').classList.add('open');
+  document.getElementById('infoOverlay').classList.add('open');
+}
+function closeInfoPanel() {
+  document.getElementById('infoPanel').classList.remove('open');
+  document.getElementById('infoOverlay').classList.remove('open');
 }
 
 // ── New-post dropdown helpers ──────────────────────────────────────────────────
