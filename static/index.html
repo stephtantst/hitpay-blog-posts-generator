@@ -1389,6 +1389,7 @@
               <input type="checkbox" id="selectAllCb" onchange="toggleSelectAll(this)" title="Select all" />
             </th>
             <th class="sortable sort-active" id="th-title" onclick="sortBy('title')">Title <span class="sort-arrow" id="sa-title">↓</span></th>
+            <th style="width:80px;">Type</th>
             <th class="sortable" id="th-status" onclick="sortBy('status')">Status <span class="sort-arrow" id="sa-status"></span></th>
             <th class="sortable" id="th-country" onclick="sortBy('country')">Market <span class="sort-arrow" id="sa-country"></span></th>
             <th class="sortable" id="th-created_at" onclick="sortBy('created_at')">Created <span class="sort-arrow" id="sa-created_at"></span></th>
@@ -2520,7 +2521,7 @@ function renderListView(filtered) {
   const tbody = document.getElementById('listBody');
 
   if (sorted.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="8" style="padding:32px; text-align:center; color:var(--text-dim); font-size:13px;">No posts found</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="9" style="padding:32px; text-align:center; color:var(--text-dim); font-size:13px;">No posts found</td></tr>`;
     return;
   }
 
@@ -2538,9 +2539,10 @@ function renderListView(filtered) {
         <input type="checkbox" ${sel ? 'checked' : ''} onchange="toggleSelect(${p.id}, this.checked)" />
       </td>
       <td>
-        <span class="post-row-title" onclick="openPost(${p.id})">${escHtml(p.title)}</span>${p.source_url ? '<span class="type-badge rewrite">Rewrite</span>' : '<span class="type-badge new">New</span>'}
+        <span class="post-row-title" onclick="openPost(${p.id})">${escHtml(p.title)}</span>
         ${p.keyword ? `<div class="post-row-kw">${escHtml(p.keyword)}</div>` : ''}
       </td>
+      <td>${p.source_url ? '<span class="type-badge rewrite">Rewrite</span>' : '<span class="type-badge new">New</span>'}</td>
       <td><span class="tbl-status ${p.status}"><span class="tbl-status-dot"></span>${STATUS_LABEL[p.status] || p.status}</span></td>
       <td>${p.country ? `<span class="market-badge">${marketLabel(p.country)}</span>` : '<span style="color:var(--text-dim);font-size:11px;">—</span>'}</td>
       <td class="dt-cell">${fmtDatetime(p.created_at)}</td>
