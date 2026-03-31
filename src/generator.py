@@ -323,7 +323,7 @@ Return the JSON object now."""
 
     response = client.messages.create(
         model=CLAUDE_MODEL,
-        max_tokens=4096,
+        max_tokens=8192,
         system=BLOG_SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_prompt}]
     )
@@ -335,7 +335,10 @@ Return the JSON object now."""
     raw = re.sub(r'\s*```$', '', raw)
     raw = raw.strip()
 
-    post_data = json.loads(raw)
+    try:
+        post_data = json.loads(raw)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Response was truncated or malformed (max_tokens may be too low). JSON error: {e}")
 
     # Add metadata
     post_data["date"] = date.today().isoformat()
@@ -484,7 +487,7 @@ Return the JSON object now."""
 
     response = client.messages.create(
         model=CLAUDE_MODEL,
-        max_tokens=4096,
+        max_tokens=8192,
         system=BLOG_SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_prompt}]
     )
@@ -494,7 +497,10 @@ Return the JSON object now."""
     raw = re.sub(r'\s*```$', '', raw)
     raw = raw.strip()
 
-    post_data = json.loads(raw)
+    try:
+        post_data = json.loads(raw)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Response was truncated or malformed (max_tokens may be too low). JSON error: {e}")
     post_data["date"] = date.today().isoformat()
     post_data["keyword"] = keyword
     post_data["country"] = country or ""
