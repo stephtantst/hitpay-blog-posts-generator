@@ -1405,15 +1405,15 @@
     <!-- Board view (hidden by default) -->
     <div id="boardView" style="display:none;" class="board-wrap">
       <div class="board-columns">
-        <div class="board-col board-col-writing">
+        <div class="board-col board-col-writing" id="bcol-writing">
           <div class="board-col-header">✏️ Writing <span class="board-col-count" id="bcount-writing">0</span></div>
           <div class="board-cards" id="bcards-writing"></div>
         </div>
-        <div class="board-col board-col-ready">
+        <div class="board-col board-col-ready" id="bcol-ready_to_publish">
           <div class="board-col-header">🔵 Ready to Publish <span class="board-col-count" id="bcount-ready_to_publish">0</span></div>
           <div class="board-cards" id="bcards-ready_to_publish"></div>
         </div>
-        <div class="board-col board-col-published">
+        <div class="board-col board-col-published" id="bcol-published">
           <div class="board-col-header">✅ Published <span class="board-col-count" id="bcount-published">0</span></div>
           <div class="board-cards" id="bcards-published"></div>
         </div>
@@ -2455,7 +2455,7 @@ function renderOverview() {
     : posts.filter(p => p.status === overviewStatusFilter);
 
   if (overviewView === 'list') renderListView(filtered);
-  else renderBoardView([...posts]); // Board is already grouped by status; apply filter only in list view
+  else renderBoardView(filtered, overviewStatusFilter);
 }
 
 // ── Datetime helpers ──────────────────────────────────────────────────────────
@@ -2559,9 +2559,16 @@ function renderListView(filtered) {
 }
 
 // ── Board view ────────────────────────────────────────────────────────────────
-function renderBoardView(filtered) {
+function renderBoardView(filtered, statusFilter = 'all') {
+  const allStatuses = ['writing', 'ready_to_publish', 'published'];
   const cols = { writing: [], ready_to_publish: [], published: [] };
   filtered.forEach(p => { if (cols[p.status]) cols[p.status].push(p); });
+
+  // Show/hide columns based on filter
+  allStatuses.forEach(s => {
+    const colEl = document.getElementById(`bcol-${s}`);
+    if (colEl) colEl.style.display = (statusFilter === 'all' || statusFilter === s) ? '' : 'none';
+  });
 
   Object.entries(cols).forEach(([status, colPosts]) => {
     const countEl = document.getElementById(`bcount-${status}`);
