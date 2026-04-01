@@ -847,6 +847,37 @@
     .overview-toolbar-left { display: flex; align-items: center; gap: 10px; flex: 1; }
     .overview-toolbar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
     .filter-chips { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+    .overview-filters {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px 10px;
+      flex-shrink: 0;
+    }
+    .overview-search {
+      flex: 1;
+      max-width: 280px;
+      padding: 6px 10px;
+      font-size: 13px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      outline: none;
+    }
+    .overview-search:focus { border-color: var(--accent); }
+    .overview-search::placeholder { color: var(--text-dim); }
+    .filter-select {
+      padding: 6px 8px;
+      font-size: 13px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      outline: none;
+    }
+    .filter-select:focus { border-color: var(--accent); }
     .chip {
       display: inline-flex;
       align-items: center;
@@ -1482,6 +1513,22 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Secondary filter row -->
+  <div class="overview-filters">
+    <input class="overview-search" id="overviewSearch" type="text" placeholder="🔍 Search by title or keyword…" oninput="renderOverview()" />
+    <select class="filter-select" id="marketFilter" onchange="renderOverview()">
+      <option value="all">All Markets</option>
+      <option value="SG">🇸🇬 Singapore</option>
+      <option value="MY">🇲🇾 Malaysia</option>
+      <option value="PH">🇵🇭 Philippines</option>
+    </select>
+    <select class="filter-select" id="typeFilter" onchange="renderOverview()">
+      <option value="all">All Types</option>
+      <option value="new">New</option>
+      <option value="rewrite">Rewrite</option>
+    </select>
   </div>
 
   <!-- Bulk action bar (visible when ≥1 selected) -->
@@ -2718,17 +2765,26 @@ function setOverviewView(v) {
 }
 
 function renderOverview() {
-  // Update chip counts
+  // Update chip counts (always against full posts, not filtered)
   const counts = { all: posts.length, writing: 0, ready_to_publish: 0, published: 0 };
   posts.forEach(p => { if (counts[p.status] !== undefined) counts[p.status]++; });
-  document.getElementById('chip-all').textContent           = counts.all;
-  document.getElementById('chip-writing').textContent       = counts.writing;
+  document.getElementById('chip-all').textContent              = counts.all;
+  document.getElementById('chip-writing').textContent          = counts.writing;
   document.getElementById('chip-ready_to_publish').textContent = counts.ready_to_publish;
-  document.getElementById('chip-published').textContent     = counts.published;
+  document.getElementById('chip-published').textContent        = counts.published;
 
-  const filtered = overviewStatusFilter === 'all'
-    ? [...posts]
-    : posts.filter(p => p.status === overviewStatusFilter);
+  const q       = (document.getElementById('overviewSearch')?.value || '').toLowerCase().trim();
+  const market  = document.getElementById('marketFilter')?.value || 'all';
+  const type    = document.getElementById('typeFilter')?.value   || 'all';
+
+  const filtered = posts.filter(p => {
+    if (overviewStatusFilter !== 'all' && p.status !== overviewStatusFilter) return false;
+    if (market !== 'all' && p.country !== market) return false;
+    if (type === 'new'     &&  p.source_url) return false;
+    if (type === 'rewrite' && !p.source_url) return false;
+    if (q && !p.title.toLowerCase().includes(q) && !(p.keyword || '').toLowerCase().includes(q)) return false;
+    return true;
+  });
 
   if (overviewView === 'list') renderListView(filtered);
   else renderBoardView(filtered, overviewStatusFilter);
