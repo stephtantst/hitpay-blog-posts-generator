@@ -564,6 +564,47 @@ async def api_submit_feedback(body: FeedbackRequest, user_email: str = Depends(r
     return {"id": fid}
 
 
+@app.get("/api/analytics/status-durations")
+def api_status_durations(_: str = Depends(require_auth)):
+    """Return average hours each post spent in each status, grouped by calendar month.
+
+    For each status transition (from → to), we compute how long the post sat in
+    the `from` status by diffing consecutive status_changed audit entries.
+    Returns rows: { period, status, avg_hours }
+    """
+    from src.database import get_connection, _rows_to_dicts
+    conn = get_connection()
+    rows = conn.run("""
+        WITH transitions AS (
+            SELECT
+                post_id,
+                details::json->>'from'  AS from_status,
+                details::json->>'to'    AS to_status,
+                timestamp               AS transitioned_at,
+                LAG(timestamp) OVER (PARTITION BY post_id ORDER BY timestamp) AS prev_ts
+            FROM audit_log
+            WHERE action = 'status_changed'
+        ),
+        durations AS (
+            SELECT
+                from_status                                              AS status,
+                EXTRACT(EPOCH FROM (transitioned_at - prev_ts)) / 3600  AS hours,
+                DATE_TRUNC('month', transitioned_at)                     AS period
+            FROM transitions
+            WHERE prev_ts IS NOT NULL AND from_status IS NOT NULL
+              AND EXTRACT(EPOCH FROM (transitioned_at - prev_ts)) > 0
+        )
+        SELECT
+            TO_CHAR(period, 'YYYY-MM')  AS period,
+            status,
+            ROUND(AVG(hours)::numeric, 2) AS avg_hours
+        FROM durations
+        GROUP BY period, status
+        ORDER BY period, status
+    """)
+    return _rows_to_dicts(conn, rows)
+
+
 @app.get("/api/feedback")
 def api_list_feedback(_: str = Depends(require_auth)):
     return list_feedback()

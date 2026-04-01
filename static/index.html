@@ -1696,6 +1696,10 @@
         <div id="analyticsDoughnutLegend" style="flex:1;"></div>
       </div>
     </div>
+    <div class="analytics-chart-section">
+      <div class="analytics-chart-title">Avg Time in Each Status (hours)</div>
+      <div id="durationChartsWrap"></div>
+    </div>
   </div>
 </div>
 
@@ -3482,11 +3486,13 @@ function populateEditorSelect(selectedEmail) {
 let _analyticsPeriod = 'week';
 let _barChart = null;
 let _doughnutChart = null;
+let _durationCharts = [];
 
 function openAnalyticsPanel() {
   document.getElementById('analyticsOverlay').classList.add('open');
   document.getElementById('analyticsPanel').classList.add('open');
   renderAnalytics();
+  renderDurationCharts();
 }
 
 function closeAnalyticsPanel() {
@@ -3499,6 +3505,121 @@ function setAnalyticsPeriod(btn) {
   document.querySelectorAll('.analytics-period-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderAnalytics();
+  renderDurationCharts();
+}
+
+async function renderDurationCharts() {
+  const wrap = document.getElementById('durationChartsWrap');
+  if (!wrap) return;
+
+  wrap.innerHTML = '<div style="font-size:12px;color:var(--text-dim);padding:8px 0;">Loading…</div>';
+
+  let data;
+  try {
+    const res = await fetch('/api/analytics/status-durations');
+    data = res.ok ? await res.json() : [];
+  } catch { data = []; }
+
+  if (!data.length) {
+    wrap.innerHTML = '<div style="font-size:12px;color:var(--text-dim);padding:8px 0;">No transition data yet — status changes will populate this chart.</div>';
+    return;
+  }
+
+  // Destroy old duration charts
+  _durationCharts.forEach(c => c.destroy());
+  _durationCharts = [];
+
+  // Group by status
+  const statuses = ['generated', 'editing', 'ready_to_publish'];
+  const statusColors = { generated: '#d97706', editing: '#f97316', ready_to_publish: '#2563eb' };
+  const statusLabels = { generated: 'Generated', editing: 'Editing', ready_to_publish: 'Ready to Publish' };
+
+  // Get all periods sorted
+  const allPeriods = [...new Set(data.map(r => r.period))].sort();
+
+  // Filter to last N periods based on toggle
+  const n = _analyticsPeriod === 'month' ? 12 : _analyticsPeriod === 'week' ? 12 : 14;
+  const periods = allPeriods.slice(-n);
+
+  // Build period labels
+  const periodLabels = periods.map(p => {
+    const d = new Date(p + '-02');
+    return d.toLocaleDateString('en-SG', { month: 'short', year: '2-digit' });
+  });
+
+  wrap.innerHTML = '';
+  statuses.forEach(status => {
+    const statusData = data.filter(r => r.status === status);
+    if (!statusData.length) return;
+
+    const avgHours = periods.map(p => {
+      const row = statusData.find(r => r.period === p);
+      return row ? parseFloat(row.avg_hours) : null;
+    });
+
+    // Skip if all null
+    if (avgHours.every(v => v === null)) return;
+
+    const chartId = `dur-chart-${status}`;
+    const section = document.createElement('div');
+    section.style.cssText = 'margin-bottom:20px;';
+    section.innerHTML = `
+      <div style="font-size:11px;font-weight:600;color:${statusColors[status]};margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">${statusLabels[status]}</div>
+      <div class="analytics-chart-wrap" style="height:160px;">
+        <canvas id="${chartId}"></canvas>
+      </div>
+    `;
+    wrap.appendChild(section);
+
+    const ctx = document.getElementById(chartId).getContext('2d');
+    const color = statusColors[status];
+    const chart = new Chart(ctx, {
+      data: {
+        labels: periodLabels,
+        datasets: [
+          {
+            type: 'bar',
+            label: 'Avg hours',
+            data: avgHours,
+            backgroundColor: color + '55',
+            borderColor: color,
+            borderWidth: 1,
+            borderRadius: 3,
+            yAxisID: 'y',
+          },
+          {
+            type: 'line',
+            label: 'Trend',
+            data: avgHours,
+            borderColor: color,
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            pointRadius: 3,
+            pointBackgroundColor: color,
+            tension: 0.3,
+            spanGaps: true,
+            yAxisID: 'y',
+          }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ` ${ctx.raw?.toFixed(1)} hrs` } }
+        },
+        scales: {
+          x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+          y: { beginAtZero: true, ticks: { font: { size: 10 }, callback: v => v + 'h' }, grid: { color: 'rgba(0,0,0,0.05)' } }
+        }
+      }
+    });
+    _durationCharts.push(chart);
+  });
+
+  if (!wrap.children.length) {
+    wrap.innerHTML = '<div style="font-size:12px;color:var(--text-dim);padding:8px 0;">No transition data yet.</div>';
+  }
 }
 
 function renderAnalytics() {
