@@ -143,8 +143,12 @@ def _build_framer_row(post: dict, file_path: str) -> dict:
     else:
         markdown_content = post.get("content", "")
     html_body = _md_to_html(markdown_content)
-    cats = json.loads(post.get("categories") or "[]")
-    tags = json.loads(post.get("tags") or "[]")
+    def _to_list(val):
+        if isinstance(val, list): return val
+        try: return json.loads(val or "[]")
+        except Exception: return []
+    cats = _to_list(post.get("categories"))
+    tags = _to_list(post.get("tags"))
 
     return {
         "Name": post.get("title", ""),

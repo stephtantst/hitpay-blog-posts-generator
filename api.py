@@ -59,7 +59,7 @@ GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
-    for d in ["writing", "ready_to_publish", "published", "exports"]:
+    for d in ["generated", "editing", "ready_to_publish", "published", "exports"]:
         try:
             Path(POSTS_DIR, d).mkdir(parents=True, exist_ok=True)
         except OSError:
@@ -298,7 +298,7 @@ class StatusRequest(BaseModel):
 
 @app.post("/api/posts/{post_id}/status")
 def api_change_status(post_id: int, body: StatusRequest, user_email: str = Depends(require_auth)):
-    valid = ["writing", "ready_to_publish", "published"]
+    valid = ["generated", "editing", "ready_to_publish", "published"]
     if body.status not in valid:
         raise HTTPException(400, f"Invalid status. Must be one of: {valid}")
 
@@ -370,9 +370,8 @@ def api_bulk_export(body: BulkExportRequest, _: str = Depends(require_auth)):
     for pid in body.post_ids:
         post = get_post(pid)
         if post:
-            file_path = post.get("file_path", "")
-            if file_path and os.path.exists(file_path):
-                posts_with_paths.append((post, file_path))
+            file_path = post.get("file_path", "") or ""
+            posts_with_paths.append((post, file_path if os.path.exists(file_path) else ""))
 
     if not posts_with_paths:
         raise HTTPException(400, "No valid posts found to export")
@@ -570,7 +569,7 @@ async def api_test_post(user_email: str = Depends(require_auth)):
         "slug": f"test-post-{ts}",
         "keyword": "[TEST]",
         "country": "",
-        "status": "writing",
+        "status": "generated",
         "date": __import__("datetime").date.today().isoformat(),
         "meta_title": "",
         "meta_description": "",

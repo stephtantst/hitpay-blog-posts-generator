@@ -256,7 +256,8 @@
       border-radius: 50%;
       flex-shrink: 0;
     }
-    .status-dot.writing { background: var(--yellow); }
+    .status-dot.generated { background: var(--yellow); }
+    .status-dot.editing { background: #f97316; }
     .status-dot.ready_to_publish { background: var(--blue); }
     .status-dot.published { background: var(--green); }
     .post-item-date { font-size: 11px; color: var(--text-dim); }
@@ -535,9 +536,17 @@
       font-weight: 600;
       margin-bottom: 10px;
     }
-    .status-badge.writing { background: #fef3c7; color: #92400e; }
+    .status-badge.generated { background: #fef3c7; color: #92400e; }
+    .status-badge.editing { background: #ffedd5; color: #9a3412; }
     .status-badge.ready_to_publish { background: #dbeafe; color: #1e40af; }
     .status-badge.published { background: #dcfce7; color: #166534; }
+
+    .status-select {
+      width: 100%; padding: 7px 10px; border: 1px solid var(--border); border-radius: var(--radius);
+      background: var(--surface); color: var(--text); font-size: 13px; cursor: pointer;
+      margin-top: 6px;
+    }
+    .status-select:focus { outline: none; border-color: var(--accent); }
 
     .status-actions { display: flex; flex-direction: column; gap: 6px; }
     .btn-status {
@@ -1200,7 +1209,8 @@
       font-weight: 600;
       white-space: nowrap;
     }
-    .tbl-status.writing { background: #fef3c7; color: #92400e; }
+    .tbl-status.generated { background: #fef3c7; color: #92400e; }
+    .tbl-status.editing { background: #ffedd5; color: #9a3412; }
     .tbl-status.ready_to_publish { background: #dbeafe; color: #1e40af; }
     .tbl-status.published { background: #dcfce7; color: #166534; }
     .tbl-status-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
@@ -1247,9 +1257,10 @@
       flex-direction: column;
       max-height: calc(100vh - 160px);
     }
-    .board-col-writing  { border-top: 2px solid var(--yellow); }
-    .board-col-ready    { border-top: 2px solid var(--blue); }
-    .board-col-published{ border-top: 2px solid var(--green); }
+    .board-col-generated { border-top: 2px solid var(--yellow); }
+    .board-col-editing   { border-top: 2px solid #f97316; }
+    .board-col-ready     { border-top: 2px solid var(--blue); }
+    .board-col-published { border-top: 2px solid var(--green); }
     .board-col-header {
       display: flex;
       align-items: center;
@@ -1346,7 +1357,8 @@
       border: 2px solid var(--border); background: var(--surface2);
     }
     .lc-dot.done { border-color: currentColor; background: currentColor; }
-    .lc-dot.writing    { color: #d97706; }
+    .lc-dot.generated  { color: #d97706; }
+    .lc-dot.editing    { color: #f97316; }
     .lc-dot.ready      { color: #2563eb; }
     .lc-dot.published  { color: #16a34a; }
     .lc-connector { width: 2px; flex: 1; min-height: 18px; background: var(--border); margin: 2px 0; }
@@ -1550,7 +1562,8 @@
     <div class="info-section">
       <div class="info-section-title">Editorial workflow</div>
       <ul>
-        <li><span class="info-tag">✏️ Writing</span> — draft in progress. Edit freely in the markdown editor.</li>
+        <li><span class="info-tag">✨ Generated</span> — freshly generated, ready for review.</li>
+        <li><span class="info-tag">✏️ Editing</span> — in progress, being edited before approval.</li>
         <li><span class="info-tag">🔵 Ready to Publish</span> — reviewed and approved for publishing.</li>
         <li><span class="info-tag">✅ Published</span> — live on the blog.</li>
       </ul>
@@ -1569,7 +1582,8 @@
     <div class="overview-toolbar-left">
       <div class="filter-chips" id="overviewChips">
         <button class="chip active" data-status="all" onclick="setOverviewFilter(this)">All <span class="chip-count" id="chip-all">0</span></button>
-        <button class="chip" data-status="writing" onclick="setOverviewFilter(this)">✏️ Writing <span class="chip-count" id="chip-writing">0</span></button>
+        <button class="chip" data-status="generated" onclick="setOverviewFilter(this)">✨ Generated <span class="chip-count" id="chip-generated">0</span></button>
+        <button class="chip" data-status="editing" onclick="setOverviewFilter(this)">✏️ Editing <span class="chip-count" id="chip-editing">0</span></button>
         <button class="chip" data-status="ready_to_publish" onclick="setOverviewFilter(this)">🔵 Ready <span class="chip-count" id="chip-ready_to_publish">0</span></button>
         <button class="chip" data-status="published" onclick="setOverviewFilter(this)">✅ Published <span class="chip-count" id="chip-published">0</span></button>
       </div>
@@ -1643,9 +1657,13 @@
     <!-- Board view (hidden by default) -->
     <div id="boardView" style="display:none;" class="board-wrap">
       <div class="board-columns">
-        <div class="board-col board-col-writing" id="bcol-writing">
-          <div class="board-col-header">✏️ Writing <span class="board-col-count" id="bcount-writing">0</span></div>
-          <div class="board-cards" id="bcards-writing"></div>
+        <div class="board-col board-col-generated" id="bcol-generated">
+          <div class="board-col-header">✨ Generated <span class="board-col-count" id="bcount-generated">0</span></div>
+          <div class="board-cards" id="bcards-generated"></div>
+        </div>
+        <div class="board-col board-col-editing" id="bcol-editing">
+          <div class="board-col-header">✏️ Editing <span class="board-col-count" id="bcount-editing">0</span></div>
+          <div class="board-cards" id="bcards-editing"></div>
         </div>
         <div class="board-col board-col-ready" id="bcol-ready_to_publish">
           <div class="board-col-header">🔵 Ready to Publish <span class="board-col-count" id="bcount-ready_to_publish">0</span></div>
@@ -1682,7 +1700,8 @@
     </div>
     <div class="status-tabs">
       <button class="status-tab active" data-status="all" onclick="setStatusFilter(this)">All</button>
-      <button class="status-tab" data-status="writing" onclick="setStatusFilter(this)">Draft</button>
+      <button class="status-tab" data-status="generated" onclick="setStatusFilter(this)">Generated</button>
+      <button class="status-tab" data-status="editing" onclick="setStatusFilter(this)">Editing</button>
       <button class="status-tab" data-status="ready_to_publish" onclick="setStatusFilter(this)">Ready</button>
       <button class="status-tab" data-status="published" onclick="setStatusFilter(this)">Live</button>
     </div>
@@ -1792,12 +1811,13 @@
     <!-- Status -->
     <div class="meta-section">
       <div class="meta-section-title">Status</div>
-      <div id="statusBadge" class="status-badge writing">✏️ Writing</div>
-      <div class="status-actions">
-        <button class="btn-status" data-status="writing" onclick="changeStatus('writing')">✏️  Mark as Writing</button>
-        <button class="btn-status" data-status="ready_to_publish" onclick="changeStatus('ready_to_publish')">🔵  Mark as Ready to Publish</button>
-        <button class="btn-status" data-status="published" onclick="changeStatus('published')">✅  Mark as Published</button>
-      </div>
+      <div id="statusBadge" class="status-badge generated">✨ Generated</div>
+      <select class="status-select" id="statusSelect" onchange="changeStatus(this.value)">
+        <option value="generated">✨ Generated</option>
+        <option value="editing">✏️ Editing</option>
+        <option value="ready_to_publish">🔵 Ready to Publish</option>
+        <option value="published">✅ Published</option>
+      </select>
     </div>
 
     <!-- Lifecycle -->
@@ -2243,13 +2263,12 @@ async function changeStatus(newStatus) {
 
 function updateStatusUI(status) {
   const badge = document.getElementById('statusBadge');
-  const labels = { writing: '✏️ Writing', ready_to_publish: '🔵 Ready to Publish', published: '✅ Published' };
+  const labels = { generated: '✨ Generated', editing: '✏️ Editing', ready_to_publish: '🔵 Ready to Publish', published: '✅ Published' };
   badge.className = `status-badge ${status}`;
   badge.textContent = labels[status] || status;
 
-  document.querySelectorAll('.btn-status').forEach(btn => {
-    btn.classList.toggle('current', btn.dataset.status === status);
-  });
+  const sel = document.getElementById('statusSelect');
+  if (sel) sel.value = status;
 }
 
 // ── Audit Log ─────────────────────────────────────────────────────────────────
@@ -2284,11 +2303,13 @@ function renderLifecycle(entries) {
 
   // Extract first occurrence of each status transition (entries are DESC; reverse to get oldest first)
   const asc = [...entries].reverse();
-  const createdAt  = currentPost?.created_at  ? new Date(currentPost.created_at.includes('T') ? currentPost.created_at : currentPost.created_at.replace(' ', 'T') + 'Z') : null;
-  const readyEntry = asc.find(e => e.action === 'status_changed' && JSON.parse(e.details || '{}').to === 'ready_to_publish');
-  const pubEntry   = asc.find(e => e.action === 'status_changed' && JSON.parse(e.details || '{}').to === 'published');
-  const readyAt    = readyEntry ? new Date(readyEntry.timestamp.includes('T') ? readyEntry.timestamp : readyEntry.timestamp.replace(' ', 'T') + 'Z') : null;
-  const pubAt      = pubEntry   ? new Date(pubEntry.timestamp.includes('T')   ? pubEntry.timestamp   : pubEntry.timestamp.replace(' ', 'T')   + 'Z') : null;
+  const createdAt   = currentPost?.created_at  ? new Date(currentPost.created_at.includes('T') ? currentPost.created_at : currentPost.created_at.replace(' ', 'T') + 'Z') : null;
+  const editEntry   = asc.find(e => e.action === 'status_changed' && JSON.parse(e.details || '{}').to === 'editing');
+  const readyEntry  = asc.find(e => e.action === 'status_changed' && JSON.parse(e.details || '{}').to === 'ready_to_publish');
+  const pubEntry    = asc.find(e => e.action === 'status_changed' && JSON.parse(e.details || '{}').to === 'published');
+  const editAt  = editEntry  ? new Date(editEntry.timestamp.includes('T')  ? editEntry.timestamp  : editEntry.timestamp.replace(' ', 'T')  + 'Z') : null;
+  const readyAt = readyEntry ? new Date(readyEntry.timestamp.includes('T') ? readyEntry.timestamp : readyEntry.timestamp.replace(' ', 'T') + 'Z') : null;
+  const pubAt   = pubEntry   ? new Date(pubEntry.timestamp.includes('T')   ? pubEntry.timestamp   : pubEntry.timestamp.replace(' ', 'T')   + 'Z') : null;
 
   if (!createdAt) { section.style.display = 'none'; return; }
   section.style.display = '';
@@ -2303,9 +2324,10 @@ function renderLifecycle(entries) {
   }
 
   const steps = [
-    { key: 'writing',           label: '✏️ Writing',           cls: 'writing',   ts: createdAt },
-    { key: 'ready_to_publish',  label: '🔵 Ready to Publish',  cls: 'ready',     ts: readyAt  },
-    { key: 'published',         label: '✅ Published',          cls: 'published', ts: pubAt    },
+    { key: 'generated',        label: '✨ Generated',          cls: 'generated', ts: createdAt },
+    { key: 'editing',          label: '✏️ Editing',            cls: 'editing',   ts: editAt   },
+    { key: 'ready_to_publish', label: '🔵 Ready to Publish',   cls: 'ready',     ts: readyAt  },
+    { key: 'published',        label: '✅ Published',           cls: 'published', ts: pubAt    },
   ];
 
   let html = '';
@@ -2917,10 +2939,11 @@ function setOverviewView(v) {
 
 function renderOverview() {
   // Update chip counts (always against full posts, not filtered)
-  const counts = { all: posts.length, writing: 0, ready_to_publish: 0, published: 0 };
+  const counts = { all: posts.length, generated: 0, editing: 0, ready_to_publish: 0, published: 0 };
   posts.forEach(p => { if (counts[p.status] !== undefined) counts[p.status]++; });
   document.getElementById('chip-all').textContent              = counts.all;
-  document.getElementById('chip-writing').textContent          = counts.writing;
+  document.getElementById('chip-generated').textContent        = counts.generated;
+  document.getElementById('chip-editing').textContent          = counts.editing;
   document.getElementById('chip-ready_to_publish').textContent = counts.ready_to_publish;
   document.getElementById('chip-published').textContent        = counts.published;
 
@@ -2958,7 +2981,7 @@ function fmtDate(str) {
 const MARKET_LABEL = { SG: '🇸🇬 SG', MY: '🇲🇾 MY', PH: '🇵🇭 PH' };
 function marketLabel(c) { return MARKET_LABEL[c] || (c ? c : '—'); }
 
-const STATUS_LABEL = { writing: '✏️ Writing', ready_to_publish: '🔵 Ready', published: '✅ Published' };
+const STATUS_LABEL = { generated: '✨ Generated', editing: '✏️ Editing', ready_to_publish: '🔵 Ready', published: '✅ Published' };
 
 // ── List view ─────────────────────────────────────────────────────────────────
 function sortBy(field) {
@@ -3043,8 +3066,8 @@ function renderListView(filtered) {
 
 // ── Board view ────────────────────────────────────────────────────────────────
 function renderBoardView(filtered, statusFilter = 'all') {
-  const allStatuses = ['writing', 'ready_to_publish', 'published'];
-  const cols = { writing: [], ready_to_publish: [], published: [] };
+  const allStatuses = ['generated', 'editing', 'ready_to_publish', 'published'];
+  const cols = { generated: [], editing: [], ready_to_publish: [], published: [] };
   filtered.forEach(p => { if (cols[p.status]) cols[p.status].push(p); });
 
   // Show/hide columns based on filter

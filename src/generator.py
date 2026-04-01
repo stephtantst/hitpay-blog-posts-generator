@@ -385,7 +385,7 @@ Return the JSON object now."""
     post_data["date"] = date.today().isoformat()
     post_data["keyword"] = keyword
     post_data["country"] = country or ""
-    post_data["status"] = "writing"
+    post_data["status"] = "generated"
 
     # Ensure slug is clean
     if not post_data.get("slug"):
@@ -559,7 +559,7 @@ Return the JSON object now."""
     post_data["date"] = date.today().isoformat()
     post_data["keyword"] = keyword
     post_data["country"] = country or ""
-    post_data["status"] = "writing"
+    post_data["status"] = "generated"
     post_data["source_url"] = url
 
     if not post_data.get("slug"):
