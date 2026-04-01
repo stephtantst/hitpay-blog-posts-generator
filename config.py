@@ -6,7 +6,7 @@ load_dotenv()
 
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 HITPAY_MCP_URL = "https://hitpay-knowledge-mcp.vercel.app/api/mcp"
-CLAUDE_MODEL = "claude-opus-4-6"
+CLAUDE_MODEL = "claude-sonnet-4-6"
 
 # Supabase PostgreSQL connection string
 DATABASE_URL = os.getenv("DATABASE_URL")
