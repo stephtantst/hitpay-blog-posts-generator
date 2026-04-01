@@ -565,21 +565,26 @@ async def api_submit_feedback(body: FeedbackRequest, user_email: str = Depends(r
 
 
 @app.get("/api/analytics/status-durations")
-def api_status_durations(_: str = Depends(require_auth)):
-    """Return average hours each post spent in each status, grouped by calendar month.
+def api_status_durations(period: str = "month", _: str = Depends(require_auth)):
+    """Return average hours each post spent in each status, grouped by period.
 
-    For each status transition (from → to), we compute how long the post sat in
-    the `from` status by diffing consecutive status_changed audit entries.
+    period: 'day' | 'week' | 'month'
     Returns rows: { period, status, avg_hours }
     """
+    if period not in ("day", "week", "month"):
+        period = "month"
+
+    trunc   = {"day": "day",   "week": "week",   "month": "month"}[period]
+    fmt     = {"day": "YYYY-MM-DD", "week": "YYYY-MM-DD", "month": "YYYY-MM"}[period]
+    n_back  = {"day": 14, "week": 12, "month": 12}[period]
+
     from src.database import get_connection, _rows_to_dicts
     conn = get_connection()
-    rows = conn.run("""
+    rows = conn.run(f"""
         WITH transitions AS (
             SELECT
                 post_id,
                 details::json->>'from'  AS from_status,
-                details::json->>'to'    AS to_status,
                 timestamp               AS transitioned_at,
                 LAG(timestamp) OVER (PARTITION BY post_id ORDER BY timestamp) AS prev_ts
             FROM audit_log
@@ -589,15 +594,16 @@ def api_status_durations(_: str = Depends(require_auth)):
             SELECT
                 from_status                                              AS status,
                 EXTRACT(EPOCH FROM (transitioned_at - prev_ts)) / 3600  AS hours,
-                DATE_TRUNC('month', transitioned_at)                     AS period
+                DATE_TRUNC('{trunc}', transitioned_at)                   AS period
             FROM transitions
             WHERE prev_ts IS NOT NULL AND from_status IS NOT NULL
               AND EXTRACT(EPOCH FROM (transitioned_at - prev_ts)) > 0
+              AND transitioned_at >= NOW() - INTERVAL '{n_back} {trunc}s'
         )
         SELECT
-            TO_CHAR(period, 'YYYY-MM')  AS period,
+            TO_CHAR(period, '{fmt}')       AS period,
             status,
-            ROUND(AVG(hours)::numeric, 2) AS avg_hours
+            ROUND(AVG(hours)::numeric, 2)  AS avg_hours
         FROM durations
         GROUP BY period, status
         ORDER BY period, status
