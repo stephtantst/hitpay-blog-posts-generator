@@ -86,7 +86,7 @@ BLOG_SYSTEM_PROMPT = """You are a senior content strategist and writer for HitPa
 - Singapore-headquartered, MAS-licensed payment gateway (PS20200643)
 - Operates across 11 markets in Southeast Asia including Singapore, Malaysia, Philippines
 - No monthly fees, no setup fees — pay per transaction only
-- Next business day payouts in SG (SGD), MY (MYR), and PH (PHP)
+- Next business day payouts in SG (SGD), MY (MYR), and PH (PHP) for domestic transactions; T+3 for cross-border payments
 - Free to sign up, approved in 1–3 business days
 - 50+ payment methods, 700+ wallets globally
 - PCI DSS compliant
@@ -99,14 +99,14 @@ BLOG_SYSTEM_PROMPT = """You are a senior content strategist and writer for HitPa
 | Wallet | GrabPay, ShopeePay | Touch 'n Go, Boost, GrabPay | GCash, Maya |
 | BNPL | Atome, ShopBack PayLater | Atome, ShopBack PayLater, Grab PayLater, SPayLater | — |
 | Cards | Visa, Mastercard, Amex | Visa, Mastercard | Visa, Mastercard |
-| Tourist/Cross-border | Alipay+, WeChat Pay | Alipay+, WeChat Pay | Alipay+, WeChat Pay |
+| Tourist/Cross-border | WeChat Pay | Alipay+, WeChat Pay | Alipay+, WeChat Pay |
 
 ## Cross-Border Payment Acceptance
 HitPay lets merchants accept payments from international customers using their home-country apps — no currency exchange needed at the point of sale.
 
 | Market | Cross-border methods accepted |
 |---|---|
-| Singapore 🇸🇬 | PromptPay (Thailand), TrueMoney (Thailand), Rabbit LINE Pay (Thailand), DuitNow (Malaysia), QRIS (Indonesia), QR Ph (Philippines), WeChatPay (China), UPI (India), KakaoPay/PayCo/LINE Pay (South Korea) |
+| Singapore 🇸🇬 | PromptPay (Thailand), TrueMoney (Thailand), Rabbit LINE Pay (Thailand), DuitNow (Malaysia), QRIS (Indonesia), QR Ph (Philippines), WeChatPay (China), UPI (India), KakaoPay/PayCo/LINE Pay (South Korea) | Note: Alipay+ is NOT available in Singapore |
 | Malaysia 🇲🇾 | QRIS (Indonesia), QR Ph (Philippines), PromptPay (Thailand), TrueMoney (Thailand), Rabbit LINE Pay (Thailand), KakaoPay/PayCo/LINE Pay (South Korea) |
 | Philippines 🇵🇭 | QRIS (Indonesia), PromptPay (Thailand), TrueMoney (Thailand), Rabbit LINE Pay (Thailand), KakaoPay/PayCo/LINE Pay (South Korea), DuitNow (Malaysia) |
 
@@ -118,7 +118,7 @@ Cross-border activation: partner providers process activation within 3–5 busin
 3. "50+ payment methods" — never "700+" (that's wallets)
 4. Never state a specific card transaction rate — write "see hitpayapp.com/pricing"
 5. Never fabricate testimonials or statistics. If you use a stat, it must come from the provided knowledge base context
-6. Payouts: always say "next business day in SG, MY & PH" — not just "T+1"
+6. Payouts: domestic transactions settle next business day in SG, MY & PH; cross-border payments settle T+3. Always distinguish between the two when relevant.
 7. FAQ questions must mirror how a user would type into a search engine or AI assistant (e.g. "How do I...", "What is...", "Is there a fee...") — direct question phrasing, not third person
 
 ## Blog Post Format
@@ -226,11 +226,12 @@ COUNTRY_CONTEXT = {
         "local_methods": "PayNow, GrabPay, ShopeePay, Atome, ShopBack PayLater, GrabPay PayLater, Cards (Visa, Mastercard, Amex, UnionPay, Apple Pay, Google Pay)",
         "cross_border": "PromptPay (Thailand), TrueMoney (Thailand), Rabbit LINE Pay (Thailand), DuitNow (Malaysia), QRIS (Indonesia), QR Ph (Philippines), WeChatPay (China), UPI (India), KakaoPay/PayCo/LINE Pay (South Korea)",
         "places": "Tanjong Pagar, Bugis, Orchard Road, Jurong East, Tiong Bahru",
-        "payout": "next business day in SGD",
+        "payout": "next business day in SGD for domestic; T+3 for cross-border payments",
         "avoid": [
             "FPX, Touch 'n Go, Boost, MayBank QR — these are Malaysia-only methods",
             "GCash, Maya, PESONet, InstaPay, QR Ph (as a local method) — Philippines-only",
             "Do not use DuitNow as a local SG payment method (it's cross-border only from SG)",
+            "Alipay+ is NOT available in Singapore — do not mention it as a SG payment method",
         ],
     },
     "MY": {
@@ -240,7 +241,7 @@ COUNTRY_CONTEXT = {
         "local_methods": "DuitNow QR, FPX, Touch 'n Go, GrabPay, ShopeePay, Boost, MayBank QR, WeChat Pay, Atome, ShopBack PayLater, GrabPay PayLater, AliPay, Cards (Visa, Mastercard)",
         "cross_border": "QRIS (Indonesia), PromptPay (Thailand), TrueMoney (Thailand), Rabbit LINE Pay (Thailand), KakaoPay/PayCo/LINE Pay (South Korea)",
         "places": "Bangsar, Petaling Jaya, KLCC, Johor Bahru, Bukit Bintang",
-        "payout": "next business day in MYR",
+        "payout": "next business day in MYR for domestic; T+3 for cross-border payments",
         "avoid": [
             "PayNow — Singapore-only; do not present as a MY method",
             "GCash, Maya, QR Ph, PESONet, InstaPay — Philippines-only",
@@ -254,7 +255,7 @@ COUNTRY_CONTEXT = {
         "local_methods": "QR Ph, GCash, Maya, Cards (Visa, Mastercard, online and in-person), ShopeePay, SPayLater, UnionBank Online, PESONet, InstaPay, BillEase, GrabPay, over-the-counter (Bayad, ECPay, Palawan)",
         "cross_border": "QRIS (Indonesia), PromptPay (Thailand), TrueMoney (Thailand), Rabbit LINE Pay (Thailand), KakaoPay/PayCo/LINE Pay (South Korea), DuitNow (Malaysia)",
         "places": "BGC (Bonifacio Global City), Makati, Quezon City, Cebu, Davao",
-        "payout": "next business day in PHP",
+        "payout": "next business day in PHP for domestic; T+3 for cross-border payments",
         "avoid": [
             "PayNow — Singapore-only; do not use as a PH payment method",
             "FPX, Touch 'n Go, Boost — Malaysia-only",

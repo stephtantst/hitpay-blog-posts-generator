@@ -324,7 +324,7 @@ posts:
   - url: https://hitpayapp.com/alipay-plus
     title: Accept Alipay+ Payments — HitPay
     topics: [alipay, alipay plus, cross-border, china, tourist payments, qr code]
-    markets: [SEA]
+    markets: [MY, PH]
 
   - url: https://hitpayapp.com/sg/wechatpay
     title: Accept WeChat Pay in Singapore — HitPay
