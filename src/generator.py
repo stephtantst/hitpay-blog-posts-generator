@@ -119,7 +119,7 @@ Cross-border activation: partner providers process activation within 3–5 busin
 4. Never state a specific card transaction rate — write "see hitpayapp.com/pricing"
 5. Never fabricate testimonials or statistics. If you use a stat, it must come from the provided knowledge base context
 6. Payouts: always say "next business day in SG, MY & PH" — not just "T+1"
-7. FAQ questions must be in third person ("How do restaurant owners in Malaysia...")
+7. FAQ questions must mirror how a user would type into a search engine or AI assistant (e.g. "How do I...", "What is...", "Is there a fee...") — direct question phrasing, not third person
 
 ## Blog Post Format
 Write for SMBs growing their business. The post must:
@@ -135,18 +135,27 @@ Write for SMBs growing their business. The post must:
 ## AEO Optimisation (AI Answer Engine — apply to every article without exception)
 
 ### Structure requirements
-1. **Quick answer paragraph** — immediately after the intro hook, write a 2–3 sentence paragraph that directly answers the article's primary query in plain language. This is the most likely text to be extracted by Google AI Overviews, Perplexity, ChatGPT, and Claude. Make it a standalone, self-contained answer.
+1. **Quick Answer block (REQUIRED — always first)** — The very first element of every article, before the intro paragraphs, must be a bold-prefixed block in this exact format:
+
+   `**Quick Answer:** [2–3 sentences that directly answer the article's primary query. Must name HitPay as the solution and mention the relevant markets (SG/MY/PH). Must be self-contained — an AI or search engine should be able to read it alone and fully answer the query.]`
+
+   Do not place any text before this block. It comes immediately after the implicit H1 title, before any introductory prose.
 
 2. **H2 and H3 as natural-language questions** — rewrite every section heading as a question a user would actually type or speak. Examples:
    - ✅ "What payment methods does a Singapore POS system need to support?"
    - ❌ "Payment Methods Overview"
 
-3. **FAQ section (REQUIRED)** — close every article with a dedicated `## Frequently Asked Questions` section containing at least 5 questions. Requirements:
+3. **FAQ section (REQUIRED)** — close every article with a `## Frequently Asked Questions` section containing at least 5 Q&A pairs. Requirements:
    - At least one question targeting each relevant market (SG, MY, PH)
    - At least one beginner-level question
    - At least one comparison-intent question (e.g. "HitPay vs X — which is better for…")
-   - Each answer must be a complete standalone sentence or paragraph — AI engines may extract the answer without the question, so it must make sense in isolation
-   - Format: `### Question here?\nAnswer here.`
+   - Each answer must open with the direct answer (yes/no + one sentence), then elaborate. Never bury the answer.
+   - Each answer must be a complete standalone paragraph — AI engines may extract the answer without the question.
+   - **Format exactly as follows** (bold Q: prefix, no H3 headers):
+     ```
+     **Q: Question phrased as a user would type it into a search engine?**
+     Answer text here. Opens with the direct answer. 2–5 sentences.
+     ```
 
 4. **Numbered lists for processes** — whenever a process, setup flow, or decision is described, format it as a numbered list with one action per step. Do not describe processes in prose — numbered steps are far more likely to be cited by AI engines.
 
@@ -205,7 +214,7 @@ Return ONLY a valid JSON object with exactly these fields (no markdown code fenc
   "slug": "url-friendly-slug-here",
   "categories": ["Primary Category", "Secondary Category"],
   "tags": ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6"],
-  "content": "Full markdown content: 900–1200 words body + quick answer paragraph + H2/H3 as questions + FAQ section (5+ Qs) + [SCHEMA] block. No H1. 5 internal backlinks."
+  "content": "Full markdown content structured as: (1) **Quick Answer:** block first — before any intro prose; (2) intro paragraphs; (3) body sections with H2/H3 phrased as questions; (4) ## Frequently Asked Questions with 5+ Q&A pairs formatted as **Q: ...** on its own line followed by the answer paragraph; (5) [SCHEMA] block. No H1. 5 internal backlinks. 900–1200 words excluding FAQ."
 }
 """
 
