@@ -364,7 +364,7 @@ Return the JSON object now."""
     response = _messages_create_with_retry(
         client,
         model=CLAUDE_MODEL,
-        max_tokens=8192,
+        max_tokens=16000,
         system=BLOG_SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_prompt}]
     )
@@ -542,7 +542,7 @@ Return the JSON object now."""
     response = _messages_create_with_retry(
         client,
         model=CLAUDE_MODEL,
-        max_tokens=8192,
+        max_tokens=16000,
         system=BLOG_SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_prompt}]
     )
