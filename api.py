@@ -433,7 +433,11 @@ def api_ai_edit(post_id: int, body: AiEditRequest, _: str = Depends(require_auth
         content = post.get("content", "")
         if not content:
             raise HTTPException(400, "Post file not found")
-    edited = ai_edit_full(content, body.instruction)
+
+    try:
+        edited = ai_edit_full(content, body.instruction)
+    except Exception as e:
+        raise HTTPException(500, f"AI edit failed: {e}")
     return {"edited_content": edited}
 
 

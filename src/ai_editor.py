@@ -50,7 +50,7 @@ def ai_edit_full(content: str, instruction: str) -> str:
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
     response = client.messages.create(
         model=CLAUDE_MODEL,
-        max_tokens=4096,
+        max_tokens=8192,
         system=_EDIT_SYSTEM,
         messages=[{
             "role": "user",
