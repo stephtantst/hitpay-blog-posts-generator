@@ -327,6 +327,70 @@
     .EasyMDEContainer .editor-statusbar { background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); border-radius: 0 0 var(--radius) var(--radius); border-top: none; }
     .CodeMirror-cursor { border-left-color: var(--accent) !important; }
 
+    /* Generation progress widget (bottom-left, shown when minimised) */
+    #genWidget {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 9998;
+      width: 280px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+      overflow: hidden;
+      font-size: 13px;
+    }
+    #genWidget.visible { display: block; }
+    .gen-widget-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+    .gen-widget-icon { font-size: 14px; flex-shrink: 0; }
+    .gen-widget-title { font-weight: 600; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text); }
+    .gen-widget-expand {
+      background: none; border: none; cursor: pointer;
+      color: var(--text-muted); font-size: 13px; padding: 2px 4px;
+      border-radius: 4px; flex-shrink: 0;
+    }
+    .gen-widget-expand:hover { background: var(--surface); color: var(--text); }
+    .gen-widget-status {
+      padding: 8px 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 12px;
+    }
+    .gen-widget-done {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+    }
+    .gen-widget-open {
+      flex: 1;
+      padding: 5px 10px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .gen-widget-open:hover { background: var(--accent-hover); }
+    .gen-widget-dismiss {
+      background: none; border: 1px solid var(--border); border-radius: 5px;
+      color: var(--text-muted); font-size: 12px; padding: 5px 8px; cursor: pointer;
+    }
+    .gen-widget-dismiss:hover { color: var(--text); border-color: var(--text-muted); }
+
     /* Back button for side-by-side / fullscreen */
     #mde-back-btn {
       display: none;
@@ -1302,6 +1366,18 @@
 <!-- Back button for EasyMDE split/fullscreen modes -->
 <button id="mde-back-btn" onclick="mdeExitMode()">← Back</button>
 
+<!-- Generation progress widget (minimised state) -->
+<div id="genWidget">
+  <div class="gen-widget-header">
+    <span class="gen-widget-icon" id="genWidgetIcon">⟳</span>
+    <span class="gen-widget-title" id="genWidgetTitle">Generating…</span>
+    <button class="gen-widget-expand" onclick="expandGenerate()" title="Expand">↗</button>
+  </div>
+  <div id="genWidgetBody">
+    <div class="gen-widget-status" id="genWidgetStatus">Starting…</div>
+  </div>
+</div>
+
 <!-- Header -->
 <header>
   <div class="logo">
@@ -1781,6 +1857,7 @@
     <div class="progress-log" id="progressLog"></div>
     <div class="modal-actions">
       <button class="btn btn-cancel" onclick="closeGenerateModal()">Cancel</button>
+      <button class="btn btn-cancel" id="minimizeBtn" onclick="minimizeGenerate()" style="display:none;">⤓ Minimize</button>
       <button class="btn btn-primary" id="generateBtn" onclick="startGenerate()">
         Generate Post
       </button>
@@ -2380,19 +2457,73 @@ function focusTagInput(id) {
 }
 
 // ── Generate Modal ────────────────────────────────────────────────────────────
+let _genNewPostId = null;
+let _genMinimized = false;
+
 function openGenerateModal() {
+  _genMinimized = false;
   document.getElementById('keywordInput').value = '';
   document.getElementById('generateCountry').value = '';
   document.getElementById('progressLog').innerHTML = '';
   document.getElementById('progressLog').classList.remove('visible');
   document.getElementById('generateBtn').disabled = false;
   document.getElementById('generateBtn').textContent = 'Generate Post';
+  document.getElementById('minimizeBtn').style.display = 'none';
   document.getElementById('generateModal').classList.add('open');
   setTimeout(() => document.getElementById('keywordInput').focus(), 150);
 }
 
 function closeGenerateModal() {
   document.getElementById('generateModal').classList.remove('open');
+}
+
+function minimizeGenerate() {
+  _genMinimized = true;
+  document.getElementById('generateModal').classList.remove('open');
+  document.getElementById('genWidget').classList.add('visible');
+}
+
+function expandGenerate() {
+  _genMinimized = false;
+  document.getElementById('generateModal').classList.add('open');
+  // If generation is done, don't re-show the widget after expanding
+  if (_genNewPostId) {
+    document.getElementById('genWidget').classList.remove('visible');
+  }
+}
+
+function _setWidgetStatus(msg) {
+  document.getElementById('genWidgetStatus').textContent = msg;
+}
+
+function _setWidgetDone(postId, keyword) {
+  _genNewPostId = postId;
+  document.getElementById('genWidgetIcon').textContent = '✓';
+  document.getElementById('genWidgetTitle').textContent = 'Post ready!';
+  const body = document.getElementById('genWidgetBody');
+  body.innerHTML = `
+    <div class="gen-widget-done">
+      <button class="gen-widget-open" onclick="openGeneratedPost()">Open Post</button>
+      <button class="gen-widget-dismiss" onclick="dismissGenWidget()">✕</button>
+    </div>`;
+  // Flash the widget to draw attention
+  const w = document.getElementById('genWidget');
+  w.style.boxShadow = '0 0 0 3px var(--accent)';
+  setTimeout(() => { w.style.boxShadow = ''; }, 1500);
+}
+
+async function openGeneratedPost() {
+  const id = _genNewPostId;
+  document.getElementById('genWidget').classList.remove('visible');
+  _genNewPostId = null;
+  closeGenerateModal();
+  await loadPosts();
+  if (id) await openPost(id);
+}
+
+function dismissGenWidget() {
+  document.getElementById('genWidget').classList.remove('visible');
+  _genNewPostId = null;
 }
 
 async function startGenerate() {
@@ -2405,6 +2536,13 @@ async function startGenerate() {
   btn.textContent = 'Generating…';
   log.innerHTML = '';
   log.classList.add('visible');
+  document.getElementById('minimizeBtn').style.display = '';
+
+  // Reset widget
+  _genNewPostId = null;
+  document.getElementById('genWidgetIcon').textContent = '⟳';
+  document.getElementById('genWidgetTitle').textContent = keyword.length > 30 ? keyword.slice(0, 30) + '…' : keyword;
+  document.getElementById('genWidgetBody').innerHTML = '<div class="gen-widget-status" id="genWidgetStatus">Starting…</div>';
 
   const addLog = (msg, cls = '') => {
     const line = document.createElement('div');
@@ -2412,6 +2550,7 @@ async function startGenerate() {
     line.textContent = msg;
     log.appendChild(line);
     log.scrollTop = log.scrollHeight;
+    _setWidgetStatus(msg);
   };
 
   addLog('→ Starting…');
@@ -2442,7 +2581,7 @@ async function startGenerate() {
         const data = JSON.parse(line.slice(6));
         if (data.type === 'status') addLog('→ ' + data.message);
         else if (data.type === 'done') {
-          addLog('✓ Done! Opening post…', 'log-done');
+          addLog('✓ Done!', 'log-done');
           newPostId = data.post_id;
         } else if (data.type === 'error') {
           addLog('✗ ' + data.message, 'log-error');
@@ -2451,16 +2590,28 @@ async function startGenerate() {
     }
 
     await loadPosts();
+
     if (newPostId) {
-      closeGenerateModal();
-      await openPost(newPostId);
+      if (_genMinimized) {
+        // Stay minimised — show "Open Post" in widget
+        _setWidgetDone(newPostId, keyword);
+      } else {
+        // Modal still open — close and open post directly
+        closeGenerateModal();
+        document.getElementById('genWidget').classList.remove('visible');
+        await openPost(newPostId);
+      }
     }
+
     btn.disabled = false;
     btn.textContent = 'Generate Post';
+    document.getElementById('minimizeBtn').style.display = 'none';
   } catch (err) {
     addLog('✗ ' + err.message, 'log-error');
+    _setWidgetStatus('✗ ' + err.message);
     btn.disabled = false;
     btn.textContent = 'Generate Post';
+    document.getElementById('minimizeBtn').style.display = 'none';
   }
 }
 

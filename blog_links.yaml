@@ -119,6 +119,11 @@ posts:
     topics: [scan to pay, philippines, in-person, qr ph, gcash, pos]
     markets: [PH]
 
+  - url: https://hitpayapp.com/paynow
+    title: Accept PayNow as a Cross-Border Payment Method for Philippines Merchants
+    topics: [paynow, philippines, cross-border, singapore, qr code, online payment, international]
+    markets: [PH]
+
   - url: https://hitpayapp.com/blog/hitpay-now-offers-tap-to-pay-on-iphone-for-merchants-to-accept-contactless-payments
     title: HitPay Now Offers Tap to Pay on iPhone for Contactless Payments
     topics: [tap to pay, iphone, contactless, nfc, pos, in-person, apple pay]

@@ -108,7 +108,7 @@ HitPay lets merchants accept payments from international customers using their h
 |---|---|
 | Singapore 🇸🇬 | PromptPay (Thailand), TrueMoney (Thailand), Rabbit LINE Pay (Thailand), DuitNow (Malaysia), QRIS (Indonesia), QR Ph (Philippines), WeChatPay (China), UPI (India), KakaoPay/PayCo/LINE Pay (South Korea) | Note: Alipay+ is NOT available in Singapore |
 | Malaysia 🇲🇾 | QRIS (Indonesia), QR Ph (Philippines), PromptPay (Thailand), TrueMoney (Thailand), Rabbit LINE Pay (Thailand), KakaoPay/PayCo/LINE Pay (South Korea) |
-| Philippines 🇵🇭 | QRIS (Indonesia), PromptPay (Thailand), TrueMoney (Thailand), Rabbit LINE Pay (Thailand), KakaoPay/PayCo/LINE Pay (South Korea), DuitNow (Malaysia) |
+| Philippines 🇵🇭 | PayNow (Singapore), QRIS (Indonesia), PromptPay (Thailand), TrueMoney (Thailand), Rabbit LINE Pay (Thailand), KakaoPay/PayCo/LINE Pay (South Korea), DuitNow (Malaysia) |
 
 Cross-border activation: partner providers process activation within 3–5 business days after submission.
 
@@ -253,7 +253,7 @@ COUNTRY_CONTEXT = {
         "flag": "🇵🇭",
         "currency": "PHP",
         "local_methods": "QR Ph, GCash, Maya, Cards (Visa, Mastercard, online and in-person), ShopeePay, SPayLater, UnionBank Online, PESONet, InstaPay, BillEase, GrabPay, over-the-counter (Bayad, ECPay, Palawan)",
-        "cross_border": "QRIS (Indonesia), PromptPay (Thailand), TrueMoney (Thailand), Rabbit LINE Pay (Thailand), KakaoPay/PayCo/LINE Pay (South Korea), DuitNow (Malaysia)",
+        "cross_border": "PayNow (Singapore), QRIS (Indonesia), PromptPay (Thailand), TrueMoney (Thailand), Rabbit LINE Pay (Thailand), KakaoPay/PayCo/LINE Pay (South Korea), DuitNow (Malaysia)",
         "places": "BGC (Bonifacio Global City), Makati, Quezon City, Cebu, Davao",
         "payout": "next business day in PHP for domestic; T+3 for cross-border payments",
         "avoid": [
