@@ -6,6 +6,7 @@
   <title>HitPay Blog Generator</title>
   <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css" />
   <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -104,6 +105,87 @@
       flex: 1; overflow-y: auto;
       padding: 20px;
       font-size: 13px; line-height: 1.65;
+    }
+
+    /* ── Analytics button & panel ────────────────────── */
+    .analytics-btn {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.15s, color 0.15s;
+      flex-shrink: 0;
+    }
+    .analytics-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .analytics-btn svg { width: 13px; height: 13px; }
+    .analytics-panel {
+      position: fixed;
+      top: 0; right: -520px;
+      width: 500px; max-width: 96vw;
+      height: 100vh;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      z-index: 901;
+      display: flex; flex-direction: column;
+      transition: right 0.25s cubic-bezier(0.4,0,0.2,1);
+      overflow: hidden;
+    }
+    .analytics-panel.open { right: 0; }
+    .analytics-panel-header {
+      display: flex; align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0; gap: 10px;
+    }
+    .analytics-panel-title { font-size: 14px; font-weight: 700; flex: 1; }
+    .analytics-panel-close {
+      background: none; border: none; color: var(--text-muted);
+      font-size: 18px; cursor: pointer; line-height: 1; padding: 2px 4px;
+    }
+    .analytics-panel-close:hover { color: var(--text); }
+    .analytics-panel-body { flex: 1; overflow-y: auto; padding: 20px; }
+    .analytics-period-toggle {
+      display: flex; gap: 3px;
+      background: var(--surface2); border-radius: 8px; padding: 3px;
+      margin-bottom: 20px;
+    }
+    .analytics-period-btn {
+      flex: 1; padding: 5px 0; border: none; background: none;
+      border-radius: 6px; font-size: 12px; font-weight: 600;
+      color: var(--text-muted); cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .analytics-period-btn.active {
+      background: var(--surface); color: var(--accent);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .analytics-stat-cards {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      margin-bottom: 24px;
+    }
+    .analytics-stat-card {
+      background: var(--surface2); border-radius: 10px; padding: 14px 16px;
+    }
+    .analytics-stat-label {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px;
+    }
+    .analytics-stat-value { font-size: 28px; font-weight: 700; color: var(--text); line-height: 1; }
+    .analytics-stat-sub { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+    .analytics-chart-section { margin-bottom: 28px; }
+    .analytics-chart-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 10px;
+    }
+    .analytics-chart-wrap {
+      background: var(--surface2); border-radius: 10px; padding: 16px;
+    }
+    .analytics-doughnut-wrap {
+      background: var(--surface2); border-radius: 10px; padding: 16px;
+      display: flex; gap: 20px; align-items: center;
     }
     .info-section { margin-bottom: 24px; }
     .info-section-title {
@@ -1402,6 +1484,11 @@
   </div>
   <div class="header-spacer"></div>
   <span class="save-indicator" id="saveIndicator">✓ Saved</span>
+  <button class="analytics-btn" onclick="openAnalyticsPanel()" title="Analytics">
+    <svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="9" width="3" height="6" rx="1"/><rect x="6.5" y="5" width="3" height="10" rx="1"/><rect x="12" y="1" width="3" height="14" rx="1"/>
+    </svg>
+  </button>
   <button class="info-btn" onclick="openInfoPanel()" title="How this tool works">i</button>
   <div class="feedback-popover-wrap" id="feedbackWrap">
     <button class="feedback-btn" onclick="toggleFeedbackPopover(event)" title="Send feedback">✦</button>
@@ -1571,6 +1658,36 @@
       <p>Use <strong>AI Edit</strong> to send a selected passage (or the full post) back to Claude with a specific instruction, without regenerating the whole article.</p>
     </div>
 
+  </div>
+</div>
+
+<!-- Analytics overlay + panel -->
+<div class="info-overlay" id="analyticsOverlay" onclick="closeAnalyticsPanel()"></div>
+<div class="analytics-panel" id="analyticsPanel">
+  <div class="analytics-panel-header">
+    <div class="analytics-panel-title">Analytics</div>
+    <button class="analytics-panel-close" onclick="closeAnalyticsPanel()">✕</button>
+  </div>
+  <div class="analytics-panel-body">
+    <div class="analytics-period-toggle">
+      <button class="analytics-period-btn" data-period="day" onclick="setAnalyticsPeriod(this)">Day</button>
+      <button class="analytics-period-btn active" data-period="week" onclick="setAnalyticsPeriod(this)">Week</button>
+      <button class="analytics-period-btn" data-period="month" onclick="setAnalyticsPeriod(this)">Month</button>
+    </div>
+    <div class="analytics-stat-cards" id="analyticsStatCards"></div>
+    <div class="analytics-chart-section">
+      <div class="analytics-chart-title">Articles Generated</div>
+      <div class="analytics-chart-wrap" style="height:210px;">
+        <canvas id="analyticsBarChart"></canvas>
+      </div>
+    </div>
+    <div class="analytics-chart-section">
+      <div class="analytics-chart-title">Status Breakdown</div>
+      <div class="analytics-doughnut-wrap">
+        <canvas id="analyticsDoughnutChart" width="130" height="130" style="flex-shrink:0;"></canvas>
+        <div id="analyticsDoughnutLegend" style="flex:1;"></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -3268,6 +3385,164 @@ async function applyAiEdit() {
     btn.disabled = false;
     btn.textContent = 'Apply Edit';
   }
+}
+
+// ── Analytics Panel ───────────────────────────────────────────────────────────
+let _analyticsPeriod = 'week';
+let _barChart = null;
+let _doughnutChart = null;
+
+function openAnalyticsPanel() {
+  document.getElementById('analyticsOverlay').classList.add('open');
+  document.getElementById('analyticsPanel').classList.add('open');
+  renderAnalytics();
+}
+
+function closeAnalyticsPanel() {
+  document.getElementById('analyticsOverlay').classList.remove('open');
+  document.getElementById('analyticsPanel').classList.remove('open');
+}
+
+function setAnalyticsPeriod(btn) {
+  _analyticsPeriod = btn.dataset.period;
+  document.querySelectorAll('.analytics-period-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAnalytics();
+}
+
+function renderAnalytics() {
+  const period = _analyticsPeriod;
+  const now = new Date();
+
+  function parseDate(str) {
+    if (!str) return new Date(0);
+    return new Date(str.includes('T') ? str : str.replace(' ', 'T') + 'Z');
+  }
+
+  function getPeriodKey(d, p) {
+    if (p === 'day') return d.toISOString().slice(0, 10);
+    if (p === 'week') {
+      const day = d.getDay();
+      const monday = new Date(d);
+      monday.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
+      return monday.toISOString().slice(0, 10);
+    }
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }
+
+  function fmtKey(k, p) {
+    if (p === 'month') return new Date(k + '-02').toLocaleDateString('en-SG', { month: 'short', year: '2-digit' });
+    const d = new Date(k + 'T00:00:00');
+    return d.toLocaleDateString('en-SG', { month: 'short', day: 'numeric' });
+  }
+
+  // Generate last N period keys ending now
+  const nPeriods = period === 'day' ? 14 : 12;
+  const periodKeys = [];
+  for (let i = nPeriods - 1; i >= 0; i--) {
+    const tmp = new Date(now);
+    if (period === 'day') tmp.setDate(now.getDate() - i);
+    else if (period === 'week') tmp.setDate(now.getDate() - i * 7);
+    else tmp.setMonth(now.getMonth() - i);
+    const k = getPeriodKey(tmp, period);
+    if (!periodKeys.includes(k)) periodKeys.push(k);
+  }
+
+  // Count posts created per period bucket
+  const generatedBuckets = {};
+  periodKeys.forEach(k => { generatedBuckets[k] = 0; });
+  posts.forEach(p => {
+    const k = getPeriodKey(parseDate(p.created_at), period);
+    if (generatedBuckets[k] !== undefined) generatedBuckets[k]++;
+  });
+
+  // Stat counts
+  const currentKey = getPeriodKey(now, period);
+  const thisPeriodCount = generatedBuckets[currentKey] || 0;
+  const totalPosts = posts.length;
+  const publishedCount = posts.filter(p => p.status === 'published').length;
+  const generatedCount = posts.filter(p => p.status === 'generated').length;
+  const editingCount   = posts.filter(p => p.status === 'editing').length;
+  const readyCount     = posts.filter(p => p.status === 'ready_to_publish').length;
+  const pipelineCount  = generatedCount + editingCount + readyCount;
+  const periodLabel    = period === 'day' ? 'today' : period === 'week' ? 'this week' : 'this month';
+
+  document.getElementById('analyticsStatCards').innerHTML = `
+    <div class="analytics-stat-card">
+      <div class="analytics-stat-label">Total Posts</div>
+      <div class="analytics-stat-value">${totalPosts}</div>
+      <div class="analytics-stat-sub">across all statuses</div>
+    </div>
+    <div class="analytics-stat-card">
+      <div class="analytics-stat-label">Generated ${periodLabel}</div>
+      <div class="analytics-stat-value">${thisPeriodCount}</div>
+      <div class="analytics-stat-sub">new articles</div>
+    </div>
+    <div class="analytics-stat-card">
+      <div class="analytics-stat-label">Published</div>
+      <div class="analytics-stat-value">${publishedCount}</div>
+      <div class="analytics-stat-sub">live on the blog</div>
+    </div>
+    <div class="analytics-stat-card">
+      <div class="analytics-stat-label">In Pipeline</div>
+      <div class="analytics-stat-value">${pipelineCount}</div>
+      <div class="analytics-stat-sub">generated + editing + ready</div>
+    </div>
+  `;
+
+  // ── Bar chart ──
+  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#6366f1';
+  const barLabels = periodKeys.map(k => fmtKey(k, period));
+  const barData   = periodKeys.map(k => generatedBuckets[k]);
+
+  if (_barChart) { _barChart.destroy(); _barChart = null; }
+  const barCtx = document.getElementById('analyticsBarChart').getContext('2d');
+  _barChart = new Chart(barCtx, {
+    type: 'bar',
+    data: {
+      labels: barLabels,
+      datasets: [{ label: 'Articles', data: barData, backgroundColor: accent, borderRadius: 4, borderSkipped: false }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 45, minRotation: 0 } },
+        y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 10 }, precision: 0 }, grid: { color: 'rgba(0,0,0,0.05)' } }
+      }
+    }
+  });
+
+  // ── Doughnut chart ──
+  const statusColors  = ['#d97706', '#f97316', '#2563eb', '#16a34a'];
+  const statusLabels  = ['Generated', 'Editing', 'Ready to Publish', 'Published'];
+  const statusCounts  = [generatedCount, editingCount, readyCount, publishedCount];
+
+  if (_doughnutChart) { _doughnutChart.destroy(); _doughnutChart = null; }
+  const dCtx = document.getElementById('analyticsDoughnutChart').getContext('2d');
+  _doughnutChart = new Chart(dCtx, {
+    type: 'doughnut',
+    data: {
+      labels: statusLabels,
+      datasets: [{ data: statusCounts, backgroundColor: statusColors, borderWidth: 2, borderColor: '#ffffff' }]
+    },
+    options: {
+      responsive: false,
+      cutout: '68%',
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw}` } }
+      }
+    }
+  });
+
+  document.getElementById('analyticsDoughnutLegend').innerHTML = statusLabels.map((lbl, i) => `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px;">
+      <span style="width:10px;height:10px;border-radius:2px;background:${statusColors[i]};flex-shrink:0;"></span>
+      <span style="font-size:12px;color:var(--text-muted);flex:1;">${lbl}</span>
+      <span style="font-size:13px;font-weight:700;color:var(--text);">${statusCounts[i]}</span>
+    </div>
+  `).join('');
 }
 
 // Keyboard shortcut: Cmd/Ctrl+S to save
