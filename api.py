@@ -427,10 +427,12 @@ def api_ai_edit(post_id: int, body: AiEditRequest, _: str = Depends(require_auth
         return {"edited_selection": edited}
 
     file_path = post.get("file_path", "")
-    if not file_path or not os.path.exists(file_path):
-        raise HTTPException(400, "Post file not found")
-
-    content = read_post_content(file_path)
+    if file_path and os.path.exists(file_path):
+        content = read_post_content(file_path)
+    else:
+        content = post.get("content", "")
+        if not content:
+            raise HTTPException(400, "Post file not found")
     edited = ai_edit_full(content, body.instruction)
     return {"edited_content": edited}
 
