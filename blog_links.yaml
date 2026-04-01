@@ -1,56 +1,655 @@
-# HitPay Blog Post Reference Links
-# Add new posts here as they're published — the generator uses this list for internal backlinks.
-# Format: url, title, description (used to match relevance)
+# HitPay Blog Post & Product Page Reference Links
+# Scraped from hitpayapp.com — last updated 2026-04-01
+#
+# markets: SG | MY | PH | SEA | Global
+# If markets is empty/omitted, link is treated as globally relevant.
+# Generator will prioritise links matching the target market.
 
 posts:
+
+  # ── Blog articles ──────────────────────────────────────────────────────────
+
+  - url: https://hitpayapp.com/blog/what-is-hitpay
+    title: What Is HitPay? A Complete Guide for Southeast Asian SMEs (2026)
+    topics: [hitpay, overview, payment platform, sme, southeast asia, features, onboarding]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/credit-card-payment
+    title: Credit Card Payment for Small Businesses in Southeast Asia (2026)
+    topics: [credit card, visa, mastercard, card payment, online payment, pos]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/upi-gateway
+    title: UPI Gateway — How It Works and What Businesses Need to Know (2026)
+    topics: [upi, india, cross-border, indian tourists, qr code, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/invoice-payment
+    title: Invoice Payment — How It Works for SMEs in Singapore and Southeast Asia (2026)
+    topics: [invoice, invoicing, payment link, b2b, billing, sme, cash flow]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/how-to-generate-qrph
+    title: How to Generate QR Ph for Your Business (2026 Step-by-Step Guide)
+    topics: [qr ph, philippines, gcash, maya, qr code, bsp, generate, static qr]
+    markets: [PH]
+
   - url: https://hitpayapp.com/blog/online-payment-singapore
     title: Online Payment Methods in Singapore
-    topics: [online payments, singapore, paynow, grabpay, ecommerce, checkout]
+    topics: [online payments, singapore, paynow, grabpay, ecommerce, checkout, card]
+    markets: [SG]
 
   - url: https://hitpayapp.com/blog/payment-gateway-singapore
-    title: Payment Gateway Singapore Guide
-    topics: [payment gateway, singapore, paynow, grabpay, visa, mastercard, integration]
+    title: Best Payment Gateway Singapore 2026 — HitPay vs Stripe vs Airwallex
+    topics: [payment gateway, singapore, paynow, grabpay, visa, mastercard, comparison, stripe, airwallex]
+    markets: [SG]
 
   - url: https://hitpayapp.com/blog/stripe-alternatives-singapore
-    title: Stripe Alternatives in Singapore
-    topics: [payment gateway, stripe, singapore, comparison, paynow, pos, invoicing]
+    title: Best Stripe Alternatives in Singapore (2026)
+    topics: [stripe, alternatives, singapore, paynow, pos, invoicing, comparison, payment gateway]
+    markets: [SG]
 
-  - url: https://hitpayapp.com/blog/top-payment-gateway-providers-singapore
-    title: Top Payment Gateway Providers in Singapore
-    topics: [payment gateway, singapore, comparison, paynow, grabpay, providers]
+  - url: https://hitpayapp.com/blog/stripe-alternatives-malaysia
+    title: Stripe Alternatives Malaysia — Best Payment Gateways for Malaysian Businesses (2026)
+    topics: [stripe, alternatives, malaysia, fpx, duitnow, grabpay, touch n go, comparison, payment gateway]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/payment-gateway-philippines
+    title: Payment Gateway Philippines — Best Options for Philippine Businesses in 2026
+    topics: [payment gateway, philippines, gcash, maya, qr ph, instapay, pesonet, msme]
+    markets: [PH]
 
   - url: https://hitpayapp.com/blog/qr-code-payments
     title: QR Code Payments — How They Work and How to Accept Them
-    topics: [qr code, paynow, duitnow, qr ph, gcash, contactless, scan to pay]
+    topics: [qr code, paynow, duitnow, qr ph, gcash, contactless, scan to pay, cross-border]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/ecommerce-payment-solutions-southeast-asia
+    title: Ecommerce Payment Solutions for Southeast Asia (2026)
+    topics: [ecommerce, payment solutions, southeast asia, woocommerce, shopify, checkout]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-customer-service
+    title: HitPay Customer Service — How to Get Support Fast (2026)
+    topics: [support, customer service, live chat, whatsapp, help center, troubleshooting, onboarding]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/pass-transaction-fees-to-customers
+    title: How to Lower Transaction Fees with HitPay Pass the Fees
+    topics: [transaction fees, pass fees, pricing, cost, paynow, fpx, woocommerce]
+    markets: [SG, MY]
+
+  - url: https://hitpayapp.com/blog/alternative-payment-methods-southeast-asia
+    title: The Strategic Advantage — Harnessing Alternative Payment Methods in Southeast Asia
+    topics: [alternative payments, digital wallets, qr code, unbanked, southeast asia, cross-border]
+    markets: [SEA]
 
   - url: https://hitpayapp.com/blog/singapore-pos-system
     title: Singapore POS System Guide
-    topics: [pos system, singapore, point of sale, retail, F&B, paynow, grabpay, hardware]
+    topics: [pos system, singapore, point of sale, retail, f&b, paynow, grabpay, hardware, tap to pay]
+    markets: [SG]
 
   - url: https://hitpayapp.com/blog/hitpay-paynow-fees
-    title: HitPay PayNow Fees
-    topics: [paynow, fees, pricing, singapore, transaction rate, cost]
+    title: HitPay PayNow Fees — What Singapore Merchants Pay
+    topics: [paynow, fees, pricing, singapore, transaction rate, cost, qr code]
+    markets: [SG]
 
-  - url: https://hitpayapp.com/blog/upi-gateway
-    title: UPI Gateway — How It Works
-    topics: [upi, india, cross-border, singapore, indian tourists, qr code]
+  - url: https://hitpayapp.com/blog/b2b-multi-currency-payments-singapore
+    title: The Easiest Way to Manage B2B Multi-Currency Payments in Singapore
+    topics: [b2b, multi-currency, international, singapore, cross-border, invoicing]
+    markets: [SG]
 
-  - url: https://hitpayapp.com/blog/payment-gateway-philippines
-    title: Payment Gateway Philippines Guide
-    topics: [philippines, payment gateway, gcash, maya, qr ph, instapay, pesonet]
+  - url: https://hitpayapp.com/blog/generate-free-payment-links-singapore
+    title: Generate Free Payment Links in Singapore — Accept PayNow and Card Payments on WhatsApp and Instagram
+    topics: [payment links, singapore, paynow, whatsapp, instagram, social commerce, free]
+    markets: [SG]
 
-  - url: https://hitpayapp.com/blog/how-to-generate-qr-ph
-    title: How to Generate QR Ph for Your Business
-    topics: [qr ph, philippines, gcash, maya, qr code, bsp, generate]
+  - url: https://hitpayapp.com/blog/accepting-qris-payments-on-woocommerce-indonesia-cross-border-use-cases
+    title: Accepting QRIS Payments on WooCommerce — Indonesia & Cross-Border Use Cases
+    topics: [qris, indonesia, woocommerce, cross-border, qr code, integration]
+    markets: [SEA]
 
-  - url: https://hitpayapp.com/hitpay-customer-service
-    title: HitPay Customer Service and Support
-    topics: [support, customer service, live chat, whatsapp, help center, troubleshooting]
+  - url: https://hitpayapp.com/blog/hitpay-scan-to-pay
+    title: Enjoy Easier In-Person Payments with HitPay Scan to Pay
+    topics: [scan to pay, qr code, in-person, pos, contactless, mobile payment]
+    markets: [SEA]
 
-  - url: https://hitpayapp.com/what-is-hitpay
-    title: What Is HitPay?
-    topics: [hitpay, overview, payment platform, sme, southeast asia, features]
+  - url: https://hitpayapp.com/blog/hitpay-philippines-scan-to-pay
+    title: Accept In-Person Payments with HitPay Scan to Pay (Philippines)
+    topics: [scan to pay, philippines, in-person, qr ph, gcash, pos]
+    markets: [PH]
 
-  - url: https://hitpayapp.com/blog/how-to-connect-paynow-to-retail-pos
-    title: How to Connect PayNow to Your Retail POS
-    topics: [paynow, pos, retail, singapore, qr code, setup]
+  - url: https://hitpayapp.com/blog/hitpay-now-offers-tap-to-pay-on-iphone-for-merchants-to-accept-contactless-payments
+    title: HitPay Now Offers Tap to Pay on iPhone for Contactless Payments
+    topics: [tap to pay, iphone, contactless, nfc, pos, in-person, apple pay]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/digital-wallet-vs-payment-gateways
+    title: Digital Wallet vs Payment Gateways — Understanding the Differences
+    topics: [digital wallet, payment gateway, comparison, grabpay, gcash, paynow, ecommerce]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/xendit-payment-gateway-review
+    title: Xendit Payment Gateway Review — Alternatives, Pros, and Cons
+    topics: [xendit, payment gateway, review, comparison, philippines, indonesia, alternatives]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/stripe-payments-malaysia
+    title: Why Stripe Payments and HitPay Are a Must for Malaysian SMEs
+    topics: [stripe, malaysia, payment gateway, fpx, duitnow, touch n go, sme]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/recurring-billing-sg
+    title: Recurring Billing for Singapore Businesses (2026)
+    topics: [recurring billing, subscription, singapore, automatic payments, membership, saas]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/recurring-billing-my
+    title: Recurring Billing for Malaysia Businesses (2026)
+    topics: [recurring billing, subscription, malaysia, automatic payments, membership, fpx]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/recurring-billing-ph
+    title: Recurring Billing for Philippines Businesses (2026)
+    topics: [recurring billing, subscription, philippines, automatic payments, gcash, membership]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/hitpay-dropin-ui
+    title: Introducing HitPay.JS — Drop-In Checkout UI
+    topics: [api, developer, javascript, checkout ui, integration, ecommerce]
+    markets: [SEA]
+
+  # ── Payment method pages ────────────────────────────────────────────────────
+
+  - url: https://hitpayapp.com/sg/paynow
+    title: Accept PayNow Payments in Singapore with HitPay
+    topics: [paynow, singapore, qr code, instant payment, bank transfer, zero fee]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/paynow
+    title: PayNow Payment Acceptance — HitPay
+    topics: [paynow, singapore, qr code, payment method]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/sg/paylah
+    title: Accept PayLah! Payments in Singapore
+    topics: [paylah, singapore, dbs, digital wallet, payment method]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/paylah
+    title: PayLah! Payment Acceptance — HitPay
+    topics: [paylah, singapore, dbs, wallet]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/sg/grabpay
+    title: Accept GrabPay in Singapore with HitPay
+    topics: [grabpay, singapore, digital wallet, grab, payment method]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/grabpay
+    title: GrabPay Payment Acceptance — HitPay
+    topics: [grabpay, southeast asia, digital wallet, grab]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/my/grabpay
+    title: Accept GrabPay in Malaysia with HitPay
+    topics: [grabpay, malaysia, digital wallet, grab, payment method]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/ph/grabpay
+    title: Accept GrabPay in the Philippines with HitPay
+    topics: [grabpay, philippines, digital wallet, grab, payment method]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/sg/shopeepay
+    title: Accept ShopeePay in Singapore with HitPay
+    topics: [shopeepay, singapore, digital wallet, shopee, payment method]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/my/shopeepay
+    title: Accept ShopeePay in Malaysia with HitPay
+    topics: [shopeepay, malaysia, digital wallet, shopee, payment method]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/shopeepay
+    title: ShopeePay Payment Acceptance — HitPay
+    topics: [shopeepay, southeast asia, digital wallet]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/my/spaylater
+    title: Accept SPayLater (BNPL) in Malaysia with HitPay
+    topics: [spaylater, bnpl, buy now pay later, malaysia, shopee, instalment]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/sg/spaylater
+    title: Accept SPayLater (BNPL) in Singapore with HitPay
+    topics: [spaylater, bnpl, buy now pay later, singapore, shopee, instalment]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/ph/spaylater-philippines
+    title: Accept SPayLater in the Philippines with HitPay
+    topics: [spaylater, bnpl, philippines, shopee, buy now pay later]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/sg/bnpl-singapore
+    title: Buy Now Pay Later (BNPL) in Singapore — HitPay
+    topics: [bnpl, buy now pay later, singapore, atome, shopback, spaylater, grab paylater]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/ph/bnpl-philippines
+    title: Buy Now Pay Later (BNPL) in the Philippines — HitPay
+    topics: [bnpl, buy now pay later, philippines, billease, spaylater]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/bnpl-malaysia
+    title: Buy Now Pay Later (BNPL) in Malaysia — HitPay
+    topics: [bnpl, buy now pay later, malaysia, atome, spaylater, grab paylater]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/sg/paylater-grab
+    title: Accept Grab PayLater in Singapore with HitPay
+    topics: [grab paylater, bnpl, buy now pay later, singapore, grab]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/my/paylater-grab
+    title: Accept Grab PayLater in Malaysia with HitPay
+    topics: [grab paylater, bnpl, buy now pay later, malaysia, grab]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/sg/atome-sg
+    title: Accept Atome BNPL in Singapore with HitPay
+    topics: [atome, bnpl, buy now pay later, singapore, instalment]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/my/atome-my
+    title: Accept Atome BNPL in Malaysia with HitPay
+    topics: [atome, bnpl, buy now pay later, malaysia, instalment]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/atome-qr-code-in-person-payments
+    title: Atome QR Code In-Person BNPL Payments — HitPay
+    topics: [atome, bnpl, qr code, in-person, pos, buy now pay later]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/shopback
+    title: Accept ShopBack PayLater — HitPay
+    topics: [shopback, bnpl, buy now pay later, paylater, instalment]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/sg/shopback
+    title: Accept ShopBack PayLater in Singapore — HitPay
+    topics: [shopback, bnpl, singapore, paylater, instalment]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/my/shopback
+    title: Accept ShopBack PayLater in Malaysia — HitPay
+    topics: [shopback, bnpl, malaysia, paylater, instalment]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/billease
+    title: Accept BillEase BNPL in the Philippines — HitPay
+    topics: [billease, bnpl, buy now pay later, philippines, instalment]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/my/duitnow-qr-business
+    title: Accept DuitNow QR for Your Malaysia Business — HitPay
+    topics: [duitnow, duitnow qr, malaysia, qr code, instant payment, bank transfer]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/duitnow
+    title: DuitNow Payment Acceptance — HitPay
+    topics: [duitnow, malaysia, qr code, bank transfer, fpx]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/ph/qr-ph
+    title: Accept QR Ph Payments in the Philippines — HitPay
+    topics: [qr ph, philippines, gcash, maya, bsp, qr code, instapay]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/gcash
+    title: Accept GCash Payments — HitPay
+    topics: [gcash, philippines, digital wallet, payment method, e-wallet]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/upi
+    title: Accept UPI Payments — HitPay
+    topics: [upi, india, cross-border, indian customers, qr code, payment method]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/sg/upi
+    title: Accept UPI Payments in Singapore — HitPay
+    topics: [upi, singapore, india, indian tourists, cross-border, qr code]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/alipay-plus
+    title: Accept Alipay+ Payments — HitPay
+    topics: [alipay, alipay plus, cross-border, china, tourist payments, qr code]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/sg/wechatpay
+    title: Accept WeChat Pay in Singapore — HitPay
+    topics: [wechat pay, singapore, china, cross-border, tourist payments, qr code]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/wechatpay
+    title: WeChat Pay Payment Acceptance — HitPay
+    topics: [wechat pay, cross-border, china, tourist, qr code]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/my/wechatpay
+    title: Accept WeChat Pay in Malaysia — HitPay
+    topics: [wechat pay, malaysia, china, cross-border, tourist payments]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/touch-n-go
+    title: Accept Touch 'n Go eWallet — HitPay
+    topics: [touch n go, tng, malaysia, digital wallet, payment method, ewallet]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/qris
+    title: Accept QRIS Payments — HitPay
+    topics: [qris, indonesia, qr code, cross-border, payment method]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/sg/giro
+    title: Accept GIRO Payments in Singapore — HitPay
+    topics: [giro, singapore, direct debit, recurring, bank transfer, subscription]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/sg/crypto-payment-gateway-singapore
+    title: Crypto Payment Gateway in Singapore — HitPay
+    topics: [crypto, cryptocurrency, bitcoin, singapore, payment gateway]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/crypto-payment-gateway-hitpay
+    title: Accept Crypto Payments — HitPay
+    topics: [crypto, cryptocurrency, digital asset, payment gateway, bitcoin]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/hitpay-borderless-qr-payments
+    title: HitPay Borderless QR Payments — Cross-Border QR Acceptance
+    topics: [cross-border, qr code, international, borderless, multi-currency]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/sg/japan-payment-gateway-singapore
+    title: Accept Japanese Payment Methods in Singapore — HitPay
+    topics: [japan, japanese tourists, cross-border, singapore, qr code, payment gateway]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/korean-ewallet-payment-gateway
+    title: Accept Korean eWallet Payments — HitPay
+    topics: [korea, korean tourists, cross-border, kakaopay, payco, line pay, qr code]
+    markets: [SEA]
+
+  # ── Platform integrations ───────────────────────────────────────────────────
+
+  - url: https://hitpayapp.com/shopify
+    title: HitPay Shopify Plugin — Accept Payments on Shopify
+    topics: [shopify, ecommerce, plugin, integration, online store, checkout]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/sg/shopify
+    title: HitPay Shopify Plugin for Singapore
+    topics: [shopify, singapore, paynow, grabpay, ecommerce, integration]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/my/shopify
+    title: HitPay Shopify Plugin for Malaysia
+    topics: [shopify, malaysia, fpx, duitnow, grabpay, ecommerce, integration]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/ph/shopify
+    title: HitPay Shopify Plugin for the Philippines
+    topics: [shopify, philippines, gcash, qr ph, ecommerce, integration]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/woocommerce
+    title: HitPay WooCommerce Plugin — Accept Payments on WooCommerce
+    topics: [woocommerce, wordpress, ecommerce, plugin, integration, checkout]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/sg/woocommerce
+    title: HitPay WooCommerce Plugin for Singapore
+    topics: [woocommerce, singapore, paynow, grabpay, ecommerce, wordpress]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/my/woocommerce
+    title: HitPay WooCommerce Plugin for Malaysia
+    topics: [woocommerce, malaysia, fpx, duitnow, grabpay, wordpress, ecommerce]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/ph/woocommerce
+    title: HitPay WooCommerce Plugin for the Philippines
+    topics: [woocommerce, philippines, gcash, qr ph, maya, wordpress, ecommerce]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/wix
+    title: HitPay Wix Payment Integration
+    topics: [wix, ecommerce, website builder, integration, checkout, online store]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/sg/wix-ecommerce-integration-singapore
+    title: HitPay Wix Ecommerce Integration for Singapore
+    topics: [wix, singapore, paynow, ecommerce, website builder, checkout]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/my/wix-payment-gateway-malaysia
+    title: HitPay Wix Payment Gateway for Malaysia
+    topics: [wix, malaysia, fpx, duitnow, ecommerce, website builder]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/ph/wix-payments-philippines
+    title: HitPay Wix Payments for the Philippines
+    topics: [wix, philippines, gcash, qr ph, ecommerce, website builder]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/magento
+    title: HitPay Magento Integration
+    topics: [magento, ecommerce, integration, plugin, checkout, online store]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/opencart
+    title: HitPay OpenCart Integration
+    topics: [opencart, ecommerce, integration, plugin, checkout]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/ecwid
+    title: HitPay Ecwid Integration
+    topics: [ecwid, ecommerce, integration, checkout, online store]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/shoplazza
+    title: HitPay Shoplazza Integration
+    topics: [shoplazza, ecommerce, integration, checkout, online store]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/shopcada
+    title: HitPay Shopcada Integration
+    topics: [shopcada, ecommerce, integration, checkout, online store, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/sitegiant
+    title: HitPay SiteGiant Integration
+    topics: [sitegiant, malaysia, ecommerce, integration, checkout, online store]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/zapier
+    title: HitPay Zapier Integration — Automate Payment Workflows
+    topics: [zapier, automation, integration, workflow, api, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/cal.com
+    title: HitPay Cal.com Integration — Accept Payments for Bookings
+    topics: [cal.com, booking, scheduling, appointment, payment, integration]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/simplybookme
+    title: HitPay SimplyBook.me Integration
+    topics: [simplybook, booking, appointment, scheduling, payment]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/google-forms-plugins
+    title: HitPay Google Forms Payment Plugin
+    topics: [google forms, plugin, payment link, integration, forms]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/sg/xero
+    title: HitPay Xero Accounting Integration for Singapore
+    topics: [xero, accounting, integration, singapore, reconciliation, invoicing]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/ewallets-recurring-payments-subscriptions
+    title: eWallet Recurring Payments & Subscriptions — HitPay
+    topics: [recurring payments, subscription, ewallet, digital wallet, automated billing]
+    markets: [SEA]
+
+  # ── In-person & hardware ────────────────────────────────────────────────────
+
+  - url: https://hitpayapp.com/sg/tap-to-pay
+    title: Tap to Pay in Singapore — Accept Contactless Payments on iPhone
+    topics: [tap to pay, iphone, contactless, nfc, singapore, pos, in-person]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/my/tap-to-pay
+    title: Tap to Pay in Malaysia — Accept Contactless Payments on iPhone
+    topics: [tap to pay, iphone, contactless, nfc, malaysia, pos, in-person]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/sg/tap-to-pay-singapore
+    title: Tap to Pay Singapore — HitPay Contactless POS
+    topics: [tap to pay, singapore, nfc, contactless, pos, iphone, in-person]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/sg/hitpay-terminal-outpost-climbing
+    title: HitPay Terminal — Outpost Climbing Case Study (Singapore)
+    topics: [pos terminal, singapore, case study, retail, climbing gym, in-person]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/sg/payment-soundbox
+    title: HitPay Payment Soundbox — Audio Payment Confirmation (Singapore)
+    topics: [soundbox, payment confirmation, audio, singapore, pos, paynow, qr code]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/sg/paynow-alerts-soundbox-singapore
+    title: PayNow Alerts & Soundbox for Singapore Merchants
+    topics: [paynow, soundbox, alerts, singapore, pos, in-person, notification]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/ph/payment-soundbox-philippines
+    title: HitPay Payment Soundbox Philippines
+    topics: [soundbox, payment confirmation, philippines, pos, qr ph, gcash]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/sg/static-qr
+    title: Static QR Code for Singapore Merchants — HitPay
+    topics: [static qr, singapore, paynow, qr code, in-person, display]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/ph/static-qr
+    title: Static QR Code for Philippines Merchants — HitPay
+    topics: [static qr, philippines, qr ph, gcash, qr code, in-person]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/donation-kiosk
+    title: HitPay Donation Kiosk — Accept Donations In-Person
+    topics: [donation, kiosk, charity, ngo, in-person, fundraising]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/shopping-mall-gto-integration
+    title: HitPay Shopping Mall GTO Integration
+    topics: [shopping mall, gto, gross turnover, retail, pos integration, singapore]
+    markets: [SG]
+
+  # ── Product features & use cases ────────────────────────────────────────────
+
+  - url: https://hitpayapp.com/free-invoice-generator
+    title: Free Invoice Generator — HitPay
+    topics: [invoice, invoicing, free, generator, billing, sme, payment link]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/donation-link
+    title: HitPay Donation Link — Collect Donations Online
+    topics: [donation, charity, ngo, payment link, fundraising, online]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/ecommerce-website-builder
+    title: HitPay Ecommerce Website Builder — Build a Free Online Store
+    topics: [website builder, ecommerce, online store, free, shop]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/free-ecommerce-website-templates
+    title: Free Ecommerce Website Templates — HitPay
+    topics: [website template, ecommerce, free, online store, design]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/philippines-payout-api
+    title: Philippines Payout API — HitPay
+    topics: [payout, api, philippines, disbursement, b2b, remittance]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/remittance-api-cross-border-payouts
+    title: Remittance API — Cross-Border Payouts with HitPay
+    topics: [remittance, payout, api, cross-border, b2b, disbursement, international]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/hitpay-cross-border-qris-integration-indonesia
+    title: HitPay Cross-Border QRIS Integration for Indonesia
+    topics: [qris, indonesia, cross-border, integration, qr code, southeast asia]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/sg/pricecal-hitpay-payment-api
+    title: HitPay Payment API Integration with PriceCal (Singapore)
+    topics: [api, integration, singapore, pricecal, developer, custom checkout]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/solutions/retail
+    title: HitPay for Retail — Payment Solutions for Retail Businesses
+    topics: [retail, pos, in-person, point of sale, physical store, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/solutions/ecommerce
+    title: HitPay for Ecommerce — Payment Solutions for Online Stores
+    topics: [ecommerce, online store, checkout, payment gateway, shopify, woocommerce]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/sg/stripe-alternative
+    title: HitPay as a Stripe Alternative in Singapore
+    topics: [stripe alternative, singapore, paynow, grabpay, payment gateway, comparison]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/my/payment-gateway-reseller-malaysia-pos-integration
+    title: HitPay Payment Gateway Reseller & POS Integration in Malaysia
+    topics: [reseller, pos integration, malaysia, payment gateway, partner, white label]
+    markets: [MY]
+
+  # ── Customer stories ────────────────────────────────────────────────────────
+
+  - url: https://hitpayapp.com/sg/woocommerce-payment-plugin-four-seasons-catering
+    title: Four Seasons Catering — HitPay WooCommerce Case Study (Singapore)
+    topics: [woocommerce, catering, f&b, singapore, case study, online ordering]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/ph/hitpay-review-philippines-travel
+    title: HitPay Review — Philippines Travel Business
+    topics: [review, philippines, travel, tourism, case study, payment acceptance]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/my/hitpay-review-malaysia-gym
+    title: HitPay Review — Malaysia Gym Business
+    topics: [review, malaysia, gym, fitness, membership, recurring billing, case study]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/my/hitpay-review-malaysia-events-payments
+    title: HitPay Review — Malaysia Events & Payments
+    topics: [review, malaysia, events, ticketing, payment, case study]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/hitpay-review-borobudur-sunrise
+    title: HitPay Review — Borobudur Sunrise Tour (Indonesia)
+    topics: [review, indonesia, tourism, travel, cross-border, qris, case study]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/customers/durian-bakery
+    title: Durian Bakery — HitPay Customer Story
+    topics: [f&b, bakery, singapore, case study, paynow, pos, online ordering]
+    markets: [SG]

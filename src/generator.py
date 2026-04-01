@@ -293,15 +293,31 @@ def generate_blog_post(keyword: str, country: str = None, on_status=None) -> dic
     if competitors:
         status(f"Found data for {len(competitors)} relevant competitors")
 
-    # Step 2: Build blog links reference
+    # Step 2: Build blog links reference — filtered to target market
     blog_links = _load_blog_links()
     links_section = ""
     if blog_links:
-        links_section = "\n## HitPay Blog Post URLs — Use 5 as Internal Backlinks\n"
-        links_section += "Pick the 5 most relevant to your post. Link naturally in-content.\n\n"
-        for link in blog_links:
+        # Keep links that match the target market, SEA (always relevant), or have no market tag.
+        # Exclude links specific to OTHER markets to avoid cross-market backlink errors.
+        other_markets = {"SG", "MY", "PH"} - ({country} if country else set())
+        def _link_ok(link):
+            markets = link.get("markets", [])
+            if not markets:
+                return True
+            for m in markets:
+                if m in ("SEA", "Global") or m == country:
+                    return True
+            # Exclude if ALL market tags are for other specific markets
+            return not any(m in other_markets for m in markets) or any(
+                m in ("SEA", "Global") for m in markets
+            )
+        filtered_links = [l for l in blog_links if _link_ok(l)]
+        links_section = "\n## HitPay URLs — Use 5 as Internal Backlinks\n"
+        links_section += f"Market: {country or 'SEA'}. Pick the 5 most relevant URLs. Link naturally in-content — never dump as a list.\n\n"
+        for link in filtered_links:
             topics_str = ", ".join(link.get("topics", []))
-            links_section += f"- [{link['title']}]({link['url']}) — relevant for: {topics_str}\n"
+            markets_str = "/".join(link.get("markets", []))
+            links_section += f"- [{link['title']}]({link['url']}) [{markets_str}] — {topics_str}\n"
 
     # Step 2b: Build country-specific context
     country_section = ""
@@ -451,11 +467,24 @@ def rewrite_blog_post(url: str, country: str = None, on_status=None) -> dict:
     blog_links = _load_blog_links()
     links_section = ""
     if blog_links:
-        links_section = "\n## HitPay Blog Post URLs — Use 5 as Internal Backlinks\n"
-        links_section += "Pick the 5 most relevant to your post. Link naturally in-content.\n\n"
-        for link in blog_links:
+        other_markets = {"SG", "MY", "PH"} - ({country} if country else set())
+        def _link_ok_rw(link):
+            markets = link.get("markets", [])
+            if not markets:
+                return True
+            for m in markets:
+                if m in ("SEA", "Global") or m == country:
+                    return True
+            return not any(m in other_markets for m in markets) or any(
+                m in ("SEA", "Global") for m in markets
+            )
+        filtered_links = [l for l in blog_links if _link_ok_rw(l)]
+        links_section = "\n## HitPay URLs — Use 5 as Internal Backlinks\n"
+        links_section += f"Market: {country or 'SEA'}. Pick the 5 most relevant URLs. Link naturally in-content — never dump as a list.\n\n"
+        for link in filtered_links:
             topics_str = ", ".join(link.get("topics", []))
-            links_section += f"- [{link['title']}]({link['url']}) — relevant for: {topics_str}\n"
+            markets_str = "/".join(link.get("markets", []))
+            links_section += f"- [{link['title']}]({link['url']}) [{markets_str}] — {topics_str}\n"
 
     country_section = ""
     if country and country in COUNTRY_CONTEXT:
