@@ -1748,6 +1748,9 @@
       <option value="new">New</option>
       <option value="rewrite">Rewrite</option>
     </select>
+    <select class="filter-select" id="editorFilter" onchange="renderOverview()">
+      <option value="all">All Editors</option>
+    </select>
   </div>
 
   <!-- Bulk action bar (visible when ≥1 selected) -->
@@ -2161,6 +2164,7 @@ function renderUserInfo() {
 async function loadPosts() {
   const res = await fetch('/api/posts');
   posts = await res.json();
+  refreshEditorFilter();
   renderPostList();
   renderOverview();
 }
@@ -3124,14 +3128,16 @@ function renderOverview() {
   document.getElementById('chip-published').textContent        = counts.published;
 
   const q       = (document.getElementById('overviewSearch')?.value || '').toLowerCase().trim();
-  const market  = document.getElementById('marketFilter')?.value || 'all';
-  const type    = document.getElementById('typeFilter')?.value   || 'all';
+  const market  = document.getElementById('marketFilter')?.value  || 'all';
+  const type    = document.getElementById('typeFilter')?.value    || 'all';
+  const editor  = document.getElementById('editorFilter')?.value  || 'all';
 
   const filtered = posts.filter(p => {
     if (overviewStatusFilter !== 'all' && p.status !== overviewStatusFilter) return false;
     if (market !== 'all' && p.country !== market) return false;
     if (type === 'new'     &&  p.source_url) return false;
     if (type === 'rewrite' && !p.source_url) return false;
+    if (editor !== 'all' && p.editor_email !== editor) return false;
     if (q && !p.title.toLowerCase().includes(q) && !(p.keyword || '').toLowerCase().includes(q)) return false;
     return true;
   });
@@ -3469,6 +3475,20 @@ async function initKnownUsers() {
     const seen = new Set();
     knownUsers = logins.map(l => l.email).filter(e => { if (seen.has(e)) return false; seen.add(e); return true; });
   } catch {}
+  refreshEditorFilter();
+}
+
+function refreshEditorFilter() {
+  const sel = document.getElementById('editorFilter');
+  if (!sel) return;
+  const current = sel.value;
+  // Merge known users + any editor_email already on loaded posts
+  const emails = new Set(knownUsers);
+  posts.forEach(p => { if (p.editor_email) emails.add(p.editor_email); });
+  sel.innerHTML = '<option value="all">All Editors</option>' +
+    [...emails].sort().map(e =>
+      `<option value="${escHtml(e)}"${e === current ? ' selected' : ''}>${escHtml(avatarInitials(e))} ${escHtml(e.split('@')[0])}</option>`
+    ).join('');
 }
 
 function populateEditorSelect(selectedEmail) {
