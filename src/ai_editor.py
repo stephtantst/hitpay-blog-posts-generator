@@ -1,7 +1,21 @@
 """AI-powered targeted editing for blog post content."""
 
 import anthropic
+import time
 from config import ANTHROPIC_API_KEY, CLAUDE_MODEL
+
+
+def _messages_create_with_retry(client, max_retries=4, **kwargs):
+    """Call client.messages.create with exponential backoff on overloaded errors."""
+    for attempt in range(max_retries):
+        try:
+            return client.messages.create(**kwargs)
+        except anthropic.APIStatusError as e:
+            if e.status_code == 529 and attempt < max_retries - 1:
+                wait = 2 ** attempt
+                time.sleep(wait)
+                continue
+            raise
 
 _EDIT_SYSTEM = """You are a precise content editor for HitPay's blog. Apply targeted edits to blog post markdown content.
 
@@ -23,7 +37,7 @@ def ai_edit_selection(selection: str, instruction: str) -> str:
         instruction: What to change (e.g. "remove mention of Maya")
     """
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-    response = client.messages.create(
+    response = _messages_create_with_retry(client,
         model=CLAUDE_MODEL,
         max_tokens=2048,
         system=_EDIT_SYSTEM,
@@ -48,7 +62,7 @@ def ai_edit_full(content: str, instruction: str) -> str:
         instruction: What to change across the post
     """
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-    response = client.messages.create(
+    response = _messages_create_with_retry(client,
         model=CLAUDE_MODEL,
         max_tokens=8192,
         system=_EDIT_SYSTEM,

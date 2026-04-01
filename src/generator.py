@@ -1,11 +1,25 @@
 import anthropic
 import json
 import re
+import time
 from datetime import date
 from pathlib import Path
 from slugify import slugify
 import yaml
 from config import ANTHROPIC_API_KEY, CLAUDE_MODEL
+
+
+def _messages_create_with_retry(client, max_retries=4, **kwargs):
+    """Call client.messages.create with exponential backoff on overloaded errors."""
+    for attempt in range(max_retries):
+        try:
+            return client.messages.create(**kwargs)
+        except anthropic.APIStatusError as e:
+            if e.status_code == 529 and attempt < max_retries - 1:
+                wait = 2 ** attempt  # 1s, 2s, 4s
+                time.sleep(wait)
+                continue
+            raise
 from src.mcp_client import search_knowledge, get_changelog, get_news
 from src.competitor_db import get_relevant_competitors, format_for_prompt
 
@@ -321,7 +335,8 @@ Remember: include exactly 5 internal backlinks from the URL list above, woven na
 
 Return the JSON object now."""
 
-    response = client.messages.create(
+    response = _messages_create_with_retry(
+        client,
         model=CLAUDE_MODEL,
         max_tokens=8192,
         system=BLOG_SYSTEM_PROMPT,
@@ -485,7 +500,8 @@ Remember: include exactly 5 internal backlinks from the URL list above, woven na
 
 Return the JSON object now."""
 
-    response = client.messages.create(
+    response = _messages_create_with_retry(
+        client,
         model=CLAUDE_MODEL,
         max_tokens=8192,
         system=BLOG_SYSTEM_PROMPT,
