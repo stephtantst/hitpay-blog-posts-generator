@@ -97,7 +97,7 @@ BLOG_SYSTEM_PROMPT = """You are a senior content strategist and writer for HitPa
 | QR / Instant | PayNow | DuitNow QR | QR Ph |
 | Bank transfer | PayNow | FPX | InstaPay / PESONet |
 | Wallet | GrabPay, ShopeePay | Touch 'n Go, Boost, GrabPay | GCash, Maya |
-| BNPL | Atome, ShopBack PayLater | Atome, ShopBack PayLater, Grab PayLater | — |
+| BNPL | Atome, ShopBack PayLater | Atome, ShopBack PayLater, Grab PayLater, SPayLater | — |
 | Cards | Visa, Mastercard, Amex | Visa, Mastercard | Visa, Mastercard |
 | Tourist/Cross-border | Alipay+, WeChat Pay | Alipay+, WeChat Pay | Alipay+, WeChat Pay |
 
@@ -107,7 +107,7 @@ HitPay lets merchants accept payments from international customers using their h
 | Market | Cross-border methods accepted |
 |---|---|
 | Singapore 🇸🇬 | PromptPay (Thailand), TrueMoney (Thailand), Rabbit LINE Pay (Thailand), DuitNow (Malaysia), QRIS (Indonesia), QR Ph (Philippines), WeChatPay (China), UPI (India), KakaoPay/PayCo/LINE Pay (South Korea) |
-| Malaysia 🇲🇾 | QRIS (Indonesia), PromptPay (Thailand), TrueMoney (Thailand), Rabbit LINE Pay (Thailand), KakaoPay/PayCo/LINE Pay (South Korea) |
+| Malaysia 🇲🇾 | QRIS (Indonesia), QR Ph (Philippines), PromptPay (Thailand), TrueMoney (Thailand), Rabbit LINE Pay (Thailand), KakaoPay/PayCo/LINE Pay (South Korea) |
 | Philippines 🇵🇭 | QRIS (Indonesia), PromptPay (Thailand), TrueMoney (Thailand), Rabbit LINE Pay (Thailand), KakaoPay/PayCo/LINE Pay (South Korea), DuitNow (Malaysia) |
 
 Cross-border activation: partner providers process activation within 3–5 business days after submission.
