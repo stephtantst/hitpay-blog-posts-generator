@@ -313,11 +313,37 @@
     .EasyMDEContainer .editor-toolbar button { color: var(--text-muted); }
     .EasyMDEContainer .editor-toolbar button:hover, .EasyMDEContainer .editor-toolbar button.active { background: var(--surface2); color: var(--text); }
     .EasyMDEContainer .editor-toolbar i.separator { border-color: var(--border); }
-    .EasyMDEContainer .editor-preview { background: var(--surface); color: var(--text); }
-    .EasyMDEContainer .editor-preview h1,.EasyMDEContainer .editor-preview h2,.EasyMDEContainer .editor-preview h3 { color: var(--text); border-color: var(--border); }
-    .EasyMDEContainer .editor-preview p { color: var(--text); }
+    .EasyMDEContainer .editor-preview { background: var(--surface); color: var(--text); padding: 16px 20px; }
+    .EasyMDEContainer .editor-preview h1,
+    .EasyMDEContainer .editor-preview h2,
+    .EasyMDEContainer .editor-preview h3,
+    .EasyMDEContainer .editor-preview h4 { color: var(--text); border-color: var(--border); margin-top: 1.4em; margin-bottom: 0.6em; }
+    .EasyMDEContainer .editor-preview p { color: var(--text); margin-bottom: 1em; }
+    .EasyMDEContainer .editor-preview ul,
+    .EasyMDEContainer .editor-preview ol { color: var(--text); margin-bottom: 1em; padding-left: 1.5em; }
+    .EasyMDEContainer .editor-preview li { margin-bottom: 0.3em; }
+    .EasyMDEContainer .editor-preview blockquote { margin-bottom: 1em; }
+    .EasyMDEContainer .editor-preview table { margin-bottom: 1em; }
     .EasyMDEContainer .editor-statusbar { background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); border-radius: 0 0 var(--radius) var(--radius); border-top: none; }
     .CodeMirror-cursor { border-left-color: var(--accent) !important; }
+
+    /* Back button for side-by-side / fullscreen */
+    #mde-back-btn {
+      display: none;
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 9999;
+      padding: 6px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    #mde-back-btn:hover { background: var(--surface2); }
 
     /* No post selected */
     .no-post-state {
@@ -1242,6 +1268,9 @@
 </head>
 <body>
 
+<!-- Back button for EasyMDE split/fullscreen modes -->
+<button id="mde-back-btn" onclick="mdeExitMode()">← Back</button>
+
 <!-- Header -->
 <header>
   <div class="logo">
@@ -1990,6 +2019,34 @@ function initEditor() {
   });
 
   mde.codemirror.on('change', () => markDirty());
+
+  // Back button: show when side-by-side or fullscreen is active
+  const mdeContainer = mde.element.closest('.EasyMDEContainer') || document.querySelector('.EasyMDEContainer');
+  const backBtn = document.getElementById('mde-back-btn');
+
+  function updateBackBtn() {
+    const isSideBySide = mdeContainer && mdeContainer.classList.contains('sided');
+    const isFullscreen = document.body.classList.contains('editor-fullscreen');
+    backBtn.style.display = (isSideBySide || isFullscreen) ? 'block' : 'none';
+  }
+
+  // Watch container class changes (side-by-side)
+  if (mdeContainer) {
+    new MutationObserver(updateBackBtn).observe(mdeContainer, { attributes: true, attributeFilter: ['class'] });
+  }
+  // Watch body class changes (fullscreen)
+  new MutationObserver(updateBackBtn).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+}
+
+function mdeExitMode() {
+  if (!mde) return;
+  if (document.body.classList.contains('editor-fullscreen')) {
+    EasyMDE.toggleFullScreen(mde);
+  }
+  const container = document.querySelector('.EasyMDEContainer');
+  if (container && container.classList.contains('sided')) {
+    EasyMDE.toggleSideBySide(mde);
+  }
 }
 
 // ── Save ──────────────────────────────────────────────────────────────────────
