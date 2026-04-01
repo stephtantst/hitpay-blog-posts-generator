@@ -342,9 +342,6 @@ def api_export_post(post_id: int, _: str = Depends(require_auth)):
         raise HTTPException(404, "Post not found")
 
     file_path = post.get("file_path", "")
-    if not file_path or not os.path.exists(file_path):
-        raise HTTPException(400, "Post file not found")
-
     csv_path = export_to_csv(post, file_path)
     return FileResponse(
         csv_path,

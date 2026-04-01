@@ -138,7 +138,10 @@ def update_post_file(file_path: str, updates: dict):
 
 def _build_framer_row(post: dict, file_path: str) -> dict:
     """Build a single Framer CMS CSV row from a post dict + its markdown file."""
-    markdown_content = read_post_content(file_path) if file_path and os.path.exists(file_path) else ""
+    if file_path and os.path.exists(file_path):
+        markdown_content = read_post_content(file_path)
+    else:
+        markdown_content = post.get("content", "")
     html_body = _md_to_html(markdown_content)
     cats = json.loads(post.get("categories") or "[]")
     tags = json.loads(post.get("tags") or "[]")
