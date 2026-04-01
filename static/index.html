@@ -629,6 +629,14 @@
       margin-top: 6px;
     }
     .status-select:focus { outline: none; border-color: var(--accent); }
+    .editor-section { margin-top: 12px; }
+    .editor-avatar {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px; border-radius: 50%;
+      font-size: 10px; font-weight: 700; color: #fff;
+      flex-shrink: 0; cursor: default;
+      text-transform: uppercase; letter-spacing: 0.03em;
+    }
 
     .status-actions { display: flex; flex-direction: column; gap: 6px; }
     .btn-status {
@@ -1760,6 +1768,7 @@
             <th class="sortable sort-active" id="th-title" onclick="sortBy('title')">Title <span class="sort-arrow" id="sa-title">↓</span></th>
             <th style="width:80px;">Type</th>
             <th class="sortable" id="th-status" onclick="sortBy('status')">Status <span class="sort-arrow" id="sa-status"></span></th>
+            <th style="width:60px;">Editor</th>
             <th class="sortable" id="th-country" onclick="sortBy('country')">Market <span class="sort-arrow" id="sa-country"></span></th>
             <th class="sortable" id="th-created_at" onclick="sortBy('created_at')">Created <span class="sort-arrow" id="sa-created_at"></span></th>
             <th class="sortable" id="th-updated_at" onclick="sortBy('updated_at')">Updated <span class="sort-arrow" id="sa-updated_at"></span></th>
@@ -1929,12 +1938,16 @@
     <div class="meta-section">
       <div class="meta-section-title">Status</div>
       <div id="statusBadge" class="status-badge generated">✨ Generated</div>
-      <select class="status-select" id="statusSelect" onchange="changeStatus(this.value)">
+      <select class="status-select" id="statusSelect" onchange="handleStatusChange(this.value)">
         <option value="generated">✨ Generated</option>
         <option value="editing">✏️ Editing</option>
         <option value="ready_to_publish">🔵 Ready to Publish</option>
         <option value="published">✅ Published</option>
       </select>
+      <div id="editorSection" class="editor-section" style="display:none;">
+        <div class="meta-section-title" style="margin-bottom:6px;">Editing by</div>
+        <select class="status-select" id="editorSelect" onchange="changeEditorEmail(this.value)"></select>
+      </div>
     </div>
 
     <!-- Lifecycle -->
@@ -2130,7 +2143,7 @@ async function init() {
   renderUserInfo();
   const params = new URLSearchParams(window.location.search);
   if (params.get('auth_error')) window.history.replaceState({}, '', '/');
-  await loadPosts();
+  await Promise.all([loadPosts(), initKnownUsers()]);
   initEditor();
   switchView('overview');
 }
@@ -2359,22 +2372,54 @@ async function savePost(silent = false) {
 }
 
 // ── Status ────────────────────────────────────────────────────────────────────
+async function handleStatusChange(newStatus) {
+  if (newStatus === 'editing') {
+    document.getElementById('editorSection').style.display = '';
+    populateEditorSelect(currentPost?.editor_email || currentUser?.email || '');
+  } else {
+    document.getElementById('editorSection').style.display = 'none';
+  }
+  await changeStatus(newStatus);
+}
+
 async function changeStatus(newStatus) {
   if (!currentPost) return;
+
+  const body = { status: newStatus };
+  if (newStatus === 'editing') {
+    const edSel = document.getElementById('editorSelect');
+    body.editor_email = edSel?.value || currentUser?.email || '';
+  }
 
   const res = await fetch(`/api/posts/${currentPost.id}/status`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ status: newStatus }),
+    body: JSON.stringify(body),
   });
 
   if (res.ok) {
     currentPost.status = newStatus;
+    currentPost.editor_email = body.editor_email || null;
     updateStatusUI(newStatus);
     await loadPosts();
     showToast(`Status → ${newStatus.replace(/_/g, ' ')}`, 'success');
   } else {
     showToast('Status update failed', 'error');
+  }
+}
+
+async function changeEditorEmail(email) {
+  if (!currentPost) return;
+  const res = await fetch(`/api/posts/${currentPost.id}/editor`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ editor_email: email }),
+  });
+  if (res.ok) {
+    currentPost.editor_email = email;
+    await loadPosts();
+  } else {
+    showToast('Could not update editor', 'error');
   }
 }
 
@@ -2386,6 +2431,16 @@ function updateStatusUI(status) {
 
   const sel = document.getElementById('statusSelect');
   if (sel) sel.value = status;
+
+  const editorSection = document.getElementById('editorSection');
+  if (editorSection) {
+    if (status === 'editing') {
+      editorSection.style.display = '';
+      populateEditorSelect(currentPost?.editor_email || currentUser?.email || '');
+    } else {
+      editorSection.style.display = 'none';
+    }
+  }
 }
 
 // ── Audit Log ─────────────────────────────────────────────────────────────────
@@ -3144,7 +3199,7 @@ function renderListView(filtered) {
   const tbody = document.getElementById('listBody');
 
   if (sorted.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="9" style="padding:32px; text-align:center; color:var(--text-dim); font-size:13px;">No posts found</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="10" style="padding:32px; text-align:center; color:var(--text-dim); font-size:13px;">No posts found</td></tr>`;
     return;
   }
 
@@ -3167,6 +3222,7 @@ function renderListView(filtered) {
       </td>
       <td>${p.source_url ? '<span class="type-badge rewrite">Rewrite</span>' : '<span class="type-badge new">New</span>'}</td>
       <td><span class="tbl-status ${p.status}"><span class="tbl-status-dot"></span>${STATUS_LABEL[p.status] || p.status}</span></td>
+      <td style="text-align:center;">${p.editor_email ? `<span class="editor-avatar" style="background:${avatarColor(p.editor_email)};" title="${escHtml(p.editor_email)}">${avatarInitials(p.editor_email)}</span>` : '<span style="color:var(--text-dim);font-size:11px;">—</span>'}</td>
       <td>${p.country ? `<span class="market-badge">${marketLabel(p.country)}</span>` : '<span style="color:var(--text-dim);font-size:11px;">—</span>'}</td>
       <td class="dt-cell">${fmtDatetime(p.created_at)}</td>
       <td class="dt-cell">${fmtDatetime(p.updated_at)}</td>
@@ -3212,6 +3268,7 @@ function renderBoardView(filtered, statusFilter = 'all') {
           <div class="board-card-foot">
             ${p.source_url ? '<span class="type-badge rewrite">Rewrite</span>' : '<span class="type-badge new">New</span>'}
             ${p.country ? `<span class="market-badge">${marketLabel(p.country)}</span>` : ''}
+            ${p.editor_email ? `<span class="editor-avatar" style="background:${avatarColor(p.editor_email)};width:20px;height:20px;font-size:9px;" title="${escHtml(p.editor_email)}">${avatarInitials(p.editor_email)}</span>` : ''}
             <span class="board-card-date">${fmtDatetime(p.created_at)}</span>
           </div>
         </div>`;
@@ -3385,6 +3442,40 @@ async function applyAiEdit() {
     btn.disabled = false;
     btn.textContent = 'Apply Edit';
   }
+}
+
+// ── Editor avatar helpers ─────────────────────────────────────────────────────
+const AVATAR_COLORS = ['#6366f1','#ec4899','#14b8a6','#f97316','#8b5cf6','#0ea5e9','#84cc16','#f43f5e'];
+function avatarColor(email) {
+  let h = 0;
+  for (let i = 0; i < (email || '').length; i++) h = (h * 31 + email.charCodeAt(i)) & 0xfffff;
+  return AVATAR_COLORS[h % AVATAR_COLORS.length];
+}
+function avatarInitials(email) {
+  if (!email) return '?';
+  return email.split('@')[0].slice(0, 2).toUpperCase();
+}
+
+let knownUsers = [];
+async function initKnownUsers() {
+  try {
+    const res = await fetch('/api/logins');
+    if (!res.ok) return;
+    const logins = await res.json();
+    const seen = new Set();
+    knownUsers = logins.map(l => l.email).filter(e => { if (seen.has(e)) return false; seen.add(e); return true; });
+  } catch {}
+}
+
+function populateEditorSelect(selectedEmail) {
+  const sel = document.getElementById('editorSelect');
+  if (!sel) return;
+  const emails = new Set(knownUsers);
+  if (currentUser?.email) emails.add(currentUser.email);
+  if (selectedEmail) emails.add(selectedEmail);
+  sel.innerHTML = [...emails].sort().map(e =>
+    `<option value="${escHtml(e)}"${e === selectedEmail ? ' selected' : ''}>${escHtml(e.split('@')[0])}</option>`
+  ).join('');
 }
 
 // ── Analytics Panel ───────────────────────────────────────────────────────────

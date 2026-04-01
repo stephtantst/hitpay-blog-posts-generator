@@ -294,6 +294,11 @@ def _rewrite_content(file_path: str, new_content: str):
 
 class StatusRequest(BaseModel):
     status: str
+    editor_email: str | None = None
+
+
+class EditorRequest(BaseModel):
+    editor_email: str
 
 
 @app.post("/api/posts/{post_id}/status")
@@ -315,9 +320,19 @@ def api_change_status(post_id: int, body: StatusRequest, user_email: str = Depen
     else:
         new_file = str(Path(POSTS_DIR) / body.status / f"{slug}.md")
 
-    update_post_status(post_id, body.status, old_file, new_file)
+    editor_email = body.editor_email if body.status == "editing" else None
+    update_post_status(post_id, body.status, old_file, new_file, editor_email=editor_email)
     log_audit(post_id, user_email, "status_changed", {"from": old_status, "to": body.status})
     return {"ok": True, "file_path": new_file}
+
+
+@app.patch("/api/posts/{post_id}/editor")
+def api_set_editor(post_id: int, body: EditorRequest, _: str = Depends(require_auth)):
+    post = get_post(post_id)
+    if not post:
+        raise HTTPException(404, "Post not found")
+    update_post_fields(post_id, {"editor_email": body.editor_email})
+    return {"ok": True}
 
 
 @app.delete("/api/posts/{post_id}")

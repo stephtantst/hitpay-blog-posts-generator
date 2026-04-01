@@ -161,12 +161,13 @@ def list_posts(status: str = None) -> list:
     return _rows_to_dicts(conn, rows)
 
 
-def update_post_status(post_id: int, new_status: str, old_file_path: str, new_file_path: str):
+def update_post_status(post_id: int, new_status: str, old_file_path: str, new_file_path: str, editor_email=None):
     conn = get_connection()
     conn.run(
-        "UPDATE posts SET status = :status, file_path = :file_path, updated_at = NOW() WHERE id = :id",
+        "UPDATE posts SET status = :status, file_path = :file_path, editor_email = :editor_email, updated_at = NOW() WHERE id = :id",
         status=new_status,
         file_path=new_file_path,
+        editor_email=editor_email,
         id=post_id,
     )
 
