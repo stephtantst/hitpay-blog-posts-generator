@@ -2021,21 +2021,22 @@ function initEditor() {
   mde.codemirror.on('change', () => markDirty());
 
   // Back button: show when side-by-side or fullscreen is active
-  const mdeContainer = mde.element.closest('.EasyMDEContainer') || document.querySelector('.EasyMDEContainer');
+  // Single subtree observer on body catches both body class (fullscreen)
+  // and EasyMDEContainer class (side-by-side) changes
+  new MutationObserver(_updateMdeBackBtn).observe(document.body, {
+    attributes: true,
+    attributeFilter: ['class'],
+    subtree: true,
+  });
+}
+
+function _updateMdeBackBtn() {
   const backBtn = document.getElementById('mde-back-btn');
-
-  function updateBackBtn() {
-    const isSideBySide = mdeContainer && mdeContainer.classList.contains('sided');
-    const isFullscreen = document.body.classList.contains('editor-fullscreen');
-    backBtn.style.display = (isSideBySide || isFullscreen) ? 'block' : 'none';
-  }
-
-  // Watch container class changes (side-by-side)
-  if (mdeContainer) {
-    new MutationObserver(updateBackBtn).observe(mdeContainer, { attributes: true, attributeFilter: ['class'] });
-  }
-  // Watch body class changes (fullscreen)
-  new MutationObserver(updateBackBtn).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  if (!backBtn) return;
+  const container = document.querySelector('.EasyMDEContainer');
+  const isSideBySide = container && container.classList.contains('sided');
+  const isFullscreen = document.body.classList.contains('editor-fullscreen');
+  backBtn.style.display = (isSideBySide || isFullscreen) ? 'block' : 'none';
 }
 
 function mdeExitMode() {
