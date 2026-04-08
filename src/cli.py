@@ -12,6 +12,7 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich import print as rprint
 
 from src.generator import generate_blog_post
+from src.fact_checker import run_fact_check
 from src.database import (
     init_db, save_post, get_post, list_posts,
     update_post_status, update_post_fields, delete_post
@@ -232,7 +233,11 @@ def edit(post_id, field, editor):
         _inline_edit(post_id, post, field, file_path)
     else:
         # Interactive menu
+        content_preview = read_post_content(file_path) if file_path and os.path.exists(file_path) else ""
         console.print(f"\n[bold]Edit Post #{post_id}: {post['title']}[/]\n")
+        # Fact Check shortcut — top right prominence via right-aligned panel hint
+        console.print(f"  [bold magenta]F.[/] [bold magenta]Fact Check[/]  [dim]verify rates, methods & regulatory claims[/]")
+        console.print()
         for i, f in enumerate(EDITABLE_FIELDS, 1):
             current = post.get(f, "")
             if f in ("categories", "tags"):
@@ -241,7 +246,15 @@ def edit(post_id, field, editor):
         console.print(f"  [cyan]{len(EDITABLE_FIELDS)+1}.[/] [bold]content[/]  [dim](opens in editor)[/]")
         console.print(f"  [cyan]0.[/] Cancel\n")
 
-        choice = click.prompt("Edit field", type=int, default=0)
+        raw = click.prompt("Edit field (or F for Fact Check)", default="0")
+        if raw.strip().upper() == "F":
+            _run_and_display_fact_check(post, content_preview)
+            return
+        try:
+            choice = int(raw)
+        except ValueError:
+            console.print("[red]Invalid choice.[/]")
+            return
         if choice == 0:
             return
         if choice == len(EDITABLE_FIELDS) + 1:
@@ -250,6 +263,58 @@ def edit(post_id, field, editor):
             console.print(f"[green]✓ Saved.[/]")
         elif 1 <= choice <= len(EDITABLE_FIELDS):
             _inline_edit(post_id, post, EDITABLE_FIELDS[choice - 1], file_path)
+
+
+def _run_and_display_fact_check(post: dict, content: str):
+    """Run fact check and display results with rich formatting."""
+    console.print()
+    with console.status("[bold magenta]Running fact check...[/]", spinner="dots"):
+        try:
+            result = run_fact_check(post, content)
+        except Exception as e:
+            console.print(f"[red]Fact check failed: {e}[/]")
+            return
+
+    market_labels = {"sg": "Singapore", "my": "Malaysia", "ph": "Philippines", "unknown": "Unknown"}
+    market = result.get("market_detected", "unknown")
+    overall = result.get("overall", "pass")
+    issues = result.get("issues", [])
+    summary = result.get("summary", "")
+
+    overall_color = {"pass": "green", "warn": "yellow", "fail": "red"}.get(overall, "white")
+    overall_icon = {"pass": "✓", "warn": "⚠", "fail": "✗"}.get(overall, "·")
+
+    console.print(Panel(
+        f"[bold]Market:[/] {market_labels.get(market, market)}   "
+        f"[bold]Result:[/] [{overall_color}]{overall_icon}  {overall.upper()}[/]   "
+        f"[bold]Issues:[/] {len(issues)}\n\n"
+        f"[dim]{summary}[/]",
+        title="[bold magenta]Fact Check Report[/]",
+        border_style=overall_color,
+        padding=(1, 2),
+    ))
+
+    if not issues:
+        console.print("[green]  No factual issues found.[/]\n")
+        return
+
+    sev_colors = {"critical": "red", "warning": "yellow", "info": "cyan"}
+    sev_icons = {"critical": "✗", "warning": "⚠", "info": "·"}
+
+    for i, issue in enumerate(issues, 1):
+        sev = issue.get("severity", "info")
+        color = sev_colors.get(sev, "white")
+        icon = sev_icons.get(sev, "·")
+        location = issue.get("location", "")
+        desc = issue.get("issue", "")
+        fix = issue.get("fix", "")
+
+        console.print(f"  [{color}]{icon} [{sev.upper()}][/]  {desc}")
+        if location:
+            console.print(f"     [dim]In:[/] \"{location}\"")
+        if fix:
+            console.print(f"     [green]Fix:[/] {fix}")
+        console.print()
 
 
 def _inline_edit(post_id: int, post: dict, field: str, file_path: str):
@@ -445,6 +510,31 @@ def research(competitors, list_available):
 
     console.print()
     console.print(table)
+
+
+@cli.command()
+@click.argument("post_id", type=int)
+def factcheck(post_id):
+    """Fact-check a blog post against verified HitPay market data.
+
+    Checks payment method counts, transaction rates, regulatory credentials,
+    and tone — flagging anything that contradicts verified facts for SG/MY/PH.
+
+    Example: python main.py factcheck 3
+    """
+    post = get_post(post_id)
+    if not post:
+        console.print(f"[red]Post #{post_id} not found.[/]")
+        raise click.Abort()
+
+    file_path = post.get("file_path", "")
+    content = read_post_content(file_path) if file_path and os.path.exists(file_path) else ""
+    if not content:
+        console.print(f"[red]No content found for post #{post_id}.[/]")
+        raise click.Abort()
+
+    console.print(f"\n[bold]Fact Check — Post #{post_id}: {post['title']}[/]")
+    _run_and_display_fact_check(post, content)
 
 
 @cli.command()
