@@ -2011,6 +2011,11 @@
       <option value="MY">🇲🇾 Malaysia</option>
       <option value="PH">🇵🇭 Philippines</option>
     </select>
+    <label class="modal-field-label">Writing Style</label>
+    <select class="modal-select" id="generatePromptStyle">
+      <option value="authority">Brand Authority — optimised for AI</option>
+      <option value="empathy">Empathy-Led — written for humans</option>
+    </select>
     <div class="progress-log" id="progressLog"></div>
     <div class="modal-actions">
       <button class="btn btn-cancel" onclick="closeGenerateModal()">Cancel</button>
@@ -2041,6 +2046,11 @@
       <option value="SG">🇸🇬 Singapore</option>
       <option value="MY">🇲🇾 Malaysia</option>
       <option value="PH">🇵🇭 Philippines</option>
+    </select>
+    <label class="modal-field-label">Writing Style</label>
+    <select class="modal-select" id="rewritePromptStyle">
+      <option value="authority">Brand Authority — optimised for AI</option>
+      <option value="empathy">Empathy-Led — written for humans</option>
     </select>
     <div class="progress-log" id="rewriteLog"></div>
     <div class="modal-actions">
@@ -2759,10 +2769,11 @@ async function startGenerate() {
 
   try {
     const country = document.getElementById('generateCountry').value || null;
+    const prompt_style = document.getElementById('generatePromptStyle').value;
     const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ keyword, country }),
+      body: JSON.stringify({ keyword, country, prompt_style }),
     });
 
     const reader = res.body.getReader();
@@ -2856,10 +2867,11 @@ async function startRewrite() {
 
   try {
     const country = document.getElementById('rewriteCountry').value || null;
+    const prompt_style = document.getElementById('rewritePromptStyle').value;
     const res = await fetch('/api/rewrite', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url, country }),
+      body: JSON.stringify({ url, country, prompt_style }),
     });
 
     const reader = res.body.getReader();

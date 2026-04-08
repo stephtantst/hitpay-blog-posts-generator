@@ -457,6 +457,7 @@ def api_ai_edit(post_id: int, body: AiEditRequest, _: str = Depends(require_auth
 class GenerateRequest(BaseModel):
     keyword: str
     country: str | None = None
+    prompt_style: str = "authority"  # "authority" or "empathy"
 
 
 @app.post("/api/generate")
@@ -474,7 +475,7 @@ async def api_generate(body: GenerateRequest, user_email: str = Depends(require_
             yield f"data: {json.dumps({'type': 'status', 'message': 'Starting generation...'})}\n\n"
 
             post_data = await loop.run_in_executor(
-                None, lambda: generate_blog_post(body.keyword, country=body.country, on_status=on_status)
+                None, lambda: generate_blog_post(body.keyword, country=body.country, prompt_style=body.prompt_style, on_status=on_status)
             )
 
             for msg in messages:
@@ -507,6 +508,7 @@ async def api_generate(body: GenerateRequest, user_email: str = Depends(require_
 class RewriteRequest(BaseModel):
     url: str
     country: str | None = None
+    prompt_style: str = "authority"  # "authority" or "empathy"
 
 
 @app.post("/api/rewrite")
@@ -524,7 +526,7 @@ async def api_rewrite(body: RewriteRequest, user_email: str = Depends(require_au
             yield f"data: {json.dumps({'type': 'status', 'message': 'Starting rewrite...'})}\n\n"
 
             post_data = await loop.run_in_executor(
-                None, lambda: rewrite_blog_post(body.url, country=body.country, on_status=on_status)
+                None, lambda: rewrite_blog_post(body.url, country=body.country, prompt_style=body.prompt_style, on_status=on_status)
             )
 
             for msg in messages:
