@@ -486,6 +486,7 @@ async def api_generate(body: GenerateRequest, user_email: str = Depends(require_
                 import time
                 post_data["slug"] = f"{post_data['slug']}-{int(time.time())}"
 
+            post_data["editor_email"] = user_email
             file_path = write_post_file(post_data)
             post_id = save_post(post_data, file_path)
             post_data["id"] = post_id
@@ -534,6 +535,7 @@ async def api_rewrite(body: RewriteRequest, user_email: str = Depends(require_au
                 import time
                 post_data["slug"] = f"{post_data['slug']}-rewrite-{int(time.time())}"
 
+            post_data["editor_email"] = user_email
             file_path = write_post_file(post_data)
             post_id = save_post(post_data, file_path)
             post_data["id"] = post_id
@@ -640,6 +642,7 @@ async def api_test_post(user_email: str = Depends(require_auth)):
         "tags": [],
         "content": "This is a test post created for prototype testing purposes.\n\nReplace this content with your actual post body.",
     }
+    post_data["editor_email"] = user_email
     file_path = write_post_file(post_data)
     post_id = save_post(post_data, file_path)
     log_audit(post_id, user_email, "created", {"keyword": "[TEST]", "country": ""})
