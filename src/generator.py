@@ -342,7 +342,10 @@ def _build_external_links_section(country: str | None, keyword: str) -> str:
     lines.append("- Link on first mention only")
     lines.append("- Each competitor link must only appear in a sentence directly about THAT specific competitor")
     lines.append("  ✗ Bad: discussing Stripe but linking to Xendit's URL")
-    lines.append("  ✓ Good: 'Xendit's card acceptance guide outlines how enterprise gateways handle cards well but lag on local e-wallets'\n")
+    lines.append("  ✓ Good: 'Xendit's card acceptance guide outlines how enterprise gateways handle cards well but lag on local e-wallets'")
+    lines.append("- COMPETITOR LINKS MUST appear no earlier than 30% into the article body (i.e. not in the intro or first H2 section).")
+    lines.append("  Placing a competitor link in the opening section causes readers to click away before engaging with the article.")
+    lines.append("  Place competitor links in the second half of the body, within the comparison or context sections.\n")
 
     for i, link in enumerate(selected, 1):
         name = link["name"]
@@ -508,6 +511,7 @@ Rules:
 - For non-competitor links use standard markdown: [anchor text](URL)
 - For competitor links (comparison articles only) use HTML with rel="nofollow": <a href="URL" rel="nofollow">Brand Name</a>
 - Each competitor link must only appear in a sentence directly about THAT specific competitor
+- Competitor links must not appear before 30% into the article body — never in the intro or first H2 section. A competitor link in the opening causes readers to bounce before engaging with the article. Place them in the second half of the body, inside comparison or context sections.
 
 ## Output
 Return ONLY a valid JSON object with exactly these fields (no markdown code fences, no extra text):
@@ -669,6 +673,7 @@ Rules:
 - For non-competitor links use standard markdown: [anchor text](URL)
 - For competitor links (comparison articles only) use HTML with rel="nofollow": <a href="URL" rel="nofollow">Brand Name</a>
 - Each competitor link must only appear in a sentence directly about THAT specific competitor
+- Competitor links must not appear before 30% into the article body — never in the intro or first H2 section. A competitor link in the opening causes readers to bounce before engaging with the article. Place them in the second half of the body, inside comparison or context sections.
 
 ## Output
 Return ONLY a valid JSON object with exactly these fields (no markdown code fences, no extra text):
