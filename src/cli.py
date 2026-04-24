@@ -512,6 +512,83 @@ def research(competitors, list_available):
     console.print(table)
 
 
+@cli.command("scrape-links")
+@click.argument("sources", nargs=-1, metavar="[SOURCE...]")
+@click.option("--list-available", "-l", is_flag=True, help="List available sources to scrape")
+def scrape_links(sources, list_available):
+    """Scrape competitor and partner blogs to build the external links database.
+
+    Run without arguments to scrape all sources.
+    Pass specific names to scrape only those: scrape-links stripe shopify
+
+    Available: stripe, airwallex, xendit, paymongo, adyen, shopify, woocommerce, xero, fiuu, ipay88, storehub
+    """
+    from src.external_link_scraper import BLOG_SOURCES, run_scraper, load_db, DB_PATH
+
+    if list_available:
+        db = load_db()
+        scraped_sources = set(db.get("sources_scraped", []))
+        article_counts = {}
+        for a in db.get("articles", []):
+            k = a.get("source_key", "")
+            article_counts[k] = article_counts.get(k, 0) + 1
+
+        console.print("\n[bold]Available sources:[/]")
+        for key, cfg in BLOG_SOURCES.items():
+            count = article_counts.get(key, 0)
+            status = f"[green]✓ {count} articles[/]" if key in scraped_sources else "[dim]not yet scraped[/]"
+            kind = "[red]competitor[/]" if cfg["is_competitor"] else "[cyan]partner[/]"
+            console.print(f"  [bold]{key}[/]  {kind}  {status}")
+        console.print()
+        return
+
+    targets = list(sources) if sources else None
+
+    if targets:
+        invalid = [t for t in targets if t not in BLOG_SOURCES]
+        if invalid:
+            console.print(f"[red]Unknown sources: {', '.join(invalid)}[/]")
+            console.print(f"[dim]Available: {', '.join(BLOG_SOURCES.keys())}[/]")
+            return
+        console.print(f"\n[bold cyan]Scraping:[/] {', '.join(targets)}\n")
+    else:
+        console.print(f"\n[bold cyan]Scraping all {len(BLOG_SOURCES)} sources...[/]\n")
+        console.print("[dim]This will take several minutes. Sit tight.[/]\n")
+
+    stats = run_scraper(targets, verbose=True)
+
+    db = load_db()
+    total_articles = len(db.get("articles", []))
+
+    console.print(f"\n[green]✓ Done.[/] {stats['articles_added']} new articles added ({total_articles} total in DB)")
+    console.print(f"[dim]Database: {DB_PATH}[/]")
+
+    if stats["failed"]:
+        console.print(f"[yellow]⚠ No articles found for: {', '.join(stats['failed'])} (may be JS-rendered)[/]")
+
+    # Summary table
+    article_counts: dict[str, int] = {}
+    for a in db.get("articles", []):
+        k = a.get("source_key", "")
+        article_counts[k] = article_counts.get(k, 0) + 1
+
+    table = Table(title="External Links Database", border_style="cyan", header_style="bold cyan")
+    table.add_column("Source", min_width=15)
+    table.add_column("Type", width=12)
+    table.add_column("Markets", width=14)
+    table.add_column("Articles", justify="right", width=10)
+
+    for key, cfg in BLOG_SOURCES.items():
+        count = article_counts.get(key, 0)
+        if count == 0:
+            continue
+        kind = "[red]competitor[/]" if cfg["is_competitor"] else "[cyan]partner[/]"
+        table.add_row(cfg["name"], kind, "/".join(cfg["markets"]), str(count))
+
+    console.print()
+    console.print(table)
+
+
 @cli.command()
 @click.argument("post_id", type=int)
 def factcheck(post_id):

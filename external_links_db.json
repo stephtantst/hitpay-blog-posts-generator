@@ -1,0 +1,3403 @@
+{
+  "last_updated": "2026-04-24",
+  "sources_scraped": [
+    "airwallex",
+    "xendit",
+    "paymongo",
+    "adyen",
+    "shopify",
+    "woocommerce",
+    "xero",
+    "fiuu",
+    "paymaya"
+  ],
+  "articles": [
+    {
+      "url": "https://www.airwallex.com/blog/scaling-in-store-payments-for-modern-omnichannel-retail",
+      "title": "Scaling In Store Payments For Modern Omnichannel Retail",
+      "topics": [
+        "pos system",
+        "in-store payments",
+        "omnichannel retail",
+        "payment processing"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/blog/embedded-in-person-payments-with-airwallex-pos",
+      "title": "Embedded In Person Payments With Airwallex Pos",
+      "topics": [
+        "pos system",
+        "in-person payments",
+        "embedded payments",
+        "payment processing"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/blog/expense-policy-agent",
+      "title": "Expense Policy Agent",
+      "topics": [
+        "expense management",
+        "ai automation",
+        "financial operations"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/blog/ai-shoppers-what-retailers-need-to-know",
+      "title": "Ai Shoppers What Retailers Need To Know",
+      "topics": [
+        "retail",
+        "ai technology",
+        "ecommerce",
+        "customer behavior"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/blog/introducing-airwallex-pos-payments",
+      "title": "Introducing Airwallex Pos Payments",
+      "topics": [
+        "pos system",
+        "in-person payments",
+        "payment processing"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/blog/the-last-mile-of-global-payments",
+      "title": "The Last Mile Of Global Payments",
+      "topics": [
+        "global payments",
+        "cross-border payments",
+        "payment infrastructure"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/blog/one-click-checkout",
+      "title": "One Click Checkout",
+      "topics": [
+        "online checkout",
+        "checkout optimization",
+        "conversion rate",
+        "ecommerce payments"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/blog/agentic-commerce-a-practical-guide-to-prepare-your-business",
+      "title": "Agentic Commerce A Practical Guide To Prepare Your Business",
+      "topics": [
+        "agentic ai",
+        "ecommerce",
+        "business automation"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/blog/trade-rewiring-payment-data-new-markets",
+      "title": "Trade Rewiring Payment Data New Markets",
+      "topics": [
+        "payment data",
+        "international trade",
+        "cross-border payments"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/blog/agentic-ai-finance-operations",
+      "title": "Agentic Ai Finance Operations",
+      "topics": [
+        "ai automation",
+        "finance operations",
+        "business efficiency"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/blog/how-airwallex-speeds-up-your-cash-flow",
+      "title": "How Airwallex Speeds Up Your Cash Flow",
+      "topics": [
+        "cash flow",
+        "payment processing",
+        "business finance"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/blog/gain-control-improve-visibility-and-save-time-global-entity-management",
+      "title": "Gain Control Improve Visibility And Save Time Global Entity Management",
+      "topics": [
+        "global entity management",
+        "financial operations",
+        "business visibility"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/blog/how-ecommerce-brands-can-protect-margins-volatility-fx-risk",
+      "title": "How Ecommerce Brands Can Protect Margins Volatility Fx Risk",
+      "topics": [
+        "ecommerce",
+        "fx risk",
+        "currency volatility",
+        "margin protection"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/blog/currency-volatility-margin-problem-hedging-cant-fix",
+      "title": "Currency Volatility Margin Problem Hedging Cant Fix",
+      "topics": [
+        "currency volatility",
+        "fx hedging",
+        "margin protection"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/blog/finance-needs-to-transform-before-ai-enters-the-picture",
+      "title": "Finance Needs To Transform Before Ai Enters The Picture",
+      "topics": [
+        "finance operations",
+        "ai integration",
+        "business transformation"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/blog/the-real-value-of-AI-in-analytics",
+      "title": "The Real Value Of Ai In Analytics",
+      "topics": [
+        "ai analytics",
+        "data insights",
+        "financial operations"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/blog/why-checkout-is-the-last-big-conversion-lever",
+      "title": "Why Checkout Is The Last Big Conversion Lever",
+      "topics": [
+        "online checkout",
+        "checkout optimization",
+        "conversion rate",
+        "ecommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/blog/five-ways-ai-removes-expense-admin",
+      "title": "Five Ways Ai Removes Expense Admin",
+      "topics": [
+        "expense management",
+        "ai automation",
+        "business operations"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/blog/continuous-forecasting",
+      "title": "Continuous Forecasting",
+      "topics": [
+        "financial forecasting",
+        "business intelligence",
+        "financial planning"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/expense-policy-agent",
+      "title": "Expense Policy Agent",
+      "topics": [
+        "expense management",
+        "ai automation",
+        "financial operations"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/agentic-commerce-a-practical-guide-to-prepare-your-business",
+      "title": "Agentic Commerce A Practical Guide To Prepare Your Business",
+      "topics": [
+        "agentic ai",
+        "ecommerce",
+        "business automation"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/one-click-checkout",
+      "title": "One Click Checkout",
+      "topics": [
+        "online checkout",
+        "checkout optimization",
+        "conversion rate",
+        "ecommerce payments"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/trade-rewiring-payment-data-new-markets",
+      "title": "Trade Rewiring Payment Data New Markets",
+      "topics": [
+        "payment data",
+        "international trade",
+        "cross-border payments"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/how-airwallex-speeds-up-your-cash-flow",
+      "title": "How Airwallex Speeds Up Your Cash Flow",
+      "topics": [
+        "cash flow",
+        "payment processing",
+        "business finance"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/comparison-ofx-vs-airwallex",
+      "title": "Comparison Ofx Vs Airwallex",
+      "topics": [
+        "payment gateway",
+        "money transfer",
+        "payment processor"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/paypal-alternatives-and-competitors",
+      "title": "Paypal Alternatives And Competitors",
+      "topics": [
+        "payment gateway",
+        "online payments",
+        "payment processor"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/comparison-adyen-vs-stripe",
+      "title": "Comparison Adyen Vs Stripe",
+      "topics": [
+        "payment gateway",
+        "payment processor"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/comparison-adyen-vs-braintree",
+      "title": "Comparison Adyen Vs Braintree",
+      "topics": [
+        "payment gateway",
+        "payment processor"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/how-ecommerce-brands-can-protect-margins-volatility-fx-risk",
+      "title": "How Ecommerce Brands Can Protect Margins Volatility Fx Risk",
+      "topics": [
+        "ecommerce",
+        "fx risk",
+        "currency exchange"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/cimb-multi-currency-account-review",
+      "title": "Cimb Multi Currency Account Review",
+      "topics": [
+        "business account",
+        "multi-currency account"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/currency-volatility-margin-problem-hedging-cant-fix",
+      "title": "Currency Volatility Margin Problem Hedging Cant Fix",
+      "topics": [
+        "currency volatility",
+        "fx risk",
+        "margin protection"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/types-of-business-accounts",
+      "title": "Types Of Business Accounts",
+      "topics": [
+        "business account",
+        "sme banking"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/what-is-global-account",
+      "title": "What Is Global Account",
+      "topics": [
+        "business account",
+        "global account"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/how-to-choose-business-bank-account",
+      "title": "How To Choose Business Bank Account",
+      "topics": [
+        "business account",
+        "sme banking"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/what-is-business-account",
+      "title": "What Is Business Account",
+      "topics": [
+        "business account",
+        "sme banking"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/best-free-business-account",
+      "title": "Best Free Business Account",
+      "topics": [
+        "business account",
+        "sme banking"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/best-international-money-transfer",
+      "title": "Best International Money Transfer",
+      "topics": [
+        "money transfer",
+        "international payments"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/sg/blog/best-business-bank-account-ecommerce-singapore",
+      "title": "Best Business Bank Account Ecommerce Singapore",
+      "topics": [
+        "business account",
+        "ecommerce",
+        "payment solutions"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/merchantrade-alternatives",
+      "title": "Merchantrade Alternatives",
+      "topics": [
+        "payment processor",
+        "money transfer"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/fiuu-vs-stripe",
+      "title": "Fiuu Vs Stripe",
+      "topics": [
+        "payment gateway",
+        "payment processor"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/fiuu-review",
+      "title": "Fiuu Review",
+      "topics": [
+        "payment gateway",
+        "payment processor"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/fiuu-alternatives",
+      "title": "Fiuu Alternatives",
+      "topics": [
+        "payment gateway",
+        "payment processor"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/curlec-vs-fiuu",
+      "title": "Curlec Vs Fiuu",
+      "topics": [
+        "payment gateway",
+        "payment processor"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/curlec-alternatives",
+      "title": "Curlec Alternatives",
+      "topics": [
+        "payment gateway",
+        "payment processor"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/airwallex-vs-swipey",
+      "title": "Airwallex Vs Swipey",
+      "topics": [
+        "payment gateway",
+        "money transfer"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/airwallex-vs-pingpong",
+      "title": "Airwallex Vs Pingpong",
+      "topics": [
+        "payment gateway",
+        "money transfer"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/best-online-payment-processor",
+      "title": "Best Online Payment Processor",
+      "topics": [
+        "payment gateway",
+        "online payments",
+        "payment processor"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/airwallex-vs-moneymatch",
+      "title": "Airwallex Vs Moneymatch",
+      "topics": [
+        "payment gateway",
+        "money transfer"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/payment-gateway-vs-payment-processor",
+      "title": "Payment Gateway Vs Payment Processor",
+      "topics": [
+        "payment gateway",
+        "payment processor"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/curlec-review",
+      "title": "Curlec Review",
+      "topics": [
+        "payment gateway",
+        "money transfer",
+        "cross-border payments"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/merchantrade-vs-wise",
+      "title": "Merchantrade Vs Wise",
+      "topics": [
+        "money transfer",
+        "cross-border payments",
+        "remittance"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/pingpong-review",
+      "title": "Pingpong Review",
+      "topics": [
+        "payment gateway",
+        "cross-border payments",
+        "money transfer"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/remitly-alternatives",
+      "title": "Remitly Alternatives",
+      "topics": [
+        "money transfer",
+        "remittance",
+        "cross-border payments"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/stripe-vs-airwallex",
+      "title": "Stripe Vs Airwallex",
+      "topics": [
+        "payment gateway",
+        "online payments",
+        "payment processing"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/wallex-vs-airwallex",
+      "title": "Wallex Vs Airwallex",
+      "topics": [
+        "payment gateway",
+        "online payments",
+        "payment processing"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/worldfirst-vs-airwallex",
+      "title": "Worldfirst Vs Airwallex",
+      "topics": [
+        "cross-border payments",
+        "money transfer",
+        "payment gateway"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/worldfirst-vs-wise",
+      "title": "Worldfirst Vs Wise",
+      "topics": [
+        "money transfer",
+        "cross-border payments",
+        "remittance"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/worldfirst-review",
+      "title": "Worldfirst Review",
+      "topics": [
+        "money transfer",
+        "cross-border payments",
+        "remittance"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/moneymatch-review",
+      "title": "Moneymatch Review",
+      "topics": [
+        "money transfer",
+        "cross-border payments",
+        "remittance"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/wise-alternatives",
+      "title": "Wise Alternatives",
+      "topics": [
+        "money transfer",
+        "cross-border payments",
+        "remittance"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.airwallex.com/my/blog/bigpay-vs-wise",
+      "title": "Bigpay Vs Wise",
+      "topics": [
+        "money transfer",
+        "cross-border payments",
+        "remittance"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "airwallex",
+      "source_name": "Airwallex",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.xendit.co/en-ph/blog/credit-card-payments-in-the-philippines-a-complete-guide-for-growing-businesses",
+      "title": "Credit Card Payments in the Philippines: A Complete Guide for Growing Businesses",
+      "topics": [
+        "credit card payments",
+        "payment methods",
+        "online payments",
+        "business guide"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "xendit",
+      "source_name": "Xendit",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.xendit.co/en-ph/blog/achieve-faster-more-reliable-payments-with-3x-faster-api-performance-than-before",
+      "title": "Achieve Faster, More Reliable Payments with 3x Faster API Performance Than Before",
+      "topics": [
+        "payment api",
+        "payment gateway",
+        "payment processing"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "xendit",
+      "source_name": "Xendit",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.xendit.co/en-ph/blog/5-reasons-to-activate-otc-to-solve-cash-challenges",
+      "title": "5 Reasons to Activate OTC to Solve Cash Challenges",
+      "topics": [
+        "otc payments",
+        "cash management",
+        "payment solutions"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "xendit",
+      "source_name": "Xendit",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.xendit.co/en-ph/blog/what-is-payment-gateway",
+      "title": "Payment Gateway: What It Is, How It Works & Its Benefits",
+      "topics": [
+        "payment gateway",
+        "online payments",
+        "payment processing"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "xendit",
+      "source_name": "Xendit",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.paymongo.com/blog/paymongo-and-stelsen-integrated-systems-partner-to-provide-a-seamless-digital-payment-system-for-safety-solutions",
+      "title": "In the SpotlightApr 17, 2026PayMongo and Stelsen Integrated Systems Partner to Provide a Seamless Digital Payment System for Safety SolutionsMANILA, Philippines — PayMongo and Stelsen Integrated Syste",
+      "topics": [
+        "payment gateway",
+        "digital payments",
+        "payment integration",
+        "b2b payments"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymongo",
+      "source_name": "PayMongo",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.paymongo.com/blog/quotable-ai-and-paymongo-partner-to-power-end-to-end-b2b-payments-for-philippine-smes",
+      "title": "In the SpotlightApr 16, 2026Quotable AI and PayMongo Partner to Power End-to-End B2B Payments for Philippine SMEsMANILA, Philippines – In the Philippines, closing a deal still often means sending a qu",
+      "topics": [
+        "b2b payments",
+        "payment solutions",
+        "sme payments",
+        "payment gateway"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymongo",
+      "source_name": "PayMongo",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.paymongo.com/blog/skyward-and-paymongo-partner-to-embed-digital-payments-in-philippine-government-platforms",
+      "title": "In the SpotlightFeb 12, 2026SKYWARD and PayMongo Partner to Embed Digital Payments in Philippine Government PlatformsGet financial insights from SKYWARD and PayMongo Partner to Embed Digital Payments ",
+      "topics": [
+        "digital payments",
+        "government payments",
+        "payment integration",
+        "payment platform"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymongo",
+      "source_name": "PayMongo",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.paymongo.com/blog/shopeepay-expands-access-with-paymongo-integration-to-bring-digital-payments-closer-to-everyday-life",
+      "title": "In the SpotlightFeb 11, 2026ShopeePay Expands Access With PayMongo Integration to Bring Digital Payments Closer to Everyday LifeGet financial insights from ShopeePay Expands Access With PayMongo Integ",
+      "topics": [
+        "digital payments",
+        "payment integration",
+        "mobile payments",
+        "payment gateway"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymongo",
+      "source_name": "PayMongo",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.paymongo.com/blog/from-idea-to-live-in-minutes-with-storefront-ai",
+      "title": "Product FeatureFeb 8, 2026From Idea to Live in Minutes with Storefront AIGet financial insights from From Idea to Live in Minutes with Storefront AI. Learn how PayMongo’s solutions and industry insigh",
+      "topics": [
+        "payment gateway",
+        "online store",
+        "ecommerce",
+        "payment solutions"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymongo",
+      "source_name": "PayMongo",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.paymongo.com/blog/the-invisible-wall-maximizing-sales-with-the-right-financial-tools",
+      "title": "Product FeatureJan 21, 2026The Invisible Wall: Maximizing Sales With The Right Financial ToolsGet financial insights from The Invisible Wall: Maximizing Sales With The Right Financial Tools. Learn how",
+      "topics": [
+        "payment solutions",
+        "sales tools",
+        "financial tools",
+        "payment gateway"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymongo",
+      "source_name": "PayMongo",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.paymongo.com/blog/qrph-the-success-of-silence",
+      "title": "Product FeatureJan 14, 2026QRPH: The Success of SilenceGet financial insights from QRPH: The Success of Silence. Learn how PayMongo’s solutions and industry insights can drive growth for your business",
+      "topics": [
+        "qr code payments",
+        "payment solutions",
+        "digital payments"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymongo",
+      "source_name": "PayMongo",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.paymongo.com/blog/paymongo-and-juan-by-juantax-partner-to-simplify-accounting-and-payments-for-philippine-smes",
+      "title": "In the SpotlightJan 11, 2026PayMongo and Juan by JuanTax Partner to Simplify Accounting and Payments for Philippine SMEsGet financial insights from PayMongo and Juan by JuanTax Partner to Simplify Acc",
+      "topics": [
+        "sme payments",
+        "accounting",
+        "payment solutions",
+        "business payments"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymongo",
+      "source_name": "PayMongo",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.paymongo.com/blog/how-embedded-finance-is-redefining-money-movement-for-businesses",
+      "title": "Seeds for ThoughtJan 8, 2026How Embedded Finance Is Redefining Money Movement for BusinessesGet financial insights from How Embedded Finance Is Redefining Money Movement for Businesses. Learn how PayM",
+      "topics": [
+        "embedded finance",
+        "payment solutions",
+        "business payments",
+        "money movement"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymongo",
+      "source_name": "PayMongo",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.adyen.com/knowledge-hub/introducing-intelligent-money-movement",
+      "title": "BlogsIntroducing Intelligent Money MovementApril 8th, 2026 · 2 minutes",
+      "topics": [
+        "payment infrastructure",
+        "money movement",
+        "financial operations"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "adyen",
+      "source_name": "Adyen",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.adyen.com/knowledge-hub/enterprise-payments-engine",
+      "title": "BlogsBuilding a winning enterprise payments engineMarch 5th, 2026 · 4 minutes",
+      "topics": [
+        "enterprise payments",
+        "payment processing",
+        "payment platform"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "adyen",
+      "source_name": "Adyen",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.adyen.com/knowledge-hub/interchange-fees-explained",
+      "title": "Guides and reportsWhat are interchange fees, how they work, and what they costApril 1st, 2026 · 5 minutes",
+      "topics": [
+        "interchange fees",
+        "payment costs",
+        "payment economics"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "adyen",
+      "source_name": "Adyen",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.adyen.com/knowledge-hub/agentic-commerce-control",
+      "title": "BlogsAgentic commerce and control: Getting the balance rightFebruary 18th, 2026 · 10 minutes",
+      "topics": [
+        "agentic commerce",
+        "automated payments",
+        "payment control"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "adyen",
+      "source_name": "Adyen",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.adyen.com/knowledge-hub/lastminute-global-payment-upgrade",
+      "title": "Customer storiesHow lastminute.com turned payment complexity into a competitive edgeApril 15th, 2026 · 4 minutes",
+      "topics": [
+        "global payments",
+        "payment solutions",
+        "payment integration"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "adyen",
+      "source_name": "Adyen",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.adyen.com/knowledge-hub/timma",
+      "title": "Customer storiesTimma and Adyen Capital: How seamless financing drives growth for Nordic salonsMarch 10th, 2026 · 6 minutes",
+      "topics": [
+        "payment financing",
+        "bnpl",
+        "merchant capital"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "adyen",
+      "source_name": "Adyen",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.adyen.com/knowledge-hub/equinox-elevates-member-experience",
+      "title": "Customer storiesHow Equinox uses unified payments to elevate member experiencesFebruary 5th, 2026 · 6 minutes",
+      "topics": [
+        "unified payments",
+        "member payments",
+        "payment experience"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "adyen",
+      "source_name": "Adyen",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.adyen.com/knowledge-hub/point-of-sale",
+      "title": "Point of sale (POS): Understanding POS systemsApril 22nd, 2026 · 6 minutes",
+      "topics": [
+        "pos system",
+        "point of sale",
+        "in-store payments"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "adyen",
+      "source_name": "Adyen",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.adyen.com/knowledge-hub/agentic-commerce-and-product-feeds-guide",
+      "title": "BlogsAgentic commerce and product feeds: a guide for retailersApril 20th, 2026 · 3 minutes",
+      "topics": [
+        "agentic commerce",
+        "retail payments",
+        "product feeds"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "adyen",
+      "source_name": "Adyen",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.adyen.com/knowledge-hub/agentic-foundations-bridging-inventory-gap",
+      "title": "BlogsAgentic foundations: Bridging the inventory gapApril 20th, 2026 · 3 minutes",
+      "topics": [
+        "agentic commerce",
+        "inventory management",
+        "payment automation"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "adyen",
+      "source_name": "Adyen",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.adyen.com/knowledge-hub/how-patreon-powers-payments-for-fans",
+      "title": "Customer storiesKeeping creativity flowing: How Patreon powers payments for millions of fansOctober 30th, 2025 · 5 minutes",
+      "topics": [
+        "payment platform",
+        "creator payments",
+        "fan payments"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "adyen",
+      "source_name": "Adyen",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.adyen.com/knowledge-hub/from-chip-pin-to-ai-agents-the-evolution-of-the-token",
+      "title": "Guides and reportsFrom Chip & PIN to AI agents: Why the token is the hidden engine of commerceOctober 30th, 2025 · 10 minutes",
+      "topics": [
+        "tokenization",
+        "payment security",
+        "payment evolution"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "adyen",
+      "source_name": "Adyen",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.adyen.com/knowledge-hub/smarter-payments-for-otas",
+      "title": "BlogsWin every booking with smarter payments for OTAsAugust 25th, 2025 · 3 minutes",
+      "topics": [
+        "online travel",
+        "booking payments",
+        "ota payments"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "adyen",
+      "source_name": "Adyen",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/start-online-store",
+      "title": "How to Start",
+      "topics": [
+        "ecommerce",
+        "online store",
+        "shopify"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/best-ecommerce-sites",
+      "title": "Website Examples",
+      "topics": [
+        "ecommerce",
+        "online store",
+        "website design"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/sales-channel",
+      "title": "How to Sell",
+      "topics": [
+        "ecommerce",
+        "sales channels",
+        "online selling"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/diy-ecommerce-store-design-as-a-beginner",
+      "title": "Website Design",
+      "topics": [
+        "ecommerce",
+        "website design",
+        "online store"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/what-is-shopify",
+      "title": "Why Shopify",
+      "topics": [
+        "shopify",
+        "ecommerce platform",
+        "online store"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/shopify-stores",
+      "title": "Shopify Stores",
+      "topics": [
+        "shopify",
+        "ecommerce",
+        "online store"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/8211159-9-simple-ways-to-write-product-descriptions-that-sell",
+      "title": "Product Descriptions",
+      "topics": [
+        "ecommerce",
+        "product descriptions",
+        "online store"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/shopify-store-launch-checklist",
+      "title": "Launch Store",
+      "topics": [
+        "ecommerce",
+        "online store",
+        "store launch"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/17156160-7-inspiring-ecommerce-call-to-action-examples-and-why-they-work",
+      "title": "call to action",
+      "topics": [
+        "ecommerce",
+        "conversion optimization",
+        "call to action"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/sales-funnel",
+      "title": "sales funnels",
+      "topics": [
+        "ecommerce",
+        "sales funnel",
+        "conversion optimization"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/landing-page",
+      "title": "landing page",
+      "topics": [
+        "ecommerce",
+        "landing page",
+        "conversion optimization"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/social-proof",
+      "title": "social proof",
+      "topics": [
+        "ecommerce",
+        "social proof",
+        "conversion optimization"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/facebook-ads",
+      "title": "Facebook ad",
+      "topics": [
+        "ecommerce",
+        "digital marketing",
+        "facebook ads"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/unique-selling-proposition",
+      "title": "unique selling proposition",
+      "topics": [
+        "ecommerce",
+        "business strategy",
+        "marketing"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/contact-us-page",
+      "title": "Contact Us page",
+      "topics": [
+        "ecommerce",
+        "website design",
+        "online store"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/120928069-how-to-create-faq-page",
+      "title": "FAQ page",
+      "topics": [
+        "ecommerce",
+        "website design",
+        "customer service"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/mobile-payment",
+      "title": "mobile payment",
+      "topics": [
+        "mobile payment",
+        "online payments",
+        "payment methods"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/how-to-write-an-about-us-page",
+      "title": "About page",
+      "topics": [
+        "ecommerce",
+        "website design",
+        "online store"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/shipping-policy",
+      "title": "shipping policy",
+      "topics": [
+        "ecommerce",
+        "shipping",
+        "online store"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/email-marketing",
+      "title": "email campaigns",
+      "topics": [
+        "ecommerce",
+        "email marketing",
+        "digital marketing"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/marketing-analytics",
+      "title": "Ecommerce analytics",
+      "topics": [
+        "ecommerce",
+        "analytics",
+        "business intelligence"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/loyalty-program",
+      "title": "7 Innovative Customer Loyalty Programs and How To Start",
+      "topics": [
+        "customer loyalty",
+        "customer retention",
+        "ecommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/customer-trust-checklist",
+      "title": "The 39-Point Store Trust Checklist- How Trustworthy Is Your Online Store?",
+      "topics": [
+        "customer trust",
+        "online store",
+        "ecommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/120261189-conversion-rate-optimization",
+      "title": "Conversion Rate Optimization- How to Get Started with CRO",
+      "topics": [
+        "conversion rate optimization",
+        "ecommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/ecommerce-marketing-personalization",
+      "title": "The Hidden Potential of On-Site Personalization (And 3 Ways to Get Started)",
+      "topics": [
+        "personalization",
+        "ecommerce marketing",
+        "customer experience"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/make-money-on-instagram",
+      "title": "How To Make Money on Instagram in 2025 (9 Actionable Ideas)",
+      "topics": [
+        "social commerce",
+        "instagram",
+        "ecommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/ecommerce-business-blueprint",
+      "title": "How To Start an Ecommerce Business: Guide for 2025",
+      "topics": [
+        "ecommerce",
+        "online business",
+        "shopify"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/what-is-dropshipping",
+      "title": "What Is Dropshipping and How Does It Work? (2025)",
+      "topics": [
+        "dropshipping",
+        "ecommerce",
+        "business model"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/print-on-demand",
+      "title": "What Is Print on Demand & How To Start a Business (2025)",
+      "topics": [
+        "print on demand",
+        "ecommerce",
+        "business model"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/build-a-website",
+      "title": "How To Create a Website in 9 Steps (2025)",
+      "topics": [
+        "website builder",
+        "ecommerce",
+        "shopify"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/make-sell-merch",
+      "title": "How To Make and Sell Merch Your Fans Will Love (2025)",
+      "topics": [
+        "ecommerce",
+        "merchandise",
+        "online sales"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/best-ecommerce-website-builder",
+      "title": "10 Best Ecommerce Website Builders for Your Online Store (2025)",
+      "topics": [
+        "ecommerce website builder",
+        "online store",
+        "shopify"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/how-to-do-inventory-counts-with-shopify-pos",
+      "title": "How To Do Inventory Counts with Shopify POS",
+      "topics": [
+        "pos system",
+        "inventory management",
+        "retail"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/opening-a-new-retail-location",
+      "title": "Opening a New Retail Location with Shopify POS: The Complete Launch Countdown",
+      "topics": [
+        "pos system",
+        "retail",
+        "shopify"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/pos-report",
+      "title": "What Is a Point-of-Sale (POS) Report? Top Options and How To Use Them (2026)",
+      "topics": [
+        "pos system",
+        "pos report",
+        "retail"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/automated-order-management",
+      "title": "What is Automated Order Management? Process and Tools for 2026",
+      "topics": [
+        "order management",
+        "inventory management",
+        "retail operations",
+        "shopify"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/batch-picking",
+      "title": "What is Batch Picking? How It Works and Benefits (2026)",
+      "topics": [
+        "order fulfillment",
+        "warehouse management",
+        "inventory management",
+        "retail operations"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/appointment-shopping",
+      "title": "Appointment Shopping: How It Works in Retail (2026)",
+      "topics": [
+        "retail experience",
+        "customer engagement",
+        "point of sale",
+        "retail strategy"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/virtual-fitting-rooms",
+      "title": "Virtual Fitting Rooms: How They Work & Top Apps (2026)",
+      "topics": [
+        "retail technology",
+        "customer experience",
+        "ecommerce",
+        "retail innovation"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/pos-experience",
+      "title": "What Is POS Experience? 8 Strategies To Enhance Customer Satisfaction",
+      "topics": [
+        "pos system",
+        "point of sale",
+        "customer experience",
+        "retail operations"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/demand-planning-kpis",
+      "title": "12 Demand Planning KPIs to Improve Forecasting in 2026",
+      "topics": [
+        "demand planning",
+        "inventory forecasting",
+        "retail analytics",
+        "business metrics"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/how-to-increase-sales-in-clothing-business",
+      "title": "How To Increase Sales in the Clothing Business: 14 Proven Ways (2026)",
+      "topics": [
+        "retail sales strategy",
+        "ecommerce",
+        "clothing business",
+        "business growth"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/crm-pos",
+      "title": "How To Use a CRM POS System To Grow Sales (2026)",
+      "topics": [
+        "crm",
+        "pos system",
+        "customer relationship management",
+        "sales growth"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/manage-multiple-retail-stores",
+      "title": "10 Strategies to Manage Multiple Retail Stores for Growth",
+      "topics": [
+        "retail management",
+        "multi-store operations",
+        "inventory management",
+        "business scaling"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/square-to-shopify",
+      "title": "How to Migrate from Square to Shopify (2026)",
+      "topics": [
+        "pos system migration",
+        "shopify",
+        "payment processing",
+        "retail platform"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/how-much-it-costs-to-open-a-retail-store-in-2025",
+      "title": "How Much It Costs To Open a Retail Store in 2026 (With Mall Costs)",
+      "topics": [
+        "retail business startup",
+        "small business",
+        "retail operations",
+        "business planning"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/start-a-consignment-shop",
+      "title": "How to Start a Consignment Shop in 2026",
+      "topics": [
+        "retail business startup",
+        "consignment shop",
+        "business model",
+        "retail operations"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/retail-leasing",
+      "title": "Retail Leasing: A Merchant’s Guide To Finding & Negotiating a Lease (2026)",
+      "topics": [
+        "retail business",
+        "retail operations",
+        "business planning",
+        "commercial leasing"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/pos-system-cost",
+      "title": "POS System Costs: A Complete 2026 Pricing Breakdown",
+      "topics": [
+        "pos system",
+        "pricing",
+        "point of sale",
+        "small business"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/10-tactics-for-impulse-buying",
+      "title": "Spontaneous Shopping: The Psychology of Impulse Buys and How To Inspire Them",
+      "topics": [
+        "retail strategy",
+        "customer psychology",
+        "sales optimization",
+        "ecommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/pos-systems-small-business",
+      "title": "6 Best Small Business POS Systems, Reviewed (2026)",
+      "topics": [
+        "pos system",
+        "point of sale",
+        "small business",
+        "retail technology"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/how-to-open-a-retail-store",
+      "title": "How To Start a Retail Store in 11 Steps (2026)",
+      "topics": [
+        "retail business startup",
+        "small business",
+        "business planning",
+        "retail operations"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/best-cash-registers-for-small-business",
+      "title": "5 Best Cash Registers for Small Businesses (2026 Guide)",
+      "topics": [
+        "cash register",
+        "pos system",
+        "retail hardware",
+        "small business"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/how-to-use-pos-system",
+      "title": "How to Use a POS System: A Step-by-Step Guide for Retailers",
+      "topics": [
+        "pos system",
+        "point of sale",
+        "retail operations",
+        "retail training"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/facing",
+      "title": "Facing in Retail: How to Attract and Keep Customers Shopping (2026)",
+      "topics": [
+        "retail merchandising",
+        "customer engagement",
+        "retail strategy",
+        "store operations"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/how-to-start-a-thrift-store",
+      "title": "How To Start a Thrift Store in 2026",
+      "topics": [
+        "retail business startup",
+        "thrift store",
+        "business planning",
+        "small business"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/international-pos",
+      "title": "International POS: How Cross-Border Transactions & Fees Work (2026)",
+      "topics": [
+        "pos system",
+        "international payments",
+        "cross-border transactions",
+        "payment processing"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/storefront-design",
+      "title": "12 Storefront Design Principles to Attract More Customers in 2026",
+      "topics": [
+        "retail design",
+        "customer experience",
+        "retail strategy",
+        "storefront"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/apparel-inventory-management",
+      "title": "The 2026 Apparel Inventory Management Software Guide",
+      "topics": [
+        "inventory management",
+        "apparel retail",
+        "retail software",
+        "ecommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/craft-fairs-and-art-shows",
+      "title": "How To Sell at a Craft Fair in 2026: A 10-Step Checklist",
+      "topics": [
+        "retail sales channels",
+        "small business",
+        "craft retail",
+        "sales strategy"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/foot-traffic",
+      "title": "How to Increase Foot Traffic: Measure and Boost Store Visits",
+      "topics": [
+        "retail analytics",
+        "customer traffic",
+        "retail strategy",
+        "store operations"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/mobile-pos-system",
+      "title": "How To Choose a Mobile POS (mPOS) System in 2026",
+      "topics": [
+        "mobile pos system",
+        "pos system",
+        "payment processing"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/thrift-store-inventory-management",
+      "title": "6 Best POS Systems for Thrift Stores (2026 Guide)",
+      "topics": [
+        "pos system",
+        "inventory management",
+        "retail"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/shopify-pos-solutions-for-home-and-garden-brands",
+      "title": "Shopify POS for Home & Garden: A 2026 Guide to Scaling Your Business",
+      "topics": [
+        "shopify pos",
+        "pos system",
+        "retail business"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.shopify.com/blog/furniture-store-pos-software",
+      "title": "8 Best Furniture Store POS Systems & Features to Consider",
+      "topics": [
+        "pos system",
+        "furniture retail",
+        "point of sale"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "shopify",
+      "source_name": "Shopify",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/blog/business-ideas",
+      "title": "Business Ideas",
+      "topics": [
+        "business ideas",
+        "ecommerce",
+        "online selling"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/blog/customer-stories",
+      "title": "Customer Stories",
+      "topics": [
+        "customer stories",
+        "ecommerce",
+        "woocommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/blog/shipping/dropshipping",
+      "title": "Dropshipping",
+      "topics": [
+        "dropshipping",
+        "shipping",
+        "ecommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/blog/marketing/email-marketing",
+      "title": "Email Marketing",
+      "topics": [
+        "email marketing",
+        "marketing",
+        "ecommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/blog/enterprise",
+      "title": "Enterprise Ecommerce",
+      "topics": [
+        "enterprise ecommerce",
+        "woocommerce",
+        "online selling"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/blog/omnichannel",
+      "title": "Omnichannel",
+      "topics": [
+        "omnichannel",
+        "ecommerce",
+        "online selling"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/blog/payments",
+      "title": "Payments",
+      "topics": [
+        "payment gateway",
+        "online payments",
+        "payments"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/blog/security",
+      "title": "Security",
+      "topics": [
+        "security",
+        "payment security",
+        "ecommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/blog/sell-online",
+      "title": "Sell Online",
+      "topics": [
+        "ecommerce",
+        "online selling",
+        "woocommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/blog/shipping",
+      "title": "Shipping",
+      "topics": [
+        "shipping",
+        "logistics",
+        "ecommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/posts/woocommerce-10-7-updates",
+      "title": "WooCommerce 10.7: 51% fewer queries, a real fulfillment API, one important cache fix",
+      "topics": [
+        "woocommerce",
+        "platform updates",
+        "fulfillment"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/posts/woocommerce-mcp",
+      "title": "WooCommerce MCP: Talk to your store like it’s your AI assistant",
+      "topics": [
+        "woocommerce",
+        "ai assistant",
+        "ecommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/posts/migrate-webflow-woocommerce",
+      "title": "How to migrate from Webflow to WooCommerce",
+      "topics": [
+        "woocommerce",
+        "platform migration",
+        "ecommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/posts/seo-product-descriptions",
+      "title": "How to write product descriptions for SEO, AI agents, and shoppers in 2026",
+      "topics": [
+        "seo",
+        "product descriptions",
+        "ecommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/posts/how-to-prepare-store-ai-driven-commerce",
+      "title": "How to prepare your store for AI-driven commerce",
+      "topics": [
+        "ai commerce",
+        "ecommerce",
+        "online selling"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/posts/landing-page-design",
+      "title": "High-converting landing page design for ecommerce (with examples)",
+      "topics": [
+        "landing page design",
+        "conversion optimization",
+        "ecommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/posts/start-pet-business",
+      "title": "How to start a pet business (best online tips and tools)",
+      "topics": [
+        "business ideas",
+        "ecommerce",
+        "online selling"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/posts/ai-product-discovery",
+      "title": "AI is changing how shoppers find your products",
+      "topics": [
+        "ai product discovery",
+        "ecommerce",
+        "online selling"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/posts/no-pong-woocommerce-success-story",
+      "title": "No Pong: From startup to multinational business with WooCommerce",
+      "topics": [
+        "customer stories",
+        "woocommerce",
+        "ecommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://woocommerce.com/posts/printful-woocommerce-print-on-demand",
+      "title": "Use print-on-demand to scale your business without inventory risk",
+      "topics": [
+        "print on demand",
+        "inventory management",
+        "ecommerce"
+      ],
+      "markets": [
+        "SG",
+        "MY",
+        "PH"
+      ],
+      "source_key": "woocommerce",
+      "source_name": "WooCommerce",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.xero.com/resources/practice-case-studies",
+      "title": "Case Studies",
+      "topics": [
+        "accounting software",
+        "business case studies",
+        "financial management"
+      ],
+      "markets": [
+        "SG",
+        "MY"
+      ],
+      "source_key": "xero",
+      "source_name": "Xero",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.xero.com/sg/resources/accountant-bookkeeper-resources",
+      "title": "Accountant and bookkeeper resources",
+      "topics": [
+        "accounting software",
+        "bookkeeping",
+        "accountant resources"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "xero",
+      "source_name": "Xero",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.xero.com/sg/resources/small-business-insights",
+      "title": "Small business insights",
+      "topics": [
+        "small business",
+        "business insights",
+        "accounting"
+      ],
+      "markets": [
+        "SG"
+      ],
+      "source_key": "xero",
+      "source_name": "Xero",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.xero.com/my/resources/accountant-bookkeeper-resources",
+      "title": "Accountant and bookkeeper resources",
+      "topics": [
+        "accounting software",
+        "bookkeeping",
+        "accountant resources"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "xero",
+      "source_name": "Xero",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.xero.com/my/resources/small-business-insights",
+      "title": "Small business insights",
+      "topics": [
+        "small business",
+        "business insights",
+        "accounting"
+      ],
+      "markets": [
+        "MY"
+      ],
+      "source_key": "xero",
+      "source_name": "Xero",
+      "is_competitor": false,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://fiuu.com/blog/detail/how-click-to-pay-speeds-up-service-for-fb-businesses",
+      "title": "FeaturesApril 21, 2026How Click to Pay Speeds Up Service for F&B BusinessesContinue Reading",
+      "topics": [
+        "click to pay",
+        "payment processing",
+        "food and beverage",
+        "merchant solutions"
+      ],
+      "markets": [
+        "MY",
+        "SG"
+      ],
+      "source_key": "fiuu",
+      "source_name": "Fiuu",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://fiuu.com/blog/detail/how-southeast-asian-merchants-can-enable-bnpl-for-daily-essentials-in-2026",
+      "title": "PaymentApril 14, 2026How Southeast Asian Merchants Can Enable BNPL for Daily Essentials in 2026Continue Reading",
+      "topics": [
+        "bnpl",
+        "buy now pay later",
+        "daily essentials",
+        "merchant enablement"
+      ],
+      "markets": [
+        "MY",
+        "SG"
+      ],
+      "source_key": "fiuu",
+      "source_name": "Fiuu",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://fiuu.com/blog/detail/embedded-in-app-payments-made-simple-with-fiuu-mobile-xdk",
+      "title": "PaymentApril 09, 2026Embedded In-App Payments Made Simple with Fiuu Mobile XDKContinue Reading",
+      "topics": [
+        "in-app payments",
+        "mobile payments",
+        "payment sdk",
+        "embedded payments"
+      ],
+      "markets": [
+        "MY",
+        "SG"
+      ],
+      "source_key": "fiuu",
+      "source_name": "Fiuu",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://fiuu.com/blog/detail/asean-2026-best-payment-gateway-guide-for-philippine-tourism-merchants",
+      "title": "BusinessApril 07, 2026ASEAN 2026: Best Payment Gateway Guide for Philippine Tourism MerchantsContinue Reading",
+      "topics": [
+        "payment gateway",
+        "tourism merchants",
+        "philippines"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "fiuu",
+      "source_name": "Fiuu",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://fiuu.com/blog/detail/how-to-scale-platform-payouts-with-automated-mass-payments-in-sea",
+      "title": "PaymentApril 02, 2026How to Scale Platform Payouts with Automated Mass Payments in SEAContinue Reading",
+      "topics": [
+        "mass payments",
+        "payouts",
+        "platform payments",
+        "automation"
+      ],
+      "markets": [
+        "MY",
+        "SG"
+      ],
+      "source_key": "fiuu",
+      "source_name": "Fiuu",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://fiuu.com/blog/detail/why-high-growth-merchants-are-choosing-platforms-with-direct-acquiring-for-better-cost-and-reliability",
+      "title": "PaymentMarch 31, 2026Why High-Growth Merchants Are Choosing Platforms with Direct Acquiring for Better Cost and ReliabilityContinue Reading",
+      "topics": [
+        "payment gateway",
+        "direct acquiring",
+        "merchant solutions",
+        "cost optimization"
+      ],
+      "markets": [
+        "MY",
+        "SG"
+      ],
+      "source_key": "fiuu",
+      "source_name": "Fiuu",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://fiuu.com/blog/detail/how-to-optimize-saas-revenue-with-fiuu-recurring-payments",
+      "title": "BusinessMarch 26, 2026How to Optimize SaaS Revenue with Fiuu Recurring PaymentsContinue Reading",
+      "topics": [
+        "recurring payments",
+        "saas payments",
+        "subscription billing"
+      ],
+      "markets": [
+        "MY",
+        "SG"
+      ],
+      "source_key": "fiuu",
+      "source_name": "Fiuu",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://fiuu.com/blog/detail/the-small-business-guide-to-secure-payments-on-social-media-no-website-required",
+      "title": "FeaturesMarch 19, 2026The Small Business Guide to Secure Payments on Social Media (No Website Required)Continue Reading",
+      "topics": [
+        "social media payments",
+        "small business",
+        "secure payments"
+      ],
+      "markets": [
+        "MY",
+        "SG"
+      ],
+      "source_key": "fiuu",
+      "source_name": "Fiuu",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://fiuu.com/blog/detail/fiuu-virtual-terminal-the-best-way-to-accept-remote-payments",
+      "title": "PaymentMarch 17, 2026Fiuu Virtual Terminal: The Best Way to Accept Remote PaymentsContinue Reading",
+      "topics": [
+        "virtual terminal",
+        "remote payments",
+        "payment processing"
+      ],
+      "markets": [
+        "MY",
+        "SG"
+      ],
+      "source_key": "fiuu",
+      "source_name": "Fiuu",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.maya.ph/blog/topic/crypto-101",
+      "title": "Crypto 101",
+      "topics": [
+        "cryptocurrency",
+        "crypto education",
+        "blockchain basics"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymaya",
+      "source_name": "Maya (PayMaya)",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.maya.ph/blog/understanding-5-important-things-about-cryptocurrency",
+      "title": "Read on",
+      "topics": [
+        "cryptocurrency",
+        "crypto education",
+        "digital assets"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymaya",
+      "source_name": "Maya (PayMaya)",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.maya.ph/blog/how-is-cryptocurrency-different-from-other-investment-instruments",
+      "title": "Read on",
+      "topics": [
+        "cryptocurrency",
+        "crypto investing",
+        "investment instruments"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymaya",
+      "source_name": "Maya (PayMaya)",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.maya.ph/blog/how-does-crypto-work-with-maya",
+      "title": "Read on",
+      "topics": [
+        "cryptocurrency",
+        "crypto payments",
+        "maya platform"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymaya",
+      "source_name": "Maya (PayMaya)",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.maya.ph/blog/how-safe-is-it-to-invest-in-cryptocurrency",
+      "title": "Read on",
+      "topics": [
+        "cryptocurrency",
+        "crypto investing",
+        "investment safety"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymaya",
+      "source_name": "Maya (PayMaya)",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.maya.ph/blog/bitcoin-ethereum-litecoin-why-youve-probably-heard-about-them",
+      "title": "Read on",
+      "topics": [
+        "cryptocurrency",
+        "bitcoin",
+        "ethereum"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymaya",
+      "source_name": "Maya (PayMaya)",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.maya.ph/blog/the-basics-of-buying-and-selling-crypto-coins-or-tokens",
+      "title": "Read on",
+      "topics": [
+        "cryptocurrency",
+        "crypto trading",
+        "buying and selling crypto"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymaya",
+      "source_name": "Maya (PayMaya)",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.maya.ph/blog/top-5-best-practices-when-investing-in-cryptocurrency",
+      "title": "Read on",
+      "topics": [
+        "cryptocurrency",
+        "crypto investing",
+        "investment best practices"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymaya",
+      "source_name": "Maya (PayMaya)",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.maya.ph/blog/how-far-can-your-php-1000-go-in-crypto",
+      "title": "Read on",
+      "topics": [
+        "cryptocurrency",
+        "crypto investing",
+        "peso to crypto"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymaya",
+      "source_name": "Maya (PayMaya)",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.maya.ph/blog/boost-your-daily-income-with-crypto",
+      "title": "Read on",
+      "topics": [
+        "cryptocurrency",
+        "crypto investing",
+        "income generation"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymaya",
+      "source_name": "Maya (PayMaya)",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    }
+  ]
+}
