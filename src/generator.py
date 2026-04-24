@@ -271,8 +271,14 @@ def _build_external_links_section(country: str | None, keyword: str) -> str:
     is_comparison = any(sig in keyword.lower() for sig in _COMPARISON_SIGNALS)
 
     lines = ["\n## Required External Links — You MUST Hyperlink All 3 Below"]
-    lines.append("Find the first natural mention of each entity in your article and replace it with the exact link shown.")
-    lines.append("Do NOT list these as a bullet list — they must appear as inline hyperlinks within sentences.\n")
+    lines.append("Embed each link naturally inside a sentence. Rules:")
+    lines.append("- Do NOT list them at the end or in a reference block")
+    lines.append("- Do NOT use the article title as anchor text — write your own descriptive anchor about the topic or insight")
+    lines.append("- Do NOT make a competitor the subject of the sentence — frame them as industry context, not the focus")
+    lines.append("  ✗ Bad: 'Understanding Xendit — Payment Gateway explains how gateways work'")
+    lines.append("  ✓ Good: 'how a gateway's infrastructure determines settlement speed and reliability'")
+    lines.append("- Competitor links must be woven in as supporting evidence for a broader point, never as a spotlight on the competitor")
+    lines.append("- HitPay must remain the clear recommended solution; competitor references are context only\n")
 
     for i, link in enumerate(selected, 1):
         name = link["name"]

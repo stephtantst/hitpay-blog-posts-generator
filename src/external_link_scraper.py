@@ -185,6 +185,26 @@ def _fetch_html(url: str, timeout: int = 15) -> str | None:
         return None
 
 
+def _clean_scraped_title(raw: str) -> str:
+    """First-pass noise removal from raw blog-card link text.
+
+    Only strips the most reliable patterns (CTA text and dates).
+    Source/category prefixes are left for Claude to handle during classification,
+    since they vary too much across sites for safe regex stripping.
+    """
+    # Drop everything from "Continue Reading" / "Read More" onwards
+    raw = re.sub(r'\s*(continue reading|read more|read article|learn more)\b.*$', '', raw, flags=re.IGNORECASE)
+    # Drop date patterns: "Apr 17, 2026" / "April 07, 2026" / "2026-04-17"
+    raw = re.sub(
+        r'\b(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|'
+        r'jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)'
+        r'\.?\s+\d{1,2},?\s+\d{4}\b',
+        '', raw, flags=re.IGNORECASE,
+    )
+    raw = re.sub(r'\b\d{4}-\d{2}-\d{2}\b', '', raw)
+    return ' '.join(raw.split()).strip()
+
+
 def _extract_article_links(html: str, base_url: str, config: dict) -> list[dict]:
     """Extract article links from a listing page that match the source's path patterns."""
     soup = BeautifulSoup(html, "lxml")
@@ -228,25 +248,37 @@ def _extract_article_links(html: str, base_url: str, config: dict) -> list[dict]
             continue
         seen.add(href_clean)
 
-        # Extract title from link text or nearby heading
-        title = a.get_text(strip=True)
+        # Extract title — prefer heading element inside the <a>, then clean full text, then slug
+        title = ""
+
+        # 1. Heading inside the link card (most reliable — avoids dates/categories)
+        inner_heading = a.find(["h1", "h2", "h3", "h4"])
+        if inner_heading:
+            title = inner_heading.get_text(strip=True)
+
+        # 2. Clean the full link text (strip noise like dates, "Continue Reading", category labels)
         if not title or len(title) < 5:
-            # Try parent heading
+            raw = a.get_text(separator=" ", strip=True)
+            title = _clean_scraped_title(raw)
+
+        # 3. Try heading in parent elements
+        if not title or len(title) < 5:
             parent = a.parent
             for _ in range(3):
                 if parent is None:
                     break
-                heading = parent.find(["h1", "h2", "h3"])
+                heading = parent.find(["h2", "h3", "h4"])
                 if heading:
-                    title = heading.get_text(strip=True)
+                    title = _clean_scraped_title(heading.get_text(strip=True))
                     break
                 parent = parent.parent
 
+        # 4. Derive from URL slug
         if not title or len(title) < 5:
-            # Derive from slug
             title = path.rstrip("/").split("/")[-1].replace("-", " ").title()
 
-        articles.append({"url": href_clean, "title": title[:200]})
+        if title and len(title) >= 5:
+            articles.append({"url": href_clean, "title": title[:200]})
 
     return articles
 
@@ -275,16 +307,17 @@ def _classify_articles_with_claude(
 
         prompt = f"""You are classifying blog articles from {source_name} (a payment/fintech company serving markets: {', '.join(source_markets)}).
 
-For each article below, determine:
-1. topics: 3-6 lowercase keyword phrases that describe what the article is about (e.g. "payment gateway", "online payments", "pos system", "woocommerce", "shopify", "invoicing", "qr code", "bnpl")
-2. markets: which of SG/MY/PH this article is most relevant to. If clearly about one market, list just that one. If multi-market or general, list all that apply from the source's markets: {source_markets}
+For each article below, do three things:
+1. title: extract the clean article headline — strip any leading source/category labels (e.g. "Fiuu — Business", "PayMongo — In the Spotlight"), leftover dates, and trailing noise. Return only the actual article title.
+2. topics: 3-6 lowercase keyword phrases describing what the article is about (e.g. "payment gateway", "online payments", "pos system", "woocommerce", "shopify", "invoicing", "qr code", "bnpl")
+3. markets: which of SG/MY/PH this article is most relevant to. If clearly one market, list just that one. If general, list all that apply from: {source_markets}
 
 Articles to classify:
 {article_list}
 
 Return a JSON array with one object per article, in order:
 [
-  {{"index": 1, "topics": ["topic1", "topic2"], "markets": ["SG"]}},
+  {{"index": 1, "title": "Clean Article Title Here", "topics": ["topic1", "topic2"], "markets": ["SG"]}},
   ...
 ]
 
@@ -305,6 +338,10 @@ Only return the JSON array. Omit articles that are clearly not about payments, S
                 idx = item.get("index", 0) - 1
                 if 0 <= idx < len(batch):
                     article = batch[idx].copy()
+                    # Use Claude's cleaned title if provided and non-empty
+                    clean_title = (item.get("title") or "").strip()
+                    if clean_title and len(clean_title) >= 5:
+                        article["title"] = clean_title
                     article["topics"] = item.get("topics", [])
                     article["markets"] = item.get("markets", source_markets)
                     classified.append(article)

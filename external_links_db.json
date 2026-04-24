@@ -996,223 +996,6 @@
       "scraped_at": "2026-04-24"
     },
     {
-      "url": "https://www.xendit.co/en-ph/blog/credit-card-payments-in-the-philippines-a-complete-guide-for-growing-businesses",
-      "title": "Credit Card Payments in the Philippines: A Complete Guide for Growing Businesses",
-      "topics": [
-        "credit card payments",
-        "payment methods",
-        "online payments",
-        "business guide"
-      ],
-      "markets": [
-        "PH"
-      ],
-      "source_key": "xendit",
-      "source_name": "Xendit",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://www.xendit.co/en-ph/blog/achieve-faster-more-reliable-payments-with-3x-faster-api-performance-than-before",
-      "title": "Achieve Faster, More Reliable Payments with 3x Faster API Performance Than Before",
-      "topics": [
-        "payment api",
-        "payment gateway",
-        "payment processing"
-      ],
-      "markets": [
-        "PH"
-      ],
-      "source_key": "xendit",
-      "source_name": "Xendit",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://www.xendit.co/en-ph/blog/5-reasons-to-activate-otc-to-solve-cash-challenges",
-      "title": "5 Reasons to Activate OTC to Solve Cash Challenges",
-      "topics": [
-        "otc payments",
-        "cash management",
-        "payment solutions"
-      ],
-      "markets": [
-        "PH"
-      ],
-      "source_key": "xendit",
-      "source_name": "Xendit",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://www.xendit.co/en-ph/blog/what-is-payment-gateway",
-      "title": "Payment Gateway: What It Is, How It Works & Its Benefits",
-      "topics": [
-        "payment gateway",
-        "online payments",
-        "payment processing"
-      ],
-      "markets": [
-        "PH"
-      ],
-      "source_key": "xendit",
-      "source_name": "Xendit",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://www.paymongo.com/blog/paymongo-and-stelsen-integrated-systems-partner-to-provide-a-seamless-digital-payment-system-for-safety-solutions",
-      "title": "In the SpotlightApr 17, 2026PayMongo and Stelsen Integrated Systems Partner to Provide a Seamless Digital Payment System for Safety SolutionsMANILA, Philippines — PayMongo and Stelsen Integrated Syste",
-      "topics": [
-        "payment gateway",
-        "digital payments",
-        "payment integration",
-        "b2b payments"
-      ],
-      "markets": [
-        "PH"
-      ],
-      "source_key": "paymongo",
-      "source_name": "PayMongo",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://www.paymongo.com/blog/quotable-ai-and-paymongo-partner-to-power-end-to-end-b2b-payments-for-philippine-smes",
-      "title": "In the SpotlightApr 16, 2026Quotable AI and PayMongo Partner to Power End-to-End B2B Payments for Philippine SMEsMANILA, Philippines – In the Philippines, closing a deal still often means sending a qu",
-      "topics": [
-        "b2b payments",
-        "payment solutions",
-        "sme payments",
-        "payment gateway"
-      ],
-      "markets": [
-        "PH"
-      ],
-      "source_key": "paymongo",
-      "source_name": "PayMongo",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://www.paymongo.com/blog/skyward-and-paymongo-partner-to-embed-digital-payments-in-philippine-government-platforms",
-      "title": "In the SpotlightFeb 12, 2026SKYWARD and PayMongo Partner to Embed Digital Payments in Philippine Government PlatformsGet financial insights from SKYWARD and PayMongo Partner to Embed Digital Payments ",
-      "topics": [
-        "digital payments",
-        "government payments",
-        "payment integration",
-        "payment platform"
-      ],
-      "markets": [
-        "PH"
-      ],
-      "source_key": "paymongo",
-      "source_name": "PayMongo",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://www.paymongo.com/blog/shopeepay-expands-access-with-paymongo-integration-to-bring-digital-payments-closer-to-everyday-life",
-      "title": "In the SpotlightFeb 11, 2026ShopeePay Expands Access With PayMongo Integration to Bring Digital Payments Closer to Everyday LifeGet financial insights from ShopeePay Expands Access With PayMongo Integ",
-      "topics": [
-        "digital payments",
-        "payment integration",
-        "mobile payments",
-        "payment gateway"
-      ],
-      "markets": [
-        "PH"
-      ],
-      "source_key": "paymongo",
-      "source_name": "PayMongo",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://www.paymongo.com/blog/from-idea-to-live-in-minutes-with-storefront-ai",
-      "title": "Product FeatureFeb 8, 2026From Idea to Live in Minutes with Storefront AIGet financial insights from From Idea to Live in Minutes with Storefront AI. Learn how PayMongo’s solutions and industry insigh",
-      "topics": [
-        "payment gateway",
-        "online store",
-        "ecommerce",
-        "payment solutions"
-      ],
-      "markets": [
-        "PH"
-      ],
-      "source_key": "paymongo",
-      "source_name": "PayMongo",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://www.paymongo.com/blog/the-invisible-wall-maximizing-sales-with-the-right-financial-tools",
-      "title": "Product FeatureJan 21, 2026The Invisible Wall: Maximizing Sales With The Right Financial ToolsGet financial insights from The Invisible Wall: Maximizing Sales With The Right Financial Tools. Learn how",
-      "topics": [
-        "payment solutions",
-        "sales tools",
-        "financial tools",
-        "payment gateway"
-      ],
-      "markets": [
-        "PH"
-      ],
-      "source_key": "paymongo",
-      "source_name": "PayMongo",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://www.paymongo.com/blog/qrph-the-success-of-silence",
-      "title": "Product FeatureJan 14, 2026QRPH: The Success of SilenceGet financial insights from QRPH: The Success of Silence. Learn how PayMongo’s solutions and industry insights can drive growth for your business",
-      "topics": [
-        "qr code payments",
-        "payment solutions",
-        "digital payments"
-      ],
-      "markets": [
-        "PH"
-      ],
-      "source_key": "paymongo",
-      "source_name": "PayMongo",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://www.paymongo.com/blog/paymongo-and-juan-by-juantax-partner-to-simplify-accounting-and-payments-for-philippine-smes",
-      "title": "In the SpotlightJan 11, 2026PayMongo and Juan by JuanTax Partner to Simplify Accounting and Payments for Philippine SMEsGet financial insights from PayMongo and Juan by JuanTax Partner to Simplify Acc",
-      "topics": [
-        "sme payments",
-        "accounting",
-        "payment solutions",
-        "business payments"
-      ],
-      "markets": [
-        "PH"
-      ],
-      "source_key": "paymongo",
-      "source_name": "PayMongo",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://www.paymongo.com/blog/how-embedded-finance-is-redefining-money-movement-for-businesses",
-      "title": "Seeds for ThoughtJan 8, 2026How Embedded Finance Is Redefining Money Movement for BusinessesGet financial insights from How Embedded Finance Is Redefining Money Movement for Businesses. Learn how PayM",
-      "topics": [
-        "embedded finance",
-        "payment solutions",
-        "business payments",
-        "money movement"
-      ],
-      "markets": [
-        "PH"
-      ],
-      "source_key": "paymongo",
-      "source_name": "PayMongo",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
       "url": "https://www.adyen.com/knowledge-hub/introducing-intelligent-money-movement",
       "title": "BlogsIntroducing Intelligent Money MovementApril 8th, 2026 · 2 minutes",
       "topics": [
@@ -3083,163 +2866,6 @@
       "scraped_at": "2026-04-24"
     },
     {
-      "url": "https://fiuu.com/blog/detail/how-click-to-pay-speeds-up-service-for-fb-businesses",
-      "title": "FeaturesApril 21, 2026How Click to Pay Speeds Up Service for F&B BusinessesContinue Reading",
-      "topics": [
-        "click to pay",
-        "payment processing",
-        "food and beverage",
-        "merchant solutions"
-      ],
-      "markets": [
-        "MY",
-        "SG"
-      ],
-      "source_key": "fiuu",
-      "source_name": "Fiuu",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://fiuu.com/blog/detail/how-southeast-asian-merchants-can-enable-bnpl-for-daily-essentials-in-2026",
-      "title": "PaymentApril 14, 2026How Southeast Asian Merchants Can Enable BNPL for Daily Essentials in 2026Continue Reading",
-      "topics": [
-        "bnpl",
-        "buy now pay later",
-        "daily essentials",
-        "merchant enablement"
-      ],
-      "markets": [
-        "MY",
-        "SG"
-      ],
-      "source_key": "fiuu",
-      "source_name": "Fiuu",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://fiuu.com/blog/detail/embedded-in-app-payments-made-simple-with-fiuu-mobile-xdk",
-      "title": "PaymentApril 09, 2026Embedded In-App Payments Made Simple with Fiuu Mobile XDKContinue Reading",
-      "topics": [
-        "in-app payments",
-        "mobile payments",
-        "payment sdk",
-        "embedded payments"
-      ],
-      "markets": [
-        "MY",
-        "SG"
-      ],
-      "source_key": "fiuu",
-      "source_name": "Fiuu",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://fiuu.com/blog/detail/asean-2026-best-payment-gateway-guide-for-philippine-tourism-merchants",
-      "title": "BusinessApril 07, 2026ASEAN 2026: Best Payment Gateway Guide for Philippine Tourism MerchantsContinue Reading",
-      "topics": [
-        "payment gateway",
-        "tourism merchants",
-        "philippines"
-      ],
-      "markets": [
-        "PH"
-      ],
-      "source_key": "fiuu",
-      "source_name": "Fiuu",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://fiuu.com/blog/detail/how-to-scale-platform-payouts-with-automated-mass-payments-in-sea",
-      "title": "PaymentApril 02, 2026How to Scale Platform Payouts with Automated Mass Payments in SEAContinue Reading",
-      "topics": [
-        "mass payments",
-        "payouts",
-        "platform payments",
-        "automation"
-      ],
-      "markets": [
-        "MY",
-        "SG"
-      ],
-      "source_key": "fiuu",
-      "source_name": "Fiuu",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://fiuu.com/blog/detail/why-high-growth-merchants-are-choosing-platforms-with-direct-acquiring-for-better-cost-and-reliability",
-      "title": "PaymentMarch 31, 2026Why High-Growth Merchants Are Choosing Platforms with Direct Acquiring for Better Cost and ReliabilityContinue Reading",
-      "topics": [
-        "payment gateway",
-        "direct acquiring",
-        "merchant solutions",
-        "cost optimization"
-      ],
-      "markets": [
-        "MY",
-        "SG"
-      ],
-      "source_key": "fiuu",
-      "source_name": "Fiuu",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://fiuu.com/blog/detail/how-to-optimize-saas-revenue-with-fiuu-recurring-payments",
-      "title": "BusinessMarch 26, 2026How to Optimize SaaS Revenue with Fiuu Recurring PaymentsContinue Reading",
-      "topics": [
-        "recurring payments",
-        "saas payments",
-        "subscription billing"
-      ],
-      "markets": [
-        "MY",
-        "SG"
-      ],
-      "source_key": "fiuu",
-      "source_name": "Fiuu",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://fiuu.com/blog/detail/the-small-business-guide-to-secure-payments-on-social-media-no-website-required",
-      "title": "FeaturesMarch 19, 2026The Small Business Guide to Secure Payments on Social Media (No Website Required)Continue Reading",
-      "topics": [
-        "social media payments",
-        "small business",
-        "secure payments"
-      ],
-      "markets": [
-        "MY",
-        "SG"
-      ],
-      "source_key": "fiuu",
-      "source_name": "Fiuu",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
-      "url": "https://fiuu.com/blog/detail/fiuu-virtual-terminal-the-best-way-to-accept-remote-payments",
-      "title": "PaymentMarch 17, 2026Fiuu Virtual Terminal: The Best Way to Accept Remote PaymentsContinue Reading",
-      "topics": [
-        "virtual terminal",
-        "remote payments",
-        "payment processing"
-      ],
-      "markets": [
-        "MY",
-        "SG"
-      ],
-      "source_key": "fiuu",
-      "source_name": "Fiuu",
-      "is_competitor": true,
-      "scraped_at": "2026-04-24"
-    },
-    {
       "url": "https://www.maya.ph/blog/topic/crypto-101",
       "title": "Crypto 101",
       "topics": [
@@ -3396,6 +3022,358 @@
       ],
       "source_key": "paymaya",
       "source_name": "Maya (PayMaya)",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://fiuu.com/blog/detail/how-click-to-pay-speeds-up-service-for-fb-businesses",
+      "title": "How Click to Pay Speeds Up Service for F&B Businesses",
+      "topics": [
+        "click to pay",
+        "payment processing",
+        "food and beverage",
+        "payment gateway"
+      ],
+      "markets": [
+        "MY",
+        "SG"
+      ],
+      "source_key": "fiuu",
+      "source_name": "Fiuu",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://fiuu.com/blog/detail/how-southeast-asian-merchants-can-enable-bnpl-for-daily-essentials-in-2026",
+      "title": "How Southeast Asian Merchants Can Enable BNPL for Daily Essentials in 2026",
+      "topics": [
+        "bnpl",
+        "buy now pay later",
+        "payment solutions",
+        "merchant tools"
+      ],
+      "markets": [
+        "MY",
+        "SG"
+      ],
+      "source_key": "fiuu",
+      "source_name": "Fiuu",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://fiuu.com/blog/detail/embedded-in-app-payments-made-simple-with-fiuu-mobile-xdk",
+      "title": "Embedded In-App Payments Made Simple with Fiuu Mobile XDK",
+      "topics": [
+        "in-app payments",
+        "mobile payments",
+        "payment sdk",
+        "mobile integration"
+      ],
+      "markets": [
+        "MY",
+        "SG"
+      ],
+      "source_key": "fiuu",
+      "source_name": "Fiuu",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://fiuu.com/blog/detail/how-to-scale-platform-payouts-with-automated-mass-payments-in-sea",
+      "title": "How to Scale Platform Payouts with Automated Mass Payments in SEA",
+      "topics": [
+        "mass payments",
+        "payouts",
+        "payment automation",
+        "platform payments"
+      ],
+      "markets": [
+        "MY",
+        "SG"
+      ],
+      "source_key": "fiuu",
+      "source_name": "Fiuu",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://fiuu.com/blog/detail/why-high-growth-merchants-are-choosing-platforms-with-direct-acquiring-for-better-cost-and-reliability",
+      "title": "Why High-Growth Merchants Are Choosing Platforms with Direct Acquiring for Better Cost and Reliability",
+      "topics": [
+        "direct acquiring",
+        "payment gateway",
+        "merchant solutions",
+        "payment processing"
+      ],
+      "markets": [
+        "MY",
+        "SG"
+      ],
+      "source_key": "fiuu",
+      "source_name": "Fiuu",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://fiuu.com/blog/detail/how-to-optimize-saas-revenue-with-fiuu-recurring-payments",
+      "title": "How to Optimize SaaS Revenue with Fiuu Recurring Payments",
+      "topics": [
+        "recurring payments",
+        "subscription payments",
+        "saas payments",
+        "payment processing"
+      ],
+      "markets": [
+        "MY",
+        "SG"
+      ],
+      "source_key": "fiuu",
+      "source_name": "Fiuu",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://fiuu.com/blog/detail/the-small-business-guide-to-secure-payments-on-social-media-no-website-required",
+      "title": "The Small Business Guide to Secure Payments on Social Media (No Website Required)",
+      "topics": [
+        "social media payments",
+        "online payments",
+        "payment solutions",
+        "small business"
+      ],
+      "markets": [
+        "MY",
+        "SG"
+      ],
+      "source_key": "fiuu",
+      "source_name": "Fiuu",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://fiuu.com/blog/detail/fiuu-virtual-terminal-the-best-way-to-accept-remote-payments",
+      "title": "Fiuu Virtual Terminal: The Best Way to Accept Remote Payments",
+      "topics": [
+        "virtual terminal",
+        "remote payments",
+        "payment processing",
+        "online payments"
+      ],
+      "markets": [
+        "MY",
+        "SG"
+      ],
+      "source_key": "fiuu",
+      "source_name": "Fiuu",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.paymongo.com/blog/paymongo-and-stelsen-integrated-systems-partner-to-provide-a-seamless-digital-payment-system-for-safety-solutions",
+      "title": "PayMongo and Stelsen Integrated Systems Partner to Provide a Seamless Digital Payment System for Safety Solutions",
+      "topics": [
+        "digital payments",
+        "payment integration",
+        "partnership"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymongo",
+      "source_name": "PayMongo",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.paymongo.com/blog/quotable-ai-and-paymongo-partner-to-power-end-to-end-b2b-payments-for-philippine-smes",
+      "title": "Quotable AI and PayMongo Partner to Power End-to-End B2B Payments for Philippine SMEs",
+      "topics": [
+        "b2b payments",
+        "sme payments",
+        "payment gateway"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymongo",
+      "source_name": "PayMongo",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.paymongo.com/blog/skyward-and-paymongo-partner-to-embed-digital-payments-in-philippine-government-platforms",
+      "title": "SKYWARD and PayMongo Partner to Embed Digital Payments in Philippine Government Platforms",
+      "topics": [
+        "digital payments",
+        "government payments",
+        "payment integration"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymongo",
+      "source_name": "PayMongo",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.paymongo.com/blog/shopeepay-expands-access-with-paymongo-integration-to-bring-digital-payments-closer-to-everyday-life",
+      "title": "ShopeePay Expands Access With PayMongo Integration to Bring Digital Payments Closer to Everyday Life",
+      "topics": [
+        "digital wallet",
+        "payment integration",
+        "online payments"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymongo",
+      "source_name": "PayMongo",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.paymongo.com/blog/from-idea-to-live-in-minutes-with-storefront-ai",
+      "title": "From Idea to Live in Minutes with Storefront AI",
+      "topics": [
+        "ecommerce platform",
+        "online store",
+        "payment solution"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymongo",
+      "source_name": "PayMongo",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.paymongo.com/blog/the-invisible-wall-maximizing-sales-with-the-right-financial-tools",
+      "title": "The Invisible Wall: Maximizing Sales With The Right Financial Tools",
+      "topics": [
+        "financial tools",
+        "business payments",
+        "sales"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymongo",
+      "source_name": "PayMongo",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.paymongo.com/blog/paymongo-and-juan-by-juantax-partner-to-simplify-accounting-and-payments-for-philippine-smes",
+      "title": "PayMongo and Juan by JuanTax Partner to Simplify Accounting and Payments for Philippine SMEs",
+      "topics": [
+        "sme payments",
+        "accounting",
+        "payment gateway"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymongo",
+      "source_name": "PayMongo",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.paymongo.com/blog/how-embedded-finance-is-redefining-money-movement-for-businesses",
+      "title": "How Embedded Finance Is Redefining Money Movement for Businesses",
+      "topics": [
+        "embedded finance",
+        "business payments",
+        "money movement"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymongo",
+      "source_name": "PayMongo",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.paymongo.com/blog/employees-are-leaving-for-better-wage-access",
+      "title": "Employees Aren't Leaving for More Pay—They're Leaving for Better Access",
+      "topics": [
+        "wage access",
+        "financial inclusion",
+        "employee payments"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "paymongo",
+      "source_name": "PayMongo",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.xendit.co/en-ph/blog/credit-card-payments-in-the-philippines-a-complete-guide-for-growing-businesses",
+      "title": "Credit Card Payments in the Philippines: A Complete Guide for Growing Businesses",
+      "topics": [
+        "credit card payments",
+        "payment methods",
+        "business payments"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "xendit",
+      "source_name": "Xendit",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.xendit.co/en-ph/blog/achieve-faster-more-reliable-payments-with-3x-faster-api-performance-than-before",
+      "title": "Achieve Faster, More Reliable Payments with 3x Faster API Performance Than Before",
+      "topics": [
+        "payment api",
+        "payment gateway",
+        "performance"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "xendit",
+      "source_name": "Xendit",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.xendit.co/en-ph/blog/5-reasons-to-activate-otc-to-solve-cash-challenges",
+      "title": "5 Reasons to Activate OTC to Solve Cash Challenges",
+      "topics": [
+        "over-the-counter payments",
+        "cash management",
+        "payment solutions"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "xendit",
+      "source_name": "Xendit",
+      "is_competitor": true,
+      "scraped_at": "2026-04-24"
+    },
+    {
+      "url": "https://www.xendit.co/en-ph/blog/what-is-payment-gateway",
+      "title": "Payment Gateway: What It Is, How It Works & Its Benefits",
+      "topics": [
+        "payment gateway",
+        "online payments",
+        "payment processing"
+      ],
+      "markets": [
+        "PH"
+      ],
+      "source_key": "xendit",
+      "source_name": "Xendit",
       "is_competitor": true,
       "scraped_at": "2026-04-24"
     }
