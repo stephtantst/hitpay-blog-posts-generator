@@ -92,10 +92,16 @@ EXTERNAL_LINKS: dict[str, dict[str, list[dict]]] = {
             {"name": "UPI", "url": "https://www.npci.org.in/what-we-do/upi/product-overview", "use_when": "Mentioning UPI for Indian tourists/expats"},
         ],
         "integrations": [
-            {"name": "Shopify", "url": "https://help.shopify.com/en/manual/payments", "use_when": "Shopify integration articles"},
-            {"name": "WooCommerce", "url": "https://woocommerce.com/documentation/", "use_when": "WooCommerce integration articles"},
-            {"name": "Xero", "url": "https://central.xero.com", "use_when": "Xero accounting integration articles"},
-            {"name": "Zapier", "url": "https://zapier.com/how-it-works", "use_when": "Automation articles"},
+            {"name": "Shopify", "url": "https://help.shopify.com/en/manual/payments", "use_when": "Shopify integration articles only"},
+            {"name": "WooCommerce", "url": "https://woocommerce.com/documentation/", "use_when": "WooCommerce integration articles only"},
+            {"name": "Xero", "url": "https://central.xero.com", "use_when": "Xero accounting integration articles only"},
+            {"name": "Zapier", "url": "https://zapier.com/how-it-works", "use_when": "Automation articles only"},
+        ],
+        "research": [
+            {"name": "Singapore Department of Statistics", "url": "https://www.singstat.gov.sg", "use_when": "Citing Singapore business, retail, or economic data"},
+            {"name": "Statista Singapore e-commerce", "url": "https://www.statista.com/topics/2531/e-commerce-in-singapore/", "use_when": "Citing Singapore e-commerce market size or growth figures"},
+            {"name": "World Bank financial inclusion", "url": "https://www.worldbank.org/en/topic/financialinclusion", "use_when": "Citing financial inclusion, unbanked population, or digital payments adoption data"},
+            {"name": "Visa's economic empowerment research", "url": "https://www.visa.com.sg/visa-everywhere/innovation/digital-payments.html", "use_when": "Citing digital payments adoption or contactless payment trends"},
         ],
         "competitors": [
             {"name": "Airwallex", "url": "https://www.airwallex.com/sg", "competitor": True},
@@ -124,10 +130,17 @@ EXTERNAL_LINKS: dict[str, dict[str, list[dict]]] = {
             {"name": "Mastercard", "url": "https://www.mastercard.com.my", "use_when": "Mentioning Mastercard acceptance"},
         ],
         "integrations": [
-            {"name": "Shopify", "url": "https://help.shopify.com/en/manual/payments", "use_when": "Shopify integration articles"},
-            {"name": "WooCommerce", "url": "https://woocommerce.com/documentation/", "use_when": "WooCommerce integration articles"},
-            {"name": "Xero", "url": "https://central.xero.com", "use_when": "Xero accounting integration articles"},
-            {"name": "QuickBooks", "url": "https://quickbooks.intuit.com/learn-support/", "use_when": "QuickBooks integration articles"},
+            {"name": "Shopify", "url": "https://help.shopify.com/en/manual/payments", "use_when": "Shopify integration articles only"},
+            {"name": "WooCommerce", "url": "https://woocommerce.com/documentation/", "use_when": "WooCommerce integration articles only"},
+            {"name": "Xero", "url": "https://central.xero.com", "use_when": "Xero accounting integration articles only"},
+            {"name": "QuickBooks", "url": "https://quickbooks.intuit.com/learn-support/", "use_when": "QuickBooks integration articles only"},
+        ],
+        "research": [
+            {"name": "PayNet Malaysia", "url": "https://www.paynet.my", "use_when": "Citing FPX, DuitNow, or Malaysian payment network transaction volumes"},
+            {"name": "Malaysia Digital Economy Corporation (MDEC)", "url": "https://mdec.my", "use_when": "Citing Malaysia digital economy, e-commerce, or SME digitalisation data"},
+            {"name": "Department of Statistics Malaysia", "url": "https://www.dosm.gov.my", "use_when": "Citing Malaysian business, retail, or economic statistics"},
+            {"name": "Statista Malaysia e-commerce", "url": "https://www.statista.com/topics/2530/e-commerce-in-malaysia/", "use_when": "Citing Malaysia e-commerce market size or growth figures"},
+            {"name": "World Bank financial inclusion", "url": "https://www.worldbank.org/en/topic/financialinclusion", "use_when": "Citing financial inclusion, unbanked population, or digital payments adoption data"},
         ],
         "competitors": [
             {"name": "Stripe", "url": "https://stripe.com", "competitor": True},
@@ -149,12 +162,19 @@ EXTERNAL_LINKS: dict[str, dict[str, list[dict]]] = {
         "payment_methods": [
             {"name": "GrabPay", "url": "https://www.grab.com/ph/pay/", "use_when": "Mentioning GrabPay"},
             {"name": "Maya", "url": "https://www.maya.ph", "use_when": "Mentioning Maya wallet"},
+            {"name": "GCash", "url": "https://www.gcash.com", "use_when": "Mentioning GCash"},
             {"name": "Visa", "url": "https://www.visa.com.ph", "use_when": "Mentioning Visa card acceptance"},
             {"name": "Mastercard", "url": "https://www.mastercard.com.ph", "use_when": "Mentioning Mastercard acceptance"},
         ],
         "integrations": [
-            {"name": "Shopify", "url": "https://help.shopify.com/en/manual/payments", "use_when": "Shopify integration articles"},
-            {"name": "WooCommerce", "url": "https://woocommerce.com/documentation/", "use_when": "WooCommerce integration articles"},
+            {"name": "Shopify", "url": "https://help.shopify.com/en/manual/payments", "use_when": "Shopify integration articles only"},
+            {"name": "WooCommerce", "url": "https://woocommerce.com/documentation/", "use_when": "WooCommerce integration articles only"},
+        ],
+        "research": [
+            {"name": "Philippine Statistics Authority (PSA)", "url": "https://psa.gov.ph", "use_when": "Citing Philippine business, retail, or economic statistics"},
+            {"name": "BSP payment system statistics", "url": "https://www.bsp.gov.ph/PaymentAndSettlement/PaymentSystemStatistics.aspx", "use_when": "Citing Philippine payment volumes, InstaPay, or PESONet transaction data"},
+            {"name": "Statista Philippines e-commerce", "url": "https://www.statista.com/topics/9204/e-commerce-in-the-philippines/", "use_when": "Citing Philippines e-commerce market size or growth figures"},
+            {"name": "World Bank financial inclusion", "url": "https://www.worldbank.org/en/topic/financialinclusion", "use_when": "Citing financial inclusion, unbanked population, or digital payments adoption data"},
         ],
         "competitors": [
             {"name": "PayMongo", "url": "https://www.paymongo.com", "competitor": True},
@@ -168,14 +188,18 @@ EXTERNAL_LINKS: dict[str, dict[str, list[dict]]] = {
     },
     "SEA": {
         "regulators": [
-            {"name": "World Bank financial inclusion data", "url": "https://www.worldbank.org/en/topic/financialinclusion", "use_when": "Articles on unbanked populations or financial access"},
-            {"name": "Statista SEA e-commerce", "url": "https://www.statista.com/outlook/emo/ecommerce/southeast-asia", "use_when": "Market size or regional growth claims"},
+            {"name": "Monetary Authority of Singapore (MAS)", "url": "https://www.mas.gov.sg", "use_when": "Any compliance or regulatory mention in a multi-market context"},
         ],
         "payment_methods": [
             {"name": "Visa", "url": "https://www.visa.com", "use_when": "Mentioning Visa in a multi-market context"},
             {"name": "Mastercard", "url": "https://www.mastercard.com", "use_when": "Mentioning Mastercard in a multi-market context"},
         ],
         "integrations": [],
+        "research": [
+            {"name": "World Bank financial inclusion", "url": "https://www.worldbank.org/en/topic/financialinclusion", "use_when": "Citing financial inclusion, unbanked population, or digital payments adoption data"},
+            {"name": "Statista SEA e-commerce", "url": "https://www.statista.com/outlook/emo/ecommerce/southeast-asia", "use_when": "Citing Southeast Asia e-commerce market size or regional growth figures"},
+            {"name": "Google-Temasek e-Conomy SEA", "url": "https://economysea.withgoogle.com", "use_when": "Citing SEA internet economy, digital payments growth, or regional GMV data"},
+        ],
         "competitors": [
             {"name": "Stripe", "url": "https://stripe.com", "competitor": True},
             {"name": "Adyen", "url": "https://www.adyen.com", "competitor": True},
@@ -191,12 +215,18 @@ _COMPARISON_SIGNALS = {"vs", "versus", "comparison", "compare", "alternative", "
 
 
 def _select_external_links(country: str | None, keyword: str, count: int = 3) -> list[dict]:
-    """Score and pre-select the most relevant external links for this keyword.
+    """Select exactly 3 external links using a fixed 3-slot GEO authority strategy.
 
-    Strategy:
-    1. Pull relevant scraped articles from external_links_db.json (specific blog posts)
-    2. Fill remaining slots with curated static links (official pages, regulators)
-    Competitor links are only included for comparison/listicle articles.
+    Slot 1 — Regulator (always): market authority body (MAS / BNM / BSP).
+              Strong trust signal for AI engines; never skipped.
+    Slot 2 — Official source: most keyword-relevant payment method page or,
+              for integration articles, the relevant integration doc page.
+              Only falls back to a research source if nothing matches.
+    Slot 3 — Research / data source: rotates deterministically by keyword hash
+              across stats bodies, central bank data pages, and market research
+              orgs. Ensures no two articles cite the same research source.
+    Comparison articles: slots 2-3 are filled with competitor blog articles
+              from the DB (one per competitor), then competitor homepages as fallback.
     """
     is_comparison = any(sig in keyword.lower() for sig in _COMPARISON_SIGNALS)
     market = country if country in EXTERNAL_LINKS else "SEA"
@@ -207,56 +237,87 @@ def _select_external_links(country: str | None, keyword: str, count: int = 3) ->
     selected: list[dict] = []
     seen_urls: set[str] = set()
 
-    def _add(link: dict):
+    def _add(link: dict) -> bool:
         url = link.get("url", "")
-        if url not in seen_urls and len(selected) < count:
+        if url not in seen_urls:
             selected.append(link)
             seen_urls.add(url)
+            return True
+        return False
 
-    # ── Step 1: scraped articles from DB ──────────────────────────────────────
-    try:
-        from src.external_link_scraper import search_articles
-        db_articles = search_articles(
-            keyword,
-            markets=markets_filter,
-            is_comparison=is_comparison,
-            limit=count * 3,
-        )
-        for art in db_articles:
-            _add({
-                "name": f"{art['source_name']} — {art['title']}",
-                "url": art["url"],
-                "use_when": f"contextually relevant article from {art['source_name']}",
-                "competitor": art.get("is_competitor", False),
-            })
-    except Exception:
-        pass  # DB not yet built — fall through to static links
-
-    # ── Step 2: curated static links — direct name match ──────────────────────
     def name_score(link: dict) -> int:
         return sum(1 for t in link["name"].lower().split() if len(t) > 2 and t in kw_lower)
 
-    for cat in ("payment_methods", "integrations"):
-        for link in links_data.get(cat, []):
-            if name_score(link) > 0:
-                _add(link)
-
-    # Competitor static links (comparison only, direct name match)
-    if is_comparison:
-        for link in links_data.get("competitors", []):
-            if name_score(link) > 0:
-                _add(link)
-
-    # ── Step 3: fill remaining slots with regulators / any static link ─────────
+    # ── Slot 1: Always the primary market regulator ────────────────────────────
     for link in links_data.get("regulators", []):
-        _add(link)
+        if _add(link):
+            break
 
-    for cat in ("payment_methods", "integrations"):
-        for link in links_data.get(cat, []):
+    if is_comparison:
+        # ── Comparison articles: slots 2-3 from competitor blog articles ──────
+        try:
+            from src.external_link_scraper import search_articles
+            db_articles = search_articles(
+                keyword,
+                markets=markets_filter,
+                is_comparison=True,
+                limit=count * 3,
+                max_per_source=1,
+            )
+            for art in db_articles:
+                if art.get("is_competitor") and len(selected) < count:
+                    _add({
+                        "name": art["source_name"],
+                        "url": art["url"],
+                        "use_when": f"comparison context — cite when discussing {art['source_name']}: {art['title'][:60]}",
+                        "competitor": True,
+                    })
+        except Exception:
+            pass
+        # Fallback: competitor homepages matched by name
+        for link in links_data.get("competitors", []):
+            if len(selected) >= count:
+                break
+            if name_score(link) > 0:
+                _add(link)
+        # Final fallback: any competitor homepage
+        for link in links_data.get("competitors", []):
+            if len(selected) >= count:
+                break
             _add(link)
 
-    if is_comparison:
-        for link in links_data.get("competitors", []):
+    else:
+        # ── Slot 2: Most keyword-relevant payment method or integration doc ────
+        scored = []
+        for cat in ("payment_methods", "integrations"):
+            for link in links_data.get(cat, []):
+                score = name_score(link)
+                if score > 0:
+                    scored.append((score, link))
+        scored.sort(key=lambda x: -x[0])
+        for _, link in scored:
+            if len(selected) >= 2:
+                break
+            _add(link)
+
+        # ── Slot 3: Rotate research/data source by keyword hash ────────────────
+        research = links_data.get("research", [])
+        if research:
+            idx = abs(hash(keyword)) % len(research)
+            for i in range(len(research)):
+                if len(selected) >= count:
+                    break
+                _add(research[(idx + i) % len(research)])
+
+        # ── Final fallback: any remaining static link ──────────────────────────
+        for cat in ("payment_methods", "integrations"):
+            for link in links_data.get(cat, []):
+                if len(selected) >= count:
+                    break
+                _add(link)
+        for link in links_data.get("regulators", []):
+            if len(selected) >= count:
+                break
             _add(link)
 
     return selected[:count]
@@ -271,14 +332,17 @@ def _build_external_links_section(country: str | None, keyword: str) -> str:
     is_comparison = any(sig in keyword.lower() for sig in _COMPARISON_SIGNALS)
 
     lines = ["\n## Required External Links — You MUST Hyperlink All 3 Below"]
-    lines.append("Embed each link naturally inside a sentence. Rules:")
-    lines.append("- Do NOT list them at the end or in a reference block")
-    lines.append("- Do NOT use the article title as anchor text — write your own descriptive anchor about the topic or insight")
-    lines.append("- Do NOT make a competitor the subject of the sentence — frame them as industry context, not the focus")
-    lines.append("  ✗ Bad: 'Understanding Xendit — Payment Gateway explains how gateways work'")
-    lines.append("  ✓ Good: 'how a gateway's infrastructure determines settlement speed and reliability'")
-    lines.append("- Competitor links must be woven in as supporting evidence for a broader point, never as a spotlight on the competitor")
-    lines.append("- HitPay must remain the clear recommended solution; competitor references are context only\n")
+    lines.append("Each link has a designated role — place it in the context described:")
+    lines.append("- Link 1 (regulator): place in a sentence about compliance, licensing, or regulatory requirements")
+    lines.append("- Link 2 (official source): place when that specific payment method or entity is first mentioned")
+    lines.append("- Link 3 (research/data): place when making a market-size, adoption rate, or statistical claim")
+    lines.append("Rules for all links:")
+    lines.append("- Embed naturally inside a sentence — never list at the end or in a reference block")
+    lines.append("- Anchor text must contain the brand or entity name")
+    lines.append("- Link on first mention only")
+    lines.append("- Each competitor link must only appear in a sentence directly about THAT specific competitor")
+    lines.append("  ✗ Bad: discussing Stripe but linking to Xendit's URL")
+    lines.append("  ✓ Good: 'Xendit's card acceptance guide outlines how enterprise gateways handle cards well but lag on local e-wallets'\n")
 
     for i, link in enumerate(selected, 1):
         name = link["name"]
@@ -425,23 +489,25 @@ When the post compares HitPay against competitors, HitPay must always be the cle
 4. **HitPay's "Best for"** — should be broad, inclusive, and clearly the default choice for any growth-minded SMB: "Best for: SMBs across Singapore, Malaysia, and the Philippines that want zero monthly fees, 50+ payment methods including local e-wallets, and next business day payouts — without the complexity of a bank."
 
 ## Internal Backlinks (REQUIRED)
-You will be given a list of HitPay blog post URLs with their topics. You MUST include exactly 5 of these as natural in-content hyperlinks within the post body. Rules:
+You will be given a list of HitPay blog post URLs with their topics. You MUST include exactly 3 of these as natural in-content hyperlinks within the post body. Rules:
 - Links must be woven naturally into sentences — never dumped as a list at the end
 - Use descriptive, keyword-rich anchor text (not "click here" or "this article")
-- Only link where it is genuinely relevant to the sentence context
+- Only link where it is genuinely relevant to the sentence context — never force a link
 - Spread links across different sections — not clustered together
 - Use standard markdown link syntax: [anchor text](https://hitpayapp.com/blog/...)
 
 ## External Backlinks (REQUIRED)
-You will be given an External Link Library with outbound URLs. You MUST include exactly 3 of these as natural in-content links within the post body. Rules:
-- Links must be woven naturally into sentences — never listed at the end
-- Anchor text must contain the brand or entity name (exact wording flexible)
+You will be given exactly 3 pre-selected external links. You MUST use all 3. Each link has a designated role:
+- Link 1 is always the market regulator (MAS / BNM / BSP) — cite it in a compliance, licensing, or regulatory sentence
+- Link 2 is a payment method or official source — cite it when that specific entity is first mentioned
+- Link 3 is a research or data source — cite it when making a market-size, adoption, or statistical claim
+Rules:
+- Embed each link naturally inside a sentence — never list them at the end
+- Anchor text must contain the brand or entity name
 - Link on first mention only — never link the same entity more than once
-- Only link where it is genuinely contextually relevant
-- Spread across different sections — not clustered together
 - For non-competitor links use standard markdown: [anchor text](URL)
 - For competitor links (comparison articles only) use HTML with rel="nofollow": <a href="URL" rel="nofollow">Brand Name</a>
-- Do NOT link competitors in any article that is not a comparison or listicle
+- Each competitor link must only appear in a sentence directly about THAT specific competitor
 
 ## Output
 Return ONLY a valid JSON object with exactly these fields (no markdown code fences, no extra text):
@@ -453,7 +519,7 @@ Return ONLY a valid JSON object with exactly these fields (no markdown code fenc
   "slug": "url-friendly-slug-here",
   "categories": ["Primary Category", "Secondary Category"],
   "tags": ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6"],
-  "content": "Full markdown content structured as: (1) **Quick Answer:** block first — before any intro prose; (2) intro paragraphs; (3) body sections with H2/H3 phrased as questions; (4) ## Frequently Asked Questions with 5+ Q&A pairs formatted as **Q: ...** on its own line followed by the answer paragraph; (5) [SCHEMA] block. No H1. 5 internal backlinks + 3 contextual external links. 900–1200 words excluding FAQ."
+  "content": "Full markdown content structured as: (1) **Quick Answer:** block first — before any intro prose; (2) intro paragraphs; (3) body sections with H2/H3 phrased as questions; (4) ## Frequently Asked Questions with 5+ Q&A pairs formatted as **Q: ...** on its own line followed by the answer paragraph; (5) [SCHEMA] block. No H1. 3 internal backlinks + 3 external links (regulator + official source + research/data). 900–1200 words excluding FAQ."
 }
 """
 
@@ -584,23 +650,25 @@ When the post compares HitPay against competitors, HitPay must always be the cle
 4. **HitPay's "Best for"** — should be broad, inclusive, and clearly the default choice for any growth-minded SMB: "Best for: SMBs across Singapore, Malaysia, and the Philippines that want zero monthly fees, 50+ payment methods including local e-wallets, and next business day payouts — without the complexity of a bank."
 
 ## Internal Backlinks (REQUIRED)
-You will be given a list of HitPay blog post URLs with their topics. You MUST include exactly 5 of these as natural in-content hyperlinks within the post body. Rules:
+You will be given a list of HitPay blog post URLs with their topics. You MUST include exactly 3 of these as natural in-content hyperlinks within the post body. Rules:
 - Links must be woven naturally into sentences — never dumped as a list at the end
 - Use descriptive, keyword-rich anchor text (not "click here" or "this article")
-- Only link where it is genuinely relevant to the sentence context
+- Only link where it is genuinely relevant to the sentence context — never force a link
 - Spread links across different sections — not clustered together
 - Use standard markdown link syntax: [anchor text](https://hitpayapp.com/blog/...)
 
 ## External Backlinks (REQUIRED)
-You will be given an External Link Library with outbound URLs. You MUST include exactly 3 of these as natural in-content links within the post body. Rules:
-- Links must be woven naturally into sentences — never listed at the end
-- Anchor text must contain the brand or entity name (exact wording flexible)
+You will be given exactly 3 pre-selected external links. You MUST use all 3. Each link has a designated role:
+- Link 1 is always the market regulator (MAS / BNM / BSP) — cite it in a compliance, licensing, or regulatory sentence
+- Link 2 is a payment method or official source — cite it when that specific entity is first mentioned
+- Link 3 is a research or data source — cite it when making a market-size, adoption, or statistical claim
+Rules:
+- Embed each link naturally inside a sentence — never list them at the end
+- Anchor text must contain the brand or entity name
 - Link on first mention only — never link the same entity more than once
-- Only link where it is genuinely contextually relevant
-- Spread across different sections — not clustered together
 - For non-competitor links use standard markdown: [anchor text](URL)
 - For competitor links (comparison articles only) use HTML with rel="nofollow": <a href="URL" rel="nofollow">Brand Name</a>
-- Do NOT link competitors in any article that is not a comparison or listicle
+- Each competitor link must only appear in a sentence directly about THAT specific competitor
 
 ## Output
 Return ONLY a valid JSON object with exactly these fields (no markdown code fences, no extra text):
@@ -612,7 +680,7 @@ Return ONLY a valid JSON object with exactly these fields (no markdown code fenc
   "slug": "url-friendly-slug-here",
   "categories": ["Primary Category", "Secondary Category"],
   "tags": ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6"],
-  "content": "Full markdown content structured as: (1) **Quick Answer:** block first — before any intro prose; (2) intro paragraphs; (3) body sections with H2/H3 phrased as questions; (4) ## Frequently Asked Questions with 5+ Q&A pairs formatted as **Q: ...** on its own line followed by the answer paragraph; (5) [SCHEMA] block. No H1. 5 internal backlinks + 3 contextual external links. 900–1200 words excluding FAQ."
+  "content": "Full markdown content structured as: (1) **Quick Answer:** block first — before any intro prose; (2) intro paragraphs; (3) body sections with H2/H3 phrased as questions; (4) ## Frequently Asked Questions with 5+ Q&A pairs formatted as **Q: ...** on its own line followed by the answer paragraph; (5) [SCHEMA] block. No H1. 3 internal backlinks + 3 external links (regulator + official source + research/data). 900–1200 words excluding FAQ."
 }
 """
 
@@ -718,8 +786,8 @@ def generate_blog_post(keyword: str, country: str = None, prompt_style: str = "a
                 m in ("SEA", "Global") for m in markets
             )
         filtered_links = [l for l in blog_links if _link_ok(l)]
-        links_section = "\n## HitPay URLs — Use 5 as Internal Backlinks\n"
-        links_section += f"Market: {country or 'SEA'}. Pick the 5 most relevant URLs. Link naturally in-content — never dump as a list.\n\n"
+        links_section = "\n## HitPay URLs — Use 3 as Internal Backlinks\n"
+        links_section += f"Market: {country or 'SEA'}. Pick the 3 most relevant URLs. Link naturally in-content — never force a link or dump as a list.\n\n"
         for link in filtered_links:
             topics_str = ", ".join(link.get("topics", []))
             markets_str = "/".join(link.get("markets", []))
@@ -765,7 +833,7 @@ Before returning your JSON, verify every payment method name, currency, and plac
 {external_links_section}
 Ground your post in the knowledge base and product documentation above. If they contain specific features, merchant use cases, flows, or product details relevant to this topic, incorporate them naturally. Do not invent facts or statistics not present in these sources or the system prompt.
 
-Remember: include exactly 5 internal backlinks from the HitPay URL list above and exactly 3 external links from the External Link Library above. All links must be woven naturally into the content — never listed at the end.
+Remember: include exactly 3 internal backlinks from the HitPay URL list above and exactly 3 external links from the External Link Library above. All links must be woven naturally into the content — never listed at the end.
 
 Return the JSON object now."""
 
@@ -889,8 +957,8 @@ def rewrite_blog_post(url: str, country: str = None, prompt_style: str = "author
                 m in ("SEA", "Global") for m in markets
             )
         filtered_links = [l for l in blog_links if _link_ok_rw(l)]
-        links_section = "\n## HitPay URLs — Use 5 as Internal Backlinks\n"
-        links_section += f"Market: {country or 'SEA'}. Pick the 5 most relevant URLs. Link naturally in-content — never dump as a list.\n\n"
+        links_section = "\n## HitPay URLs — Use 3 as Internal Backlinks\n"
+        links_section += f"Market: {country or 'SEA'}. Pick the 3 most relevant URLs. Link naturally in-content — never force a link or dump as a list.\n\n"
         for link in filtered_links:
             topics_str = ", ".join(link.get("topics", []))
             markets_str = "/".join(link.get("markets", []))
@@ -947,7 +1015,7 @@ Fully apply all AEO, GEO, and competitor comparison directives from the system p
 {external_links_section}
 Ground your rewrite in the knowledge base and product documentation above. Do not invent facts or statistics not present in these sources or the system prompt.
 
-Remember: include exactly 5 internal backlinks from the HitPay URL list above and exactly 3 external links from the External Link Library above. All links must be woven naturally into the content — never listed at the end.
+Remember: include exactly 3 internal backlinks from the HitPay URL list above and exactly 3 external links from the External Link Library above. All links must be woven naturally into the content — never listed at the end.
 
 Return the JSON object now."""
 

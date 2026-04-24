@@ -37,12 +37,10 @@ BLOG_SOURCES: dict[str, dict] = {
         "is_competitor": True,
         "markets": ["SG", "MY", "PH"],
         "listing_pages": [
-            "https://stripe.com/en-sg/resources",
-            "https://stripe.com/resources/guides",
-            "https://stripe.com/en-my/resources",
-            "https://stripe.com/en-ph/resources",
+            "https://stripe.com/blog",
+            "https://stripe.com/blog/industry",
         ],
-        "link_path_patterns": ["/resources/", "/guides/"],
+        "link_path_patterns": ["/blog/"],
         "exclude_path_patterns": ["/docs/", "/changelog/", "#", "?"],
     },
     "airwallex": {
@@ -51,8 +49,11 @@ BLOG_SOURCES: dict[str, dict] = {
         "markets": ["SG", "MY"],
         "listing_pages": [
             "https://www.airwallex.com/blog",
+            "https://www.airwallex.com/blog/page/2",
+            "https://www.airwallex.com/blog/page/3",
             "https://www.airwallex.com/sg/blog",
             "https://www.airwallex.com/my/blog",
+            "https://www.airwallex.com/my/blog/page/2",
         ],
         "link_path_patterns": ["/blog/"],
         "exclude_path_patterns": ["/blog/category/", "/blog/tag/", "/blog/author/", "/blog/page/", "#"],
@@ -63,8 +64,8 @@ BLOG_SOURCES: dict[str, dict] = {
         "markets": ["PH", "MY"],
         "listing_pages": [
             "https://www.xendit.co/blog/",
-            "https://www.xendit.co/resources/",
             "https://www.xendit.co/en-ph/blog/",
+            "https://www.xendit.co/en-id/blog/",
         ],
         "link_path_patterns": ["/blog/", "/resources/"],
         "exclude_path_patterns": ["/blog/category/", "/blog/tag/", "/blog/page/", "#"],
@@ -75,6 +76,7 @@ BLOG_SOURCES: dict[str, dict] = {
         "markets": ["PH"],
         "listing_pages": [
             "https://www.paymongo.com/blog",
+            "https://www.paymongo.com/blog?page=2",
         ],
         "link_path_patterns": ["/blog/"],
         "exclude_path_patterns": ["/blog/category/", "/blog/tag/", "/blog/page/", "#"],
@@ -85,7 +87,7 @@ BLOG_SOURCES: dict[str, dict] = {
         "markets": ["SG", "MY", "PH"],
         "listing_pages": [
             "https://www.adyen.com/knowledge-hub",
-            "https://www.adyen.com/knowledge-hub/payments",
+            "https://www.adyen.com/knowledge-hub?page=2",
         ],
         "link_path_patterns": ["/knowledge-hub/"],
         "exclude_path_patterns": ["/knowledge-hub/category/", "/knowledge-hub/tag/", "#"],
@@ -98,6 +100,7 @@ BLOG_SOURCES: dict[str, dict] = {
             "https://www.shopify.com/blog/topics/payments",
             "https://www.shopify.com/blog/topics/ecommerce",
             "https://www.shopify.com/blog/topics/retail",
+            "https://www.shopify.com/blog/topics/marketing",
         ],
         "link_path_patterns": ["/blog/"],
         "exclude_path_patterns": ["/blog/topics/", "#", "?"],
@@ -108,6 +111,9 @@ BLOG_SOURCES: dict[str, dict] = {
         "markets": ["SG", "MY", "PH"],
         "listing_pages": [
             "https://woocommerce.com/blog/",
+            "https://woocommerce.com/blog/page/2/",
+            "https://woocommerce.com/blog/page/3/",
+            "https://woocommerce.com/blog/page/4/",
             "https://woocommerce.com/posts/",
         ],
         "link_path_patterns": ["/blog/", "/posts/"],
@@ -119,6 +125,7 @@ BLOG_SOURCES: dict[str, dict] = {
         "markets": ["SG", "MY"],
         "listing_pages": [
             "https://www.xero.com/blog/",
+            "https://www.xero.com/blog/page/2/",
             "https://www.xero.com/sg/resources/",
             "https://www.xero.com/my/resources/",
         ],
@@ -131,6 +138,9 @@ BLOG_SOURCES: dict[str, dict] = {
         "markets": ["MY", "SG"],
         "listing_pages": [
             "https://fiuu.com/blog/",
+            "https://fiuu.com/blog/page/2/",
+            "https://fiuu.com/blog/page/3/",
+            "https://fiuu.com/blog/page/4/",
         ],
         "link_path_patterns": ["/blog/"],
         "exclude_path_patterns": ["/blog/category/", "/blog/tag/", "/blog/page/", "#"],
@@ -163,6 +173,107 @@ BLOG_SOURCES: dict[str, dict] = {
         "listing_pages": [
             "https://www.maya.ph/blog",
             "https://www.maya.ph/for-business/resources",
+            "https://www.maya.ph/for-business/blog",
+        ],
+        "link_path_patterns": ["/blog/", "/resources/"],
+        "exclude_path_patterns": ["/blog/category/", "/blog/tag/", "/blog/page/", "#"],
+    },
+    "billplz": {
+        "name": "Billplz",
+        "is_competitor": True,
+        "markets": ["MY"],
+        "listing_pages": [
+            "https://www.billplz.com/blog",
+            "https://www.billplz.com/blog?page=2",
+            "https://www.billplz.com/blog?page=3",
+        ],
+        "link_path_patterns": ["/blog/"],
+        "exclude_path_patterns": ["/blog/category/", "/blog/tag/", "/blog/page/", "#"],
+    },
+    "senangpay": {
+        "name": "SenangPay",
+        "is_competitor": True,
+        "markets": ["MY"],
+        "listing_pages": [
+            "https://senangpay.com/blog/",
+            "https://senangpay.com/resources/",
+        ],
+        "link_path_patterns": ["/blog/", "/resources/"],
+        "exclude_path_patterns": ["/blog/category/", "/blog/tag/", "/blog/page/", "#"],
+    },
+    "curlec": {
+        "name": "Curlec",
+        "is_competitor": True,
+        "markets": ["MY"],
+        "listing_pages": [
+            "https://curlec.com/blog/",
+            "https://curlec.com/resources/",
+        ],
+        "link_path_patterns": ["/blog/", "/resources/"],
+        "exclude_path_patterns": ["/blog/category/", "/blog/tag/", "/blog/page/", "#"],
+    },
+    "revolut": {
+        "name": "Revolut",
+        "is_competitor": True,
+        "markets": ["SG"],
+        "listing_pages": [
+            "https://www.revolut.com/blog/",
+            "https://www.revolut.com/en-SG/blog/",
+        ],
+        "link_path_patterns": ["/blog/"],
+        "exclude_path_patterns": ["/blog/category/", "/blog/tag/", "/blog/page/", "/blog/author/", "#"],
+    },
+    "qashier": {
+        "name": "Qashier",
+        "is_competitor": True,
+        "markets": ["SG"],
+        "listing_pages": [
+            "https://qashier.com/blog/",
+            "https://qashier.com/resources/",
+        ],
+        "link_path_patterns": ["/blog/", "/resources/"],
+        "exclude_path_patterns": ["/blog/category/", "/blog/tag/", "/blog/page/", "#"],
+    },
+    "2c2p": {
+        "name": "2C2P",
+        "is_competitor": True,
+        "markets": ["SG", "MY", "PH"],
+        "listing_pages": [
+            "https://www.2c2p.com/insights",
+            "https://www.2c2p.com/resources",
+        ],
+        "link_path_patterns": ["/insights/", "/resources/"],
+        "exclude_path_patterns": ["/insights/category/", "/insights/tag/", "#"],
+    },
+    "dragonpay": {
+        "name": "DragonPay",
+        "is_competitor": True,
+        "markets": ["PH"],
+        "listing_pages": [
+            "https://www.dragonpay.ph/blog/",
+            "https://www.dragonpay.ph/resources/",
+        ],
+        "link_path_patterns": ["/blog/", "/resources/"],
+        "exclude_path_patterns": ["/blog/category/", "/blog/tag/", "/blog/page/", "#"],
+    },
+    "paynamics": {
+        "name": "Paynamics",
+        "is_competitor": True,
+        "markets": ["PH"],
+        "listing_pages": [
+            "https://paynamics.com/blog/",
+            "https://paynamics.com/resources/",
+        ],
+        "link_path_patterns": ["/blog/", "/resources/"],
+        "exclude_path_patterns": ["/blog/category/", "/blog/tag/", "/blog/page/", "#"],
+    },
+    "eghl": {
+        "name": "eGHL",
+        "is_competitor": True,
+        "markets": ["MY"],
+        "listing_pages": [
+            "https://www.eghl.my/blog/",
+            "https://www.eghl.my/resources/",
         ],
         "link_path_patterns": ["/blog/", "/resources/"],
         "exclude_path_patterns": ["/blog/category/", "/blog/tag/", "/blog/page/", "#"],
@@ -469,11 +580,13 @@ def search_articles(
     markets: list[str] | None = None,
     is_comparison: bool = False,
     limit: int = 10,
+    max_per_source: int = 2,
 ) -> list[dict]:
     """Search the DB for articles relevant to the keyword.
 
     Scores: topic token match + title token match. Competitor articles are only
-    returned when is_comparison=True.
+    returned when is_comparison=True. max_per_source prevents any single site
+    from dominating the results.
     """
     db = load_db()
     articles = db.get("articles", [])
@@ -512,4 +625,17 @@ def search_articles(
             scored.append((total, article))
 
     scored.sort(key=lambda x: -x[0])
-    return [a for _, a in scored[:limit]]
+
+    # Apply per-source cap to prevent one site from dominating
+    results: list[dict] = []
+    source_counts: dict[str, int] = {}
+    for article in (a for _, a in scored):
+        src = article.get("source_key", "")
+        if source_counts.get(src, 0) >= max_per_source:
+            continue
+        source_counts[src] = source_counts.get(src, 0) + 1
+        results.append(article)
+        if len(results) >= limit:
+            break
+
+    return results

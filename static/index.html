@@ -1580,7 +1580,7 @@
       </div>
       <div class="info-step">
         <div class="info-step-num">4</div>
-        <div class="info-step-body"><strong>Internal blog link index</strong> — <span class="info-tag">blog_links.yaml</span> lists all published HitPay posts by topic. The AI picks exactly 5 relevant URLs and weaves them as natural in-content hyperlinks — never as a list.</div>
+        <div class="info-step-body"><strong>Internal blog link index</strong> — <span class="info-tag">blog_links.yaml</span> lists all published HitPay posts by topic. The AI picks exactly 3 genuinely relevant URLs and weaves them as natural in-content hyperlinks — never as a list.</div>
       </div>
     </div>
 
@@ -1596,7 +1596,7 @@
         <li><strong>Market-accurate payment methods</strong> — per-market lists of valid methods, plus a fact-check list of cross-market misattributions to avoid (e.g. PayNow is SG-only).</li>
         <li><strong>Local specificity</strong> — district and city names required per market (Tanjong Pagar, Bangsar, BGC).</li>
         <li><strong>No fabricated stats or testimonials</strong> — all claims must come from the knowledge base.</li>
-        <li><strong>Exactly 5 internal backlinks</strong> woven naturally using descriptive anchor text.</li>
+        <li><strong>Exactly 3 internal backlinks</strong> woven naturally using descriptive anchor text — 3 well-placed relevant links outperform 5 forced ones for GEO citability.</li>
         <li><strong>Payout messaging</strong> — always "next business day in SG, MY &amp; PH", never just "T+1".</li>
         <li><strong>Competitor comparisons</strong> — factual, non-disparaging. Acknowledge competitor strengths, then show where HitPay wins on relevant dimensions (fees, ease of onboarding, payout speed, local support). No fake data.</li>
       </ul>
@@ -1636,7 +1636,7 @@
       </div>
       <div class="info-step">
         <div class="info-step-num">4</div>
-        <div class="info-step-body">Build internal backlink reference from <span class="info-tag">blog_links.yaml</span></div>
+        <div class="info-step-body">Build internal backlink reference from <span class="info-tag">blog_links.yaml</span> and select 3 external links using the GEO authority strategy (see below)</div>
       </div>
       <div class="info-step">
         <div class="info-step-num">5</div>
@@ -1650,6 +1650,34 @@
         <div class="info-step-num">7</div>
         <div class="info-step-body">Parse JSON response → save to Supabase + open in editor</div>
       </div>
+    </div>
+
+    <hr class="info-divider" />
+
+    <div class="info-section">
+      <div class="info-section-title">GEO link strategy — why articles are linked the way they are</div>
+      <p>GEO (Generative Engine Optimisation) is about getting HitPay content cited by AI answer engines — Perplexity, ChatGPT, Google AI Overviews, Claude. AI engines evaluate outbound links as a trust signal: linking to authoritative, diverse sources makes content more citable. Linking to the same partner blog every article signals shallow sourcing and reduces citability.</p>
+
+      <p><strong>Internal backlinks: 3 (not 5)</strong></p>
+      <p>Three highly relevant internal links are better than five padded ones. AI engines evaluate anchor text relevance — a forced link with weak context actively lowers the article's authority signal. The AI is instructed to only link where it is genuinely relevant, never to hit a number.</p>
+
+      <p><strong>External links: always 3, fixed slot roles</strong></p>
+      <div class="info-step">
+        <div class="info-step-num">1</div>
+        <div class="info-step-body"><strong>Regulator (always)</strong> — MAS for SG, Bank Negara Malaysia for MY, BSP for PH. Government and central bank URLs are the strongest authority signal available. This slot is never skipped.</div>
+      </div>
+      <div class="info-step">
+        <div class="info-step-num">2</div>
+        <div class="info-step-body"><strong>Official source</strong> — the most keyword-relevant payment method page (e.g. PayNow, DuitNow, GCash official pages) or, for integration articles, the relevant platform's documentation. First-party official pages, not blog posts.</div>
+      </div>
+      <div class="info-step">
+        <div class="info-step-num">3</div>
+        <div class="info-step-body"><strong>Research / data source</strong> — rotates deterministically by keyword across: Singapore Department of Statistics, PayNet Malaysia, Philippine Statistics Authority, Statista market reports, World Bank financial inclusion data, Google-Temasek e-Conomy SEA. This ensures no two articles cite the same research source, which AI engines read as breadth of evidence.</div>
+      </div>
+
+      <p style="margin-top:12px;"><strong>Comparison articles</strong> — slots 2 and 3 are filled with competitor blog articles (one per competitor, from the scraped article database), so competitor links appear with specific context rather than just a homepage. All competitor links use <span class="info-tag">rel="nofollow"</span> and must only appear in sentences directly about that specific competitor.</p>
+
+      <p><strong>Why not Shopify and WooCommerce blog posts?</strong> Partner blog articles are weak GEO signals — AI engines interpret repeated links to the same partner blog as affiliate bias, not genuine research. Shopify and WooCommerce only appear as external links when the article is specifically about Shopify or WooCommerce integration (slot 2, official docs URL only — not a blog post).</p>
     </div>
 
     <hr class="info-divider" />
