@@ -803,6 +803,7 @@ def generate_blog_post(keyword: str, country: str = None, prompt_style: str = "a
     if country and country in COUNTRY_CONTEXT:
         ctx = COUNTRY_CONTEXT[country]
         avoid_list = "\n".join(f"  - {r}" for r in ctx["avoid"])
+        ph_terminology = "\nTERMINOLOGY — Philippines market uses \"SMEs\" not \"SMBs\". Replace every instance of \"SMB\" or \"SMBs\" with \"SME\" or \"SMEs\" throughout the post.\n" if country == "PH" else ""
         country_section = f"""
 ## Country Focus: {ctx['flag']} {ctx['name']} ({country}) — STRICT REQUIREMENT
 This post must be written EXCLUSIVELY for the {ctx['name']} market.
@@ -815,7 +816,7 @@ Place name examples: {ctx['places']}
 
 FACT CHECK — Do NOT include these market mismatches:
 {avoid_list}
-
+{ph_terminology}
 Before returning your JSON, verify every payment method name, currency, and place name is correct for {ctx['name']}. Correct any mismatches.
 """
         status(f"Country focus set to {ctx['flag']} {ctx['name']}")
@@ -973,6 +974,7 @@ def rewrite_blog_post(url: str, country: str = None, prompt_style: str = "author
     if country and country in COUNTRY_CONTEXT:
         ctx = COUNTRY_CONTEXT[country]
         avoid_list = "\n".join(f"  - {r}" for r in ctx["avoid"])
+        ph_terminology = "\nTERMINOLOGY — Philippines market uses \"SMEs\" not \"SMBs\". Replace every instance of \"SMB\" or \"SMBs\" with \"SME\" or \"SMEs\" throughout the post.\n" if country == "PH" else ""
         country_section = f"""
 ## Country Focus: {ctx['flag']} {ctx['name']} ({country}) — STRICT REQUIREMENT
 This post must be written EXCLUSIVELY for the {ctx['name']} market.
@@ -985,7 +987,7 @@ Place name examples: {ctx['places']}
 
 FACT CHECK — Do NOT include these market mismatches:
 {avoid_list}
-
+{ph_terminology}
 Before returning your JSON, verify every payment method name, currency, and place name is correct for {ctx['name']}. Correct any mismatches.
 """
         status(f"Country focus set to {ctx['flag']} {ctx['name']}")
