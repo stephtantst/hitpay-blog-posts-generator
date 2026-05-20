@@ -687,6 +687,8 @@ Ground your post in the knowledge base and product documentation above. If they 
 
 Remember: include exactly 3 internal backlinks from the HitPay URL list above and exactly 3 external links from the External Link Library above. All links must be woven naturally into the content — never listed at the end.
 
+OUTPUT LENGTH REQUIREMENT: The content field must be 900–1100 words maximum (body only, excluding FAQ). Each FAQ answer must be 2–4 sentences. Do not pad or over-explain — concise and factual is better. The entire JSON response must fit within a reasonable token budget.
+
 Return the JSON object now."""
 
     response = _messages_create_with_retry(
@@ -875,6 +877,8 @@ Fully apply all AEO, GEO, and competitor comparison directives from the system p
 Ground your rewrite in the knowledge base and product documentation above. Do not invent facts or statistics not present in these sources or the system prompt.
 
 Remember: include exactly 3 internal backlinks from the HitPay URL list above and exactly 3 external links from the External Link Library above. All links must be woven naturally into the content — never listed at the end.
+
+OUTPUT LENGTH REQUIREMENT: The content field must be 900–1100 words maximum (body only, excluding FAQ). Each FAQ answer must be 2–4 sentences. Do not pad or over-explain — concise and factual is better. The entire JSON response must fit within a reasonable token budget.
 
 Return the JSON object now."""
 
