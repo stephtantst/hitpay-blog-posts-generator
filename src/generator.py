@@ -709,8 +709,12 @@ Return the JSON object now."""
 
     try:
         post_data = json.loads(raw)
-    except json.JSONDecodeError as e:
-        raise ValueError(f"Response was truncated or malformed (max_tokens may be too low). JSON error: {e}")
+    except json.JSONDecodeError:
+        try:
+            from json_repair import repair_json
+            post_data = json.loads(repair_json(raw))
+        except Exception as e:
+            raise ValueError(f"Response could not be parsed after repair attempt. JSON error: {e}")
 
     # Add metadata
     post_data["date"] = date.today().isoformat()
@@ -892,8 +896,12 @@ Return the JSON object now."""
 
     try:
         post_data = json.loads(raw)
-    except json.JSONDecodeError as e:
-        raise ValueError(f"Response was truncated or malformed (max_tokens may be too low). JSON error: {e}")
+    except json.JSONDecodeError:
+        try:
+            from json_repair import repair_json
+            post_data = json.loads(repair_json(raw))
+        except Exception as e:
+            raise ValueError(f"Response could not be parsed after repair attempt. JSON error: {e}")
     post_data["date"] = date.today().isoformat()
     post_data["keyword"] = keyword
     post_data["country"] = country or ""
