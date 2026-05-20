@@ -459,6 +459,7 @@ class GenerateRequest(BaseModel):
     country: str | None = None
     aeo_prompt: str | None = None
     category: str | None = None
+    max_tokens: int = 16000
 
 
 @app.post("/api/generate")
@@ -476,7 +477,7 @@ async def api_generate(body: GenerateRequest, user_email: str = Depends(require_
             yield f"data: {json.dumps({'type': 'status', 'message': 'Starting generation...'})}\n\n"
 
             post_data = await loop.run_in_executor(
-                None, lambda: generate_blog_post(body.keyword, country=body.country, aeo_prompt=body.aeo_prompt, category=body.category, on_status=on_status)
+                None, lambda: generate_blog_post(body.keyword, country=body.country, aeo_prompt=body.aeo_prompt, category=body.category, max_tokens=body.max_tokens, on_status=on_status)
             )
 
             for msg in messages:

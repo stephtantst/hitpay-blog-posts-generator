@@ -3310,6 +3310,64 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+async function bulkRunRow(i, r) {
+  document.getElementById(`bpi-${i}`).className = 'bulk-progress-icon running';
+  document.getElementById(`bpi-${i}`).textContent = '⟳';
+  document.getElementById(`bps-${i}`).textContent = 'Starting…';
+  const retryBtn = document.getElementById(`bpretry-${i}`);
+  if (retryBtn) retryBtn.style.display = 'none';
+  document.getElementById(`bpr-${i}`).scrollIntoView({ block: 'nearest' });
+
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        keyword:    r.keyword,
+        country:    r.market || null,
+        aeo_prompt: r.aeo_prompt || null,
+        category:   r.category || null,
+        max_tokens: 32000,
+      }),
+    });
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '', succeeded = false;
+
+    while (true) {
+      const { done: streamDone, value } = await reader.read();
+      if (streamDone) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = JSON.parse(line.slice(6));
+        if (data.type === 'status') {
+          document.getElementById(`bps-${i}`).textContent = data.message;
+        } else if (data.type === 'done') {
+          document.getElementById(`bpi-${i}`).className = 'bulk-progress-icon done';
+          document.getElementById(`bpi-${i}`).textContent = '✓';
+          document.getElementById(`bps-${i}`).textContent = `Generated — post #${data.post_id}`;
+          succeeded = true;
+        } else if (data.type === 'error') {
+          throw new Error(data.message);
+        }
+      }
+    }
+    return succeeded;
+  } catch (err) {
+    document.getElementById(`bpi-${i}`).className = 'bulk-progress-icon error';
+    document.getElementById(`bpi-${i}`).textContent = '✗';
+    document.getElementById(`bps-${i}`).textContent = err.message;
+    // Show retry button
+    const rb = document.getElementById(`bpretry-${i}`);
+    if (rb) rb.style.display = '';
+    return false;
+  }
+}
+
 async function startBulkGenerate() {
   const queue = _bulkParsed.filter(r => r.selected);
   if (!queue.length) return;
@@ -3332,82 +3390,40 @@ async function startBulkGenerate() {
         <div class="bulk-progress-keyword">${flag} ${escHtml(r.keyword)}</div>
         <div class="bulk-progress-status" id="bps-${i}">Waiting…</div>
       </div>
+      <button id="bpretry-${i}" class="btn btn-cancel" style="display:none;font-size:11px;padding:3px 8px;flex-shrink:0" onclick="bulkRetryRow(${i})">Retry</button>
     `;
     list.appendChild(div);
   });
 
   let done = 0, errors = 0;
-  const updateOverall = () => {
+  const updateOverall = (current) => {
     document.getElementById('bulkOverall').innerHTML =
-      `Generating <span>${done + errors + 1}</span> of <span>${queue.length}</span>` +
-      (errors ? ` · ${errors} error${errors>1?'s':''}` : '');
+      `Generating <span>${current + 1}</span> of <span>${queue.length}</span>` +
+      (errors ? ` · <span style="color:var(--red)">${errors} failed</span>` : '');
   };
 
   for (let i = 0; i < queue.length; i++) {
-    const r = queue[i];
-    updateOverall();
-    document.getElementById(`bpi-${i}`).className = 'bulk-progress-icon running';
-    document.getElementById(`bpi-${i}`).textContent = '⟳';
-    document.getElementById(`bps-${i}`).textContent = 'Starting…';
-
-    // Scroll to current row
-    document.getElementById(`bpr-${i}`).scrollIntoView({ block: 'nearest' });
-
-    try {
-      const res = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          keyword:    r.keyword,
-          country:    r.market || null,
-          aeo_prompt: r.aeo_prompt || null,
-          category:   r.category || null,
-        }),
-      });
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
-
-      while (true) {
-        const { done: streamDone, value } = await reader.read();
-        if (streamDone) break;
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop();
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          const data = JSON.parse(line.slice(6));
-          if (data.type === 'status') {
-            document.getElementById(`bps-${i}`).textContent = data.message;
-          } else if (data.type === 'done') {
-            document.getElementById(`bpi-${i}`).className = 'bulk-progress-icon done';
-            document.getElementById(`bpi-${i}`).textContent = '✓';
-            document.getElementById(`bps-${i}`).textContent = `Generated — post #${data.post_id}`;
-            done++;
-          } else if (data.type === 'error') {
-            document.getElementById(`bpi-${i}`).className = 'bulk-progress-icon error';
-            document.getElementById(`bpi-${i}`).textContent = '✗';
-            document.getElementById(`bps-${i}`).textContent = data.message;
-            errors++;
-          }
-        }
-      }
-    } catch (err) {
-      document.getElementById(`bpi-${i}`).className = 'bulk-progress-icon error';
-      document.getElementById(`bpi-${i}`).textContent = '✗';
-      document.getElementById(`bps-${i}`).textContent = err.message;
-      errors++;
-    }
+    updateOverall(i);
+    const ok = await bulkRunRow(i, queue[i]);
+    if (ok) done++; else errors++;
   }
 
   // All done
   _bulkRunning = false;
   document.getElementById('bulkOverall').innerHTML =
     `Done — <span>${done}</span> generated` +
-    (errors ? `, <span style="color:var(--red)">${errors} failed</span>` : '');
+    (errors ? ` · <span style="color:var(--red)">${errors} failed — use Retry on individual rows</span>` : '');
   document.getElementById('bulkDoneBtn').style.display = '';
   await loadPosts();
+}
+
+async function bulkRetryRow(i) {
+  // Find the row in the rendered queue (same index as queue array built during startBulkGenerate)
+  const queue = _bulkParsed.filter(r => r.selected);
+  const r = queue[i];
+  if (!r) return;
+  const ok = await bulkRunRow(i, r);
+  if (ok) await loadPosts();
 }
 
 // ── New-post dropdown helpers ──────────────────────────────────────────────────

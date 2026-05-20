@@ -577,7 +577,7 @@ COUNTRY_CONTEXT = {
 }
 
 
-def generate_blog_post(keyword: str, country: str = None, aeo_prompt: str = None, category: str = None, on_status=None) -> dict:
+def generate_blog_post(keyword: str, country: str = None, aeo_prompt: str = None, category: str = None, max_tokens: int = 16000, on_status=None) -> dict:
     """Generate a blog post for the given keyword.
 
     Args:
@@ -585,6 +585,7 @@ def generate_blog_post(keyword: str, country: str = None, aeo_prompt: str = None
         country: Optional market code (SG/MY/PH)
         aeo_prompt: Optional primary AEO question the post must answer
         category: Optional preferred category hint
+        max_tokens: Claude response token limit (use 32000 for bulk/longer posts)
         on_status: Optional callback(message: str) for progress updates
     """
     def status(msg):
@@ -686,7 +687,7 @@ Return the JSON object now."""
     response = _messages_create_with_retry(
         client,
         model=CLAUDE_MODEL,
-        max_tokens=32000,
+        max_tokens=max_tokens,
         system=system_prompt,
         messages=[{"role": "user", "content": user_prompt}]
     )
@@ -868,7 +869,7 @@ Return the JSON object now."""
     response = _messages_create_with_retry(
         client,
         model=CLAUDE_MODEL,
-        max_tokens=32000,
+        max_tokens=16000,
         system=system_prompt,
         messages=[{"role": "user", "content": user_prompt}]
     )
