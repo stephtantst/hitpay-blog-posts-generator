@@ -1,5 +1,5 @@
 # HitPay Product Documentation
-**Compiled on:** 2026-03-31
+**Compiled on:** 2026-04-27
 
 ---
 
@@ -17777,9 +17777,9 @@ If the account representative is **not listed** in the SEC registration:
 
 ### Overview
 
-Under **Revenue Regulations No. 16-2023**, as amended, and **RMC No. 55-2024**, a **1% withholding tax** will apply to gross remittances made by digital financial service providers and electronic marketplace operators to sellers/merchants.
+Under **Revenue Regulations No. 16-2023**, as amended, and **RMC No. 55-2024**, a **0.50% withholding tax** will apply to gross remittances made by digital financial service providers and electronic marketplace operators to sellers/merchants.
 
-All HitPay-registered merchants are subject to this 1% withholding tax **unless** they qualify for an exemption.
+All HitPay-registered merchants are subject to this 0.50% withholding tax **unless** they qualify for an exemption.
 
 ### Exemptions Include:
 
@@ -17805,7 +17805,7 @@ All HitPay-registered merchants are subject to this 1% withholding tax **unless*
 
 ## Important:
 
-If the sworn declaration is **not submitted**, the 1% withholding tax will automatically be applied to **50% of your gross sales** starting **October 12, 2024**, regardless of your earnings.
+If the sworn declaration is **not submitted**, the 0.50% withholding tax will automatically be applied to **your gross sales** starting **October 12, 2024**, regardless of your earnings.
 
 ---
 
@@ -17828,7 +17828,7 @@ Merchants subject to withholding tax will receive **BIR Form 2307** at their reg
   </Accordion>
 
   <Accordion title="What are the tax compliance requirements for HitPay merchants?">
-    Under BIR Revenue Regulations No. 16-2023 and RMC No. 55-2024, a 1% withholding tax applies to remittances made by digital platforms unless exempt.
+    Under BIR Revenue Regulations No. 16-2023 and RMC No. 55-2024, a 0.50% withholding tax applies to remittances made by digital platforms unless exempt.
 
     **Exemptions include**:
     - Non-stock, non-profits
@@ -17838,7 +17838,7 @@ Merchants subject to withholding tax will receive **BIR Form 2307** at their reg
     Submit a notarized, stamped, and BIR-verified **Sworn Declaration** to qualify for exemption.
     </Info>
 
-    If not submitted, 1% tax applies to **50% of gross sales** starting **October 12, 2024**.
+    If not submitted, 0.50% tax applies to **gross sales** starting **October 12, 2024**.
 
     <Check>
     Withholding tax will be reported quarterly via **BIR Form 2307**, sent to your registered email.
@@ -28542,6 +28542,7 @@ Tap to pay is only available in the following countries:
 | ---------------- | --- | 
 | Singapore        | ✓   | 
 | Australia        | ✓   | 
+| Malaysia         | ✓   | 
 | New Zealand      | ✓   | 
 | United Kingdom   | ✓   | 
 | United States    | ✓   | 
@@ -28610,6 +28611,7 @@ Card issuers set their own rules for contactless payments. Depending on the regi
     - **Australia**: 100 to 200 AUD depending on the card scheme
     - **Canada**: 250 CAD
     - **Japan**: 15,000 JPY
+    - **Malaysia**: 250 MYR
     - **New Zealand**: 200 NZD
     - **Singapore**: SGD 200
     - **United Kingdom**: 100 GBP
