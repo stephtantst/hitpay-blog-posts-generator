@@ -3254,13 +3254,32 @@ function bulkSplitCsvLine(line) {
   return cells;
 }
 
+function bulkAlreadyExists(r) {
+  const kw = r.keyword.toLowerCase();
+  return posts.some(p =>
+    (p.keyword || '').toLowerCase() === kw &&
+    (p.country || null) === (r.market || null)
+  );
+}
+
 function bulkShowPreview(rows) {
+  // Mark rows that already exist in the DB so they default to unchecked
+  rows.forEach(r => {
+    if (r.selected && bulkAlreadyExists(r)) {
+      r.selected = false;
+      r.alreadyExists = true;
+    }
+  });
+
   const tbody = document.getElementById('bulkPreviewBody');
   tbody.innerHTML = '';
   rows.forEach((r, i) => {
     const flag = BULK_MARKET_FLAG[r.market] || '🌐';
     const tr = document.createElement('tr');
     if (!r.selected) tr.classList.add('skipped');
+    const statusCell = r.alreadyExists
+      ? `<span style="color:var(--text-muted);font-size:11px">✓ exists</span>`
+      : (r.status ? `<span style="color:${r.status.toLowerCase()==='live'?'var(--green)':'var(--text-muted)'};font-size:11px">${escHtml(r.status)}</span>` : '—');
     tr.innerHTML = `
       <td><input type="checkbox" data-idx="${i}" ${r.selected ? 'checked' : ''} onchange="bulkRowCheck(${i}, this.checked)"></td>
       <td style="color:var(--text-muted)">${i + 1}</td>
@@ -3268,7 +3287,7 @@ function bulkShowPreview(rows) {
       <td class="bulk-keyword-cell">${escHtml(r.keyword)}</td>
       <td class="bulk-prompt-cell" title="${escHtml(r.aeo_prompt)}">${escHtml(r.aeo_prompt || '—')}</td>
       <td style="font-size:11px;color:var(--text-muted)">${escHtml(r.category || '—')}</td>
-      <td style="font-size:11px">${r.status ? `<span style="color:${r.status.toLowerCase()==='live'?'var(--green)':'var(--text-muted)'}">${escHtml(r.status)}</span>` : '—'}</td>
+      <td>${statusCell}</td>
     `;
     tbody.appendChild(tr);
   });
@@ -3296,14 +3315,16 @@ function bulkToggleAll(checked) {
 }
 
 function bulkUpdateSummary() {
-  const selected = _bulkParsed.filter(r => r.selected).length;
-  const skipped  = _bulkParsed.length - selected;
+  const selected    = _bulkParsed.filter(r => r.selected).length;
+  const existing    = _bulkParsed.filter(r => r.alreadyExists && !r.selected).length;
+  const liveSkipped = _bulkParsed.filter(r => r.status && r.status.toLowerCase() === 'live' && !r.selected).length;
   const btn = document.getElementById('bulkStartBtn');
   btn.textContent = `Generate ${selected} Post${selected !== 1 ? 's' : ''}`;
   btn.disabled = selected === 0;
-  document.getElementById('bulkSummary').innerHTML =
-    `<strong>${selected}</strong> rows selected for generation` +
-    (skipped ? ` · <span>${skipped} skipped</span>` : '');
+  const parts = [`<strong>${selected}</strong> selected`];
+  if (existing)    parts.push(`${existing} already exist`);
+  if (liveSkipped) parts.push(`${liveSkipped} Live`);
+  document.getElementById('bulkSummary').innerHTML = parts.join(' · ');
 }
 
 function escHtml(s) {
