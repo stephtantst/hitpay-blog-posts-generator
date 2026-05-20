@@ -457,6 +457,8 @@ def api_ai_edit(post_id: int, body: AiEditRequest, _: str = Depends(require_auth
 class GenerateRequest(BaseModel):
     keyword: str
     country: str | None = None
+    aeo_prompt: str | None = None
+    category: str | None = None
 
 
 @app.post("/api/generate")
@@ -474,7 +476,7 @@ async def api_generate(body: GenerateRequest, user_email: str = Depends(require_
             yield f"data: {json.dumps({'type': 'status', 'message': 'Starting generation...'})}\n\n"
 
             post_data = await loop.run_in_executor(
-                None, lambda: generate_blog_post(body.keyword, country=body.country, on_status=on_status)
+                None, lambda: generate_blog_post(body.keyword, country=body.country, aeo_prompt=body.aeo_prompt, category=body.category, on_status=on_status)
             )
 
             for msg in messages:

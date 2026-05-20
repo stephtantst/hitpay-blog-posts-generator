@@ -577,12 +577,14 @@ COUNTRY_CONTEXT = {
 }
 
 
-def generate_blog_post(keyword: str, country: str = None, on_status=None) -> dict:
+def generate_blog_post(keyword: str, country: str = None, aeo_prompt: str = None, category: str = None, on_status=None) -> dict:
     """Generate a blog post for the given keyword.
 
     Args:
         keyword: The topic/keyword to write about
         country: Optional market code (SG/MY/PH)
+        aeo_prompt: Optional primary AEO question the post must answer
+        category: Optional preferred category hint
         on_status: Optional callback(message: str) for progress updates
     """
     def status(msg):
@@ -664,8 +666,11 @@ Before returning your JSON, verify every payment method name, currency, and plac
     docs_section = f"\n## HitPay Product Documentation — Feature & Flow Accuracy\n{product_docs}\n" if product_docs else ""
     external_links_section = _build_external_links_section(country, keyword)
 
+    aeo_line = f'\nPrimary AEO question this post must answer: "{aeo_prompt}"\n' if aeo_prompt else ""
+    category_line = f'\nPreferred category for this post: {category}\n' if category else ""
+
     user_prompt = f"""Write a blog post about: "{keyword}"
-{country_section}
+{aeo_line}{category_line}{country_section}
 ## HitPay Knowledge Base — Use for Factual Accuracy
 {mcp_context}
 {docs_section}

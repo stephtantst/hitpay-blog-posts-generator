@@ -784,6 +784,46 @@
     }
     .modal-select:focus { border-color: var(--accent); }
     .modal-select option { background: var(--surface2); }
+    /* Bulk generate modal */
+    .modal-wide { width: 780px; max-width: 94vw; }
+    .bulk-dropzone {
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 36px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      margin-bottom: 20px;
+    }
+    .bulk-dropzone:hover, .bulk-dropzone.drag-over { border-color: var(--accent); background: var(--surface2); }
+    .bulk-dropzone-icon { font-size: 32px; margin-bottom: 8px; }
+    .bulk-dropzone-label { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .bulk-dropzone-sub { font-size: 12px; color: var(--text-muted); }
+    .bulk-preview-wrap { overflow-x: auto; margin-bottom: 14px; max-height: 340px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; }
+    .bulk-preview-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .bulk-preview-table th { background: var(--surface2); padding: 8px 10px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); position: sticky; top: 0; z-index: 1; }
+    .bulk-preview-table td { padding: 7px 10px; border-top: 1px solid var(--border); vertical-align: top; }
+    .bulk-preview-table tr.skipped td { opacity: 0.4; }
+    .bulk-preview-table tr:hover td { background: var(--surface2); }
+    .bulk-keyword-cell { max-width: 180px; }
+    .bulk-prompt-cell { max-width: 240px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+    .bulk-summary { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+    .bulk-summary strong { color: var(--text); }
+    .bulk-progress-list { max-height: 380px; overflow-y: auto; margin-bottom: 16px; }
+    .bulk-progress-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .bulk-progress-row:last-child { border-bottom: none; }
+    .bulk-progress-icon { width: 18px; flex-shrink: 0; margin-top: 1px; text-align: center; font-size: 14px; }
+    .bulk-progress-icon.pending { color: var(--text-dim); }
+    .bulk-progress-icon.running { color: var(--accent); }
+    .bulk-progress-icon.done { color: var(--green); }
+    .bulk-progress-icon.error { color: var(--red); }
+    .bulk-progress-info { flex: 1; min-width: 0; }
+    .bulk-progress-keyword { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bulk-progress-status { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .bulk-overall { font-size: 13px; font-weight: 600; margin-bottom: 12px; color: var(--text-muted); }
+    .bulk-overall span { color: var(--accent); }
+    .market-flag { font-size: 14px; }
+
     .modal-field-label {
       font-size: 11px;
       font-weight: 600;
@@ -1758,6 +1798,7 @@
         <div class="new-post-menu" id="newPostMenu">
           <button class="new-post-menu-item" onclick="openGenerateModal(); closeNewPostMenu()">Generate Post</button>
           <button class="new-post-menu-item" onclick="openRewriteModal(); closeNewPostMenu()">Rewrite Existing Post</button>
+          <button class="new-post-menu-item" onclick="openBulkModal(); closeNewPostMenu()">Bulk Generate from CSV</button>
           <button class="new-post-menu-item" onclick="createTestPost(); closeNewPostMenu()">Create Test Post</button>
         </div>
       </div>
@@ -2049,6 +2090,65 @@
         Generate Post
       </button>
     </div>
+  </div>
+</div>
+
+<!-- Bulk Generate Modal -->
+<div class="modal-overlay" id="bulkModal">
+  <div class="modal modal-wide">
+
+    <!-- Step 1: Upload -->
+    <div id="bulkStep1">
+      <div class="modal-title">Bulk Generate from CSV</div>
+      <div class="modal-sub">Upload a CSV with columns: <strong>Market</strong>, <strong>SEO Keyword</strong>, <strong>AEO Prompt</strong>, <strong>Category</strong>, <strong>Status</strong>. Rows with Status "Live" are skipped automatically.</div>
+      <div class="bulk-dropzone" id="bulkDropzone" onclick="document.getElementById('bulkFileInput').click()" ondragover="bulkDragOver(event)" ondragleave="bulkDragLeave(event)" ondrop="bulkDrop(event)">
+        <div class="bulk-dropzone-icon">📂</div>
+        <div class="bulk-dropzone-label">Drop CSV file here or click to browse</div>
+        <div class="bulk-dropzone-sub">Accepts .csv files exported from Google Sheets or Excel</div>
+      </div>
+      <input type="file" id="bulkFileInput" accept=".csv" style="display:none" onchange="bulkFileSelected(event)">
+      <div class="modal-actions">
+        <button class="btn btn-cancel" onclick="closeBulkModal()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Preview -->
+    <div id="bulkStep2" style="display:none">
+      <div class="modal-title">Review Import</div>
+      <div class="bulk-summary" id="bulkSummary"></div>
+      <div class="bulk-preview-wrap">
+        <table class="bulk-preview-table">
+          <thead>
+            <tr>
+              <th style="width:32px"><input type="checkbox" id="bulkSelectAll" onchange="bulkToggleAll(this.checked)"></th>
+              <th style="width:40px">#</th>
+              <th style="width:50px">Market</th>
+              <th>Keyword</th>
+              <th>AEO Prompt</th>
+              <th style="width:110px">Category</th>
+              <th style="width:60px">Status</th>
+            </tr>
+          </thead>
+          <tbody id="bulkPreviewBody"></tbody>
+        </table>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-cancel" onclick="closeBulkModal()">Cancel</button>
+        <button class="btn btn-cancel" onclick="bulkBackToUpload()">← Back</button>
+        <button class="btn btn-primary" id="bulkStartBtn" onclick="startBulkGenerate()">Generate Selected</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Progress -->
+    <div id="bulkStep3" style="display:none">
+      <div class="modal-title">Generating Posts</div>
+      <div class="bulk-overall" id="bulkOverall">Starting…</div>
+      <div class="bulk-progress-list" id="bulkProgressList"></div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="bulkDoneBtn" onclick="closeBulkModal()" style="display:none">Done</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -3053,6 +3153,263 @@ function closeInfoPanel() {
   document.getElementById('infoOverlay').classList.remove('open');
 }
 
+// ── Bulk Generate ─────────────────────────────────────────────────────────────
+
+const BULK_MARKET_MAP = { singapore: 'SG', malaysia: 'MY', philippines: 'PH' };
+const BULK_MARKET_FLAG = { SG: '🇸🇬', MY: '🇲🇾', PH: '🇵🇭' };
+let _bulkParsed = []; // all parsed rows
+let _bulkRunning = false;
+
+function openBulkModal() {
+  bulkReset();
+  document.getElementById('bulkModal').classList.add('open');
+}
+function closeBulkModal() {
+  if (_bulkRunning) return; // don't close while generating
+  document.getElementById('bulkModal').classList.remove('open');
+  setTimeout(bulkReset, 300);
+}
+function bulkReset() {
+  _bulkParsed = [];
+  _bulkRunning = false;
+  document.getElementById('bulkStep1').style.display = '';
+  document.getElementById('bulkStep2').style.display = 'none';
+  document.getElementById('bulkStep3').style.display = 'none';
+  document.getElementById('bulkFileInput').value = '';
+  document.getElementById('bulkDoneBtn').style.display = 'none';
+}
+function bulkBackToUpload() {
+  document.getElementById('bulkStep2').style.display = 'none';
+  document.getElementById('bulkStep1').style.display = '';
+}
+
+function bulkDragOver(e) { e.preventDefault(); document.getElementById('bulkDropzone').classList.add('drag-over'); }
+function bulkDragLeave(e) { document.getElementById('bulkDropzone').classList.remove('drag-over'); }
+function bulkDrop(e) {
+  e.preventDefault();
+  document.getElementById('bulkDropzone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) bulkLoadFile(file);
+}
+function bulkFileSelected(e) {
+  const file = e.target.files[0];
+  if (file) bulkLoadFile(file);
+}
+
+function bulkLoadFile(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const rows = bulkParseCsv(e.target.result);
+    _bulkParsed = rows;
+    bulkShowPreview(rows);
+  };
+  reader.readAsText(file);
+}
+
+function bulkParseCsv(text) {
+  const lines = text.split(/\r?\n/).filter(l => l.trim());
+  if (lines.length < 2) return [];
+
+  // Parse header — find column indices case-insensitively
+  const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+  const col = (name) => headers.findIndex(h => h.includes(name));
+  const iMarket    = col('market');
+  const iKeyword   = col('seo keyword') !== -1 ? col('seo keyword') : col('keyword');
+  const iAeo       = col('aeo');
+  const iCategory  = col('category');
+  const iStatus    = col('status');
+
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    // CSV split respecting quoted fields
+    const cells = bulkSplitCsvLine(lines[i]);
+    const marketRaw = (cells[iMarket] || '').trim();
+    const keyword   = (cells[iKeyword] || '').trim();
+    if (!keyword) continue;
+    const marketCode = BULK_MARKET_MAP[marketRaw.toLowerCase()] || null;
+    rows.push({
+      market: marketCode,
+      marketLabel: marketRaw,
+      keyword,
+      aeo_prompt: iAeo !== -1 ? (cells[iAeo] || '').trim() : '',
+      category:   iCategory !== -1 ? (cells[iCategory] || '').trim() : '',
+      status:     iStatus !== -1 ? (cells[iStatus] || '').trim() : '',
+      selected: (cells[iStatus] || '').trim().toLowerCase() !== 'live',
+      rowIndex: i,
+    });
+  }
+  return rows;
+}
+
+function bulkSplitCsvLine(line) {
+  const cells = [];
+  let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') { inQ = !inQ; }
+    else if (c === ',' && !inQ) { cells.push(cur); cur = ''; }
+    else { cur += c; }
+  }
+  cells.push(cur);
+  return cells;
+}
+
+function bulkShowPreview(rows) {
+  const tbody = document.getElementById('bulkPreviewBody');
+  tbody.innerHTML = '';
+  rows.forEach((r, i) => {
+    const flag = BULK_MARKET_FLAG[r.market] || '🌐';
+    const tr = document.createElement('tr');
+    if (!r.selected) tr.classList.add('skipped');
+    tr.innerHTML = `
+      <td><input type="checkbox" data-idx="${i}" ${r.selected ? 'checked' : ''} onchange="bulkRowCheck(${i}, this.checked)"></td>
+      <td style="color:var(--text-muted)">${i + 1}</td>
+      <td class="market-flag" title="${r.marketLabel}">${flag}</td>
+      <td class="bulk-keyword-cell">${escHtml(r.keyword)}</td>
+      <td class="bulk-prompt-cell" title="${escHtml(r.aeo_prompt)}">${escHtml(r.aeo_prompt || '—')}</td>
+      <td style="font-size:11px;color:var(--text-muted)">${escHtml(r.category || '—')}</td>
+      <td style="font-size:11px">${r.status ? `<span style="color:${r.status.toLowerCase()==='live'?'var(--green)':'var(--text-muted)'}">${escHtml(r.status)}</span>` : '—'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  bulkUpdateSummary();
+  document.getElementById('bulkStep1').style.display = 'none';
+  document.getElementById('bulkStep2').style.display = '';
+}
+
+function bulkRowCheck(idx, checked) {
+  _bulkParsed[idx].selected = checked;
+  const tr = document.querySelector(`#bulkPreviewBody tr:nth-child(${idx + 1})`);
+  if (tr) tr.classList.toggle('skipped', !checked);
+  bulkUpdateSummary();
+}
+
+function bulkToggleAll(checked) {
+  _bulkParsed.forEach((r, i) => {
+    r.selected = checked;
+    const cb = document.querySelector(`#bulkPreviewBody input[data-idx="${i}"]`);
+    if (cb) cb.checked = checked;
+    const tr = document.querySelector(`#bulkPreviewBody tr:nth-child(${i + 1})`);
+    if (tr) tr.classList.toggle('skipped', !checked);
+  });
+  bulkUpdateSummary();
+}
+
+function bulkUpdateSummary() {
+  const selected = _bulkParsed.filter(r => r.selected).length;
+  const skipped  = _bulkParsed.length - selected;
+  const btn = document.getElementById('bulkStartBtn');
+  btn.textContent = `Generate ${selected} Post${selected !== 1 ? 's' : ''}`;
+  btn.disabled = selected === 0;
+  document.getElementById('bulkSummary').innerHTML =
+    `<strong>${selected}</strong> rows selected for generation` +
+    (skipped ? ` · <span>${skipped} skipped</span>` : '');
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function startBulkGenerate() {
+  const queue = _bulkParsed.filter(r => r.selected);
+  if (!queue.length) return;
+
+  _bulkRunning = true;
+  document.getElementById('bulkStep2').style.display = 'none';
+  document.getElementById('bulkStep3').style.display = '';
+
+  // Build progress rows
+  const list = document.getElementById('bulkProgressList');
+  list.innerHTML = '';
+  queue.forEach((r, i) => {
+    const flag = BULK_MARKET_FLAG[r.market] || '🌐';
+    const div = document.createElement('div');
+    div.className = 'bulk-progress-row';
+    div.id = `bpr-${i}`;
+    div.innerHTML = `
+      <div class="bulk-progress-icon pending" id="bpi-${i}">○</div>
+      <div class="bulk-progress-info">
+        <div class="bulk-progress-keyword">${flag} ${escHtml(r.keyword)}</div>
+        <div class="bulk-progress-status" id="bps-${i}">Waiting…</div>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+
+  let done = 0, errors = 0;
+  const updateOverall = () => {
+    document.getElementById('bulkOverall').innerHTML =
+      `Generating <span>${done + errors + 1}</span> of <span>${queue.length}</span>` +
+      (errors ? ` · ${errors} error${errors>1?'s':''}` : '');
+  };
+
+  for (let i = 0; i < queue.length; i++) {
+    const r = queue[i];
+    updateOverall();
+    document.getElementById(`bpi-${i}`).className = 'bulk-progress-icon running';
+    document.getElementById(`bpi-${i}`).textContent = '⟳';
+    document.getElementById(`bps-${i}`).textContent = 'Starting…';
+
+    // Scroll to current row
+    document.getElementById(`bpr-${i}`).scrollIntoView({ block: 'nearest' });
+
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          keyword:    r.keyword,
+          country:    r.market || null,
+          aeo_prompt: r.aeo_prompt || null,
+          category:   r.category || null,
+        }),
+      });
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done: streamDone, value } = await reader.read();
+        if (streamDone) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const data = JSON.parse(line.slice(6));
+          if (data.type === 'status') {
+            document.getElementById(`bps-${i}`).textContent = data.message;
+          } else if (data.type === 'done') {
+            document.getElementById(`bpi-${i}`).className = 'bulk-progress-icon done';
+            document.getElementById(`bpi-${i}`).textContent = '✓';
+            document.getElementById(`bps-${i}`).textContent = `Generated — post #${data.post_id}`;
+            done++;
+          } else if (data.type === 'error') {
+            document.getElementById(`bpi-${i}`).className = 'bulk-progress-icon error';
+            document.getElementById(`bpi-${i}`).textContent = '✗';
+            document.getElementById(`bps-${i}`).textContent = data.message;
+            errors++;
+          }
+        }
+      }
+    } catch (err) {
+      document.getElementById(`bpi-${i}`).className = 'bulk-progress-icon error';
+      document.getElementById(`bpi-${i}`).textContent = '✗';
+      document.getElementById(`bps-${i}`).textContent = err.message;
+      errors++;
+    }
+  }
+
+  // All done
+  _bulkRunning = false;
+  document.getElementById('bulkOverall').innerHTML =
+    `Done — <span>${done}</span> generated` +
+    (errors ? `, <span style="color:var(--red)">${errors} failed</span>` : '');
+  document.getElementById('bulkDoneBtn').style.display = '';
+  await loadPosts();
+}
+
 // ── New-post dropdown helpers ──────────────────────────────────────────────────
 function toggleNewPostMenu(e) {
   e.stopPropagation();
@@ -3848,7 +4205,7 @@ document.addEventListener('keydown', e => {
     e.preventDefault();
     if (currentPost) savePost();
   }
-  if (e.key === 'Escape') { closeGenerateModal(); closeAiEditModal(); }
+  if (e.key === 'Escape') { closeGenerateModal(); closeAiEditModal(); closeBulkModal(); }
 });
 
 // Start
