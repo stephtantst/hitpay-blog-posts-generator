@@ -697,6 +697,9 @@ Return the JSON object now."""
         messages=[{"role": "user", "content": user_prompt}]
     )
 
+    if response.stop_reason == "max_tokens":
+        raise ValueError(f"Response hit the max_tokens limit ({max_tokens}). Increase max_tokens and retry.")
+
     raw = response.content[0].text.strip()
 
     # Strip markdown code fences if present
@@ -878,6 +881,9 @@ Return the JSON object now."""
         system=system_prompt,
         messages=[{"role": "user", "content": user_prompt}]
     )
+
+    if response.stop_reason == "max_tokens":
+        raise ValueError(f"Response hit the max_tokens limit ({max_tokens}). Increase max_tokens and retry.")
 
     raw = response.content[0].text.strip()
     raw = re.sub(r'^```(?:json)?\s*', '', raw)
