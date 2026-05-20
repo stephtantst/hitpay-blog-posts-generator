@@ -10,10 +10,15 @@ from config import ANTHROPIC_API_KEY, CLAUDE_MODEL
 
 
 def _messages_create_with_retry(client, max_retries=4, **kwargs):
-    """Call client.messages.create with exponential backoff on overloaded errors."""
+    """Call client.messages.stream with exponential backoff on overloaded errors.
+
+    Uses streaming to avoid the 10-minute timeout on long generations.
+    Returns the same Message object as messages.create() so callers are unchanged.
+    """
     for attempt in range(max_retries):
         try:
-            return client.messages.create(**kwargs)
+            with client.messages.stream(**kwargs) as stream:
+                return stream.get_final_message()
         except anthropic.APIStatusError as e:
             if e.status_code == 529 and attempt < max_retries - 1:
                 wait = 2 ** attempt  # 1s, 2s, 4s
