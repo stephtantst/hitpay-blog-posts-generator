@@ -24,12 +24,14 @@ from config import (
     GOOGLE_CLIENT_SECRET,
     POSTS_DIR,
     SECRET_KEY,
+    TYPEFULLY_API_KEY,
 )
 from src.database import (
     delete_post,
     get_audit_log,
     get_post,
     get_post_by_slug,
+    get_repurposed_content,
     init_db,
     list_feedback,
     list_logins,
@@ -40,6 +42,7 @@ from src.database import (
     save_post,
     update_post_fields,
     update_post_status,
+    update_repurposed_content,
 )
 from src.generator import generate_blog_post, rewrite_blog_post
 from src.post_writer import (
@@ -650,6 +653,369 @@ async def api_test_post(user_email: str = Depends(require_auth)):
     post_id = save_post(post_data, file_path)
     log_audit(post_id, user_email, "created", {"keyword": "[TEST]", "country": ""})
     return {"post_id": post_id}
+
+
+# ── X Posts ───────────────────────────────────────────────────────────────────
+
+from src.x_database import (
+    list_x_posts,
+    get_x_post,
+    create_x_post,
+    update_x_post,
+    change_x_post_status as _change_x_status,
+    delete_x_post,
+    log_x_audit,
+    get_x_audit_log,
+)
+
+
+class CreateXPostRequest(BaseModel):
+    content: str
+    market: str | None = None
+    scheduled_at: str | None = None
+
+
+class UpdateXPostRequest(BaseModel):
+    content: str | None = None
+    market: str | None = None
+    scheduled_at: str | None = None
+
+
+class XStatusRequest(BaseModel):
+    status: str
+    scheduled_at: str | None = None
+    post_url: str | None = None
+
+
+@app.get("/api/x-posts")
+def api_list_x_posts(status: str = None, market: str = None, _: str = Depends(require_auth)):
+    posts = list_x_posts(
+        status if status and status != "all" else None,
+        market if market and market != "all" else None,
+    )
+    return posts
+
+
+@app.post("/api/x-posts")
+def api_create_x_post(body: CreateXPostRequest, user_email: str = Depends(require_auth)):
+    if not body.content.strip():
+        raise HTTPException(400, "Content cannot be empty")
+    post_id = create_x_post(
+        content=body.content.strip(),
+        market=body.market or None,
+        scheduled_at=body.scheduled_at or None,
+        editor_email=user_email,
+    )
+    log_x_audit(post_id, user_email, "created", {"market": body.market or ""})
+    return {"id": post_id}
+
+
+@app.get("/api/x-posts/{post_id}")
+def api_get_x_post(post_id: int, _: str = Depends(require_auth)):
+    post = get_x_post(post_id)
+    if not post:
+        raise HTTPException(404, "X post not found")
+    return post
+
+
+@app.put("/api/x-posts/{post_id}")
+def api_update_x_post(post_id: int, body: UpdateXPostRequest, user_email: str = Depends(require_auth)):
+    post = get_x_post(post_id)
+    if not post:
+        raise HTTPException(404, "X post not found")
+    fields = {}
+    changed = []
+    if body.content is not None:
+        fields["content"] = body.content.strip()
+        changed.append("content")
+    if body.market is not None:
+        fields["market"] = body.market or None
+        changed.append("market")
+    if body.scheduled_at is not None:
+        fields["scheduled_at"] = body.scheduled_at or None
+        changed.append("scheduled_at")
+    if fields:
+        update_x_post(post_id, fields)
+        log_x_audit(post_id, user_email, "edited", {"fields": changed})
+    return {"ok": True}
+
+
+@app.post("/api/x-posts/{post_id}/status")
+def api_change_x_post_status(post_id: int, body: XStatusRequest, user_email: str = Depends(require_auth)):
+    valid = ["draft", "scheduled", "posted"]
+    if body.status not in valid:
+        raise HTTPException(400, f"Invalid status. Must be one of: {valid}")
+    post = get_x_post(post_id)
+    if not post:
+        raise HTTPException(404, "X post not found")
+    _change_x_status(post_id, body.status, scheduled_at=body.scheduled_at, post_url=body.post_url)
+    log_x_audit(post_id, user_email, "status_changed", {"from": post.get("status"), "to": body.status})
+    return {"ok": True}
+
+
+@app.delete("/api/x-posts/{post_id}")
+def api_delete_x_post(post_id: int, user_email: str = Depends(require_auth)):
+    post = get_x_post(post_id)
+    if not post:
+        raise HTTPException(404, "X post not found")
+    log_x_audit(post_id, user_email, "deleted", {"content_preview": (post.get("content") or "")[:60]})
+    delete_x_post(post_id)
+    return {"ok": True}
+
+
+class XBulkDeleteRequest(BaseModel):
+    ids: list[int]
+
+
+@app.post("/api/x-posts/bulk-delete")
+def api_bulk_delete_x_posts(body: XBulkDeleteRequest, user_email: str = Depends(require_auth)):
+    deleted = []
+    for pid in body.ids:
+        post = get_x_post(pid)
+        if post:
+            log_x_audit(pid, user_email, "deleted", {"content_preview": (post.get("content") or "")[:60]})
+            delete_x_post(pid)
+            deleted.append(pid)
+    return {"deleted": deleted}
+
+
+@app.get("/api/x-posts/{post_id}/audit-log")
+def api_get_x_audit_log(post_id: int, _: str = Depends(require_auth)):
+    return get_x_audit_log(post_id)
+
+
+# ── Repurpose for Social ─────────────────────────────────────────────────────
+
+from src.repurposer import repurpose_for_platform, push_to_typefully
+
+
+class RepurposeRequest(BaseModel):
+    platform: str = "twitter"
+
+
+class TypefullyRequest(BaseModel):
+    format_key: str
+    blog_url: str
+    schedule_date: str | None = None
+    tweets: list[str] | None = None
+    link_reply: str | None = None
+
+
+class RepurposeToXRequest(BaseModel):
+    format_key: str
+    blog_url: str
+    tweets: list[str] | None = None
+    link_reply: str | None = None
+    market: str | None = None
+
+
+class RepurposeCardRequest(BaseModel):
+    card_type: str   # "quick_hit" | "thread" | "contextual" | "market"
+    hook_style: str  # "Curiosity" | "Contrarian" | "Result" | "Mistake" | "List"
+
+
+@app.get("/api/config")
+def api_config(_: str = Depends(require_auth)):
+    return {"typefully_enabled": bool(TYPEFULLY_API_KEY)}
+
+
+@app.post("/api/posts/{post_id}/repurpose")
+async def api_repurpose(post_id: int, body: RepurposeRequest,
+                        user_email: str = Depends(require_auth)):
+    post = get_post(post_id)
+    if not post:
+        raise HTTPException(404, "Post not found")
+
+    async def stream():
+        messages: list[str] = []
+        loop = asyncio.get_event_loop()
+
+        def on_status(msg: str):
+            messages.append(msg)
+
+        try:
+            yield f"data: {json.dumps({'type': 'status', 'message': 'Generating social content...'})}\n\n"
+            result = await loop.run_in_executor(
+                None, lambda: repurpose_for_platform(post, body.platform, on_status=on_status)
+            )
+            for msg in messages:
+                yield f"data: {json.dumps({'type': 'status', 'message': msg})}\n\n"
+            update_repurposed_content(post_id, body.platform, result)
+            log_audit(post_id, user_email, "repurposed", {"platform": body.platform})
+            yield f"data: {json.dumps({'type': 'done', 'result': result})}\n\n"
+        except Exception as e:
+            yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
+
+    return StreamingResponse(stream(), media_type="text/event-stream")
+
+
+@app.post("/api/posts/{post_id}/repurpose-card")
+async def api_repurpose_card(post_id: int, body: RepurposeCardRequest,
+                              user_email: str = Depends(require_auth)):
+    valid_types = {"quick_hit", "thread", "contextual", "market"}
+    valid_styles = {"Curiosity", "Contrarian", "Result", "Mistake", "List"}
+    if body.card_type not in valid_types:
+        raise HTTPException(400, f"card_type must be one of: {sorted(valid_types)}")
+    if body.hook_style not in valid_styles:
+        raise HTTPException(400, f"hook_style must be one of: {sorted(valid_styles)}")
+
+    post = get_post(post_id)
+    if not post:
+        raise HTTPException(404, "Post not found")
+
+    from src.repurposer import _generate_twitter_card
+
+    async def stream():
+        messages: list[str] = []
+        loop = asyncio.get_event_loop()
+
+        def on_status(msg: str):
+            messages.append(msg)
+
+        try:
+            yield f"data: {json.dumps({'type': 'status', 'message': f'Regenerating {body.card_type} card...'})}\n\n"
+            card = await loop.run_in_executor(
+                None,
+                lambda: _generate_twitter_card(post, body.card_type, body.hook_style, on_status=on_status),
+            )
+            for msg in messages:
+                yield f"data: {json.dumps({'type': 'status', 'message': msg})}\n\n"
+            # Persist: replace the matching card in stored data
+            repurposed = get_repurposed_content(post_id) or {}
+            twitter_data = repurposed.get("twitter", {}) if isinstance(repurposed.get("twitter"), dict) else repurposed
+            choices = twitter_data.get("choices", []) if isinstance(twitter_data, dict) else []
+            updated = False
+            for i, c in enumerate(choices):
+                if isinstance(c, dict) and c.get("type") == body.card_type:
+                    choices[i] = card
+                    updated = True
+                    break
+            if not updated:
+                choices.append(card)
+            if isinstance(twitter_data, dict):
+                twitter_data["choices"] = choices
+            update_repurposed_content(post_id, "twitter", twitter_data)
+            log_audit(post_id, user_email, "repurposed_card", {
+                "card_type": body.card_type, "hook_style": body.hook_style
+            })
+            yield f"data: {json.dumps({'type': 'done', 'card': card})}\n\n"
+        except Exception as e:
+            yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
+
+    return StreamingResponse(stream(), media_type="text/event-stream")
+
+
+@app.get("/api/posts/{post_id}/repurposed")
+def api_get_repurposed(post_id: int, _: str = Depends(require_auth)):
+    post = get_post(post_id)
+    if not post:
+        raise HTTPException(404, "Post not found")
+    data = get_repurposed_content(post_id)
+    return data or {}
+
+
+@app.put("/api/posts/{post_id}/repurposed")
+async def api_save_repurposed(post_id: int, request: Request,
+                               user_email: str = Depends(require_auth)):
+    post = get_post(post_id)
+    if not post:
+        raise HTTPException(404, "Post not found")
+    data = await request.json()
+    update_repurposed_content(post_id, "twitter", data)
+    return {"ok": True}
+
+
+@app.post("/api/posts/{post_id}/typefully")
+def api_push_typefully(post_id: int, body: TypefullyRequest,
+                       user_email: str = Depends(require_auth)):
+    if not TYPEFULLY_API_KEY:
+        raise HTTPException(400, "Typefully API key not configured")
+    post = get_post(post_id)
+    if not post:
+        raise HTTPException(404, "Post not found")
+    repurposed = get_repurposed_content(post_id)
+    twitter_data = (repurposed or {}).get("twitter", {})
+    try:
+        result = push_to_typefully(
+            twitter_data=twitter_data,
+            format_key=body.format_key,
+            blog_url=body.blog_url,
+            schedule_date=body.schedule_date or None,
+            api_key=TYPEFULLY_API_KEY,
+            tweets_override=body.tweets,
+            link_reply_override=body.link_reply,
+        )
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+    log_audit(post_id, user_email, "pushed_to_typefully", {"format": body.format_key})
+    return result
+
+
+@app.post("/api/posts/{post_id}/repurpose-to-x-drafts")
+def api_repurpose_to_x_drafts(post_id: int, body: RepurposeToXRequest,
+                               user_email: str = Depends(require_auth)):
+    post = get_post(post_id)
+    if not post:
+        raise HTTPException(404, "Post not found")
+
+    repurposed = get_repurposed_content(post_id)
+    twitter_data = (repurposed or {}).get("twitter", {})
+
+    # Resolve tweets and link_reply from override or stored data
+    tweets: list[str] = []
+    link_reply: str = ""
+
+    if body.tweets is not None:
+        tweets = body.tweets
+        link_reply = body.link_reply or ""
+    else:
+        fk = body.format_key
+        if fk == "stat_hook":
+            d = twitter_data.get("stat_hook") or {}
+            tweets = [d.get("tweet", "")]
+            link_reply = d.get("link_reply", "")
+        elif fk == "quick_answer_thread":
+            d = twitter_data.get("quick_answer_thread") or {}
+            tweets = d.get("tweets", [])
+            link_reply = d.get("link_reply", "")
+        elif fk == "comparison_tweet":
+            d = twitter_data.get("comparison_tweet") or {}
+            tweets = [d.get("tweet", "")]
+            link_reply = d.get("link_reply", "")
+        elif fk == "howto_thread":
+            d = twitter_data.get("howto_thread") or {}
+            tweets = d.get("tweets", [])
+            link_reply = d.get("link_reply", "")
+        elif fk in ("market_sg", "market_my", "market_ph"):
+            mkt = fk.split("_")[1].upper()
+            d = (twitter_data.get("market_tweets") or {}).get(mkt) or {}
+            tweets = [d.get("tweet", "")]
+            link_reply = d.get("link_reply", "")
+
+    if not tweets:
+        raise HTTPException(400, "No tweet content found for this format")
+
+    blog_url = body.blog_url
+    market = body.market or post.get("country") or None
+
+    THREAD_SEP = "\n\n---\n\n"
+    all_parts = [t.replace("[URL]", blog_url) for t in tweets]
+    if link_reply:
+        all_parts.append(link_reply.replace("[URL]", blog_url))
+    content = THREAD_SEP.join(all_parts)
+
+    xid = create_x_post(
+        content=content,
+        market=market,
+        editor_email=user_email,
+        source_blog_post_id=post_id,
+    )
+    log_x_audit(xid, user_email, "created", {
+        "source": f"repurpose:{body.format_key}",
+        "tweet_count": len(all_parts),
+    })
+    log_audit(post_id, user_email, "added_to_x_drafts", {"format": body.format_key, "count": 1})
+    return {"ok": True, "created_ids": [xid]}
 
 
 if __name__ == "__main__":

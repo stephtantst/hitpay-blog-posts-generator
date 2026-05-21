@@ -411,6 +411,21 @@
     .CodeMirror-cursor { border-left-color: var(--accent) !important; }
 
     /* Generation progress widget (bottom-left, shown when minimised) */
+    #bulkWidget {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      left: 20px;
+      z-index: 9998;
+      width: 280px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+      overflow: hidden;
+      font-size: 13px;
+    }
+    #bulkWidget.visible { display: block; }
     #genWidget {
       display: none;
       position: fixed;
@@ -637,6 +652,10 @@
       flex-shrink: 0; cursor: default;
       text-transform: uppercase; letter-spacing: 0.03em;
     }
+
+    .inline-editor-sel { font-size: 11px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); color: var(--text); padding: 2px 4px; cursor: pointer; max-width: 96px; }
+    .inline-editor-sel:focus { outline: none; border-color: var(--accent); }
+    .inline-editor-sel:hover { border-color: var(--accent); }
 
     .status-actions { display: flex; flex-direction: column; gap: 6px; }
     .btn-status {
@@ -1501,6 +1520,339 @@
       display: inline-block; font-size: 10.5px; color: var(--text-dim);
       margin: 3px 0 3px 20px; font-style: italic;
     }
+
+    /* ── Platform sidebar ───────────────────────────── */
+    #mainContent {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+    }
+    #platformSidebar {
+      width: 56px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+      gap: 4px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      flex-shrink: 0;
+      z-index: 5;
+    }
+    .platform-btn {
+      width: 40px; height: 40px;
+      border: none;
+      background: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 3px;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 600;
+      transition: background 0.15s, color 0.15s;
+    }
+    .platform-btn:hover { background: var(--surface2); color: var(--text); }
+    .platform-btn.active { background: var(--surface2); color: var(--accent); }
+    .platform-btn svg { width: 18px; height: 18px; }
+    .platform-btn-icon { font-size: 16px; line-height: 1; font-weight: 700; }
+    .platform-btn-label { font-size: 9px; font-weight: 600; letter-spacing: 0.2px; }
+    #blogPlatform {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── X Platform ─────────────────────────────────── */
+    #xPlatform {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+    }
+    .x-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+      gap: 12px;
+    }
+    .x-toolbar-left { display: flex; align-items: center; gap: 10px; flex: 1; }
+    .x-toolbar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .x-status-chips { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+    .x-layout {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+    /* X Sidebar */
+    .x-sidebar {
+      width: var(--sidebar-w);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .x-sidebar-top {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .x-status-tabs {
+      display: flex; gap: 2px;
+      padding: 8px 12px 0;
+      flex-shrink: 0;
+    }
+    .x-status-tab {
+      flex: 1;
+      background: none; border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      font-size: 11px; font-weight: 600;
+      cursor: pointer; padding: 4px 2px 6px;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .x-status-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .x-post-list {
+      flex: 1; overflow-y: auto; padding: 8px 0;
+    }
+    .x-post-list::-webkit-scrollbar { width: 4px; }
+    .x-post-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .x-post-item {
+      padding: 10px 14px; cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: background 0.1s, border-color 0.1s;
+    }
+    .x-post-item:hover { background: var(--surface2); }
+    .x-post-item.active { background: var(--surface2); border-left-color: var(--accent); }
+    .x-post-item-preview {
+      font-size: 13px; color: var(--text); line-height: 1.4;
+      margin-bottom: 5px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .x-post-item-meta {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 11px; color: var(--text-dim);
+    }
+    /* X Editor area */
+    .x-editor-area {
+      flex: 1; display: flex; flex-direction: column;
+      overflow: hidden; background: var(--bg);
+    }
+    .x-no-post {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      color: var(--text-muted); gap: 12px;
+    }
+    .x-no-post .icon { font-size: 36px; opacity: 0.3; }
+    .x-editor-content {
+      flex: 1; display: flex; flex-direction: column;
+      overflow: hidden; padding: 24px;
+    }
+    .x-editor-header {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--text-muted);
+      margin-bottom: 10px; display: flex; justify-content: space-between;
+      align-items: center;
+    }
+    .x-char-count {
+      font-size: 12px; font-weight: 600;
+      color: var(--text-dim);
+    }
+    .x-char-count.warn { color: var(--yellow); }
+    .x-char-count.over { color: var(--red); }
+    .x-textarea {
+      flex: 1; max-height: 220px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 14px;
+      font-size: 15px; font-family: var(--font); color: var(--text);
+      line-height: 1.6; resize: none; outline: none;
+      transition: border-color 0.15s;
+    }
+    .x-textarea:focus { border-color: var(--accent); }
+    .x-thread-block { border: 1px solid var(--border); border-radius: 8px; padding: 14px; background: var(--bg); display: flex; flex-direction: column; gap: 6px; }
+    .x-thread-block-header { display: flex; justify-content: space-between; align-items: center; }
+    .x-thread-block-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+    .x-thread-sep { text-align: center; color: var(--text-muted); font-size: 18px; line-height: 1; padding: 2px 0; }
+    /* X Meta panel */
+    .x-meta-panel {
+      width: var(--meta-w);
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      overflow-y: auto; flex-shrink: 0;
+      padding: 16px;
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .x-meta-panel::-webkit-scrollbar { width: 4px; }
+    .x-meta-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    /* X status badge */
+    .x-status-badge {
+      display: inline-block;
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 12px; font-weight: 600; margin-bottom: 10px;
+    }
+    .x-status-badge.draft { background: #fef3c7; color: #b45309; }
+    .x-status-badge.scheduled { background: #dbeafe; color: #1d4ed8; }
+    .x-status-badge.posted { background: #dcfce7; color: #16a34a; }
+
+    /* ── X Bulk Select ──────────────────────────────────────────────────────── */
+    .x-bulk-bar { display:flex; align-items:center; gap:10px; padding:8px 14px; background:var(--accent); color:#fff; border-radius:7px; margin:8px 0 4px; font-size:13px; }
+    .x-bulk-bar button { padding:4px 12px; border-radius:5px; border:1.5px solid rgba(255,255,255,0.6); background:rgba(255,255,255,0.15); color:#fff; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; transition:background 0.12s; }
+    .x-bulk-bar button:hover { background:rgba(255,255,255,0.3); }
+    .x-bulk-bar .x-bulk-danger { border-color:rgba(255,255,255,0.8); background:rgba(220,38,38,0.5); }
+    .x-bulk-bar .x-bulk-danger:hover { background:rgba(220,38,38,0.8); }
+    .x-bulk-bar span { flex:1; font-weight:600; }
+    .x-cb-col { width:36px; padding-left:10px !important; }
+    .x-select-cb { width:15px; height:15px; cursor:pointer; accent-color:var(--accent); }
+    /* Sidebar bulk select */
+    .x-post-item { position:relative; }
+    .x-post-item-cb { position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; cursor:pointer; accent-color:var(--accent); opacity:0; transition:opacity 0.1s; }
+    .x-post-list.selecting .x-post-item-cb { opacity:1; }
+    .x-post-list.selecting .x-post-item { padding-left:32px; }
+    .x-sidebar-bulk-bar { display:none; padding:6px 12px; border-bottom:1px solid var(--border); background:var(--accent); }
+    .x-sidebar-bulk-bar button { padding:3px 10px; border-radius:4px; border:1.5px solid rgba(255,255,255,0.6); background:rgba(255,255,255,0.15); color:#fff; font-size:11px; font-weight:600; cursor:pointer; font-family:inherit; }
+    .x-sidebar-bulk-bar button:hover { background:rgba(255,255,255,0.3); }
+    .x-sidebar-bulk-bar .x-bulk-danger { background:rgba(220,38,38,0.5); }
+    .x-sidebar-bulk-bar .x-bulk-danger:hover { background:rgba(220,38,38,0.8); }
+
+    /* ── Repurpose Modal ─────────────────────────────────────────────────────── */
+    .repurpose-modal { width: 900px; max-width: 96vw; height: 82vh; max-height: 820px; padding: 0; display: flex; flex-direction: column; overflow: hidden; }
+    .repurpose-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .repurpose-modal-header h2 { font-size: 16px; font-weight: 600; margin: 0; }
+    .repurpose-modal-close { background: none; border: none; cursor: pointer; color: var(--text-dim); font-size: 20px; padding: 4px 8px; border-radius: 4px; line-height: 1; }
+    .repurpose-modal-close:hover { color: var(--text); background: var(--hover-bg); }
+    .repurpose-layout { display: flex; flex: 1; overflow: hidden; }
+    .repurpose-nav { width: 188px; flex-shrink: 0; border-right: 1px solid var(--border); padding: 12px 0; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
+    .repurpose-nav-item { padding: 8px 16px; font-size: 13px; color: var(--text-dim); cursor: pointer; border: none; border-left: 3px solid transparent; background: none; text-align: left; transition: all 0.12s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .repurpose-nav-item:hover { color: var(--text); background: var(--hover-bg); }
+    .repurpose-nav-item.active { color: var(--text); font-weight: 600; border-left-color: var(--accent); background: var(--hover-bg); }
+    .repurpose-nav-item.null-format { color: var(--text-muted); font-style: italic; cursor: default; pointer-events: none; }
+    .repurpose-nav-sep { height: 1px; background: var(--border); margin: 6px 12px; }
+    .repurpose-context-row { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+    .ctx-btn { padding: 4px 12px; font-size: 12px; border: 1px solid var(--border); border-radius: 20px; background: none; cursor: pointer; color: var(--text-dim); transition: all 0.12s; line-height: 1.4; }
+    .ctx-btn:hover { border-color: var(--accent); color: var(--text); }
+    .ctx-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    .repurpose-content { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+    .repurpose-warning-banner { background: #fffbeb; border: 1px solid #fbbf24; border-radius: 6px; padding: 10px 14px; font-size: 12px; color: #92400e; }
+    .repurpose-warnings-list { margin: 4px 0 0; padding-left: 16px; }
+    .repurpose-warnings-list li { margin-bottom: 2px; }
+    .repurpose-empty { text-align: center; padding: 60px 20px; color: var(--text-dim); font-size: 13px; }
+    .repurpose-generating { text-align: center; padding: 60px 20px; color: var(--text-dim); }
+    @keyframes repurpose-spin { to { transform: rotate(360deg); } }
+    .repurpose-generating .spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: repurpose-spin 0.8s linear infinite; margin-bottom: 12px; }
+    .repurpose-status-log { font-size: 12px; color: var(--text-muted); margin-top: 8px; }
+    .tweet-card { background: var(--sidebar-bg, #fafafa); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+    .tweet-card-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 8px; }
+    .tweet-bubble-input { width: 100%; min-height: 72px; resize: vertical; border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; font-size: 13.5px; line-height: 1.55; font-family: inherit; background: var(--bg); color: var(--text); box-sizing: border-box; }
+    .tweet-bubble-input:focus { outline: none; border-color: var(--accent); }
+    .tweet-char-count { text-align: right; font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+    .tweet-char-count.warn { color: #d97706; }
+    .tweet-char-count.over { color: var(--red); font-weight: 600; }
+    .tweet-link-reply-wrap { border: 1px dashed var(--border); border-radius: 6px; padding: 0; overflow: hidden; margin-top: 6px; }
+    .tweet-link-reply-wrap textarea { width: 100%; border: none; background: transparent; font-size: 12.5px; color: var(--text-dim); font-family: inherit; resize: none; outline: none; padding: 8px 12px; box-sizing: border-box; display: block; }
+    .tweet-card-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .typefully-panel { border: 1px solid var(--border); border-radius: 8px; padding: 14px; background: var(--hover-bg); }
+    .typefully-panel h4 { font-size: 13px; font-weight: 600; margin: 0 0 10px; }
+    .typefully-date { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .typefully-date label { font-size: 12px; color: var(--text-dim); }
+    .typefully-result { font-size: 12.5px; color: #16a34a; margin-top: 8px; font-weight: 500; }
+    .btn-success { background: #16a34a; color: #fff; border: none; border-radius: 6px; padding: 7px 16px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .btn-success:hover { background: #15803d; }
+
+    /* ── Repurpose v2 — carousel ─────────────────────────────────────────────── */
+    .rp2-body { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+    .rp2-carousel-wrap { flex: 1; overflow: hidden; position: relative; padding: 16px 20px 0; display: flex; flex-direction: column; }
+    .rp2-carousel { display: flex; gap: 16px; flex: 1; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding-bottom: 8px; }
+    .rp2-carousel::-webkit-scrollbar { height: 3px; }
+    .rp2-carousel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .rp2-card { flex: 0 0 100%; scroll-snap-align: start; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
+    .rp2-card-header { padding: 12px 16px 10px; border-bottom: 1px solid var(--border); flex-shrink: 0; background: var(--surface); }
+    .rp2-card-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 3px; }
+    .rp2-card-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); }
+    .rp2-card-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .rp2-hook-pills { display: flex; gap: 4px; flex-wrap: wrap; padding: 8px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; background: var(--bg); }
+    .rp2-hook-pill { padding: 3px 10px; font-size: 11px; border: 1px solid var(--border); border-radius: 20px; background: none; cursor: pointer; color: var(--text-dim); transition: all 0.12s; line-height: 1.5; font-family: inherit; }
+    .rp2-hook-pill:hover { border-color: var(--accent); color: var(--text); }
+    .rp2-hook-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    .rp2-card-body { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; }
+    .rp2-card-body::-webkit-scrollbar { width: 3px; }
+    .rp2-card-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .rp2-card-footer { padding: 8px 16px 10px; border-top: 1px solid var(--border); display: flex; gap: 8px; align-items: center; flex-shrink: 0; background: var(--surface); flex-wrap: wrap; }
+    .rp2-nav-row { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 8px 20px; flex-shrink: 0; border-top: 1px solid var(--border); background: var(--sidebar-bg, #fafafa); }
+    .rp2-nav-arrow { width: 28px; height: 28px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); cursor: pointer; font-size: 16px; color: var(--text-dim); display: flex; align-items: center; justify-content: center; transition: all 0.12s; flex-shrink: 0; padding: 0; line-height: 1; }
+    .rp2-nav-arrow:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+    .rp2-nav-arrow:disabled { opacity: 0.3; cursor: default; }
+    .rp2-nav-dots { display: flex; gap: 7px; align-items: center; }
+    .rp2-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); cursor: pointer; transition: all 0.15s; border: none; padding: 0; }
+    .rp2-dot.active { background: var(--accent); transform: scale(1.25); }
+    .rp2-regen-btn { font-size: 11px; padding: 3px 9px; border: 1px solid var(--border); border-radius: 5px; background: none; cursor: pointer; color: var(--text-dim); transition: all 0.12s; font-family: inherit; line-height: 1.5; }
+    .rp2-regen-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+    .rp2-regen-btn:disabled { opacity: 0.5; cursor: wait; }
+    .rp2-card-spinning { display: flex; align-items: center; gap: 10px; padding: 24px 0; color: var(--text-muted); font-size: 13px; justify-content: center; }
+    .rp2-visual-note { display: flex; align-items: flex-start; gap: 8px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; padding: 8px 10px; font-size: 12px; color: #92400e; line-height: 1.45; flex-shrink: 0; }
+    .rp2-visual-note-icon { flex-shrink: 0; font-size: 14px; }
+    .rp2-warnings { background: #fffbeb; border: 1px solid #fbbf24; border-radius: 6px; padding: 8px 12px; font-size: 11px; color: #92400e; }
+    .rp2-warnings ul { margin: 4px 0 0; padding-left: 14px; }
+    .rp2-warnings li { margin-bottom: 2px; }
+
+    /* ── X Platform Nav ─────────────────────────────────────────────────────── */
+    .x-platform-nav {
+      display: flex; align-items: center; gap: 8px;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+      height: 42px;
+    }
+    .x-platform-nav-tabs { display: flex; gap: 2px; }
+
+    /* ── X Overview Pane ────────────────────────────────────────────────────── */
+    .x-ov-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 20px; border-bottom: 1px solid var(--border);
+      background: var(--surface); flex-shrink: 0; gap: 12px;
+    }
+    .x-ov-toolbar-left { display: flex; align-items: center; gap: 10px; flex: 1; }
+    .x-ov-toolbar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .x-ov-filters {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 20px; border-bottom: 1px solid var(--border);
+      background: var(--bg); flex-shrink: 0;
+    }
+    .x-ov-content {
+      flex: 1; overflow-y: auto;
+    }
+    .x-ov-content::-webkit-scrollbar { width: 6px; }
+    .x-ov-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    /* X board card */
+    .x-board-card {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px; cursor: pointer; margin-bottom: 8px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .x-board-card:hover { border-color: var(--accent); box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .x-board-card-preview {
+      font-size: 13px; color: var(--text); line-height: 1.45;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .x-board-card-meta {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      font-size: 11px; color: var(--text-dim);
+    }
+
   </style>
 </head>
 <body>
@@ -1517,6 +1869,18 @@
   </div>
   <div id="genWidgetBody">
     <div class="gen-widget-status" id="genWidgetStatus">Starting…</div>
+  </div>
+</div>
+
+<!-- Bulk generation progress widget (minimised state) -->
+<div id="bulkWidget">
+  <div class="gen-widget-header">
+    <span class="gen-widget-icon" id="bulkWidgetIcon">⟳</span>
+    <span class="gen-widget-title" id="bulkWidgetTitle">Bulk generating…</span>
+    <button class="gen-widget-expand" onclick="expandBulk()" title="Expand">↗</button>
+  </div>
+  <div id="bulkWidgetBody">
+    <div class="gen-widget-status" id="bulkWidgetStatus">Starting…</div>
   </div>
 </div>
 
@@ -1772,6 +2136,29 @@
     </div>
   </div>
 </div>
+
+<!-- Main content area (platform sidebar + blog/X panes) -->
+<div id="mainContent">
+
+<!-- Platform sidebar -->
+<nav id="platformSidebar">
+  <button class="platform-btn active" id="platformBtnBlog" onclick="switchPlatform('blog')" title="Blog Posts">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="3" width="14" height="14" rx="2"/>
+      <line x1="6.5" y1="7" x2="13.5" y2="7"/>
+      <line x1="6.5" y1="10" x2="13.5" y2="10"/>
+      <line x1="6.5" y1="13" x2="10" y2="13"/>
+    </svg>
+    <span class="platform-btn-label">Blog</span>
+  </button>
+  <button class="platform-btn" id="platformBtnX" onclick="switchPlatform('x')" title="X / Twitter">
+    <span class="platform-btn-icon">𝕏</span>
+    <span class="platform-btn-label">X</span>
+  </button>
+</nav>
+
+<!-- Blog platform wrapper -->
+<div id="blogPlatform">
 
 <!-- Overview Pane -->
 <div id="overviewPane" class="overview-pane">
@@ -2044,6 +2431,9 @@
         <button class="btn btn-secondary" onclick="openAiEditModal()">
           ✦  AI Edit
         </button>
+        <button class="btn btn-secondary" id="repurposeBtn" onclick="openRepurposeModal()">
+          𝕏  Repurpose for X
+        </button>
         <button class="btn btn-secondary" onclick="exportPost()">
           ↓  Export CSV for Framer
         </button>
@@ -2061,6 +2451,216 @@
 
   </aside>
 </div>
+
+</div><!-- /blogPlatform -->
+
+<!-- X Platform -->
+<div id="xPlatform" style="display:none; flex:1; overflow:hidden; flex-direction:column;">
+
+  <!-- X Platform Nav -->
+  <div class="x-platform-nav">
+    <div class="x-platform-nav-tabs">
+      <button class="nav-btn active" id="xNavOverview" onclick="switchXView('overview')">Overview</button>
+      <button class="nav-btn" id="xNavEditor" onclick="switchXView('editor')">Editor</button>
+    </div>
+    <div style="flex:1"></div>
+    <button class="btn-new-post" onclick="openCreateXModal()">＋ New Post</button>
+  </div>
+
+  <!-- X Overview Pane -->
+  <div id="xOverviewPane" style="display:flex; flex:1; overflow:hidden; flex-direction:column;">
+
+    <!-- Overview Toolbar -->
+    <div class="x-ov-toolbar">
+      <div class="x-ov-toolbar-left">
+        <div class="filter-chips" id="xOverviewChips">
+          <button class="chip active" data-status="all" onclick="setXOverviewFilter(this)">All <span class="chip-count" id="xovchip-all">0</span></button>
+          <button class="chip" data-status="draft" onclick="setXOverviewFilter(this)">📝 Draft <span class="chip-count" id="xovchip-draft">0</span></button>
+          <button class="chip" data-status="scheduled" onclick="setXOverviewFilter(this)">🕐 Scheduled <span class="chip-count" id="xovchip-scheduled">0</span></button>
+          <button class="chip" data-status="posted" onclick="setXOverviewFilter(this)">✅ Posted <span class="chip-count" id="xovchip-posted">0</span></button>
+        </div>
+      </div>
+      <div class="x-ov-toolbar-right">
+        <button class="btn btn-secondary" id="xBulkSelectToggle" style="font-size:12px;padding:5px 12px;" onclick="xToggleSelectMode()">☑ Select</button>
+        <div class="view-switch">
+          <button class="view-switch-btn active" id="xOvsw-list" onclick="setXOverviewView('list')">☰ List</button>
+          <button class="view-switch-btn" id="xOvsw-board" onclick="setXOverviewView('board')">⊞ Board</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overview Filter row -->
+    <div class="x-ov-filters">
+      <input class="overview-search" id="xOvSearch" type="text" placeholder="🔍 Search posts…" oninput="renderXOverview()" />
+      <select class="filter-select" id="xOvMarket" onchange="renderXOverview()">
+        <option value="all">All Markets</option>
+        <option value="SG">🇸🇬 Singapore</option>
+        <option value="MY">🇲🇾 Malaysia</option>
+        <option value="PH">🇵🇭 Philippines</option>
+      </select>
+    </div>
+
+    <!-- Overview Content -->
+    <div class="x-ov-content">
+      <!-- List View -->
+      <div id="xOverviewListView">
+        <div id="xBulkBar" class="x-bulk-bar" style="display:none;">
+          <span id="xBulkCount">0 selected</span>
+          <button class="x-bulk-danger" onclick="xBulkDelete()">✕ Delete selected</button>
+          <button onclick="xClearSelection()">Clear</button>
+        </div>
+        <table class="posts-table">
+          <thead>
+            <tr>
+              <th class="x-cb-col" id="xCbHeaderCell" style="display:none;"><input type="checkbox" class="x-select-cb" id="xSelectAllCb" onchange="xToggleSelectAll(this.checked)" title="Select all"></th>
+              <th>Content</th>
+              <th style="width:90px;">Market</th>
+              <th style="width:120px;">Status</th>
+              <th style="width:100px;">Scheduled</th>
+              <th style="width:100px;">Created</th>
+              <th style="width:70px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="xListBody"></tbody>
+        </table>
+      </div>
+      <!-- Board View -->
+      <div id="xOverviewBoardView" style="display:none;" class="board-wrap">
+        <div class="board-columns">
+          <div class="board-col" id="xBCol-draft">
+            <div class="board-col-header">📝 Draft <span class="board-col-count" id="xBCount-draft">0</span></div>
+            <div class="board-cards" id="xBCards-draft"></div>
+          </div>
+          <div class="board-col" id="xBCol-scheduled">
+            <div class="board-col-header">🕐 Scheduled <span class="board-col-count" id="xBCount-scheduled">0</span></div>
+            <div class="board-cards" id="xBCards-scheduled"></div>
+          </div>
+          <div class="board-col" id="xBCol-posted">
+            <div class="board-col-header">✅ Posted <span class="board-col-count" id="xBCount-posted">0</span></div>
+            <div class="board-cards" id="xBCards-posted"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /xOverviewPane -->
+
+  <!-- X Editor Pane -->
+  <div id="xEditorPane" style="display:none; flex:1; overflow:hidden; flex-direction:column;">
+
+    <!-- X Toolbar -->
+    <div class="x-toolbar">
+      <div class="x-toolbar-left">
+        <div class="x-status-chips" id="xStatusChips">
+          <button class="chip active" data-status="all" onclick="setXFilter(this)">All <span class="chip-count" id="xchip-all">0</span></button>
+          <button class="chip" data-status="draft" onclick="setXFilter(this)">📝 Draft <span class="chip-count" id="xchip-draft">0</span></button>
+          <button class="chip" data-status="scheduled" onclick="setXFilter(this)">🕐 Scheduled <span class="chip-count" id="xchip-scheduled">0</span></button>
+          <button class="chip" data-status="posted" onclick="setXFilter(this)">✅ Posted <span class="chip-count" id="xchip-posted">0</span></button>
+        </div>
+      </div>
+      <div class="x-toolbar-right"></div>
+    </div>
+
+    <!-- X Layout: sidebar + editor + meta -->
+    <div class="x-layout">
+
+      <!-- X Sidebar -->
+      <aside class="x-sidebar">
+        <div class="x-sidebar-top">
+          <input class="search-box" id="xSearchBox" type="text" placeholder="Search posts…" oninput="renderXPostList()" />
+        </div>
+        <div class="x-sidebar-bulk-bar" id="xSidebarBulkBar">
+          <span id="xSidebarBulkCount" style="font-size:12px;color:#fff;font-weight:600;flex:1;">0 selected</span>
+          <button class="x-bulk-danger" onclick="xBulkDelete()" style="margin-right:4px;">✕ Delete</button>
+          <button onclick="xClearSelection()">Clear</button>
+        </div>
+        <div class="x-status-tabs">
+          <button class="x-status-tab active" data-status="all" onclick="setXSidebarFilter(this)">All</button>
+          <button class="x-status-tab" data-status="draft" onclick="setXSidebarFilter(this)">Draft</button>
+          <button class="x-status-tab" data-status="scheduled" onclick="setXSidebarFilter(this)">Scheduled</button>
+          <button class="x-status-tab" data-status="posted" onclick="setXSidebarFilter(this)">Posted</button>
+        </div>
+        <div class="x-post-list" id="xPostList"></div>
+      </aside>
+
+      <!-- X Editor area -->
+      <main class="x-editor-area">
+        <div class="x-no-post" id="xNoPostState">
+          <div class="icon">𝕏</div>
+          <p>Select a post or create a new one</p>
+          <button class="btn btn-primary" onclick="openCreateXModal()">＋ New Post</button>
+        </div>
+        <div id="xEditorContent" style="display:none; flex:1; flex-direction:column; overflow:auto; padding:24px; gap:12px;">
+          <!-- single tweet mode -->
+          <div id="xSingleMode">
+            <div class="x-editor-header" style="margin-bottom:8px;">
+              <span>Tweet content</span>
+              <span class="x-char-count" id="xCharCount">0 / 280</span>
+            </div>
+            <textarea
+              class="x-textarea"
+              id="xContentInput"
+              placeholder="What's happening at HitPay?"
+              oninput="xMarkDirty(); updateXCharCount()"
+            ></textarea>
+          </div>
+          <!-- thread mode (rendered dynamically) -->
+          <div id="xThreadMode" style="display:none; flex-direction:column; gap:8px;"></div>
+        </div>
+      </main>
+
+      <!-- X Meta panel -->
+      <aside class="x-meta-panel" id="xMetaPanel" style="display:none;">
+
+        <div class="meta-section">
+          <div class="meta-section-title">Status</div>
+          <div id="xStatusBadge" class="x-status-badge draft">📝 Draft</div>
+          <select class="status-select" id="xStatusSelect" onchange="handleXStatusChange(this.value)">
+            <option value="draft">📝 Draft</option>
+            <option value="scheduled">🕐 Scheduled</option>
+            <option value="posted">✅ Posted</option>
+          </select>
+          <div id="xScheduledSection" style="display:none; margin-top:10px;">
+            <div class="field-label">Scheduled date &amp; time</div>
+            <input class="field-input" id="xScheduledAt" type="datetime-local" oninput="xMarkDirty()" />
+          </div>
+          <div id="xPostedSection" style="display:none; margin-top:10px;">
+            <div class="field-label">Tweet URL (optional)</div>
+            <input class="field-input" id="xPostUrl" type="url" placeholder="https://x.com/…" oninput="xMarkDirty()" />
+          </div>
+        </div>
+
+        <div class="meta-section">
+          <div class="meta-section-title">Market</div>
+          <select class="field-input" id="xMarket" onchange="xMarkDirty()" style="cursor:pointer;">
+            <option value="">All Markets</option>
+            <option value="SG">🇸🇬 Singapore</option>
+            <option value="MY">🇲🇾 Malaysia</option>
+            <option value="PH">🇵🇭 Philippines</option>
+          </select>
+        </div>
+
+        <div class="meta-section">
+          <div class="meta-section-title">Actions</div>
+          <div class="action-buttons">
+            <button class="btn btn-primary" id="xSaveBtn" onclick="saveXPost()">↑ Save Changes</button>
+            <button class="btn btn-danger" onclick="deleteXPost()">✕ Delete Post</button>
+          </div>
+        </div>
+
+        <div class="meta-section" id="xAuditSection" style="display:none;">
+          <div class="meta-section-title">History</div>
+          <div id="xAuditLog"></div>
+        </div>
+
+      </aside>
+    </div>
+
+  </div><!-- /xEditorPane -->
+
+</div><!-- /xPlatform -->
+
+</div><!-- /mainContent -->
 
 <!-- Generate Modal -->
 <div class="modal-overlay" id="generateModal">
@@ -2145,6 +2745,7 @@
       <div class="bulk-overall" id="bulkOverall">Starting…</div>
       <div class="bulk-progress-list" id="bulkProgressList"></div>
       <div class="modal-actions">
+        <button class="btn btn-cancel" id="bulkMinimizeBtn" onclick="minimizeBulk()">⤓ Minimize</button>
         <button class="btn btn-primary" id="bulkDoneBtn" onclick="closeBulkModal()" style="display:none">Done</button>
       </div>
     </div>
@@ -2208,6 +2809,36 @@
   </div>
 </div>
 
+<!-- Repurpose for X Modal -->
+<div class="modal-overlay" id="repurposeModal">
+  <div class="modal repurpose-modal">
+    <div class="repurpose-modal-header">
+      <h2>𝕏 Repurpose for X</h2>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="btn btn-secondary" id="repurposeRegenBtn"
+          onclick="startRepurpose()" style="font-size:12px;padding:5px 12px;display:none;">
+          ↺ Regenerate All
+        </button>
+        <button class="repurpose-modal-close" onclick="closeRepurposeModal()">✕</button>
+      </div>
+    </div>
+    <div class="rp2-body" id="rp2Body">
+      <div class="rp2-carousel-wrap" id="rp2CarouselWrap">
+        <div class="repurpose-empty" style="margin:auto;padding:60px 20px;text-align:center;">
+          Preparing content…
+        </div>
+      </div>
+      <div class="rp2-nav-row" id="rp2NavRow" style="display:none;">
+        <button class="rp2-nav-arrow" id="rp2PrevBtn" onclick="rp2Navigate(-1)">‹</button>
+        <div class="rp2-nav-dots" id="rp2Dots"></div>
+        <button class="rp2-nav-arrow" id="rp2NextBtn" onclick="rp2Navigate(1)">›</button>
+        <span style="flex:1;"></span>
+        <span id="rp2FooterStatus" style="font-size:12px;color:var(--text-muted);"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Delete Confirmation Modal -->
 <div class="modal-overlay" id="deleteModal">
   <div class="modal">
@@ -2222,6 +2853,38 @@
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
+
+<!-- Create X Post Modal -->
+<div class="modal-overlay" id="createXModal">
+  <div class="modal">
+    <div class="modal-title">New X Post</div>
+    <div class="modal-sub">Write your tweet. 280 characters max.</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <label class="modal-field-label" style="margin-bottom:0;">Content</label>
+      <span class="x-char-count" id="createXCharCount">0 / 280</span>
+    </div>
+    <textarea
+      class="modal-input"
+      id="createXContent"
+      rows="5"
+      placeholder="What's happening at HitPay?"
+      maxlength="280"
+      oninput="updateCreateXCharCount()"
+      style="resize:vertical;"
+    ></textarea>
+    <label class="modal-field-label">Market</label>
+    <select class="modal-select" id="createXMarket">
+      <option value="">All Markets</option>
+      <option value="SG">🇸🇬 Singapore</option>
+      <option value="MY">🇲🇾 Malaysia</option>
+      <option value="PH">🇵🇭 Philippines</option>
+    </select>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="closeCreateXModal()">Cancel</button>
+      <button class="btn btn-primary" id="createXBtn" onclick="submitCreateXPost()">Create Post</button>
+    </div>
+  </div>
+</div>
 
 <!-- Login Overlay -->
 <div id="loginOverlay" style="display:none;">
@@ -2258,6 +2921,25 @@ let selectedPostIds = new Set();
 let sortField = 'created_at';
 let sortDir = 'desc';
 let currentUser = null;
+// Repurpose state
+window._config = {};
+let _repurposeData = null;
+let _repurposeActiveFormat = 'stat_hook';
+let _repurposeAbortController = null;
+let _repurposeSaveTimer = null;
+let _rp2ActiveCard = 0;
+let _rp2CardAbort = {};
+const FORMAT_LABELS = {
+  hook_variants: 'Hook Variants',
+  stat_hook: 'Stat Hook',
+  quick_answer_thread: 'Q&A Thread',
+  comparison_tweet: 'Comparison',
+  howto_thread: 'How-to Thread',
+};
+let _repurposeContext = {}; // { format_key: 'general' | 'SG' | 'MY' | 'PH' }
+function getFormatContext(key) { return _repurposeContext[key] || 'general'; }
+function setFormatContext(key, ctx) { _repurposeContext[key] = ctx; renderFormatCard(key); }
+function _ctxKey(key) { return `${key}_${getFormatContext(key)}`; }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 async function init() {
@@ -2280,7 +2962,8 @@ async function init() {
   renderUserInfo();
   const params = new URLSearchParams(window.location.search);
   if (params.get('auth_error')) window.history.replaceState({}, '', '/');
-  await Promise.all([loadPosts(), initKnownUsers()]);
+  const [,, cfgRes] = await Promise.all([loadPosts(), initKnownUsers(), fetch('/api/config').then(r => r.ok ? r.json() : {})]);
+  window._config = cfgRes || {};
   initEditor();
   switchView('overview');
 }
@@ -2406,6 +3089,8 @@ async function openPost(id) {
 
   // Audit log (also updates lifecycle with status transition timestamps)
   await loadAuditLog(id);
+
+  updateRepurposeBtn();
 }
 
 // ── Editor ────────────────────────────────────────────────────────────────────
@@ -2468,7 +3153,7 @@ function markDirty() {
   // Debounced auto-save
   clearTimeout(saveTimeout);
   saveTimeout = setTimeout(() => {
-    if (isDirty && currentPost) savePost(true);
+    if (isDirty && currentPost && !document.getElementById('repurposeModal').classList.contains('open')) savePost(true);
   }, 3000);
 }
 
@@ -2858,6 +3543,44 @@ function dismissGenWidget() {
   _genNewPostId = null;
 }
 
+function minimizeBulk() {
+  _bulkMinimized = true;
+  document.getElementById('bulkModal').classList.remove('open');
+  document.getElementById('bulkWidget').classList.add('visible');
+}
+
+function expandBulk() {
+  _bulkMinimized = false;
+  document.getElementById('bulkModal').classList.add('open');
+  if (!_bulkRunning) {
+    document.getElementById('bulkWidget').classList.remove('visible');
+  }
+}
+
+function _setBulkWidgetStatus(msg) {
+  document.getElementById('bulkWidgetStatus').textContent = msg;
+}
+
+function _setBulkWidgetDone(done, errors) {
+  document.getElementById('bulkWidgetIcon').textContent = '✓';
+  document.getElementById('bulkWidgetTitle').textContent = `Done — ${done} generated${errors ? ` · ${errors} failed` : ''}`;
+  const body = document.getElementById('bulkWidgetBody');
+  body.innerHTML = `
+    <div class="gen-widget-done">
+      <button class="gen-widget-open" onclick="expandBulk()">View Results</button>
+      <button class="gen-widget-dismiss" onclick="dismissBulkWidget()">✕</button>
+    </div>`;
+  const w = document.getElementById('bulkWidget');
+  w.style.boxShadow = '0 0 0 3px var(--accent)';
+  setTimeout(() => { w.style.boxShadow = ''; }, 1500);
+}
+
+function dismissBulkWidget() {
+  document.getElementById('bulkWidget').classList.remove('visible');
+  _bulkMinimized = false;
+  bulkReset();
+}
+
 async function startGenerate() {
   const keyword = document.getElementById('keywordInput').value.trim();
   if (!keyword) { document.getElementById('keywordInput').focus(); return; }
@@ -3159,24 +3882,28 @@ const BULK_MARKET_MAP = { singapore: 'SG', malaysia: 'MY', philippines: 'PH' };
 const BULK_MARKET_FLAG = { SG: '🇸🇬', MY: '🇲🇾', PH: '🇵🇭' };
 let _bulkParsed = []; // all parsed rows
 let _bulkRunning = false;
+let _bulkMinimized = false;
 
 function openBulkModal() {
   bulkReset();
   document.getElementById('bulkModal').classList.add('open');
 }
 function closeBulkModal() {
-  if (_bulkRunning) return; // don't close while generating
+  if (_bulkRunning && !_bulkMinimized) return; // don't close while generating unless minimized
   document.getElementById('bulkModal').classList.remove('open');
-  setTimeout(bulkReset, 300);
+  if (!_bulkRunning) setTimeout(bulkReset, 300);
 }
 function bulkReset() {
   _bulkParsed = [];
   _bulkRunning = false;
+  _bulkMinimized = false;
+  document.getElementById('bulkWidget').classList.remove('visible');
   document.getElementById('bulkStep1').style.display = '';
   document.getElementById('bulkStep2').style.display = 'none';
   document.getElementById('bulkStep3').style.display = 'none';
   document.getElementById('bulkFileInput').value = '';
   document.getElementById('bulkDoneBtn').style.display = 'none';
+  document.getElementById('bulkMinimizeBtn').style.display = '';
 }
 function bulkBackToUpload() {
   document.getElementById('bulkStep2').style.display = 'none';
@@ -3367,6 +4094,7 @@ async function bulkRunRow(i, r) {
         const data = JSON.parse(line.slice(6));
         if (data.type === 'status') {
           document.getElementById(`bps-${i}`).textContent = data.message;
+          if (_bulkMinimized) _setBulkWidgetStatus(data.message);
         } else if (data.type === 'done') {
           document.getElementById(`bpi-${i}`).className = 'bulk-progress-icon done';
           document.getElementById(`bpi-${i}`).textContent = '✓';
@@ -3394,8 +4122,14 @@ async function startBulkGenerate() {
   if (!queue.length) return;
 
   _bulkRunning = true;
+  _bulkMinimized = false;
   document.getElementById('bulkStep2').style.display = 'none';
   document.getElementById('bulkStep3').style.display = '';
+
+  // Reset bulk widget
+  document.getElementById('bulkWidgetIcon').textContent = '⟳';
+  document.getElementById('bulkWidgetTitle').textContent = `Bulk generating ${queue.length} post${queue.length > 1 ? 's' : ''}…`;
+  document.getElementById('bulkWidgetBody').innerHTML = '<div class="gen-widget-status" id="bulkWidgetStatus">Starting…</div>';
 
   // Build progress rows
   const list = document.getElementById('bulkProgressList');
@@ -3418,9 +4152,11 @@ async function startBulkGenerate() {
 
   let done = 0, errors = 0;
   const updateOverall = (current) => {
+    const text = `Generating ${current + 1} of ${queue.length}${errors ? ` · ${errors} failed` : ''}`;
     document.getElementById('bulkOverall').innerHTML =
       `Generating <span>${current + 1}</span> of <span>${queue.length}</span>` +
       (errors ? ` · <span style="color:var(--red)">${errors} failed</span>` : '');
+    _setBulkWidgetStatus(text);
   };
 
   for (let i = 0; i < queue.length; i++) {
@@ -3435,6 +4171,8 @@ async function startBulkGenerate() {
     `Done — <span>${done}</span> generated` +
     (errors ? ` · <span style="color:var(--red)">${errors} failed — use Retry on individual rows</span>` : '');
   document.getElementById('bulkDoneBtn').style.display = '';
+  document.getElementById('bulkMinimizeBtn').style.display = 'none';
+  if (_bulkMinimized) _setBulkWidgetDone(done, errors);
   await loadPosts();
 }
 
@@ -3656,7 +4394,7 @@ function renderListView(filtered) {
       </td>
       <td>${p.source_url ? '<span class="type-badge rewrite">Rewrite</span>' : '<span class="type-badge new">New</span>'}</td>
       <td><span class="tbl-status ${p.status}"><span class="tbl-status-dot"></span>${STATUS_LABEL[p.status] || p.status}</span></td>
-      <td style="text-align:center;">${p.editor_email ? `<span class="editor-avatar" style="background:${avatarColor(p.editor_email)};" title="${escHtml(p.editor_email)}">${avatarInitials(p.editor_email)}</span>` : '<span style="color:var(--text-dim);font-size:11px;">—</span>'}</td>
+      <td><select class="inline-editor-sel" onchange="setEditorInline(${p.id}, this.value)" onclick="event.stopPropagation()">${editorOptions(p.editor_email)}</select></td>
       <td>${p.country ? `<span class="market-badge">${marketLabel(p.country)}</span>` : '<span style="color:var(--text-dim);font-size:11px;">—</span>'}</td>
       <td class="dt-cell">${fmtDatetime(p.created_at)}</td>
       <td class="dt-cell">${fmtDatetime(p.updated_at)}</td>
@@ -3702,7 +4440,7 @@ function renderBoardView(filtered, statusFilter = 'all') {
           <div class="board-card-foot">
             ${p.source_url ? '<span class="type-badge rewrite">Rewrite</span>' : '<span class="type-badge new">New</span>'}
             ${p.country ? `<span class="market-badge">${marketLabel(p.country)}</span>` : ''}
-            ${p.editor_email ? `<span class="editor-avatar" style="background:${avatarColor(p.editor_email)};width:20px;height:20px;font-size:9px;" title="${escHtml(p.editor_email)}">${avatarInitials(p.editor_email)}</span>` : ''}
+            <select class="inline-editor-sel" onchange="setEditorInline(${p.id}, this.value)" onclick="event.stopPropagation()">${editorOptions(p.editor_email)}</select>
             <span class="board-card-date">${fmtDatetime(p.created_at)}</span>
           </div>
         </div>`;
@@ -3878,6 +4616,886 @@ async function applyAiEdit() {
   }
 }
 
+// ── Repurpose for X ───────────────────────────────────────────────────────────
+
+function updateRepurposeBtn() {
+  const btn = document.getElementById('repurposeBtn');
+  if (!btn || !currentPost) return;
+  const existing = currentPost.repurposed_content;
+  const hasTwitter = existing && (typeof existing === 'object' ? existing.twitter : JSON.parse(existing || '{}').twitter);
+  btn.textContent = hasTwitter ? '𝕏  Repurposed ✓' : '𝕏  Repurpose for X';
+}
+
+function _isNewSchema(data) {
+  return !!(data && Array.isArray(data.choices));
+}
+
+async function openRepurposeModal() {
+  if (!currentPost) return;
+  _repurposeData = null;
+  _repurposeActiveFormat = 'stat_hook';
+  _repurposeContext = {};
+  _rp2ActiveCard = 0;
+  document.getElementById('repurposeModal').classList.add('open');
+  const regenBtn = document.getElementById('repurposeRegenBtn');
+  if (regenBtn) regenBtn.style.display = 'none';
+
+  // Try loading existing repurposed content
+  try {
+    const res = await fetch(`/api/posts/${currentPost.id}/repurposed`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.twitter) {
+        _repurposeData = data.twitter;
+        if (_isNewSchema(_repurposeData)) {
+          renderCarousel();
+        } else {
+          _renderLegacyModal(_repurposeData);
+        }
+        if (regenBtn) regenBtn.style.display = '';
+        return;
+      }
+    }
+  } catch (_) {}
+
+  // No cached content — auto-generate immediately
+  startRepurpose();
+}
+
+function closeRepurposeModal() {
+  if (_repurposeAbortController) { _repurposeAbortController.abort(); _repurposeAbortController = null; }
+  Object.values(_rp2CardAbort).forEach(c => c.abort());
+  _rp2CardAbort = {};
+  clearTimeout(_repurposeSaveTimer);
+  document.getElementById('repurposeModal').classList.remove('open');
+}
+
+function renderRepurposeEmpty() {
+  const wrap = document.getElementById('rp2CarouselWrap');
+  if (wrap) wrap.innerHTML = '<div class="repurpose-empty" style="margin:auto;padding:60px 20px;text-align:center;">Click <strong>↺ Regenerate All</strong> to create X content from this post.</div>';
+}
+
+function renderNavState() {
+  if (!_repurposeData) return;
+  const d = _repurposeData;
+  const nullFormats = new Set();
+  if (!d.comparison_tweet) nullFormats.add('comparison_tweet');
+  if (!d.howto_thread) nullFormats.add('howto_thread');
+  document.querySelectorAll('#repurposeNav .repurpose-nav-item').forEach(btn => {
+    btn.classList.toggle('null-format', nullFormats.has(btn.dataset.format));
+  });
+}
+
+function activateFormat(key) {
+  _repurposeActiveFormat = key;
+  document.querySelectorAll('#repurposeNav .repurpose-nav-item').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.format === key);
+  });
+  if (!_repurposeData) {
+    document.getElementById('repurposeContent').innerHTML =
+      '<div class="repurpose-empty">Click <strong>Generate</strong> to create Twitter/X content from this post.</div>';
+    return;
+  }
+  renderFormatCard(key);
+}
+
+function _getFormatData(key) {
+  if (!_repurposeData) return null;
+  if (key === 'hook_variants') return _repurposeData.hook_variants || null;
+  const ctx = getFormatContext(key);
+  if (ctx !== 'general') {
+    // Market context: only stat_hook maps to market_tweets
+    return key === 'stat_hook' ? ((_repurposeData.market_tweets || {})[ctx] || null) : null;
+  }
+  if (key === 'stat_hook') return _repurposeData.stat_hook || null;
+  if (key === 'quick_answer_thread') return _repurposeData.quick_answer_thread || null;
+  if (key === 'comparison_tweet') return _repurposeData.comparison_tweet || null;
+  if (key === 'howto_thread') return _repurposeData.howto_thread || null;
+  return null;
+}
+
+function _isThread(key) {
+  return key === 'quick_answer_thread' || key === 'howto_thread';
+}
+
+function renderFormatCard(key) {
+  const content = document.getElementById('repurposeContent');
+
+  // ── Hook Variants — special multi-card layout ──────────────────────────────
+  if (key === 'hook_variants') {
+    const data = _getFormatData(key);
+    if (!data) {
+      const msg = !_repurposeData
+        ? 'Click <strong>Generate</strong> to create Twitter/X content from this post.'
+        : '<strong>Hook Variants</strong> — not available for this post.';
+      content.innerHTML = `<div class="repurpose-empty">${msg}</div>`;
+      return;
+    }
+    const STYLE_DESC = {
+      Curiosity: 'Stops the scroll by withholding the answer',
+      Contrarian: 'Challenges a belief the reader holds as obvious',
+      Result: 'Leads with the measurable outcome first',
+      Mistake: 'Names the error before the reader can defend',
+      List: 'Number-led hook that signals scannable value',
+    };
+    let html = '';
+    data.forEach((v, i) => {
+      const tId = `hvTweet_${i}`;
+      const cId = `hvCount_${i}`;
+      const lrId = `hvLR_${i}`;
+      const desc = STYLE_DESC[v.style] || '';
+      const typefullyBtn = window._config.typefully_enabled
+        ? `<button class="btn btn-secondary" style="font-size:12px;" onclick="pushHookVariantToTypefully(${i})">→ Typefully</button>`
+        : '';
+      html += `<div class="tweet-card" style="margin-bottom:4px;">
+        <div class="tweet-card-label" style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:12px;font-weight:700;color:var(--accent);">${escHtml(v.style)}</span>
+          <span style="font-size:11px;color:var(--text-dim);font-weight:400;">${escHtml(desc)}</span>
+        </div>
+        <textarea class="tweet-bubble-input" id="${tId}" oninput="updateTweetCharCount('${tId}','${cId}'); repurposeTrackEdit('hook_variants')">${escHtml(v.tweet)}</textarea>
+        <div class="tweet-char-count" id="${cId}">${v.tweet.length} / 280</div>
+        <div class="tweet-link-reply-wrap" style="margin-top:6px;">
+          <textarea id="${lrId}" rows="1" oninput="repurposeTrackEdit('hook_variants')">${escHtml(v.link_reply || '')}</textarea>
+        </div>
+        <div class="tweet-card-actions" style="margin-top:8px;">
+          <button class="btn btn-primary" style="font-size:12px;" onclick="addHookVariantToXDraft(${i})">＋ Add to X Drafts</button>
+          ${typefullyBtn}
+          <button class="btn btn-secondary" style="font-size:12px;" onclick="copyHookVariant(${i})">⎘ Copy</button>
+        </div>
+      </div>`;
+    });
+    content.innerHTML = html;
+    data.forEach((_, i) => updateTweetCharCount(`hvTweet_${i}`, `hvCount_${i}`));
+    return;
+  }
+
+  // ── Standard formats ───────────────────────────────────────────────────────
+  const ctx = getFormatContext(key);
+  const ck = _ctxKey(key); // stable prefix for all element IDs this render
+  const label = FORMAT_LABELS[key] || key;
+
+  // Context row
+  const ctxLabels = { general: 'General', SG: '🇸🇬 SG', MY: '🇲🇾 MY', PH: '🇵🇭 PH' };
+  const ctxRow = `<div class="repurpose-context-row">${
+    Object.entries(ctxLabels).map(([c, lbl]) =>
+      `<button class="ctx-btn${ctx === c ? ' active' : ''}" onclick="setFormatContext('${key}','${c}')">${lbl}</button>`
+    ).join('')
+  }</div>`;
+
+  const data = _getFormatData(key);
+
+  if (!data) {
+    let msg;
+    if (!_repurposeData) {
+      msg = 'Click <strong>Generate</strong> to create Twitter/X content from this post.';
+    } else if (ctx !== 'general' && key !== 'stat_hook') {
+      msg = `Market-specific variants are only available on <strong>Stat Hook</strong>. Showing general ${label} content is the only option for threads.`;
+    } else {
+      msg = `<strong>${escHtml(label)}</strong> — not applicable for this post.`;
+    }
+    content.innerHTML = ctxRow + `<div class="repurpose-empty">${msg}</div>`;
+    return;
+  }
+
+  const warnings = (_repurposeData._warnings || []);
+  let html = ctxRow;
+  if (warnings.length) {
+    const items = warnings.map(w => `<li>${escHtml(w)}</li>`).join('');
+    html += `<div class="repurpose-warning-banner">⚠ Validation warnings:<ul class="repurpose-warnings-list">${items}</ul></div>`;
+  }
+
+  const isThread = _isThread(key);
+  const tweets = isThread ? data.tweets : [data.tweet];
+  const linkReply = data.link_reply || '';
+
+  tweets.forEach((tweet, i) => {
+    const tId = `repTweet_${ck}_${i}`;
+    const cId = `repCount_${ck}_${i}`;
+    html += `<div class="tweet-card">
+      <div class="tweet-card-label">${isThread ? `Tweet ${i+1} of ${tweets.length}` : label}</div>
+      <textarea class="tweet-bubble-input" id="${tId}" oninput="updateTweetCharCount('${tId}','${cId}'); repurposeTrackEdit('${key}')">${escHtml(tweet)}</textarea>
+      <div class="tweet-char-count" id="${cId}">${tweet.length} / 280</div>
+    </div>`;
+  });
+
+  const lrId = `repLinkReply_${ck}`;
+  html += `<div class="tweet-card">
+    <div class="tweet-card-label">Link Reply</div>
+    <div class="tweet-link-reply-wrap">
+      <textarea id="${lrId}" rows="2" oninput="repurposeTrackEdit('${key}')">${escHtml(linkReply)}</textarea>
+    </div>
+  </div>`;
+
+  const typefullyBtn = window._config.typefully_enabled
+    ? `<button class="btn btn-secondary" onclick="openTypefullyPanel('${ck}')">→ Send to Typefully</button>`
+    : '';
+  html += `<div class="tweet-card-actions">
+    <button class="btn btn-primary" onclick="addToXDraft('${key}')">＋ Add to X Drafts</button>
+    ${typefullyBtn}
+    <button class="btn btn-secondary" onclick="copyThread('${key}')">⎘ Copy</button>
+  </div>`;
+
+  html += `<div id="typefullyPanel_${ck}" style="display:none;" class="typefully-panel">
+    <h4>Schedule on Typefully</h4>
+    <div class="typefully-date">
+      <label>Schedule (optional):</label>
+      <input type="datetime-local" id="typefullyDate_${ck}" class="field-input" style="font-size:12px;padding:4px 8px;" />
+      <button class="btn-success" onclick="pushToTypefully('${key}')">Send Draft</button>
+    </div>
+    <div class="typefully-result" id="typefullyResult_${ck}" style="display:none;"></div>
+  </div>`;
+
+  content.innerHTML = html;
+  tweets.forEach((_, i) => updateTweetCharCount(`repTweet_${ck}_${i}`, `repCount_${ck}_${i}`));
+}
+
+function updateTweetCharCount(inputId, countId) {
+  const input = document.getElementById(inputId);
+  const count = document.getElementById(countId);
+  if (!input || !count) return;
+  const len = input.value.length;
+  count.textContent = `${len} / 280`;
+  count.className = 'tweet-char-count' + (len > 280 ? ' over' : len > 240 ? ' warn' : '');
+}
+
+function _collectEditedTweets(key) {
+  const data = _getFormatData(key);
+  if (!data) return { tweets: [], linkReply: '' };
+  const ck = _ctxKey(key);
+  const isThread = _isThread(key);
+  const origTweets = isThread ? data.tweets : [data.tweet];
+  const tweets = origTweets.map((_, i) => {
+    const el = document.getElementById(`repTweet_${ck}_${i}`);
+    return el ? el.value : _;
+  });
+  const lrEl = document.getElementById(`repLinkReply_${ck}`);
+  const linkReply = lrEl ? lrEl.value : (data.link_reply || '');
+  return { tweets, linkReply };
+}
+
+function _updateRepurposeDataFromDOM(key) {
+  if (!_repurposeData) return;
+
+  if (key === 'hook_variants') {
+    const variants = _repurposeData.hook_variants;
+    if (!variants) return;
+    variants.forEach((v, i) => {
+      const tEl = document.getElementById(`hvTweet_${i}`);
+      const lrEl = document.getElementById(`hvLR_${i}`);
+      if (tEl) v.tweet = tEl.value;
+      if (lrEl) v.link_reply = lrEl.value;
+    });
+    return;
+  }
+
+  const ck = _ctxKey(key);
+  const ctx = getFormatContext(key);
+  const isThread = _isThread(key);
+
+  let target;
+  if (ctx !== 'general') {
+    target = key === 'stat_hook' ? ((_repurposeData.market_tweets || {})[ctx] || null) : null;
+  } else {
+    target = _repurposeData[key] || null;
+  }
+  if (!target) return;
+
+  if (isThread) {
+    target.tweets = target.tweets.map((orig, i) => {
+      const el = document.getElementById(`repTweet_${ck}_${i}`);
+      return el ? el.value : orig;
+    });
+  } else {
+    const el = document.getElementById(`repTweet_${ck}_0`);
+    if (el) target.tweet = el.value;
+  }
+  const lrEl = document.getElementById(`repLinkReply_${ck}`);
+  if (lrEl) target.link_reply = lrEl.value;
+}
+
+function rp2SetFooterStatus(text) {
+  const el = document.getElementById('rp2FooterStatus');
+  if (el) el.textContent = text;
+}
+
+function repurposeTrackEdit(key) {
+  _updateRepurposeDataFromDOM(key);
+  rp2SetFooterStatus('● Unsaved…');
+  clearTimeout(_repurposeSaveTimer);
+  _repurposeSaveTimer = setTimeout(repurposeSaveEdits, 1500);
+}
+
+async function repurposeSaveEdits() {
+  if (!currentPost || !_repurposeData) return;
+  rp2SetFooterStatus('Saving…');
+  try {
+    const res = await fetch(`/api/posts/${currentPost.id}/repurposed`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(_repurposeData),
+    });
+    if (!res.ok) throw new Error();
+    rp2SetFooterStatus('Saved ✓');
+    setTimeout(() => { if (document.getElementById('rp2FooterStatus')?.textContent === 'Saved ✓') rp2SetFooterStatus(''); }, 2000);
+  } catch (_) {
+    rp2SetFooterStatus('Save failed');
+  }
+}
+
+// ── Carousel (v2 schema) functions ───────────────────────────────────────────
+
+function _getBlogUrl() {
+  const slug = currentPost ? currentPost.slug : '';
+  return `https://hitpayapp.com/blog/${slug}`;
+}
+
+function _cardTypeLabel(type, card) {
+  if (card && card.label) return card.label;
+  const map = { quick_win: 'Quick Win', quick_hit: 'Quick Win', thread: 'Thread', contextual: 'How-to Thread', market: 'Market Tweet' };
+  return map[type] || type;
+}
+
+function _cardHookSubtitle(card) {
+  const style = card.hook_style || '';
+  return style ? `Hook: ${style}` : '';
+}
+
+function _visualNoteHtml(card) {
+  if (!card.visual_note) return '';
+  return `<div class="rp2-visual-note"><span class="rp2-visual-note-icon">💡</span><span>${escHtml(card.visual_note)}</span></div>`;
+}
+
+function renderCardContent(card, i) {
+  const visualNote = _visualNoteHtml(card);
+  if (card.tweets && card.tweets.length > 0) {
+    return card.tweets.map((tw, ti) => `
+      <div style="margin-bottom:8px;">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:3px;">${ti === 0 ? 'Tweet 1 (hook)' : (ti === card.tweets.length - 1 ? `Tweet ${ti + 1} (TL;DR + CTA)` : `Tweet ${ti + 1}`)}</div>
+        <textarea class="tweet-input" rows="4" oninput="rp2TrackEdit(${i})"
+          data-card="${i}" data-tweet="${ti}"
+          style="width:100%;font-size:13px;line-height:1.5;resize:vertical;"
+        >${escHtml(tw)}</textarea>
+        <div style="text-align:right;font-size:11px;color:var(--text-muted);">${tw.length}/280</div>
+      </div>`).join('') +
+      (card.link_reply ? `<div style="margin-top:4px;"><div style="font-size:11px;color:var(--text-muted);margin-bottom:3px;">Link reply</div>
+        <textarea class="tweet-input" rows="2" oninput="rp2TrackEdit(${i})"
+          data-card="${i}" data-tweet="link_reply"
+          style="width:100%;font-size:12px;resize:vertical;"
+        >${escHtml(card.link_reply)}</textarea></div>` : '') +
+      visualNote;
+  } else {
+    const tw = card.tweet || '';
+    return `<div>
+      <textarea class="tweet-input" rows="5" oninput="rp2TrackEdit(${i})"
+        data-card="${i}" data-tweet="0"
+        style="width:100%;font-size:13px;line-height:1.5;resize:vertical;"
+      >${escHtml(tw)}</textarea>
+      <div style="text-align:right;font-size:11px;color:var(--text-muted);">${tw.length}/280</div>
+      ${card.link_reply ? `<div style="margin-top:4px;"><div style="font-size:11px;color:var(--text-muted);margin-bottom:3px;">Link reply</div>
+        <textarea class="tweet-input" rows="2" oninput="rp2TrackEdit(${i})"
+          data-card="${i}" data-tweet="link_reply"
+          style="width:100%;font-size:12px;resize:vertical;"
+        >${escHtml(card.link_reply)}</textarea></div>` : ''}
+      ${visualNote}
+    </div>`;
+  }
+}
+
+function renderCardHtml(card, i) {
+  const hookStyles = ['Definition', 'Contrarian', 'Result', 'Mistake', 'List'];
+  const activeHook = card.hook_style || hookStyles[0];
+  const pills = hookStyles.map(s =>
+    `<button class="rp2-hook-pill${s === activeHook ? ' active' : ''}" onclick="applyHookSwitch(${i},'${s}')">${s}</button>`
+  ).join('');
+
+  return `<div class="rp2-card" id="rp2Card${i}">
+    <div class="rp2-card-header">
+      <div class="rp2-card-meta">
+        <span class="rp2-card-label">${_cardTypeLabel(card.type, card)}</span>
+        <span class="rp2-card-title">${_cardHookSubtitle(card)}</span>
+      </div>
+    </div>
+    <div class="rp2-hook-pills">${pills}</div>
+    <div class="rp2-card-body" id="rp2CardBody${i}">
+      ${renderCardContent(card, i)}
+    </div>
+    <div class="rp2-card-footer">
+      <button class="rp2-regen-btn" id="rp2RegenBtn${i}" onclick="regenCard(${i})">↺ Regen Card</button>
+      <button class="btn btn-secondary" style="font-size:12px;padding:4px 10px;" onclick="copyCard(${i})">⎘ Copy</button>
+      <button class="btn btn-primary rp2-add-draft-btn" style="font-size:12px;padding:4px 10px;" onclick="addCardToXDraft(${i})">+ Add to Drafts</button>
+    </div>
+  </div>`;
+}
+
+function renderCarousel() {
+  const wrap = document.getElementById('rp2CarouselWrap');
+  const navRow = document.getElementById('rp2NavRow');
+  if (!wrap || !_repurposeData || !_repurposeData.choices) return;
+
+  const choices = _repurposeData.choices;
+  wrap.innerHTML = `<div class="rp2-carousel" id="rp2Carousel">${choices.map((c, i) => renderCardHtml(c, i)).join('')}</div>`;
+
+  // Build nav dots
+  const dotsEl = document.getElementById('rp2Dots');
+  if (dotsEl) dotsEl.innerHTML = choices.map((_, i) => `<button class="rp2-dot${i === 0 ? ' active' : ''}" onclick="rp2GoTo(${i})"></button>`).join('');
+
+  if (navRow) navRow.style.display = 'flex';
+  rp2GoTo(0, false);
+}
+
+function rp2GoTo(idx, animate = true) {
+  const choices = _repurposeData && _repurposeData.choices;
+  if (!choices) return;
+  idx = Math.max(0, Math.min(idx, choices.length - 1));
+  _rp2ActiveCard = idx;
+  const carousel = document.getElementById('rp2Carousel');
+  if (carousel) {
+    const card = carousel.children[idx];
+    if (card) card.scrollIntoView({ behavior: animate ? 'smooth' : 'instant', block: 'nearest', inline: 'start' });
+  }
+  document.querySelectorAll('.rp2-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+  updateArrows();
+}
+
+function rp2Navigate(dir) { rp2GoTo(_rp2ActiveCard + dir); }
+
+function updateArrows() {
+  const choices = _repurposeData && _repurposeData.choices;
+  const n = choices ? choices.length : 0;
+  const prev = document.getElementById('rp2PrevBtn');
+  const next = document.getElementById('rp2NextBtn');
+  if (prev) prev.disabled = _rp2ActiveCard <= 0;
+  if (next) next.disabled = _rp2ActiveCard >= n - 1;
+}
+
+function applyHookSwitch(cardIdx, hookStyle) {
+  if (!_repurposeData || !_repurposeData.choices) return;
+  const card = _repurposeData.choices[cardIdx];
+  const variants = _repurposeData.hook_variants || [];
+  const variant = variants.find(v => v.style === hookStyle);
+  if (!variant) return;
+
+  const hookText = variant.hook;
+  // Replace opening line of the first tweet
+  let firstTweet = card.tweets ? (card.tweets[0] || '') : (card.tweet || '');
+  const lines = firstTweet.split('\n');
+  // Replace first non-empty line (the hook line)
+  const firstLineIdx = lines.findIndex(l => l.trim());
+  if (firstLineIdx >= 0) lines[firstLineIdx] = hookText;
+  const newFirstTweet = lines.join('\n');
+
+  if (card.tweets) {
+    card.tweets[0] = newFirstTweet;
+  } else {
+    card.tweet = newFirstTweet;
+  }
+  card.hook_style = hookStyle;
+
+  // Update DOM textarea
+  const tweetEl = document.querySelector(`[data-card="${cardIdx}"][data-tweet="0"]`);
+  if (tweetEl) { tweetEl.value = newFirstTweet; }
+
+  // Update pill active state
+  const cardEl = document.getElementById(`rp2Card${cardIdx}`);
+  if (cardEl) {
+    cardEl.querySelectorAll('.rp2-hook-pill').forEach(p => p.classList.toggle('active', p.textContent === hookStyle));
+    // Update subtitle
+    const subtitle = cardEl.querySelector('.rp2-card-title');
+    if (subtitle) subtitle.textContent = `Hook: ${hookStyle}`;
+  }
+
+  rp2TrackEdit(cardIdx);
+}
+
+async function regenCard(cardIdx) {
+  if (!currentPost || !_repurposeData || !_repurposeData.choices) return;
+  const card = _repurposeData.choices[cardIdx];
+  const cardType = card.type;
+  const hookStyle = card.hook_style || 'Result';
+
+  if (_rp2CardAbort[cardType]) _rp2CardAbort[cardType].abort();
+  _rp2CardAbort[cardType] = new AbortController();
+  const signal = _rp2CardAbort[cardType].signal;
+
+  const bodyEl = document.getElementById(`rp2CardBody${cardIdx}`);
+  const regenBtn = document.getElementById(`rp2RegenBtn${cardIdx}`);
+  if (bodyEl) bodyEl.innerHTML = '<div class="rp2-card-spinning"><div class="spinner" style="width:24px;height:24px;"></div><span>Regenerating…</span></div>';
+  if (regenBtn) regenBtn.disabled = true;
+
+  try {
+    const res = await fetch(`/api/posts/${currentPost.id}/repurpose-card`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ card_type: cardType, hook_style: hookStyle }),
+      signal,
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buf = '';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value, { stream: true });
+      const parts = buf.split('\n\n');
+      buf = parts.pop();
+      for (const part of parts) {
+        if (!part.startsWith('data: ')) continue;
+        let msg;
+        try { msg = JSON.parse(part.slice(6)); } catch (_) { continue; }
+        if (msg.type === 'status') {
+          if (bodyEl) bodyEl.innerHTML = `<div class="rp2-card-spinning"><div class="spinner" style="width:24px;height:24px;"></div><span>${escHtml(msg.message)}</span></div>`;
+        } else if (msg.type === 'done') {
+          _repurposeData.choices[cardIdx] = msg.card;
+          if (bodyEl) bodyEl.innerHTML = renderCardContent(msg.card, cardIdx);
+          // Refresh pill active state
+          const cardEl = document.getElementById(`rp2Card${cardIdx}`);
+          if (cardEl) {
+            cardEl.querySelectorAll('.rp2-hook-pill').forEach(p => p.classList.toggle('active', p.textContent === msg.card.hook_style));
+            const subtitle = cardEl.querySelector('.rp2-card-title');
+            if (subtitle) subtitle.textContent = msg.card.hook_style ? `Hook: ${msg.card.hook_style}` : '';
+          }
+          rp2SetFooterStatus('Card regenerated ✓');
+          setTimeout(() => rp2SetFooterStatus(''), 2000);
+        } else if (msg.type === 'error') {
+          throw new Error(msg.message);
+        }
+      }
+    }
+  } catch (e) {
+    if (e.name === 'AbortError') return;
+    if (bodyEl) bodyEl.innerHTML = `<div style="color:var(--red);padding:16px;">Regen failed: ${escHtml(e.message)}<br><button class="btn btn-secondary" style="margin-top:8px;font-size:12px;" onclick="regenCard(${cardIdx})">Try again</button></div>`;
+  } finally {
+    if (regenBtn) regenBtn.disabled = false;
+    delete _rp2CardAbort[cardType];
+  }
+}
+
+function rp2TrackEdit(cardIdx) {
+  // Sync DOM → _repurposeData.choices[cardIdx]
+  if (!_repurposeData || !_repurposeData.choices) return;
+  const card = _repurposeData.choices[cardIdx];
+  document.querySelectorAll(`[data-card="${cardIdx}"]`).forEach(el => {
+    const tweet = el.dataset.tweet;
+    if (tweet === 'link_reply') {
+      card.link_reply = el.value;
+    } else {
+      const ti = parseInt(tweet, 10);
+      if (!isNaN(ti)) {
+        if (card.tweets) {
+          card.tweets[ti] = el.value;
+        } else {
+          card.tweet = el.value;
+        }
+      }
+    }
+  });
+  rp2SetFooterStatus('● Unsaved…');
+  clearTimeout(_repurposeSaveTimer);
+  _repurposeSaveTimer = setTimeout(repurposeSaveEdits, 1500);
+}
+
+async function addCardToXDraft(cardIdx) {
+  if (!currentPost || !_repurposeData || !_repurposeData.choices) return;
+  const card = _repurposeData.choices[cardIdx];
+
+  const btn = document.querySelector(`#rp2Card${cardIdx} .rp2-add-draft-btn`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+
+  // Collect current DOM values
+  const tweets = [];
+  if (card.tweets) {
+    card.tweets.forEach((_, ti) => {
+      const el = document.querySelector(`[data-card="${cardIdx}"][data-tweet="${ti}"]`);
+      tweets.push(el ? el.value : card.tweets[ti]);
+    });
+  } else {
+    const el = document.querySelector(`[data-card="${cardIdx}"][data-tweet="0"]`);
+    tweets.push(el ? el.value : (card.tweet || ''));
+  }
+  const linkReplyEl = document.querySelector(`[data-card="${cardIdx}"][data-tweet="link_reply"]`);
+  const linkReply = linkReplyEl ? linkReplyEl.value : (card.link_reply || '');
+
+  const market = card.market || currentPost.country || null;
+  try {
+    const res = await fetch(`/api/posts/${currentPost.id}/repurpose-to-x-drafts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ format_key: card.type, blog_url: _getBlogUrl(), tweets, link_reply: linkReply, market }),
+    });
+    if (!res.ok) { showToast('Failed to add to X drafts', 'error'); return; }
+    const result = await res.json();
+    if (btn) { btn.textContent = '✓ Added'; }
+    showToast(`Added ${result.created_ids.length} post(s) to X Drafts`, 'success');
+    setTimeout(() => { if (btn) { btn.textContent = '+ Add to Drafts'; btn.disabled = false; } }, 2000);
+  } catch (e) {
+    showToast('Error adding to X drafts', 'error');
+    if (btn) { btn.textContent = '+ Add to Drafts'; btn.disabled = false; }
+  }
+}
+
+function copyCard(cardIdx) {
+  if (!_repurposeData || !_repurposeData.choices) return;
+  const card = _repurposeData.choices[cardIdx];
+  const parts = [];
+  if (card.tweets) {
+    card.tweets.forEach((_, ti) => {
+      const el = document.querySelector(`[data-card="${cardIdx}"][data-tweet="${ti}"]`);
+      parts.push(el ? el.value : card.tweets[ti]);
+    });
+  } else {
+    const el = document.querySelector(`[data-card="${cardIdx}"][data-tweet="0"]`);
+    parts.push(el ? el.value : (card.tweet || ''));
+  }
+  const linkReplyEl = document.querySelector(`[data-card="${cardIdx}"][data-tweet="link_reply"]`);
+  if (linkReplyEl && linkReplyEl.value) parts.push('---\n' + linkReplyEl.value);
+  navigator.clipboard.writeText(parts.join('\n---\n')).then(() => showToast('Copied to clipboard', 'success'));
+}
+
+function _renderLegacyModal(data) {
+  const body = document.getElementById('rp2Body');
+  if (!body) return;
+  // Re-inject legacy nav+tabs layout into rp2Body for old-schema cache
+  body.innerHTML = `
+    <div style="background:var(--yellow-bg,#fffbe6);border:1px solid var(--yellow-border,#f0d070);padding:8px 16px;font-size:12px;color:var(--text-muted);border-radius:4px;margin:12px 16px 0;">
+      ⚠ This content uses the old format. Click <strong>↺ Regenerate All</strong> to upgrade.
+    </div>
+    <div class="repurpose-layout" style="flex:1;min-height:0;">
+      <nav class="repurpose-nav" id="repurposeNav">
+        <button class="repurpose-nav-item" data-format="hook_variants" onclick="activateFormat('hook_variants')">Hook Variants</button>
+        <div class="repurpose-nav-sep"></div>
+        <button class="repurpose-nav-item active" data-format="stat_hook" onclick="activateFormat('stat_hook')">Stat Hook</button>
+        <button class="repurpose-nav-item" data-format="quick_answer_thread" onclick="activateFormat('quick_answer_thread')">Q&amp;A Thread</button>
+        <button class="repurpose-nav-item" data-format="comparison_tweet" onclick="activateFormat('comparison_tweet')">Comparison</button>
+        <button class="repurpose-nav-item" data-format="howto_thread" onclick="activateFormat('howto_thread')">How-to Thread</button>
+      </nav>
+      <div class="repurpose-content" id="repurposeContent"></div>
+    </div>
+    <div class="rp2-nav-row" id="rp2NavRow" style="display:flex;">
+      <span style="flex:1;"></span>
+      <span id="rp2FooterStatus" style="font-size:12px;color:var(--text-muted);"></span>
+    </div>`;
+  renderNavState();
+  activateFormat('stat_hook');
+}
+
+// ── End carousel functions ────────────────────────────────────────────────────
+
+async function addToXDraft(key) {
+  if (!currentPost || !_repurposeData) return;
+  const { tweets, linkReply } = _collectEditedTweets(key);
+  if (!tweets.length) return;
+  const ctx = getFormatContext(key);
+  const market = ctx !== 'general' ? ctx : (currentPost.country || null);
+  try {
+    const res = await fetch(`/api/posts/${currentPost.id}/repurpose-to-x-drafts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        format_key: key,
+        blog_url: _getBlogUrl(),
+        tweets,
+        link_reply: linkReply,
+        market,
+      }),
+    });
+    if (!res.ok) { showToast('Failed to add to X drafts', 'error'); return; }
+    const result = await res.json();
+    showToast(`Added ${result.created_ids.length} post(s) to X Drafts`, 'success');
+  } catch (e) {
+    showToast('Error adding to X drafts', 'error');
+  }
+}
+
+function openTypefullyPanel(ck) {
+  const panel = document.getElementById(`typefullyPanel_${ck}`);
+  if (panel) panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+async function pushToTypefully(key) {
+  if (!currentPost || !_repurposeData) return;
+  const ck = _ctxKey(key);
+  const { tweets, linkReply } = _collectEditedTweets(key);
+  const dateEl = document.getElementById(`typefullyDate_${ck}`);
+  const scheduleDate = dateEl && dateEl.value ? new Date(dateEl.value).toISOString() : null;
+  const resultEl = document.getElementById(`typefullyResult_${ck}`);
+  if (resultEl) { resultEl.style.display = 'none'; resultEl.textContent = ''; }
+  try {
+    const res = await fetch(`/api/posts/${currentPost.id}/typefully`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        format_key: key,
+        blog_url: _getBlogUrl(),
+        schedule_date: scheduleDate,
+        tweets,
+        link_reply: linkReply,
+      }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      showToast(err.detail || 'Typefully error', 'error');
+      return;
+    }
+    const data = await res.json();
+    if (resultEl) {
+      resultEl.style.display = 'block';
+      resultEl.textContent = data.scheduled ? `✓ Scheduled in Typefully` : `✓ Saved as draft in Typefully`;
+    }
+    showToast('Sent to Typefully', 'success');
+  } catch (e) {
+    showToast('Error sending to Typefully', 'error');
+  }
+}
+
+function copyThread(key) {
+  const { tweets, linkReply } = _collectEditedTweets(key);
+  const all = [...tweets, linkReply].filter(Boolean).join('\n\n---\n\n');
+  navigator.clipboard.writeText(all).then(
+    () => showToast('Copied to clipboard', 'success'),
+    () => showToast('Copy failed', 'error')
+  );
+}
+
+// ── Hook Variants helpers ──────────────────────────────────────────────────────
+function _getHookVariantFromDOM(i) {
+  const tweetEl = document.getElementById(`hvTweet_${i}`);
+  const lrEl = document.getElementById(`hvLR_${i}`);
+  return {
+    tweet: tweetEl ? tweetEl.value : '',
+    link_reply: lrEl ? lrEl.value : '',
+  };
+}
+
+async function addHookVariantToXDraft(i) {
+  if (!currentPost || !_repurposeData) return;
+  const { tweet, link_reply } = _getHookVariantFromDOM(i);
+  if (!tweet) return;
+  const market = currentPost.country || null;
+  try {
+    const res = await fetch(`/api/posts/${currentPost.id}/repurpose-to-x-drafts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        format_key: `hook_variant_${i}`,
+        blog_url: _getBlogUrl(),
+        tweets: [tweet],
+        link_reply,
+        market,
+      }),
+    });
+    if (!res.ok) { showToast('Failed to add to X drafts', 'error'); return; }
+    showToast('Added to X Drafts', 'success');
+  } catch (e) {
+    showToast('Error adding to X drafts', 'error');
+  }
+}
+
+function copyHookVariant(i) {
+  const { tweet, link_reply } = _getHookVariantFromDOM(i);
+  const text = [tweet, link_reply].filter(Boolean).join('\n\n---\n\n');
+  navigator.clipboard.writeText(text).then(
+    () => showToast('Copied to clipboard', 'success'),
+    () => showToast('Copy failed', 'error')
+  );
+}
+
+async function pushHookVariantToTypefully(i) {
+  if (!currentPost || !_repurposeData) return;
+  const { tweet, link_reply } = _getHookVariantFromDOM(i);
+  if (!tweet) return;
+  try {
+    const res = await fetch(`/api/posts/${currentPost.id}/typefully`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        format_key: `hook_variant_${i}`,
+        blog_url: _getBlogUrl(),
+        schedule_date: null,
+        tweets: [tweet],
+        link_reply,
+      }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      showToast(err.detail || 'Typefully error', 'error');
+      return;
+    }
+    showToast('Sent to Typefully', 'success');
+  } catch (e) {
+    showToast('Error sending to Typefully', 'error');
+  }
+}
+
+async function startRepurpose() {
+  if (!currentPost) return;
+  if (_repurposeAbortController) _repurposeAbortController.abort();
+  _repurposeAbortController = new AbortController();
+  const signal = _repurposeAbortController.signal;
+
+  const regenBtn = document.getElementById('repurposeRegenBtn');
+  if (regenBtn) { regenBtn.disabled = true; regenBtn.style.display = ''; }
+  document.getElementById('rp2NavRow').style.display = 'none';
+  document.getElementById('rp2CarouselWrap').innerHTML =
+    `<div class="repurpose-generating" style="margin:auto;"><div class="spinner"></div><div>Generating X content…</div><div class="repurpose-status-log" id="repurposeStatusLog">Calling Claude API…</div></div>`;
+
+  const slowTimer = setTimeout(() => {
+    const log = document.getElementById('repurposeStatusLog');
+    if (log) log.textContent = 'Still generating — this takes 30–60s for a full post…';
+  }, 20000);
+
+  try {
+    const res = await fetch(`/api/posts/${currentPost.id}/repurpose`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ platform: 'twitter' }),
+      signal,
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buf = '';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value, { stream: true });
+      const parts = buf.split('\n\n');
+      buf = parts.pop();
+      for (const part of parts) {
+        if (!part.startsWith('data: ')) continue;
+        let msg;
+        try { msg = JSON.parse(part.slice(6)); } catch (_) { continue; }
+        if (msg.type === 'status') {
+          const log = document.getElementById('repurposeStatusLog');
+          if (log) log.textContent = msg.message;
+        } else if (msg.type === 'done') {
+          clearTimeout(slowTimer);
+          _repurposeData = msg.result;
+          if (currentPost) currentPost.repurposed_content = { twitter: _repurposeData };
+          updateRepurposeBtn();
+          if (regenBtn) { regenBtn.disabled = false; regenBtn.style.display = ''; }
+          if (_isNewSchema(_repurposeData)) {
+            renderCarousel();
+          } else {
+            _renderLegacyModal(_repurposeData);
+          }
+        } else if (msg.type === 'error') {
+          throw new Error(msg.message);
+        }
+      }
+    }
+  } catch (e) {
+    clearTimeout(slowTimer);
+    if (e.name === 'AbortError') return;
+    document.getElementById('rp2CarouselWrap').innerHTML =
+      `<div class="repurpose-empty" style="margin:auto;padding:60px 20px;text-align:center;color:var(--red);">Generation failed: ${escHtml(e.message)}<br><button class="btn btn-secondary" style="margin-top:12px;font-size:13px;" onclick="startRepurpose()">Try again</button></div>`;
+    if (regenBtn) { regenBtn.disabled = false; regenBtn.style.display = ''; }
+  }
+  clearTimeout(slowTimer);
+}
+
 // ── Editor avatar helpers ─────────────────────────────────────────────────────
 const AVATAR_COLORS = ['#6366f1','#ec4899','#14b8a6','#f97316','#8b5cf6','#0ea5e9','#84cc16','#f43f5e'];
 function avatarColor(email) {
@@ -3913,6 +5531,31 @@ function refreshEditorFilter() {
     [...emails].sort().map(e =>
       `<option value="${escHtml(e)}"${e === current ? ' selected' : ''}>${escHtml(avatarInitials(e))} ${escHtml(e.split('@')[0])}</option>`
     ).join('');
+}
+
+function editorOptions(selectedEmail) {
+  const emails = new Set(knownUsers);
+  posts.forEach(p => { if (p.editor_email) emails.add(p.editor_email); });
+  if (currentUser?.email) emails.add(currentUser.email);
+  if (selectedEmail) emails.add(selectedEmail);
+  return `<option value="">Assign…</option>` +
+    [...emails].sort().map(e =>
+      `<option value="${escHtml(e)}"${e === selectedEmail ? ' selected' : ''}>${escHtml(e.split('@')[0])}</option>`
+    ).join('');
+}
+
+async function setEditorInline(postId, email) {
+  const res = await fetch(`/api/posts/${postId}/editor`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ editor_email: email }),
+  });
+  if (!res.ok) { showToast('Failed to update editor', 'error'); return; }
+  const post = posts.find(p => p.id === postId);
+  if (post) post.editor_email = email || null;
+  if (currentPost && currentPost.id === postId) currentPost.editor_email = email || null;
+  refreshEditorFilter();
+  showToast(email ? `Editor set to ${email.split('@')[0]}` : 'Editor cleared', 'success');
 }
 
 function populateEditorSelect(selectedEmail) {
@@ -4240,10 +5883,606 @@ function renderAnalytics() {
 document.addEventListener('keydown', e => {
   if ((e.metaKey || e.ctrlKey) && e.key === 's') {
     e.preventDefault();
-    if (currentPost) savePost();
+    if (currentPlatform === 'x') { if (currentXPost) saveXPost(); }
+    else { if (currentPost) savePost(); }
   }
-  if (e.key === 'Escape') { closeGenerateModal(); closeAiEditModal(); closeBulkModal(); }
+  if (e.key === 'Escape') { closeGenerateModal(); closeAiEditModal(); closeBulkModal(); closeCreateXModal(); closeRepurposeModal(); }
 });
+
+// ── Platform switching ────────────────────────────────────────────────────────
+let currentPlatform = 'blog';
+
+function switchPlatform(platform) {
+  currentPlatform = platform;
+  const isBlog = platform === 'blog';
+  document.getElementById('blogPlatform').style.display = isBlog ? 'flex' : 'none';
+  document.getElementById('xPlatform').style.display    = isBlog ? 'none' : 'flex';
+  document.getElementById('platformBtnBlog').classList.toggle('active', isBlog);
+  document.getElementById('platformBtnX').classList.toggle('active', !isBlog);
+  // Show/hide blog header nav
+  const headerNav = document.querySelector('.header-nav');
+  if (headerNav) headerNav.style.display = isBlog ? '' : 'none';
+  if (!isBlog) { loadXPosts(); switchXView('overview'); }
+}
+
+// ── X View switching ──────────────────────────────────────────────────────────
+let xCurrentView = 'overview';
+let xOverviewViewMode = 'list';
+
+function switchXView(view) {
+  xCurrentView = view;
+  document.getElementById('xOverviewPane').style.display = view === 'overview' ? 'flex' : 'none';
+  document.getElementById('xEditorPane').style.display   = view === 'editor'   ? 'flex' : 'none';
+  document.getElementById('xNavOverview').classList.toggle('active', view === 'overview');
+  document.getElementById('xNavEditor').classList.toggle('active', view === 'editor');
+  if (view === 'overview') renderXOverview();
+}
+
+// ── X Overview ────────────────────────────────────────────────────────────────
+function setXOverviewFilter(btn) {
+  document.querySelectorAll('#xOverviewChips .chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  xStatusFilter = btn.dataset.status;
+  // Sync editor chips/tabs
+  document.querySelectorAll('#xStatusChips .chip').forEach(c => c.classList.remove('active'));
+  const editorChip = document.querySelector(`#xStatusChips .chip[data-status="${xStatusFilter}"]`);
+  if (editorChip) editorChip.classList.add('active');
+  setXSidebarFilterByStatus(xStatusFilter);
+  xSelectedIds.clear();
+  xUpdateBulkBar();
+  renderXOverview();
+}
+
+function setXOverviewView(v) {
+  xOverviewViewMode = v;
+  document.getElementById('xOvsw-list').classList.toggle('active', v === 'list');
+  document.getElementById('xOvsw-board').classList.toggle('active', v === 'board');
+  document.getElementById('xOverviewListView').style.display  = v === 'list'  ? 'block' : 'none';
+  document.getElementById('xOverviewBoardView').style.display = v === 'board' ? 'flex'  : 'none';
+  renderXOverview();
+}
+
+function renderXOverview() {
+  renderXChipCounts();
+  if (xOverviewViewMode === 'list') renderXListView();
+  else renderXBoardView();
+}
+
+function _xOvFiltered() {
+  const search = (document.getElementById('xOvSearch')?.value || '').toLowerCase();
+  const mkt = document.getElementById('xOvMarket')?.value || 'all';
+  return xPosts.filter(p => {
+    if (xStatusFilter !== 'all' && p.status !== xStatusFilter) return false;
+    if (mkt !== 'all' && (p.market || '') !== mkt) return false;
+    if (search && !(p.content || '').toLowerCase().includes(search)) return false;
+    return true;
+  });
+}
+
+function renderXListView() {
+  const filtered = _xOvFiltered();
+  const tbody = document.getElementById('xListBody');
+  const colspan = xSelectMode ? '7' : '6';
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align:center;padding:40px;color:var(--text-dim);">No posts found</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = filtered.map(p => {
+    const isThread = (p.content || '').includes(X_THREAD_SEP);
+    const preview = isThread
+      ? (p.content || '').split(X_THREAD_SEP)[0].slice(0, 100)
+      : (p.content || '').slice(0, 120);
+    const statusLabel = { draft: '📝 Draft', scheduled: '🕐 Scheduled', posted: '✅ Posted' }[p.status] || p.status;
+    const market = p.market ? xMarketFlag(p.market) + ' ' + p.market : '—';
+    const scheduled = p.scheduled_at ? fmtDate(p.scheduled_at) : '—';
+    const created = p.created_at ? fmtDate(p.created_at) : '—';
+    const threadBadge = isThread ? ' <span style="color:var(--text-muted);font-size:11px;">🧵</span>' : '';
+    const checked = xSelectedIds.has(p.id) ? ' checked' : '';
+    const cbCell = xSelectMode
+      ? `<td class="x-cb-col" onclick="event.stopPropagation();"><input type="checkbox" class="x-select-cb" data-id="${p.id}"${checked} onchange="xToggleSelect(${p.id}, this.checked)"></td>`
+      : '';
+    const rowClick = xSelectMode
+      ? `onclick="xRowClick(${p.id})"`
+      : `onclick="openXPostFromOverview(${p.id})"`;
+    const rowBg = xSelectedIds.has(p.id) ? 'background:var(--surface2);' : '';
+    return `<tr style="cursor:pointer;${rowBg}" ${rowClick}>
+      ${cbCell}
+      <td style="max-width:340px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px;">${escHtml(preview)}${threadBadge}</td>
+      <td style="font-size:13px;">${market}</td>
+      <td><span class="x-status-badge ${p.status}" style="font-size:11px; padding:3px 9px;">${statusLabel}</span></td>
+      <td style="font-size:12px; color:var(--text-dim);">${scheduled}</td>
+      <td style="font-size:12px; color:var(--text-dim);">${created}</td>
+      <td><button class="btn btn-secondary" style="font-size:12px; padding:4px 10px;" onclick="event.stopPropagation(); openXPostFromOverview(${p.id})">Edit</button></td>
+    </tr>`;
+  }).join('');
+  // Sync select-all checkbox state
+  const allCb = document.getElementById('xSelectAllCb');
+  if (allCb) {
+    const filteredIds = filtered.map(p => p.id);
+    const allChecked = filteredIds.length > 0 && filteredIds.every(id => xSelectedIds.has(id));
+    const someChecked = filteredIds.some(id => xSelectedIds.has(id));
+    allCb.checked = allChecked;
+    allCb.indeterminate = !allChecked && someChecked;
+  }
+}
+
+function renderXBoardView() {
+  const search = (document.getElementById('xOvSearch')?.value || '').toLowerCase();
+  const mkt = document.getElementById('xOvMarket')?.value || 'all';
+  ['draft', 'scheduled', 'posted'].forEach(status => {
+    const countEl = document.getElementById(`xBCount-${status}`);
+    const cardsEl = document.getElementById(`xBCards-${status}`);
+    const filtered = xPosts.filter(p => {
+      if (p.status !== status) return false;
+      if (mkt !== 'all' && (p.market || '') !== mkt) return false;
+      if (search && !(p.content || '').toLowerCase().includes(search)) return false;
+      return true;
+    });
+    if (countEl) countEl.textContent = filtered.length;
+    if (!cardsEl) return;
+    if (!filtered.length) {
+      cardsEl.innerHTML = '<div style="padding:12px; font-size:12px; color:var(--text-dim);">No posts</div>';
+      return;
+    }
+    cardsEl.innerHTML = filtered.map(p => {
+      const isThread = (p.content || '').includes(X_THREAD_SEP);
+      const preview = isThread
+        ? (p.content || '').split(X_THREAD_SEP)[0].slice(0, 120)
+        : (p.content || '').slice(0, 120);
+      const market = p.market ? xMarketFlag(p.market) + ' ' + p.market : '';
+      return `<div class="x-board-card" onclick="openXPostFromOverview(${p.id})">
+        <div class="x-board-card-preview">${escHtml(preview)}</div>
+        <div class="x-board-card-meta">
+          ${market ? `<span>${market}</span>` : ''}
+          ${isThread ? '<span>🧵 Thread</span>' : ''}
+          <span>${p.created_at ? fmtDate(p.created_at) : ''}</span>
+        </div>
+      </div>`;
+    }).join('');
+  });
+}
+
+function openXPostFromOverview(id) {
+  switchXView('editor');
+  openXPost(id);
+}
+
+// ── X Bulk Select ─────────────────────────────────────────────────────────────
+
+function xToggleSelectMode() {
+  xSelectMode = !xSelectMode;
+  if (!xSelectMode) xSelectedIds.clear();
+  const btn = document.getElementById('xBulkSelectToggle');
+  if (btn) {
+    btn.textContent = xSelectMode ? '✕ Cancel' : '☑ Select';
+    btn.style.background = xSelectMode ? 'var(--accent)' : '';
+    btn.style.color = xSelectMode ? '#fff' : '';
+    btn.style.borderColor = xSelectMode ? 'var(--accent)' : '';
+  }
+  const cbHeader = document.getElementById('xCbHeaderCell');
+  if (cbHeader) cbHeader.style.display = xSelectMode ? '' : 'none';
+  xUpdateBulkBar();
+  renderXListView();
+}
+
+function xRowClick(id) {
+  xToggleSelect(id, !xSelectedIds.has(id));
+  renderXListView();
+}
+
+function xToggleSelect(id, checked) {
+  if (checked) xSelectedIds.add(id);
+  else xSelectedIds.delete(id);
+  xUpdateBulkBar();
+}
+
+function xToggleSelectAll(checked) {
+  const filtered = _xOvFiltered();
+  filtered.forEach(p => {
+    if (checked) xSelectedIds.add(p.id);
+    else xSelectedIds.delete(p.id);
+  });
+  xUpdateBulkBar();
+  renderXListView();
+}
+
+function xUpdateBulkBar() {
+  const n = xSelectedIds.size;
+  // Overview bulk bar
+  const bar = document.getElementById('xBulkBar');
+  const count = document.getElementById('xBulkCount');
+  if (bar) bar.style.display = (xSelectMode && n > 0) ? 'flex' : 'none';
+  if (count) count.textContent = `${n} selected`;
+  // Sidebar bulk bar
+  const sbar = document.getElementById('xSidebarBulkBar');
+  const scount = document.getElementById('xSidebarBulkCount');
+  if (sbar) sbar.style.display = n > 0 ? 'flex' : 'none';
+  if (scount) scount.textContent = `${n} selected`;
+}
+
+function xClearSelection() {
+  xSelectedIds.clear();
+  xUpdateBulkBar();
+  if (xSelectMode) renderXListView();
+  renderXPostList();
+}
+
+async function xBulkDelete() {
+  const ids = [...xSelectedIds];
+  if (!ids.length) return;
+  if (!confirm(`Delete ${ids.length} X post${ids.length > 1 ? 's' : ''}? This cannot be undone.`)) return;
+  try {
+    const res = await fetch('/api/x-posts/bulk-delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids }),
+    });
+    if (!res.ok) { showToast('Bulk delete failed', 'error'); return; }
+    const result = await res.json();
+    const deleted = new Set(result.deleted);
+    xPosts = xPosts.filter(p => !deleted.has(p.id));
+    if (currentXPost && deleted.has(currentXPost.id)) {
+      currentXPost = null;
+      xIsDirty = false;
+      document.getElementById('xNoPostState').style.display = '';
+      document.getElementById('xEditorContent').style.display = 'none';
+      document.getElementById('xMetaPanel').style.display = 'none';
+    }
+    xSelectedIds.clear();
+    xSelectMode = false;
+    const btn = document.getElementById('xBulkSelectToggle');
+    if (btn) { btn.textContent = '☑ Select'; btn.style.background = ''; btn.style.color = ''; btn.style.borderColor = ''; }
+    const cbHeader = document.getElementById('xCbHeaderCell');
+    if (cbHeader) cbHeader.style.display = 'none';
+    xUpdateBulkBar();
+    renderXPostList();
+    renderXChipCounts();
+    renderXOverview();
+    showToast(`Deleted ${result.deleted.length} post${result.deleted.length > 1 ? 's' : ''}`, 'success');
+  } catch (e) {
+    showToast('Error during bulk delete', 'error');
+  }
+}
+
+// ── X Module State ────────────────────────────────────────────────────────────
+let xPosts = [];
+let currentXPost = null;
+let xStatusFilter = 'all';
+let xIsDirty = false;
+let xThreadMode = false;
+const X_THREAD_SEP = '\n\n---\n\n';
+let xSaveTimeout = null;
+let xSelectedIds = new Set();
+let xSelectMode = false;
+
+// ── X Load & Render ───────────────────────────────────────────────────────────
+async function loadXPosts() {
+  const res = await fetch('/api/x-posts');
+  if (!res.ok) return;
+  xPosts = await res.json();
+  renderXPostList();
+  renderXChipCounts();
+  if (xCurrentView === 'overview') renderXOverview();
+}
+
+function renderXChipCounts() {
+  const counts = { all: xPosts.length, draft: 0, scheduled: 0, posted: 0 };
+  xPosts.forEach(p => { if (counts[p.status] !== undefined) counts[p.status]++; });
+  Object.entries(counts).forEach(([status, count]) => {
+    const el = document.getElementById(`xchip-${status}`);
+    if (el) el.textContent = count;
+    const ovEl = document.getElementById(`xovchip-${status}`);
+    if (ovEl) ovEl.textContent = count;
+  });
+}
+
+function renderXPostList() {
+  const search = (document.getElementById('xSearchBox')?.value || '').toLowerCase();
+  const list = document.getElementById('xPostList');
+  const filtered = xPosts.filter(p => {
+    if (xStatusFilter !== 'all' && p.status !== xStatusFilter) return false;
+    if (search && !(p.content || '').toLowerCase().includes(search)) return false;
+    return true;
+  });
+  if (!filtered.length) {
+    list.innerHTML = '<div style="padding:20px 14px;font-size:13px;color:var(--text-dim);">No posts found</div>';
+    return;
+  }
+  list.innerHTML = filtered.map(p => {
+    const isActive = currentXPost && currentXPost.id === p.id ? ' active' : '';
+    const statusLabel = { draft: '📝', scheduled: '🕐', posted: '✅' }[p.status] || '';
+    const market = p.market ? `<span style="color:var(--text-dim);">${xMarketFlag(p.market)}</span>` : '';
+    const date = p.created_at ? fmtDate(p.created_at) : '';
+    const isThread = (p.content || '').includes(X_THREAD_SEP);
+    const threadBadge = isThread ? `<span style="color:var(--text-muted);font-size:10px;">🧵 Thread</span>` : '';
+    const preview = isThread ? (p.content || '').split(X_THREAD_SEP)[0].slice(0, 90) : (p.content || '').slice(0, 120);
+    return `<div class="x-post-item${isActive}" onclick="openXPost(${p.id})">
+      <div class="x-post-item-preview">${escHtml(preview)}</div>
+      <div class="x-post-item-meta">${statusLabel} ${threadBadge} ${market} <span>${date}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function xMarketFlag(market) {
+  return { SG: '🇸🇬', MY: '🇲🇾', PH: '🇵🇭' }[market] || market;
+}
+
+function fmtDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: '2-digit' });
+}
+
+function setXFilter(btn) {
+  document.querySelectorAll('#xStatusChips .chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  xStatusFilter = btn.dataset.status;
+  setXSidebarFilterByStatus(xStatusFilter);
+  renderXPostList();
+}
+
+function setXSidebarFilter(btn) {
+  document.querySelectorAll('.x-status-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  xStatusFilter = btn.dataset.status;
+  // Sync toolbar chips
+  document.querySelectorAll('#xStatusChips .chip').forEach(c => c.classList.remove('active'));
+  const chip = document.querySelector(`#xStatusChips .chip[data-status="${xStatusFilter}"]`);
+  if (chip) chip.classList.add('active');
+  renderXPostList();
+}
+
+function setXSidebarFilterByStatus(status) {
+  document.querySelectorAll('.x-status-tab').forEach(t => t.classList.remove('active'));
+  const tab = document.querySelector(`.x-status-tab[data-status="${status}"]`);
+  if (tab) tab.classList.add('active');
+}
+
+// ── X Open / Edit ─────────────────────────────────────────────────────────────
+async function openXPost(id) {
+  if (xIsDirty && currentXPost) {
+    if (!confirm('You have unsaved changes. Discard them?')) return;
+  }
+  const res = await fetch(`/api/x-posts/${id}`);
+  if (!res.ok) return;
+  currentXPost = await res.json();
+  xIsDirty = false;
+  populateXEditor(currentXPost);
+  renderXPostList();
+}
+
+function _renderXSingleEditor(content) {
+  xThreadMode = false;
+  document.getElementById('xSingleMode').style.display = '';
+  document.getElementById('xThreadMode').style.display = 'none';
+  document.getElementById('xContentInput').value = content;
+  updateXCharCount();
+}
+
+function _renderXThreadEditor(content) {
+  xThreadMode = true;
+  document.getElementById('xSingleMode').style.display = 'none';
+  const threadEl = document.getElementById('xThreadMode');
+  threadEl.style.display = 'flex';
+  const parts = content.split(X_THREAD_SEP);
+  threadEl.innerHTML = `
+    <div class="x-editor-header"><span>🧵 Thread &mdash; ${parts.length} tweets</span></div>
+    ${parts.map((part, i) => `
+      <div class="x-thread-block">
+        <div class="x-thread-block-header">
+          <span class="x-thread-block-label">${i === parts.length - 1 && part.startsWith('Full post:') ? 'Link Reply' : `Tweet ${i + 1} / ${parts.length}`}</span>
+          <span class="x-char-count" id="xThreadCount_${i}"></span>
+        </div>
+        <textarea class="x-textarea" id="xThreadTweet_${i}" style="min-height:64px;" oninput="xMarkDirty(); updateXThreadCount(${i})">${escHtml(part)}</textarea>
+      </div>
+      ${i < parts.length - 1 ? '<div class="x-thread-sep">↓</div>' : ''}
+    `).join('')}`;
+  parts.forEach((_, i) => updateXThreadCount(i));
+}
+
+function updateXThreadCount(i) {
+  const ta = document.getElementById(`xThreadTweet_${i}`);
+  const el = document.getElementById(`xThreadCount_${i}`);
+  if (!ta || !el) return;
+  const len = ta.value.length;
+  el.textContent = `${len} / 280`;
+  el.className = 'x-char-count' + (len > 280 ? ' over' : len > 240 ? ' warn' : '');
+}
+
+function _getXContent() {
+  if (xThreadMode) {
+    const parts = [];
+    let i = 0;
+    while (document.getElementById(`xThreadTweet_${i}`)) {
+      parts.push(document.getElementById(`xThreadTweet_${i}`).value);
+      i++;
+    }
+    return parts.join(X_THREAD_SEP);
+  }
+  return document.getElementById('xContentInput').value;
+}
+
+function populateXEditor(post) {
+  document.getElementById('xNoPostState').style.display = 'none';
+  const content = document.getElementById('xEditorContent');
+  content.style.display = 'flex';
+  document.getElementById('xMetaPanel').style.display = '';
+
+  const postContent = post.content || '';
+  if (postContent.includes(X_THREAD_SEP)) {
+    _renderXThreadEditor(postContent);
+  } else {
+    _renderXSingleEditor(postContent);
+  }
+
+  document.getElementById('xMarket').value = post.market || '';
+  document.getElementById('xStatusSelect').value = post.status || 'draft';
+  toggleXStatusFields(post.status || 'draft');
+  if (post.scheduled_at) {
+    const dt = new Date(post.scheduled_at);
+    const local = new Date(dt.getTime() - dt.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    document.getElementById('xScheduledAt').value = local;
+  } else {
+    document.getElementById('xScheduledAt').value = '';
+  }
+  document.getElementById('xPostUrl').value = post.post_url || '';
+
+  const badge = document.getElementById('xStatusBadge');
+  const labels = { draft: '📝 Draft', scheduled: '🕐 Scheduled', posted: '✅ Posted' };
+  badge.textContent = labels[post.status] || post.status;
+  badge.className = `x-status-badge ${post.status || 'draft'}`;
+
+  loadXAuditLog(post.id);
+}
+
+function toggleXStatusFields(status) {
+  document.getElementById('xScheduledSection').style.display = status === 'scheduled' ? 'block' : 'none';
+  document.getElementById('xPostedSection').style.display = status === 'posted' ? 'block' : 'none';
+}
+
+function handleXStatusChange(status) {
+  toggleXStatusFields(status);
+  xMarkDirty();
+}
+
+function xMarkDirty() {
+  xIsDirty = true;
+}
+
+function updateXCharCount() {
+  const len = (document.getElementById('xContentInput')?.value || '').length;
+  const el = document.getElementById('xCharCount');
+  if (!el) return;
+  el.textContent = `${len} / 280`;
+  el.className = 'x-char-count' + (len > 280 ? ' over' : len > 240 ? ' warn' : '');
+}
+
+function updateCreateXCharCount() {
+  const len = (document.getElementById('createXContent')?.value || '').length;
+  const el = document.getElementById('createXCharCount');
+  if (!el) return;
+  el.textContent = `${len} / 280`;
+  el.className = 'x-char-count' + (len > 280 ? ' over' : len > 240 ? ' warn' : '');
+}
+
+// ── X Save ────────────────────────────────────────────────────────────────────
+async function saveXPost() {
+  if (!currentXPost) return;
+  const content = _getXContent().trim();
+  if (!content) { showToast('Content cannot be empty', 'error'); return; }
+
+  const status = document.getElementById('xStatusSelect').value;
+  const market = document.getElementById('xMarket').value;
+  const scheduledAt = document.getElementById('xScheduledAt').value || null;
+  const postUrl = document.getElementById('xPostUrl').value.trim() || null;
+
+  // Save content + metadata
+  const updateRes = await fetch(`/api/x-posts/${currentXPost.id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content, market: market || null, scheduled_at: scheduledAt }),
+  });
+  if (!updateRes.ok) { showToast('Save failed', 'error'); return; }
+
+  // Change status if different
+  if (status !== currentXPost.status) {
+    const statusRes = await fetch(`/api/x-posts/${currentXPost.id}/status`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status, scheduled_at: scheduledAt, post_url: postUrl }),
+    });
+    if (!statusRes.ok) { showToast('Status update failed', 'error'); return; }
+  }
+
+  xIsDirty = false;
+  currentXPost = { ...currentXPost, content, market: market || null, status, scheduled_at: scheduledAt, post_url: postUrl };
+  // Update local array
+  const idx = xPosts.findIndex(p => p.id === currentXPost.id);
+  if (idx !== -1) xPosts[idx] = { ...xPosts[idx], ...currentXPost };
+  renderXPostList();
+  renderXChipCounts();
+  if (xCurrentView === 'overview') renderXOverview();
+  showToast('Saved');
+  loadXAuditLog(currentXPost.id);
+}
+
+// ── X Delete ──────────────────────────────────────────────────────────────────
+async function deleteXPost() {
+  if (!currentXPost) return;
+  if (!confirm('Delete this X post? This cannot be undone.')) return;
+  const res = await fetch(`/api/x-posts/${currentXPost.id}`, { method: 'DELETE' });
+  if (!res.ok) { showToast('Delete failed', 'error'); return; }
+  xPosts = xPosts.filter(p => p.id !== currentXPost.id);
+  currentXPost = null;
+  xIsDirty = false;
+  document.getElementById('xNoPostState').style.display = '';
+  document.getElementById('xEditorContent').style.display = 'none';
+  document.getElementById('xMetaPanel').style.display = 'none';
+  renderXPostList();
+  renderXChipCounts();
+  renderXOverview();
+  showToast('Post deleted');
+}
+
+// ── X Audit log ───────────────────────────────────────────────────────────────
+async function loadXAuditLog(postId) {
+  const res = await fetch(`/api/x-posts/${postId}/audit-log`);
+  if (!res.ok) return;
+  const entries = await res.json();
+  const section = document.getElementById('xAuditSection');
+  const logEl = document.getElementById('xAuditLog');
+  if (!entries.length) { section.style.display = 'none'; return; }
+  section.style.display = '';
+  logEl.innerHTML = entries.map(e => {
+    const ts = e.timestamp ? new Date(e.timestamp).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+    const actor = (e.user_email || '').split('@')[0];
+    const actionLabel = { created: 'Created', edited: 'Edited', status_changed: 'Status changed', deleted: 'Deleted' }[e.action] || e.action;
+    let detail = '';
+    if (e.action === 'status_changed' && e.details) {
+      try { const d = typeof e.details === 'string' ? JSON.parse(e.details) : e.details; detail = `${d.from} → ${d.to}`; } catch {}
+    }
+    return `<div style="padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+      <div style="color:var(--text);font-weight:500;">${actionLabel}${detail ? ': ' + escHtml(detail) : ''}</div>
+      <div style="color:var(--text-dim);margin-top:2px;">${escHtml(actor)} · ${ts}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── X Create Modal ────────────────────────────────────────────────────────────
+function openCreateXModal() {
+  document.getElementById('createXContent').value = '';
+  document.getElementById('createXMarket').value = '';
+  document.getElementById('createXCharCount').textContent = '0 / 280';
+  document.getElementById('createXCharCount').className = 'x-char-count';
+  document.getElementById('createXModal').classList.add('open');
+  setTimeout(() => document.getElementById('createXContent').focus(), 50);
+}
+
+function closeCreateXModal() {
+  document.getElementById('createXModal').classList.remove('open');
+}
+
+async function submitCreateXPost() {
+  const content = document.getElementById('createXContent').value.trim();
+  if (!content) { showToast('Content cannot be empty', 'error'); return; }
+  const market = document.getElementById('createXMarket').value;
+  const btn = document.getElementById('createXBtn');
+  btn.disabled = true;
+  btn.textContent = 'Creating…';
+  const res = await fetch('/api/x-posts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content, market: market || null }),
+  });
+  btn.disabled = false;
+  btn.textContent = 'Create Post';
+  if (!res.ok) { showToast('Failed to create post', 'error'); return; }
+  const { id } = await res.json();
+  closeCreateXModal();
+  await loadXPosts();
+  openXPostFromOverview(id);
+  showToast('Post created');
+}
 
 // Start
 init();

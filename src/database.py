@@ -190,3 +190,39 @@ def update_post_fields(post_id: int, fields: dict):
 def delete_post(post_id: int):
     conn = get_connection()
     conn.run("DELETE FROM posts WHERE id = :id", id=post_id)
+
+
+def get_repurposed_content(post_id: int) -> dict | None:
+    conn = get_connection()
+    rows = conn.run(
+        "SELECT repurposed_content FROM posts WHERE id = :id", id=post_id
+    )
+    if not rows or rows[0][0] is None:
+        return None
+    val = rows[0][0]
+    return val if isinstance(val, dict) else json.loads(val)
+
+
+def update_repurposed_content(post_id: int, platform: str | None,
+                              data: dict, replace_all: bool = False):
+    conn = get_connection()
+    if replace_all:
+        conn.run(
+            "UPDATE posts SET repurposed_content = :data, updated_at = NOW() WHERE id = :id",
+            data=json.dumps(data),
+            id=post_id,
+        )
+    else:
+        existing_rows = conn.run(
+            "SELECT repurposed_content FROM posts WHERE id = :id", id=post_id
+        )
+        existing = {}
+        if existing_rows and existing_rows[0][0]:
+            val = existing_rows[0][0]
+            existing = val if isinstance(val, dict) else json.loads(val)
+        existing[platform] = data
+        conn.run(
+            "UPDATE posts SET repurposed_content = :data, updated_at = NOW() WHERE id = :id",
+            data=json.dumps(existing),
+            id=post_id,
+        )

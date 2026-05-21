@@ -29,3 +29,4 @@ GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
 SECRET_KEY = os.getenv("SECRET_KEY", "change-me-please-set-in-env")
 BASE_URL = os.getenv("BASE_URL", "http://localhost:8000").strip().rstrip("/")
 ALLOWED_DOMAIN = "hit-pay.com"
+TYPEFULLY_API_KEY = os.getenv("TYPEFULLY_API_KEY", "")
