@@ -5,63 +5,76 @@
   "markets": [
     "Philippines"
   ],
-  "last_updated": "2026-03-30",
-  "pricing": {},
+  "last_updated": "2026-05-21",
+  "pricing": {
+    "monthly_fee": null,
+    "setup_fee": null,
+    "transaction_fees": {
+      "cards": null,
+      "local_methods": null,
+      "notes": null
+    },
+    "pricing_model": null
+  },
   "payment_methods": {
     "singapore": [],
     "malaysia": [],
     "philippines": [
       "QR code transfer",
       "Phone number transfer",
-      "@username transfer",
-      "InstaPay",
+      "Instapay transfer",
       "Banks",
       "Self-service kiosks",
       "Debit cards",
-      "Credit cards"
+      "Credit cards",
+      "VISA credit/debit/prepaid cards"
     ],
-    "global": []
+    "global": [
+      "Crypto",
+      "Over a dozen currencies"
+    ]
   },
   "features": [
-    "Digital wallet",
+    "Digital bank app",
     "Money transfer via QR code",
     "Money transfer via phone number",
-    "Money transfer via @username",
-    "Cryptocurrency trading (buy, sell, send, receive)",
+    "Crypto buying and selling",
     "Stock trading",
-    "Physical and virtual card",
-    "Cash withdrawal",
+    "Physical Maya card with @username",
+    "Virtual wallet card",
     "Savings account",
-    "Credit line (up to ₱30,000)",
-    "Personal loan",
-    "Credit card",
-    "Rewards program",
-    "Referral program",
-    "Multi-currency support",
-    "Remittance receiving"
+    "Maya Credit line",
+    "Landers Cashback Everywhere Credit Card",
+    "Maya Black credit card",
+    "Remittance receiving",
+    "Cash withdrawal",
+    "Online shopping",
+    "Referral rewards program",
+    "Cashback rewards",
+    "Miles rewards"
   ],
   "target_segment": [
-    "consumer"
+    "platform"
   ],
   "integrations": [],
   "compliance": [],
   "unique_selling_points": [
     "#1 Digital Bank App in monthly active users",
-    "Money transfer using @username",
+    "Approval in seconds for credit",
     "Sign up with just 1 ID and no minimum balance",
-    "Free physical card with @username",
+    "Send money using @usernames",
     "Up to 15% interest p.a. with Maya Savings",
-    "Access to over a dozen currencies for crypto"
+    "Up to 10% p.a. savings account starting March 7"
   ],
   "positioning": "Maya gives the safety of a bank and convenience of a wallet.",
-  "payout_speed": "Approval in seconds",
+  "payout_speed": null,
   "markets_served": [
     "Philippines"
   ],
   "sources": [
     {
       "url": "https://www.maya.ph",
-      "scraped_at": "2026-03-30"
+      "scraped_at": "2026-05-21"
     }
   ]
 }

@@ -10,13 +10,8 @@
     "Thailand",
     "Vietnam"
   ],
-  "last_updated": "2026-03-30",
-  "pricing": {
-    "monthly_fee": null,
-    "setup_fee": null,
-    "transaction_fees": null,
-    "pricing_model": null
-  },
+  "last_updated": "2026-05-21",
+  "pricing": {},
   "payment_methods": {
     "singapore": [
       "Mastercard",
@@ -33,18 +28,17 @@
     "global": [
       "cards",
       "digital wallets",
-      "over-the-counter at over 600,000 locations across Asia",
-      "instalment payment options",
+      "over-the-counter payments at over 600,000 locations across Asia",
+      "pay by instalments",
       "Cards",
       "Digital Wallets",
       "BNPL",
-      "Buy Now Pay Later",
       "Crypto",
       "IPP Banks & Schemes",
-      "Offline QR Payment",
       "Online QR Payment",
+      "Offline QR Payment",
       "123 Network",
-      "Over-the-counter at more than 600,000 locations across Asia",
+      "Over-the-counter payments",
       "international and local payment providers",
       "card schemes",
       "financial institutions"
@@ -54,39 +48,41 @@
     "Accept any type of payment",
     "Pay by instalments",
     "Issuing - Customise and issue wallets and cards",
-    "Payout & Remittance - large transfers and complex settlements domestically and across borders",
+    "Payout & Remittance - Simplify large transfers and complex settlements domestically and across borders",
+    "3D Secure",
     "Over 400 payment options",
+    "Over-the-counter payments at more than 600,000 locations across Asia",
     "Refunds supported",
-    "3DS supported",
-    "Chargebacks supported",
+    "3DS supported for cards",
+    "Chargebacks supported for cards",
     "Multiple transaction currencies",
     "Multiple settlement currencies",
     "Access to every payment option with one integration",
-    "One point of integration for multiple payment options",
+    "One point of integration",
     "Accept payments",
     "Make payments"
   ],
   "target_segment": [
     "SME",
     "enterprise",
-    "businesses of all sizes",
-    "platform"
+    "tech giants",
+    "online marketplaces",
+    "global retailers"
   ],
   "integrations": [],
   "compliance": [],
   "unique_selling_points": [
     "Over 600,000 over-the-counter payment locations across Asia",
     "Network extends to regions with low card penetration",
-    "Over-the-counter payment capabilities",
-    "Instalment payment options for big ticket items",
-    "Customizable wallet and card issuing",
-    "Cross-border payout and remittance capabilities",
+    "Instalment payment options",
+    "Comprehensive payment solutions for businesses of all sizes",
+    "Secure monthly instalment payment processing",
     "Most comprehensive payments platform in Southeast Asia",
     "Over 400 payment options",
-    "Over-the-counter payments at 600,000+ locations across Asia",
+    "Over-the-counter payment locations at 600,000+ locations across Asia",
     "Full-suite payments platform",
     "Aggregated international and local payment providers onto single platform",
-    "One integration for every payment option"
+    "One integration for multiple payment options"
   ],
   "positioning": "Every payment solution for every business need",
   "payout_speed": "T+1 to T+3",
@@ -115,15 +111,15 @@
   "sources": [
     {
       "url": "https://2c2p.com",
-      "scraped_at": "2026-03-30"
+      "scraped_at": "2026-05-21"
     },
     {
       "url": "https://2c2p.com/payment-methods",
-      "scraped_at": "2026-03-30"
+      "scraped_at": "2026-05-21"
     },
     {
       "url": "https://2c2p.com/about-us",
-      "scraped_at": "2026-03-30"
+      "scraped_at": "2026-05-21"
     }
   ]
 }

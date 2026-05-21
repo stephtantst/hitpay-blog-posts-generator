@@ -7,7 +7,6 @@
       "Malaysia",
       "Philippines",
       "160 countries",
-      "135+ currencies supported",
       "195+ countries",
       "United States",
       "Netherlands",
@@ -15,15 +14,18 @@
       "Japan",
       "25+ languages",
       "135+ currencies",
+      "100+ global payment methods",
       "24 countries",
+      "worldwide",
+      "global",
       "197 countries",
       "100+ countries",
       "600+ product categories",
-      "More than 130 countries",
-      "Most US states",
+      "130+ countries with tax collection requirements",
+      "US states",
       "Spain",
-      "UK",
       "EU",
+      "UK",
       "New York",
       "Texas",
       "California",
@@ -36,18 +38,19 @@
       "Mexico",
       "Indonesia",
       "Switzerland",
-      "over 100 countries",
+      "Over 100 countries",
       "40+ countries",
       "all US states",
+      "40+ countries for onboarding and payouts",
       "US",
-      "global",
       "47 countries",
       "135 currencies",
+      "Philippines (page location)",
       "China",
       "France",
       "Germany"
     ],
-    "positioning": "Financial infrastructure to grow your revenue \u2013 accept payments, offer financial services and implement custom revenue models from your first transaction to your billionth.",
+    "positioning": "Financial infrastructure to grow your revenue.",
     "target_segment": [
       "SME",
       "enterprise",
@@ -55,20 +58,25 @@
       "developer",
       "platform",
       "businesses with large payments volume",
-      "online businesses",
+      "businesses with unique business models",
+      "growing teams",
+      "large teams",
+      "small teams",
+      "platforms",
       "marketplace",
       "software platform",
-      "business",
+      "on-demand marketplace",
+      "retail marketplace",
+      "crowdfunding marketplace",
       "global internet businesses",
-      "B2B",
-      "B2C",
-      "subscriptions",
-      "marketplaces",
+      "small and midmarket businesses",
+      "community",
       "SaaS",
-      "creator economy",
+      "SaaS platforms",
+      "non-profit",
       "unique business models"
     ],
-    "last_updated": "2026-03-30"
+    "last_updated": "2026-05-21"
   },
   "airwallex": {
     "name": "Airwallex",
@@ -79,31 +87,38 @@
       "Philippines",
       "Hong Kong",
       "Australia",
-      "200+ countries",
-      "120+ countries for transfers",
-      "200+ countries for SWIFT transfers",
-      "20+ currencies supported",
-      "200+ countries for supplier payments"
+      "Canada",
+      "China",
+      "Europe",
+      "France",
+      "Germany",
+      "Hong Kong SAR",
+      "Israel",
+      "Japan",
+      "Netherlands",
+      "New Zealand",
+      "South Korea",
+      "United Kingdom",
+      "United States",
+      "Vietnam",
+      "200+ countries"
     ],
-    "positioning": "The global payments and banking platform for growing businesses",
+    "positioning": "The intelligent financial platform for global businesses to manage payments, treasury, and spend with AI-native financial infrastructure and software.",
     "target_segment": [
-      "growing businesses",
       "global businesses",
       "platform",
       "marketplace",
       "developer",
-      "global business",
-      "SME",
-      "large businesses",
       "enterprise",
+      "SME",
       "merchants",
       "direct sellers",
       "marketplace sellers",
       "marketplace operators",
       "aggregators",
-      "SaaS platforms"
+      "SaaS"
     ],
-    "last_updated": "2026-03-30"
+    "last_updated": "2026-05-21"
   },
   "maya": {
     "name": "Maya Business",
@@ -112,9 +127,9 @@
     ],
     "positioning": "Maya gives the safety of a bank and convenience of a wallet.",
     "target_segment": [
-      "consumer"
+      "platform"
     ],
-    "last_updated": "2026-03-30"
+    "last_updated": "2026-05-21"
   },
   "adyen": {
     "name": "Adyen",
@@ -196,16 +211,24 @@
       "Latin America",
       "Europe",
       "Asia Pacific",
-      "North America"
+      "North America",
+      "Cross-border"
     ],
-    "positioning": "One platform for payments, data, and financial products built to scale with the world's leading businesses.",
+    "positioning": "One platform for payments, data, and financial products. Built to scale with the world's leading businesses.",
     "target_segment": [
       "enterprise",
       "platform",
-      "SME",
+      "retailer",
+      "Quick service restaurants",
+      "Food delivery services",
+      "Restaurant chains",
+      "Restaurant groups",
+      "Bars and pubs",
+      "Franchisees",
+      "Franchisors",
       "SaaS"
     ],
-    "last_updated": "2026-03-30"
+    "last_updated": "2026-05-21"
   },
   "paypal": {
     "name": "PayPal",
@@ -214,35 +237,44 @@
       "Singapore",
       "Malaysia",
       "Philippines",
-      "International"
+      "200+ markets globally",
+      "130+ currencies supported",
+      "200+ markets",
+      "130+ currencies",
+      "110+ countries",
+      "worldwide"
     ],
-    "positioning": "Your way to pay, with PayPal - spend, send and manage your transactions with ease and security in one place.",
+    "positioning": "Send, request, and pay securely with buyer protection and encrypted transactions.",
     "target_segment": [
       "SME",
-      "startup",
-      "businesses of all sizes",
       "enterprise",
-      "platform"
+      "solopreneur",
+      "small business",
+      "Enterprise",
+      "Small business",
+      "Solopreneur",
+      "startup",
+      "Consumer",
+      "consumer",
+      "businesses of all sizes"
     ],
-    "last_updated": "2026-03-30"
+    "last_updated": "2026-05-21"
   },
   "paymongo": {
     "name": "PayMongo",
     "markets": [
       "Philippines"
     ],
-    "positioning": "Powerful financial tools for fast-growing disruptors offering the full suite of financial tools: accept payments, manage transactions, fund your business, and so much more\u2014all in one place",
+    "positioning": "Powerful financial tools for fast-growing disruptors offering the full suite of financial tools: accept payments, manage transactions, fund your business, and more\u2014all in one place",
     "target_segment": [
       "SME",
       "startup",
       "developer",
       "fast-growing disruptors",
       "enterprise",
-      "small businesses",
-      "businesses with large payments volume",
-      "established brand"
+      "platform"
     ],
-    "last_updated": "2026-03-30"
+    "last_updated": "2026-05-21"
   },
   "2c2p": {
     "name": "2C2P",
@@ -272,10 +304,11 @@
     "target_segment": [
       "SME",
       "enterprise",
-      "businesses of all sizes",
-      "platform"
+      "tech giants",
+      "online marketplaces",
+      "global retailers"
     ],
-    "last_updated": "2026-03-30"
+    "last_updated": "2026-05-21"
   },
   "xendit": {
     "name": "Xendit",
@@ -285,17 +318,13 @@
       "Malaysia",
       "Thailand",
       "Vietnam",
-      "Southeast Asia",
-      "Singapore",
-      "Hong Kong"
+      "Southeast Asia"
     ],
-    "positioning": "A payment platform that helps global wellness platforms improve their credit card acceptance rates.",
+    "positioning": "A payment platform that helps businesses improve payment acceptance rates.",
     "target_segment": [
       "subscription businesses",
-      "SME",
-      "enterprise",
-      "startup"
+      "platform"
     ],
-    "last_updated": "2026-03-30"
+    "last_updated": "2026-05-21"
   }
 }

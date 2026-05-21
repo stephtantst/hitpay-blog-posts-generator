@@ -9,36 +9,15 @@
     "Thailand",
     "Vietnam"
   ],
-  "last_updated": "2026-03-30",
-  "pricing": {
-    "monthly_fee": null,
-    "setup_fee": null,
-    "transaction_fees": {
-      "cards": null,
-      "local_methods": null,
-      "notes": null
-    },
-    "pricing_model": null
-  },
+  "last_updated": "2026-05-21",
+  "pricing": {},
   "payment_methods": {
     "singapore": [],
-    "malaysia": [
-      "FPX",
-      "Cards",
-      "Touch 'n Go",
-      "GrabPay",
-      "ShopeePay",
-      "WeChatPay",
-      "AliPay",
-      "DuitNow QR",
-      "Instalment Payments",
-      "BNPL",
-      "Subscription Payments"
-    ],
+    "malaysia": [],
     "philippines": [
-      "e-wallets",
-      "direct debit",
-      "bank cards"
+      "7-Eleven",
+      "ECPAY",
+      "Cebuana"
     ],
     "global": [
       "QR Codes",
@@ -48,130 +27,112 @@
       "Cards",
       "Retail Outlets / Over-the-counter",
       "PayLater",
-      "150+ popular online payment methods",
-      "international bank cards",
+      "e-wallets",
+      "credit cards",
+      "direct debit",
+      "bank cards",
       "QRIS",
-      "100+ payment methods"
+      "150+ online payment methods"
     ],
-    "notes": "100+ payment methods across Southeast Asia"
+    "regional": [
+      "Alfamart",
+      "Indomart"
+    ]
   },
   "features": [
-    "Payment links",
-    "QR codes",
-    "No-code creation",
-    "Single or multiple-use payment requests",
-    "Send via WhatsApp and Viber",
-    "Pre-built UI or customizable checkout",
-    "Customizable payment terms",
-    "Automated reminders",
+    "Payment links creation",
+    "QR code generation",
+    "No-code payment links",
+    "Customizable checkout pages",
+    "Automated payment reminders",
     "Instant payment recognition",
-    "Localized instructions",
-    "Automated notifications",
-    "Real-time notifications",
     "Branded payment pages",
-    "Logo customization",
-    "Brand color customization",
-    "API for full automation",
-    "Dashboard creation",
+    "Logo and color customization",
+    "Personalized messages",
+    "Real-time notifications",
+    "Dashboard payment link creation",
+    "API for automated payment link creation",
+    "Messaging app integration (WhatsApp, Viber)",
     "Tokenization for recurring payments",
-    "Fraud detection system",
-    "Refunds",
-    "Settlement and reconciliation",
+    "Refund automation",
+    "Settlement automation",
+    "Reconciliation tools",
+    "In-house fraud detection system",
     "Recurring/subscription billing",
-    "Payment links and QR codes",
-    "SMS, email, and social app sharing",
-    "Offline/in-person payments",
-    "Partner account management",
-    "Transaction monitoring",
-    "Direct partner charging",
-    "Customizable billing schedules with anchor dates and intervals",
-    "Retry rules configuration",
+    "Payment links",
+    "QR code payments",
+    "SMS/email/social sharing of payment links",
+    "Offline payment collection",
+    "Business management (account opening, transaction representation, flow monitoring, direct charging)",
+    "Custom billing schedules (anchor dates, billing intervals, retry rules)",
     "Customer notifications",
-    "Multiple payment method binding (up to 5)",
+    "Multiple payment method binding (up to 5 methods per customer)",
     "Smart retry logic",
-    "Built-in retry for declined transactions",
-    "E-wallet recurring payments",
-    "Direct debit automatic payments",
-    "Bank card recurring payments",
-    "Payment Links",
-    "Subscriptions",
-    "Instalments",
-    "Batch Payouts",
-    "Automated Payouts",
-    "Fraud Detection",
-    "XenPlatform for marketplaces",
-    "0% Credit Card Instalment Plan up to 60 months",
-    "Payment Links with optimized payment UI",
-    "Auto-debit payment flows",
-    "Virtual accounts for bank transfers",
-    "Recurring payments with auto-debit and scheduling"
+    "Built-in retry for declined transactions"
   ],
   "target_segment": [
     "subscription businesses",
-    "SME",
-    "enterprise",
-    "startup"
+    "platform"
   ],
   "integrations": [],
   "compliance": [
-    "PCI DSS",
-    "Licensed by Bank Negara Malaysia"
+    "PCI DSS"
   ],
   "unique_selling_points": [
-    "Improved credit card acceptance rates by 198%",
-    "3x Faster API Performance Than Before",
-    "100+ payment methods network",
-    "Up to 30% increased acceptance rates for card payments",
-    "Low chargeback rates with in-house fraud detection",
-    "12,000+ convenience store access for over-the-counter payments",
-    "Automated updates according to latest payment trends",
+    "Improved credit card acceptance rates by 198% for a global wellness platform",
+    "99.999% Uptime",
+    "Payment Reliability",
+    "100+ payment methods",
+    "Up to 30% increased card acceptance rates",
+    "12,000+ convenience store network",
+    "Automated notifications for payment reminders",
+    "Future-proof checkout with localized instructions and best practices",
+    "Pre-built UI or custom checkout design",
     "First in Southeast Asia to enable true recurring billing across e-wallets, direct debit, and bank cards",
-    "150+ alternative payment channels in Southeast Asia with single integration",
-    "Support for major local e-wallets for recurring payments",
-    "0% interest instalment plans up to 60 months - first and only service of its kind in Malaysia",
-    "100+ payment methods across SEA",
-    "Multiple market-firsts including payout API with batch disbursement, recurring payments with auto-debit, digitalizing bank transfers through virtual accounts"
+    "Single integration for 150+ online payment methods",
+    "Maximizes payment success rate",
+    "Converts one-time buyers to long-term users",
+    "Achieved 5× Transaction Growth for Gelora",
+    "143% Business Expansion for Gelora"
   ],
-  "positioning": "A payment platform that helps global wellness platforms improve their credit card acceptance rates.",
-  "payout_speed": "timely payments every day of the year, including holidays",
+  "positioning": "A payment platform that helps businesses improve payment acceptance rates.",
+  "payout_speed": null,
   "markets_served": [
     "Philippines",
     "Indonesia",
     "Malaysia",
     "Thailand",
     "Vietnam",
-    "Southeast Asia",
-    "Singapore",
-    "Hong Kong"
+    "Southeast Asia"
   ],
   "sources": [
     {
       "url": "https://www.xendit.co",
-      "scraped_at": "2026-03-30"
+      "scraped_at": "2026-05-21"
     },
     {
       "url": "https://www.xendit.co/en-ph/",
-      "scraped_at": "2026-03-30"
+      "scraped_at": "2026-05-21"
     },
     {
       "url": "https://www.xendit.co/en-ph/pricing/",
-      "scraped_at": "2026-03-30"
+      "scraped_at": "2026-05-21"
     },
     {
       "url": "https://www.xendit.co/en-ph/products/payment-links/",
-      "scraped_at": "2026-03-30"
+      "scraped_at": "2026-05-21"
     },
     {
       "url": "https://www.xendit.co/en-ph/products/recurring/",
-      "scraped_at": "2026-03-30"
+      "scraped_at": "2026-05-21"
     },
     {
       "url": "https://www.xendit.co/en-id/",
-      "scraped_at": "2026-03-30"
+      "scraped_at": "2026-05-21"
     },
     {
       "url": "https://www.xendit.co/en-my/",
-      "scraped_at": "2026-03-30"
+      "scraped_at": "2026-05-21"
     }
   ]
 }
