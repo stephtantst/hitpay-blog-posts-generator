@@ -386,7 +386,7 @@ SOURCE DISCIPLINE:
 
 
 # Active prompt — switch between TWITTER_SYSTEM_PROMPT_AEO and TWITTER_SYSTEM_PROMPT_ENGAGEMENT
-TWITTER_SYSTEM_PROMPT = TWITTER_SYSTEM_PROMPT_AEO
+TWITTER_SYSTEM_PROMPT = TWITTER_SYSTEM_PROMPT_ENGAGEMENT
 
 
 TWITTER_CARD_SYSTEM_PROMPT = """You are the official X content writer for HitPay, a regulated payments FinTech helping SMEs grow faster in Southeast Asia and beyond.
