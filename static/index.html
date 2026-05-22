@@ -4753,8 +4753,9 @@ async function openRepurposeModal() {
     }
   } catch (_) {}
 
-  // No cached content — auto-generate immediately
-  startRepurpose();
+  // No cached content — show empty state; user picks format then generates
+  renderRepurposeEmpty();
+  if (regenBtn) regenBtn.style.display = '';
 }
 
 function closeRepurposeModal() {
@@ -4767,7 +4768,7 @@ function closeRepurposeModal() {
 
 function renderRepurposeEmpty() {
   const wrap = document.getElementById('rp2CarouselWrap');
-  if (wrap) wrap.innerHTML = '<div class="repurpose-empty" style="margin:auto;padding:60px 20px;text-align:center;">Click <strong>↺ Regenerate All</strong> to create X content from this post.</div>';
+  if (wrap) wrap.innerHTML = '<div class="repurpose-empty" style="margin:auto;padding:60px 20px;text-align:center;">Select a format above, then click <strong>↺ Regenerate All</strong> to generate X content.</div>';
 }
 
 function renderNavState() {
