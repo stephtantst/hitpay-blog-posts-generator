@@ -885,6 +885,7 @@ def api_x_post_typefully(post_id: int, body: XTypefullyRequest,
 class GenerateThoughtLeadershipRequest(BaseModel):
     market: str | None = None
     topic_hint: str | None = None
+    thread_size: int = 7  # 1, 3, 5, or 7
 
 
 @app.post("/api/x-posts/generate-thought-leadership")
@@ -897,6 +898,7 @@ def api_generate_thought_leadership(
         result = generate_thought_leadership_thread(
             market=body.market or None,
             topic_hint=body.topic_hint or None,
+            thread_size=body.thread_size,
         )
     except ValueError as e:
         raise HTTPException(422, str(e))
