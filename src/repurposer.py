@@ -4,6 +4,52 @@ import re
 import anthropic
 import httpx
 
+
+def _cap_tweet(text: str, limit: int = 280) -> str:
+    """Trim a tweet to `limit` chars at a word boundary, appending … if truncated."""
+    if len(text) <= limit:
+        return text
+    cutoff = text.rfind(" ", 0, limit - 1)
+    if cutoff <= 0:
+        cutoff = limit - 1
+    return text[:cutoff] + "…"
+
+
+def _cap_all_tweets(data: dict) -> None:
+    """Apply 280-char cap in-place to every tweet field in the repurpose data structure."""
+    for choice in data.get("choices") or []:
+        if choice.get("tweet"):
+            choice["tweet"] = _cap_tweet(choice["tweet"])
+        if choice.get("tweets"):
+            choice["tweets"] = [_cap_tweet(t) for t in choice["tweets"]]
+
+
+_URL_RE = re.compile(r'https?://\S+')
+
+
+def _move_url_to_reply(tweets: list[str]) -> list[str]:
+    """Move any URL from the last tweet into a standalone reply tweet.
+
+    X policy blocks API auto-publishing (publish_at) when any tweet body contains
+    a URL. Splitting the URL into a bare reply tweet keeps the body URL-free while
+    still attaching the link after the thread.
+    """
+    if not tweets:
+        return tweets
+    last = tweets[-1]
+    match = _URL_RE.search(last)
+    if not match:
+        return tweets
+    url = match.group(0).rstrip(".,)")
+    cleaned = _URL_RE.sub("", last).rstrip(" —,.—").strip()
+    result = list(tweets)
+    if cleaned:
+        result[-1] = cleaned
+    else:
+        result = result[:-1]
+    result.append(url)
+    return result
+
 from config import ANTHROPIC_API_KEY, CLAUDE_MODEL
 from src.generator import _messages_create_with_retry
 
@@ -466,6 +512,8 @@ def _generate_twitter(post: dict, on_status=None) -> dict:
     raw = re.sub(r"\s*```$", "", raw)
     data = json.loads(raw)
 
+    _cap_all_tweets(data)
+
     warnings = _validate_twitter_output(data, post)
     if warnings:
         for w in warnings:
@@ -495,7 +543,12 @@ def _generate_twitter_card(post: dict, card_type: str, hook_style: str, on_statu
     raw = response.content[0].text.strip()
     raw = re.sub(r"^```(?:json)?\s*", "", raw)
     raw = re.sub(r"\s*```$", "", raw)
-    return json.loads(raw)
+    card = json.loads(raw)
+    if card.get("tweet"):
+        card["tweet"] = _cap_tweet(card["tweet"])
+    if card.get("tweets"):
+        card["tweets"] = [_cap_tweet(t) for t in card["tweets"]]
+    return card
 
 
 def _build_twitter_prompt(post: dict) -> str:
@@ -627,6 +680,24 @@ def _validate_twitter_output(data: dict, post: dict) -> list[str]:
     return errors
 
 
+def _get_typefully_social_set_id(api_key: str) -> str:
+    """Return the first Typefully social set ID for this account."""
+    from config import TYPEFULLY_SOCIAL_SET_ID
+    if TYPEFULLY_SOCIAL_SET_ID:
+        return TYPEFULLY_SOCIAL_SET_ID
+    resp = httpx.get(
+        "https://api.typefully.com/v2/social-sets",
+        headers={"Authorization": f"Bearer {api_key}"},
+        timeout=10,
+    )
+    resp.raise_for_status()
+    data = resp.json()
+    sets = data["results"] if isinstance(data, dict) and "results" in data else data
+    if not sets:
+        raise ValueError("No Typefully social sets found — connect an X account in Typefully")
+    return str(sets[0]["id"])
+
+
 def push_to_typefully(twitter_data: dict, format_key: str,
                       blog_url: str, schedule_date: str | None,
                       api_key: str,
@@ -637,36 +708,43 @@ def push_to_typefully(twitter_data: dict, format_key: str,
     else:
         content = _build_typefully_content(twitter_data, format_key, blog_url)
 
-    body: dict = {
-        "content": content,
-        "threadify": False,
-        "auto-retweet-enabled": False,
-        "auto-plug-enabled": False,
+    THREAD_SEP = "\n\n---\n\n"
+    tweets = [t.strip() for t in content.split(THREAD_SEP) if t.strip()]
+
+    if schedule_date:
+        tweets = _move_url_to_reply(tweets)
+
+    payload: dict = {
+        "platforms": {
+            "x": {
+                "enabled": True,
+                "posts": [{"text": t} for t in tweets],
+            }
+        },
     }
     if schedule_date:
-        body["schedule-date"] = schedule_date
+        payload["publish_at"] = schedule_date
+
+    social_set_id = _get_typefully_social_set_id(api_key)
+    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+    endpoint = f"https://api.typefully.com/v2/social-sets/{social_set_id}/drafts"
 
     try:
-        resp = httpx.post(
-            "https://api.typefully.com/v1/drafts/",
-            headers={"X-API-KEY": api_key, "Content-Type": "application/json"},
-            json=body,
-            timeout=15,
-        )
+        resp = httpx.post(endpoint, headers=headers, json=payload, timeout=15)
         resp.raise_for_status()
     except httpx.HTTPStatusError as e:
-        if e.response.status_code == 401:
+        if e.response.status_code in (401, 403):
             raise ValueError("Typefully API key is invalid — check TYPEFULLY_API_KEY in .env")
-        if e.response.status_code == 429:
+        elif e.response.status_code == 429:
             raise ValueError("Typefully rate limit hit — wait a minute and try again")
-        raise ValueError(
-            f"Typefully API error {e.response.status_code}: {e.response.text[:200]}"
-        )
+        else:
+            raise ValueError(f"Typefully API error {e.response.status_code}: {e.response.text[:200]}")
     except httpx.TimeoutException:
         raise ValueError("Typefully request timed out — try again")
 
     data = resp.json()
-    return {"typefully_url": data.get("url", ""), "scheduled": bool(schedule_date)}
+    typefully_url = data.get("share_url") or data.get("private_url") or data.get("url") or ""
+    return {"typefully_url": typefully_url, "scheduled": bool(schedule_date)}
 
 
 def _build_content_from_parts(tweets: list[str], link_reply: str, blog_url: str) -> str:

@@ -25,6 +25,7 @@ from config import (
     POSTS_DIR,
     SECRET_KEY,
     TYPEFULLY_API_KEY,
+    TYPEFULLY_SOCIAL_SET_ID,
 )
 from src.database import (
     delete_post,
@@ -784,9 +785,131 @@ def api_get_x_audit_log(post_id: int, _: str = Depends(require_auth)):
     return get_x_audit_log(post_id)
 
 
+class XTypefullyRequest(BaseModel):
+    schedule_date: str | None = None
+    post_now: bool = False
+
+
+def _get_typefully_social_set_id() -> str:
+    """Return configured social set ID, or auto-fetch the first one from the API."""
+    if TYPEFULLY_SOCIAL_SET_ID:
+        return TYPEFULLY_SOCIAL_SET_ID
+    try:
+        resp = httpx.get(
+            "https://api.typefully.com/v2/social-sets",
+            headers={"Authorization": f"Bearer {TYPEFULLY_API_KEY}"},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        sets = data["results"] if isinstance(data, dict) and "results" in data else data
+        if not sets:
+            raise HTTPException(400, "No Typefully social sets found — connect an X account in Typefully")
+        return str(sets[0]["id"])
+    except httpx.HTTPStatusError as e:
+        if e.response.status_code in (401, 403):
+            raise HTTPException(400, "Typefully API key is invalid — check TYPEFULLY_API_KEY in .env")
+        raise HTTPException(500, f"Could not fetch Typefully social sets: {e.response.text[:200]}")
+
+
+@app.post("/api/x-posts/{post_id}/push-to-typefully")
+def api_x_post_typefully(post_id: int, body: XTypefullyRequest,
+                         user_email: str = Depends(require_auth)):
+    if not TYPEFULLY_API_KEY:
+        raise HTTPException(400, "Typefully not configured — add TYPEFULLY_API_KEY to .env")
+    post = get_x_post(post_id)
+    if not post:
+        raise HTTPException(404, "X post not found")
+    content = (post.get("content") or "").strip()
+    if not content:
+        raise HTTPException(400, "Post has no content")
+
+    THREAD_SEP = "\n\n---\n\n"
+    tweets = [_cap_tweet(t.strip()) for t in content.split(THREAD_SEP) if t.strip()]
+
+    will_autopublish = body.post_now or bool(body.schedule_date)
+    if will_autopublish:
+        # X policy blocks API publishing when any tweet body contains a URL.
+        # Move the URL from the last tweet into a standalone reply so the body is URL-free.
+        tweets = _move_url_to_reply(tweets)
+
+    payload: dict = {
+        "platforms": {
+            "x": {
+                "enabled": True,
+                "posts": [{"text": t} for t in tweets],
+            }
+        }
+    }
+    if body.schedule_date:
+        payload["publish_at"] = body.schedule_date
+    elif body.post_now:
+        from datetime import datetime, timezone, timedelta
+        payload["publish_at"] = (datetime.now(timezone.utc) + timedelta(minutes=2)).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    social_set_id = _get_typefully_social_set_id()
+
+    try:
+        resp = httpx.post(
+            f"https://api.typefully.com/v2/social-sets/{social_set_id}/drafts",
+            headers={"Authorization": f"Bearer {TYPEFULLY_API_KEY}", "Content-Type": "application/json"},
+            json=payload,
+            timeout=15,
+        )
+        resp.raise_for_status()
+    except httpx.HTTPStatusError as e:
+        if e.response.status_code in (401, 403):
+            raise HTTPException(400, "Typefully API key is invalid — check TYPEFULLY_API_KEY")
+        elif e.response.status_code == 429:
+            raise HTTPException(429, "Typefully rate limit — wait a minute and retry")
+        else:
+            raise HTTPException(500, f"Typefully error {e.response.status_code}: {e.response.text[:200]}")
+    except httpx.TimeoutException:
+        raise HTTPException(504, "Typefully request timed out")
+
+    data = resp.json()
+    typefully_url = data.get("share_url") or data.get("private_url") or data.get("url") or ""
+    mode = "now" if body.post_now else ("scheduled" if body.schedule_date else "draft")
+    log_x_audit(post_id, user_email, "pushed_to_typefully", {
+        "mode": mode,
+        "schedule_date": body.schedule_date,
+        "typefully_url": typefully_url,
+    })
+    return {
+        "typefully_url": typefully_url,
+        "posted": body.post_now,
+        "scheduled": bool(body.schedule_date),
+    }
+
+
+class GenerateThoughtLeadershipRequest(BaseModel):
+    market: str | None = None
+    topic_hint: str | None = None
+
+
+@app.post("/api/x-posts/generate-thought-leadership")
+def api_generate_thought_leadership(
+    body: GenerateThoughtLeadershipRequest,
+    _: str = Depends(require_auth),
+):
+    from src.thought_leadership import generate_thought_leadership_thread
+    try:
+        result = generate_thought_leadership_thread(
+            market=body.market or None,
+            topic_hint=body.topic_hint or None,
+        )
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+    except Exception as e:
+        if "overloaded_error" in str(e):
+            raise HTTPException(503, "Claude API is busy right now — please try again in a few seconds")
+        raise HTTPException(500, f"Generation error: {e}")
+    return result
+
+
 # ── Repurpose for Social ─────────────────────────────────────────────────────
 
-from src.repurposer import repurpose_for_platform, push_to_typefully
+from src.repurposer import repurpose_for_platform, push_to_typefully, _cap_tweet, _move_url_to_reply
 
 
 class RepurposeRequest(BaseModel):

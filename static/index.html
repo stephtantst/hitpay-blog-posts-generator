@@ -2648,6 +2648,21 @@
           </div>
         </div>
 
+        <div class="meta-section" id="xTypefullySection" style="display:none;">
+          <div class="meta-section-title">Publish via Typefully</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;gap:6px;">
+              <button class="btn" id="xSaveDraftBtn" onclick="xPushToTypefully('draft')" style="flex:1;font-size:13px;">Save Draft</button>
+              <button class="btn btn-primary" id="xPostNowBtn" onclick="xPushToTypefully('now')" style="flex:1;font-size:13px;">Post Now ↗</button>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <input type="datetime-local" id="xTypefullyScheduleDate" class="field-input" style="flex:1;font-size:12px;padding:4px 8px;" />
+              <button class="btn" id="xScheduleBtn" onclick="xPushToTypefully('schedule')" style="white-space:nowrap;font-size:13px;">Schedule ↗</button>
+            </div>
+            <div id="xTypefullyResult" style="display:none;font-size:12px;font-weight:500;padding:6px 8px;border-radius:6px;"></div>
+          </div>
+        </div>
+
         <div class="meta-section" id="xAuditSection" style="display:none;">
           <div class="meta-section-title">History</div>
           <div id="xAuditLog"></div>
@@ -2856,32 +2871,82 @@
 
 <!-- Create X Post Modal -->
 <div class="modal-overlay" id="createXModal">
-  <div class="modal">
+  <div class="modal" style="max-width:520px;">
     <div class="modal-title">New X Post</div>
-    <div class="modal-sub">Write your tweet. 280 characters max.</div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-      <label class="modal-field-label" style="margin-bottom:0;">Content</label>
-      <span class="x-char-count" id="createXCharCount">0 / 280</span>
+
+    <!-- Mode tabs -->
+    <div style="display:flex;gap:6px;margin-bottom:16px;">
+      <button id="createXTabWrite" class="btn" style="flex:1;font-size:13px;" onclick="switchCreateXTab('write')">✏️ Write</button>
+      <button id="createXTabGenerate" class="btn btn-primary" style="flex:1;font-size:13px;" onclick="switchCreateXTab('generate')">✨ Generate thread</button>
     </div>
-    <textarea
-      class="modal-input"
-      id="createXContent"
-      rows="5"
-      placeholder="What's happening at HitPay?"
-      maxlength="280"
-      oninput="updateCreateXCharCount()"
-      style="resize:vertical;"
-    ></textarea>
-    <label class="modal-field-label">Market</label>
-    <select class="modal-select" id="createXMarket">
-      <option value="">All Markets</option>
-      <option value="SG">🇸🇬 Singapore</option>
-      <option value="MY">🇲🇾 Malaysia</option>
-      <option value="PH">🇵🇭 Philippines</option>
-    </select>
-    <div class="modal-actions">
-      <button class="btn btn-cancel" onclick="closeCreateXModal()">Cancel</button>
-      <button class="btn btn-primary" id="createXBtn" onclick="submitCreateXPost()">Create Post</button>
+
+    <!-- Write mode -->
+    <div id="createXWritePane">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <label class="modal-field-label" style="margin-bottom:0;">Content</label>
+        <span class="x-char-count" id="createXCharCount">0 / 280</span>
+      </div>
+      <textarea
+        class="modal-input"
+        id="createXContent"
+        rows="5"
+        placeholder="What's happening at HitPay?"
+        maxlength="280"
+        oninput="updateCreateXCharCount()"
+        style="resize:vertical;"
+      ></textarea>
+      <label class="modal-field-label">Market</label>
+      <select class="modal-select" id="createXMarket">
+        <option value="">All Markets</option>
+        <option value="SG">🇸🇬 Singapore</option>
+        <option value="MY">🇲🇾 Malaysia</option>
+        <option value="PH">🇵🇭 Philippines</option>
+      </select>
+      <div class="modal-actions">
+        <button class="btn btn-cancel" onclick="closeCreateXModal()">Cancel</button>
+        <button class="btn btn-primary" id="createXBtn" onclick="submitCreateXPost()">Create Post</button>
+      </div>
+    </div>
+
+    <!-- Generate mode -->
+    <div id="createXGeneratePane" style="display:none;">
+      <label class="modal-field-label">Topic hint <span style="font-weight:400;color:var(--text-dim)">(optional)</span></label>
+      <input
+        class="modal-input"
+        id="createXTopicHint"
+        type="text"
+        placeholder="e.g. MDR fees, chargebacks, PayNow settlement…"
+        style="margin-bottom:12px;"
+      />
+      <label class="modal-field-label">Market</label>
+      <select class="modal-select" id="createXGenerateMarket" style="margin-bottom:16px;">
+        <option value="">All Markets (SEA)</option>
+        <option value="SG">🇸🇬 Singapore</option>
+        <option value="MY">🇲🇾 Malaysia</option>
+        <option value="PH">🇵🇭 Philippines</option>
+      </select>
+
+      <!-- Generate button -->
+      <div id="createXGenerateActions" style="display:flex;gap:8px;margin-bottom:16px;">
+        <button class="btn btn-cancel" onclick="closeCreateXModal()" style="flex:1;">Cancel</button>
+        <button class="btn btn-primary" id="createXGenerateBtn" onclick="runThoughtLeadershipGenerate()" style="flex:2;">Generate thread</button>
+      </div>
+
+      <!-- Loading state -->
+      <div id="createXGenerateLoading" style="display:none;text-align:center;padding:24px 0;color:var(--text-dim);font-size:13px;">
+        <div style="margin-bottom:8px;">Generating thread…</div>
+        <div style="font-size:11px;">This usually takes 5–10 seconds</div>
+      </div>
+
+      <!-- Result preview -->
+      <div id="createXGenerateResult" style="display:none;">
+        <div style="font-size:12px;font-weight:600;color:var(--text-dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em;" id="createXGenerateTopic"></div>
+        <div id="createXGenerateTweets" style="display:flex;flex-direction:column;gap:8px;max-height:320px;overflow-y:auto;margin-bottom:14px;"></div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn" onclick="runThoughtLeadershipGenerate()" style="flex:1;font-size:13px;">Regenerate</button>
+          <button class="btn btn-primary" onclick="useGeneratedThread()" style="flex:2;font-size:13px;">Use this thread →</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -5341,9 +5406,13 @@ async function pushToTypefully(key) {
     const data = await res.json();
     if (resultEl) {
       resultEl.style.display = 'block';
-      resultEl.textContent = data.scheduled ? `✓ Scheduled in Typefully` : `✓ Saved as draft in Typefully`;
+      if (data.downgraded_to_draft) {
+        resultEl.textContent = `✓ Saved as draft — X blocks URL scheduling via API. Schedule manually in Typefully.`;
+      } else {
+        resultEl.textContent = data.scheduled ? `✓ Scheduled in Typefully` : `✓ Saved as draft in Typefully`;
+      }
     }
-    showToast('Sent to Typefully', 'success');
+    showToast(data.downgraded_to_draft ? 'Saved as draft (see note)' : 'Sent to Typefully', data.downgraded_to_draft ? 'warn' : 'success');
   } catch (e) {
     showToast('Error sending to Typefully', 'error');
   }
@@ -6333,6 +6402,65 @@ function populateXEditor(post) {
   badge.className = `x-status-badge ${post.status || 'draft'}`;
 
   loadXAuditLog(post.id);
+
+  const typefullySection = document.getElementById('xTypefullySection');
+  if (typefullySection) {
+    typefullySection.style.display = window._config.typefully_enabled ? '' : 'none';
+    document.getElementById('xTypefullyResult').style.display = 'none';
+    document.getElementById('xTypefullyScheduleDate').value = '';
+  }
+}
+
+async function xPushToTypefully(mode) {  // mode: 'draft' | 'now' | 'schedule'
+  if (!currentXPost) return;
+  const resultEl = document.getElementById('xTypefullyResult');
+  const saveDraftBtn = document.getElementById('xSaveDraftBtn');
+  const postNowBtn = document.getElementById('xPostNowBtn');
+  const scheduleBtn = document.getElementById('xScheduleBtn');
+
+  let scheduleDate = null;
+  if (mode === 'schedule') {
+    const val = document.getElementById('xTypefullyScheduleDate').value;
+    if (!val) { showToast('Pick a date and time to schedule', 'error'); return; }
+    scheduleDate = new Date(val).toISOString();
+  }
+
+  [saveDraftBtn, postNowBtn, scheduleBtn].forEach(b => b && (b.disabled = true));
+  resultEl.style.display = 'none';
+
+  try {
+    const res = await fetch(`/api/x-posts/${currentXPost.id}/push-to-typefully`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ schedule_date: scheduleDate, post_now: mode === 'now' }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      resultEl.textContent = data.detail || 'Failed to push to Typefully';
+      resultEl.style.background = 'var(--danger-bg, #fee2e2)';
+      resultEl.style.color = 'var(--danger, #dc2626)';
+      resultEl.style.display = 'block';
+      return;
+    }
+    const msg = mode === 'now' ? 'Posted ✓' : mode === 'schedule' ? 'Scheduled ✓' : 'Saved as draft ✓';
+    const linkLabel = mode === 'draft' ? 'open & publish in Typefully ↗' : 'view in Typefully ↗';
+    resultEl.style.background = 'var(--success-bg, #dcfce7)';
+    resultEl.style.color = 'var(--success, #16a34a)';
+    resultEl.style.display = 'block';
+    if (data.typefully_url) {
+      resultEl.innerHTML = `${msg} — <a href="${escHtml(data.typefully_url)}" target="_blank" style="color:inherit;">${linkLabel}</a>`;
+    } else {
+      resultEl.textContent = msg;
+    }
+    await loadXPosts();
+  } catch (e) {
+    resultEl.textContent = 'Network error — try again';
+    resultEl.style.background = 'var(--danger-bg, #fee2e2)';
+    resultEl.style.color = 'var(--danger, #dc2626)';
+    resultEl.style.display = 'block';
+  } finally {
+    [saveDraftBtn, postNowBtn, scheduleBtn].forEach(b => b && (b.disabled = false));
+  }
 }
 
 function toggleXStatusFields(status) {
@@ -6358,11 +6486,18 @@ function updateXCharCount() {
 }
 
 function updateCreateXCharCount() {
-  const len = (document.getElementById('createXContent')?.value || '').length;
+  const val = document.getElementById('createXContent')?.value || '';
   const el = document.getElementById('createXCharCount');
   if (!el) return;
-  el.textContent = `${len} / 280`;
-  el.className = 'x-char-count' + (len > 280 ? ' over' : len > 240 ? ' warn' : '');
+  if (val.includes(X_THREAD_SEP)) {
+    const count = val.split(X_THREAD_SEP).length;
+    el.textContent = `${count} tweet thread`;
+    el.className = 'x-char-count';
+  } else {
+    const len = val.length;
+    el.textContent = `${len} / 280`;
+    el.className = 'x-char-count' + (len > 280 ? ' over' : len > 240 ? ' warn' : '');
+  }
 }
 
 // ── X Save ────────────────────────────────────────────────────────────────────
@@ -6449,17 +6584,105 @@ async function loadXAuditLog(postId) {
 }
 
 // ── X Create Modal ────────────────────────────────────────────────────────────
+let _generatedThread = null;
+
 function openCreateXModal() {
-  document.getElementById('createXContent').value = '';
+  const ta = document.getElementById('createXContent');
+  ta.value = '';
+  ta.setAttribute('maxlength', '280');
   document.getElementById('createXMarket').value = '';
   document.getElementById('createXCharCount').textContent = '0 / 280';
   document.getElementById('createXCharCount').className = 'x-char-count';
+  document.getElementById('createXTopicHint').value = '';
+  document.getElementById('createXGenerateMarket').value = '';
+  _generatedThread = null;
+  switchCreateXTab('write');
   document.getElementById('createXModal').classList.add('open');
-  setTimeout(() => document.getElementById('createXContent').focus(), 50);
+  setTimeout(() => ta.focus(), 50);
 }
 
 function closeCreateXModal() {
   document.getElementById('createXModal').classList.remove('open');
+}
+
+function switchCreateXTab(tab) {
+  const isWrite = tab === 'write';
+  document.getElementById('createXWritePane').style.display = isWrite ? '' : 'none';
+  document.getElementById('createXGeneratePane').style.display = isWrite ? 'none' : '';
+  document.getElementById('createXTabWrite').className = isWrite ? 'btn btn-primary' : 'btn';
+  document.getElementById('createXTabGenerate').className = isWrite ? 'btn' : 'btn btn-primary';
+  if (!isWrite) {
+    // reset generate pane state
+    document.getElementById('createXGenerateActions').style.display = 'flex';
+    document.getElementById('createXGenerateLoading').style.display = 'none';
+    document.getElementById('createXGenerateResult').style.display = 'none';
+    setTimeout(() => document.getElementById('createXTopicHint').focus(), 50);
+  }
+}
+
+async function runThoughtLeadershipGenerate() {
+  const topicHint = document.getElementById('createXTopicHint').value.trim();
+  const market = document.getElementById('createXGenerateMarket').value;
+  const btn = document.getElementById('createXGenerateBtn');
+
+  document.getElementById('createXGenerateActions').style.display = 'none';
+  document.getElementById('createXGenerateResult').style.display = 'none';
+  document.getElementById('createXGenerateLoading').style.display = 'block';
+
+  try {
+    const res = await fetch('/api/x-posts/generate-thought-leadership', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ market: market || null, topic_hint: topicHint || null }),
+    });
+    if (!res.ok) {
+      let errMsg = 'Generation failed — try again';
+      try {
+        const errBody = await res.json();
+        if (errBody.detail) errMsg = errBody.detail;
+      } catch (_) {}
+      throw new Error(errMsg);
+    }
+    const data = await res.json();
+    _generatedThread = data;
+
+    document.getElementById('createXGenerateTopic').textContent = data.topic || 'Generated thread';
+
+    const tweetsEl = document.getElementById('createXGenerateTweets');
+    tweetsEl.innerHTML = (data.tweets || []).map((t, i) =>
+      `<div style="background:var(--bg-alt,#f7f7f7);border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.5;white-space:pre-wrap;">${escHtml(t)}</div>`
+    ).join('');
+
+    document.getElementById('createXGenerateLoading').style.display = 'none';
+    document.getElementById('createXGenerateResult').style.display = 'block';
+  } catch (e) {
+    document.getElementById('createXGenerateLoading').style.display = 'none';
+    document.getElementById('createXGenerateActions').style.display = 'flex';
+    showToast(e.message || 'Generation failed — try again', 'error');
+  }
+}
+
+function useGeneratedThread() {
+  if (!_generatedThread) return;
+  const tweets = _generatedThread.tweets || [];
+  const linkUrl = _generatedThread.link_url || 'https://hitpayapp.com/pricing';
+  // Replace [URL] placeholder with the actual link URL in each tweet
+  const resolvedTweets = tweets.map(t => t.replace(/\[URL\]/g, linkUrl));
+  const content = resolvedTweets.join(X_THREAD_SEP);
+
+  // Switch to write mode and populate textarea (remove 280 limit for threads)
+  const ta = document.getElementById('createXContent');
+  ta.removeAttribute('maxlength');
+  ta.value = content;
+  // Sync market
+  const market = document.getElementById('createXGenerateMarket').value;
+  document.getElementById('createXMarket').value = market;
+  // Update char counter to show thread info
+  const count = resolvedTweets.length;
+  const charEl = document.getElementById('createXCharCount');
+  charEl.textContent = `${count} tweet thread`;
+  charEl.className = 'x-char-count';
+  switchCreateXTab('write');
 }
 
 async function submitCreateXPost() {

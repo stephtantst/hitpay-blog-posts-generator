@@ -20,8 +20,9 @@ def _messages_create_with_retry(client, max_retries=4, **kwargs):
             with client.messages.stream(**kwargs) as stream:
                 return stream.get_final_message()
         except anthropic.APIStatusError as e:
-            if e.status_code == 529 and attempt < max_retries - 1:
-                wait = 2 ** attempt  # 1s, 2s, 4s
+            overloaded = e.status_code == 529 or "overloaded_error" in str(e)
+            if overloaded and attempt < max_retries - 1:
+                wait = 2 ** (attempt + 1)  # 2s, 4s, 8s
                 time.sleep(wait)
                 continue
             raise
