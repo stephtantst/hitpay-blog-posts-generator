@@ -854,15 +854,6 @@
     }
 
     /* ── Header nav ─────────────────────────────────── */
-    .header-nav {
-      display: flex;
-      gap: 2px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 3px;
-      margin: 0 8px;
-    }
     .nav-btn {
       background: none;
       border: none;
@@ -1808,7 +1799,7 @@
     .rp2-warnings li { margin-bottom: 2px; }
 
     /* ── X Platform Nav ─────────────────────────────────────────────────────── */
-    .x-platform-nav {
+    .x-platform-nav, .blog-platform-nav {
       display: flex; align-items: center; gap: 8px;
       padding: 0 16px;
       border-bottom: 1px solid var(--border);
@@ -1816,7 +1807,7 @@
       flex-shrink: 0;
       height: 42px;
     }
-    .x-platform-nav-tabs { display: flex; gap: 2px; }
+    .x-platform-nav-tabs, .blog-platform-nav-tabs { display: flex; gap: 2px; }
 
     /* ── X Overview Pane ────────────────────────────────────────────────────── */
     .x-ov-toolbar {
@@ -1889,10 +1880,6 @@
   <div class="logo">
     <div class="logo-dot"></div>
     HitPay Blog
-  </div>
-  <div class="header-nav">
-    <button class="nav-btn active" id="navOverview" onclick="switchView('overview')">Overview</button>
-    <button class="nav-btn" id="navEditor" onclick="switchView('editor')">Editor</button>
   </div>
   <div class="header-spacer"></div>
   <span class="save-indicator" id="saveIndicator">✓ Saved</span>
@@ -2160,6 +2147,25 @@
 <!-- Blog platform wrapper -->
 <div id="blogPlatform">
 
+<!-- Blog Platform Nav -->
+<div class="blog-platform-nav">
+  <div class="blog-platform-nav-tabs">
+    <button class="nav-btn active" id="navOverview" onclick="switchView('overview')">Overview</button>
+    <button class="nav-btn" id="navEditor" onclick="switchView('editor')">Editor</button>
+  </div>
+  <div style="flex:1"></div>
+  <div class="new-post-wrap">
+    <button class="btn-new-post" onclick="openGenerateModal()">＋ New Post</button>
+    <button class="new-post-arrow" onclick="toggleNewPostMenu(event)" title="More options">▾</button>
+    <div class="new-post-menu" id="newPostMenu">
+      <button class="new-post-menu-item" onclick="openGenerateModal(); closeNewPostMenu()">Generate Post</button>
+      <button class="new-post-menu-item" onclick="openRewriteModal(); closeNewPostMenu()">Rewrite Existing Post</button>
+      <button class="new-post-menu-item" onclick="openBulkModal(); closeNewPostMenu()">Bulk Generate from CSV</button>
+      <button class="new-post-menu-item" onclick="createTestPost(); closeNewPostMenu()">Create Test Post</button>
+    </div>
+  </div>
+</div>
+
 <!-- Overview Pane -->
 <div id="overviewPane" class="overview-pane">
 
@@ -2178,16 +2184,6 @@
       <div class="view-switch">
         <button class="view-switch-btn active" id="vsw-list" onclick="setOverviewView('list')">☰ List</button>
         <button class="view-switch-btn" id="vsw-board" onclick="setOverviewView('board')">⊞ Board</button>
-      </div>
-      <div class="new-post-wrap">
-        <button class="btn-new-post" onclick="openGenerateModal()">＋ New Post</button>
-        <button class="new-post-arrow" onclick="toggleNewPostMenu(event)" title="More options">▾</button>
-        <div class="new-post-menu" id="newPostMenu">
-          <button class="new-post-menu-item" onclick="openGenerateModal(); closeNewPostMenu()">Generate Post</button>
-          <button class="new-post-menu-item" onclick="openRewriteModal(); closeNewPostMenu()">Rewrite Existing Post</button>
-          <button class="new-post-menu-item" onclick="openBulkModal(); closeNewPostMenu()">Bulk Generate from CSV</button>
-          <button class="new-post-menu-item" onclick="createTestPost(); closeNewPostMenu()">Create Test Post</button>
-        </div>
       </div>
     </div>
   </div>
@@ -6153,9 +6149,6 @@ function switchPlatform(platform) {
   document.getElementById('xPlatform').style.display    = isBlog ? 'none' : 'flex';
   document.getElementById('platformBtnBlog').classList.toggle('active', isBlog);
   document.getElementById('platformBtnX').classList.toggle('active', !isBlog);
-  // Show/hide blog header nav
-  const headerNav = document.querySelector('.header-nav');
-  if (headerNav) headerNav.style.display = isBlog ? '' : 'none';
   if (!isBlog) { loadXPosts(); switchXView('overview'); }
 }
 

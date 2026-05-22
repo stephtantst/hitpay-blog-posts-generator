@@ -895,7 +895,8 @@ def api_x_post_typefully(post_id: int, body: XTypefullyRequest,
 class GenerateThoughtLeadershipRequest(BaseModel):
     market: str | None = None
     topic_hint: str | None = None
-    thread_size: int = 7  # 1, 3, 5, or 7
+    thread_size: int = 7  # 1, 2, 3, 5, or 7
+    style: str = "educational"  # "educational" or "storytelling"
 
 
 @app.post("/api/x-posts/generate-thought-leadership")
@@ -909,7 +910,27 @@ def api_generate_thought_leadership(
             market=body.market or None,
             topic_hint=body.topic_hint or None,
             thread_size=body.thread_size,
+            style=body.style,
         )
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+    except Exception as e:
+        if "overloaded_error" in str(e):
+            raise HTTPException(503, "Claude API is busy right now — please try again in a few seconds")
+        raise HTTPException(500, f"Generation error: {e}")
+    return result
+
+
+@app.post("/api/x-posts/generate-random")
+def api_generate_random_x_post(
+    market: str | None = None,
+    topic_hint: str | None = None,
+    _: str = Depends(require_auth),
+):
+    """Generate a post with randomized style + thread_size — entry point for automated scheduling."""
+    from src.thought_leadership import generate_random_x_post
+    try:
+        result = generate_random_x_post(market=market or None, topic_hint=topic_hint or None)
     except ValueError as e:
         raise HTTPException(422, str(e))
     except Exception as e:

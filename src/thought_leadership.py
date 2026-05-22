@@ -1,4 +1,5 @@
 import json
+import random
 import re
 
 import anthropic
@@ -50,6 +51,86 @@ _VALID_URL_SET = {url for _, url in VALID_BLOG_URLS}
 _FALLBACK_URL = "https://hitpayapp.com/blog/hitpay-rates"
 
 
+def _build_storytelling_prompt(thread_size: int) -> str:
+    urls_list = "\n".join(f'  - "{title}": {url}' for title, url in VALID_BLOG_URLS)
+
+    if thread_size == 1:
+        format_section = """CONTENT FORMAT: Single standalone tweet
+- Exactly 1 tweet, no numbering
+- 200–280 chars
+- A compact narrative arc: observation → insight → resolution
+- Ends with a natural HitPay mention + [URL] as a literal placeholder"""
+        output_example = (
+            '{"topic": "borderless payments", '
+            '"tweets": ["Payment infrastructure was built around where you are, not who walks through your door. '
+            'That mismatch costs merchants silently every day. HitPay fixes the gap: [URL]"], '
+            '"link_url": "https://hitpayapp.com/blog/hitpay-rates", "visual_note": null}'
+        )
+    else:
+        format_section = (
+            f"CONTENT FORMAT: Storytelling thread of exactly {thread_size} tweets\n"
+            f"- Exactly {thread_size} tweets numbered \"1/{thread_size} ...\", "
+            f"\"2/{thread_size} ...\", etc. No more, no fewer.\n"
+            "- Tweet 1: open with an observation or tension — a truth about the world that feels slightly wrong. "
+            "No product mention. Conversational, grounded. Optionally end with 🧵\n"
+            "- Middle tweets (if any): deepen the tension with a concrete scenario or implication. "
+            "Still no product pitch. Let the reader feel the problem.\n"
+            f"- Final tweet ({thread_size}/{thread_size}): resolve the tension — what it should look like, "
+            "and where HitPay fits in naturally. End with [URL] as a literal placeholder.\n"
+            "- Each tweet: 180–280 chars, short punchy sentences, no stats or lists\n"
+            "- Tone: philosophical but grounded — like a founder reflecting after a long week, not a marketer"
+        )
+        example_tweets = [f'"{i}/{thread_size} ..."' for i in range(1, thread_size + 1)]
+        example_tweets[-1] = f'"{thread_size}/{thread_size} ... [URL]"'
+        output_example = (
+            '{"topic": "...", "tweets": [' + ", ".join(example_tweets) + '], '
+            '"link_url": "https://hitpayapp.com/blog/hitpay-rates", "visual_note": null}'
+        )
+
+    return f"""You are the voice behind @hitpay_app on X (Twitter).
+Your job is to write storytelling posts that make merchants pause and think — not to educate them with data, but to name something they already feel but couldn't articulate.
+
+BRAND: HitPay — MAS-licensed (SG), BNM-approved (MY), BSP OPS-licensed (PH). No monthly fees. 50+ payment methods. Next business day payouts.
+TONE: Reflective, honest, slightly philosophical. Like a founder talking to another founder — not a brand talking to a customer.
+AUDIENCE: SME founders and merchants in Southeast Asia (SG/MY/PH).
+
+{format_section}
+
+STYLE RULES:
+- No statistics or percentages in any tweet except the final one (and even then, sparingly)
+- Short declarative sentences. Fragments are fine.
+- Em-dashes (—) are fine, used sparingly
+- No hashtags, no @ mentions
+- No URLs except the final tweet — use [URL] as a literal placeholder there only
+- No promotional language until the final tweet
+- The final tweet resolves the tension; HitPay is the answer, not the pitch
+- Banned words: seamlessly, unlock, revolutionise, game-changer, cutting-edge, empower, leverage, utilise, transformative, innovative, robust
+
+NARRATIVE THEMES — pick the most resonant if no hint is given:
+- Payment systems built for where you are, not who you serve
+- The silent cost of cash that nobody talks about
+- Why your invoice tool doesn't feel like yours
+- The gap between "accepted" and "paid"
+- Cross-border payments from a customer's perspective
+- What a tourist feels when their card gets declined
+- The moment a business realises their checkout is losing them customers
+- Reconciliation as a symptom, not a problem
+- Why "no monthly fee" changes how merchants take risks
+- The difference between a payment tool and payment infrastructure
+
+LINK URL RULE — critical, no exceptions:
+You MUST set link_url to one of the following verified HitPay blog URLs only.
+Do NOT invent or guess any other URL. Pick the most topically relevant one.
+If no clear match, default to the Rates & Pricing URL.
+
+{urls_list}
+
+OUTPUT: Return a raw JSON object only. No markdown fences, no preamble.
+{output_example}
+
+IMPORTANT: [URL] in the tweet(s) is a literal placeholder — never substitute the real URL into the tweet text itself."""
+
+
 def _build_thought_leadership_prompt(thread_size: int) -> str:
     urls_list = "\n".join(f'  - "{title}": {url}' for title, url in VALID_BLOG_URLS)
 
@@ -63,6 +144,18 @@ def _build_thought_leadership_prompt(thread_size: int) -> str:
             '"tweets": ["Most merchants pay 2–3% per card transaction without knowing what '
             'it covers. That fee — MDR — is split between your bank, card network, and '
             'processor. HitPay\'s card MDR starts at 2.8% + S$0.50, no monthly fees: [URL]"], '
+            '"link_url": "https://hitpayapp.com/blog/hitpay-rates", "visual_note": null}'
+        )
+    elif thread_size == 2:
+        format_section = (
+            "CONTENT FORMAT: Thread of exactly 2 tweets\n"
+            "- Exactly 2 tweets numbered \"1/2 ...\" and \"2/2 ...\"\n"
+            "- Tweet 1/2: introduce the concept clearly with a key fact or insight — end with 🧵\n"
+            "- Tweet 2/2: concrete example or actionable takeaway + natural HitPay mention + [URL]\n"
+            "- Each tweet: 200–280 chars, self-contained"
+        )
+        output_example = (
+            '{"topic": "...", "tweets": ["1/2 ... 🧵", "2/2 ... [URL]"], '
             '"link_url": "https://hitpayapp.com/blog/hitpay-rates", "visual_note": null}'
         )
     else:
@@ -143,23 +236,81 @@ TOPIC_POOL = [
     "Recurring billing and subscription payment mechanics",
 ]
 
+STORYTELLING_TOPIC_POOL = [
+    "Payment systems built for where you are, not who you serve",
+    "The silent cost of cash that nobody talks about",
+    "Why your invoice tool doesn't feel like yours",
+    "The gap between 'accepted' and 'paid'",
+    "Cross-border payments from a customer's perspective",
+    "What a tourist feels when their card gets declined",
+    "The moment a business realises their checkout is losing them customers",
+    "Reconciliation as a symptom, not a problem",
+    "Why 'no monthly fee' changes how merchants take risks",
+    "The difference between a payment tool and payment infrastructure",
+    "What getting paid really means for a small business",
+    "How payment friction becomes a business culture problem",
+]
+
+# All valid (style, thread_size) combinations — used for randomized automation
+_AUTOMATION_VARIANTS: list[tuple[str, int]] = [
+    ("educational", 1),
+    ("educational", 3),
+    ("educational", 5),
+    ("educational", 7),
+    ("storytelling", 1),
+    ("storytelling", 2),
+    ("storytelling", 3),
+    ("storytelling", 5),
+]
+
+_AUTOMATION_MARKETS = ["SG", "MY", "PH", None]  # None = SEA broadly
+
+
+def generate_random_x_post(market: str = None, topic_hint: str = None) -> dict:
+    """Pick a random style + thread_size and generate a standalone X post.
+
+    Designed as the single entry point for automated 3x/week scheduling.
+
+    Returns: {
+        "topic": str, "tweets": list[str], "link_url": str, "visual_note": str | None,
+        "style": str, "thread_size": int, "market": str | None
+    }
+    """
+    style, thread_size = random.choice(_AUTOMATION_VARIANTS)
+    chosen_market = market if market is not None else random.choice(_AUTOMATION_MARKETS)
+    result = generate_thought_leadership_thread(
+        market=chosen_market,
+        topic_hint=topic_hint,
+        thread_size=thread_size,
+        style=style,
+    )
+    result["style"] = style
+    result["thread_size"] = thread_size
+    result["market"] = chosen_market
+    return result
+
 
 def generate_thought_leadership_thread(
     market: str = None,
     topic_hint: str = None,
     thread_size: int = 7,
+    style: str = "educational",
 ) -> dict:
     """Generate a standalone thought leadership X post or thread on a payments topic.
 
     Args:
         market: Optional market code (SG, MY, PH)
         topic_hint: Optional topic to focus on
-        thread_size: Number of tweets — 1 (single post), 3, 5, or 7
+        thread_size: Number of tweets — 1, 2 (storytelling), 3, 5, or 7
+        style: "educational" (data-driven) or "storytelling" (narrative arc)
 
     Returns: {"topic": str, "tweets": list[str], "link_url": str, "visual_note": str | None}
     """
-    if thread_size not in (1, 3, 5, 7):
-        raise ValueError(f"thread_size must be 1, 3, 5, or 7 — got {thread_size}")
+    if style not in ("educational", "storytelling"):
+        raise ValueError(f"style must be 'educational' or 'storytelling' — got {style!r}")
+
+    if thread_size not in (1, 2, 3, 5, 7):
+        raise ValueError(f"thread_size must be one of (1, 2, 3, 5, 7) — got {thread_size}")
 
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
     context_parts = []
@@ -189,11 +340,12 @@ def generate_thought_leadership_thread(
 
     user_message = "\n\n".join(context_parts)
 
+    prompt_builder = _build_storytelling_prompt if style == "storytelling" else _build_thought_leadership_prompt
     msg = _messages_create_with_retry(
         client,
         model=CLAUDE_MODEL,
         max_tokens=2500,
-        system=_build_thought_leadership_prompt(thread_size),
+        system=prompt_builder(thread_size),
         messages=[{"role": "user", "content": user_message}],
     )
 
