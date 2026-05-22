@@ -870,6 +870,16 @@ def api_x_post_typefully(post_id: int, body: XTypefullyRequest,
     data = resp.json()
     typefully_url = data.get("share_url") or data.get("private_url") or data.get("url") or ""
     mode = "now" if body.post_now else ("scheduled" if body.schedule_date else "draft")
+
+    # Update local status to reflect where the post now lives
+    if body.post_now:
+        _change_x_status(post_id, "posted")
+    elif body.schedule_date:
+        _change_x_status(post_id, "scheduled", scheduled_at=body.schedule_date)
+    else:
+        # Saved as draft in Typefully — mark scheduled so it shows as "in queue"
+        _change_x_status(post_id, "scheduled")
+
     log_x_audit(post_id, user_email, "pushed_to_typefully", {
         "mode": mode,
         "schedule_date": body.schedule_date,

@@ -5,6 +5,11 @@ from src.database import get_connection, _rows_to_dicts
 
 def list_x_posts(status: str = None, market: str = None) -> list:
     conn = get_connection()
+    # Auto-flip overdue scheduled posts to posted
+    conn.run(
+        "UPDATE x_posts SET status = 'posted', posted_at = scheduled_at, updated_at = NOW() "
+        "WHERE status = 'scheduled' AND scheduled_at IS NOT NULL AND scheduled_at < NOW()"
+    )
     clauses = []
     params = {}
     if status:
