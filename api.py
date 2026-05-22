@@ -506,7 +506,9 @@ async def api_generate(body: GenerateRequest, user_email: str = Depends(require_
             yield f"data: {json.dumps({'type': 'done', 'post_id': post_id, 'title': post_data['title']})}\n\n"
 
         except Exception as e:
-            yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
+            _err = str(e)
+            _msg = "Claude API is busy right now — please try again in a few seconds" if "overloaded_error" in _err else _err
+            yield f"data: {json.dumps({'type': 'error', 'message': _msg})}\n\n"
 
     return StreamingResponse(stream(), media_type="text/event-stream")
 
@@ -556,7 +558,9 @@ async def api_rewrite(body: RewriteRequest, user_email: str = Depends(require_au
             yield f"data: {json.dumps({'type': 'done', 'post_id': post_id, 'title': post_data['title']})}\n\n"
 
         except Exception as e:
-            yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
+            _err = str(e)
+            _msg = "Claude API is busy right now — please try again in a few seconds" if "overloaded_error" in _err else _err
+            yield f"data: {json.dumps({'type': 'error', 'message': _msg})}\n\n"
 
     return StreamingResponse(stream(), media_type="text/event-stream")
 
@@ -1001,7 +1005,9 @@ async def api_repurpose(post_id: int, body: RepurposeRequest,
             log_audit(post_id, user_email, "repurposed", {"platform": body.platform})
             yield f"data: {json.dumps({'type': 'done', 'result': result})}\n\n"
         except Exception as e:
-            yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
+            _err = str(e)
+            _msg = "Claude API is busy right now — please try again in a few seconds" if "overloaded_error" in _err else _err
+            yield f"data: {json.dumps({'type': 'error', 'message': _msg})}\n\n"
 
     return StreamingResponse(stream(), media_type="text/event-stream")
 
@@ -1057,7 +1063,9 @@ async def api_repurpose_card(post_id: int, body: RepurposeCardRequest,
             })
             yield f"data: {json.dumps({'type': 'done', 'card': card})}\n\n"
         except Exception as e:
-            yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
+            _err = str(e)
+            _msg = "Claude API is busy right now — please try again in a few seconds" if "overloaded_error" in _err else _err
+            yield f"data: {json.dumps({'type': 'error', 'message': _msg})}\n\n"
 
     return StreamingResponse(stream(), media_type="text/event-stream")
 
@@ -1085,7 +1093,9 @@ async def api_repurpose_thread(post_id: int, body: RepurposeThreadRequest,
             log_audit(post_id, user_email, "repurposed", {"platform": "twitter", "thread_size": body.thread_size})
             yield f"data: {json.dumps({'type': 'done', 'result': result})}\n\n"
         except Exception as e:
-            yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
+            _err = str(e)
+            _msg = "Claude API is busy right now — please try again in a few seconds" if "overloaded_error" in _err else _err
+            yield f"data: {json.dumps({'type': 'error', 'message': _msg})}\n\n"
 
     return StreamingResponse(stream(), media_type="text/event-stream")
 

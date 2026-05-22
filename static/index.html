@@ -5586,8 +5586,12 @@ async function startRepurpose() {
   } catch (e) {
     clearTimeout(slowTimer);
     if (e.name === 'AbortError') return;
+    const rawMsg = e.message || '';
+    const displayMsg = rawMsg.includes('overloaded_error') || rawMsg.startsWith('{')
+      ? 'Claude API is busy right now — please try again in a few seconds'
+      : rawMsg;
     document.getElementById('rp2CarouselWrap').innerHTML =
-      `<div class="repurpose-empty" style="margin:auto;padding:60px 20px;text-align:center;color:var(--red);">Generation failed: ${escHtml(e.message)}<br><button class="btn btn-secondary" style="margin-top:12px;font-size:13px;" onclick="startRepurpose()">Try again</button></div>`;
+      `<div class="repurpose-empty" style="margin:auto;padding:60px 20px;text-align:center;color:var(--red);">Generation failed: ${escHtml(displayMsg)}<br><button class="btn btn-secondary" style="margin-top:12px;font-size:13px;" onclick="startRepurpose()">Try again</button></div>`;
     if (regenBtn) { regenBtn.disabled = false; regenBtn.style.display = ''; }
   }
   clearTimeout(slowTimer);
