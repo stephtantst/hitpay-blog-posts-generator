@@ -2159,6 +2159,10 @@
     <span class="platform-btn-icon">𝕏</span>
     <span class="platform-btn-label">X</span>
   </button>
+  <button class="platform-btn" id="platformBtnThreads" onclick="switchPlatform('threads')" title="Threads">
+    <svg viewBox="0 0 192 192" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="18" height="18"><path d="M141.537 88.988a66.667 66.667 0 0 0-2.518-1.143c-1.482-27.307-16.403-42.94-41.457-43.1h-.34c-14.986 0-27.449 6.396-35.12 18.036l13.779 9.452c5.73-8.695 14.724-10.548 21.348-10.548h.229c8.249.053 14.474 2.452 18.503 7.129 2.932 3.405 4.893 8.111 5.864 14.05-7.314-1.243-15.224-1.626-23.68-1.14-23.82 1.371-39.134 15.264-38.105 34.568.522 9.792 5.4 18.216 13.735 23.719 7.047 4.652 16.124 6.927 25.557 6.412 12.458-.683 22.231-5.436 29.049-14.127 5.178-6.6 8.453-15.153 9.899-25.93 5.937 3.583 10.337 8.298 12.767 13.966 4.132 9.635 4.373 25.468-8.546 38.376-11.319 11.308-24.925 16.2-45.488 16.351-22.809-.169-40.06-7.484-51.275-21.742C35.236 139.966 29.808 120.682 29.605 96c.203-24.682 5.63-43.966 16.133-57.317C56.954 24.425 74.206 17.11 97.015 16.94c22.975.17 40.526 7.52 52.171 21.847 5.71 7.026 10.015 15.86 12.853 26.162l16.147-4.308c-3.44-12.68-8.853-23.606-16.219-32.668C147.036 9.607 125.202.195 97.105 0h-.2C68.789.195 47.179 9.642 32.8 28.08 19.931 44.492 13.244 67.544 13.01 96v.04c.234 28.456 6.921 51.508 19.79 67.92C47.18 182.358 68.79 191.805 96.905 192h.2c24.96-.173 42.554-6.708 57.048-21.189 18.963-18.945 18.392-42.692 12.142-57.27-4.484-10.454-13.033-18.945-24.758-24.553z"/></svg>
+    <span class="platform-btn-label">Threads</span>
+  </button>
 </nav>
 
 <!-- Blog platform wrapper -->
@@ -2249,7 +2253,7 @@
             <th style="width:60px;">Editor</th>
             <th class="sortable" id="th-country" onclick="sortBy('country')">Market <span class="sort-arrow" id="sa-country"></span></th>
             <th class="sortable" id="th-created_at" onclick="sortBy('created_at')">Created <span class="sort-arrow" id="sa-created_at"></span></th>
-            <th style="width:64px;" title="Repurposed to social platforms">Social</th>
+            <th style="width:80px;" title="Repurposed to social platforms">Repurposed For</th>
             <th style="width:90px;">Actions</th>
           </tr>
         </thead>
@@ -2687,6 +2691,197 @@
 
 </div><!-- /xPlatform -->
 
+<div id="threadsPlatform" style="display:none; flex:1; overflow:hidden; flex-direction:column;">
+
+  <div class="x-platform-nav">
+    <div class="x-platform-nav-tabs">
+      <button class="nav-btn active" id="thrNavOverview" onclick="switchThrView('overview')">Overview</button>
+      <button class="nav-btn" id="thrNavEditor" onclick="switchThrView('editor')">Editor</button>
+    </div>
+    <div style="flex:1"></div>
+    <button class="btn-new-post" onclick="openCreateThrModal()">＋ New Story</button>
+  </div>
+
+  <!-- Threads Overview Pane -->
+  <div id="thrOverviewPane" style="display:flex; flex:1; overflow:hidden; flex-direction:column;">
+    <div class="x-ov-toolbar">
+      <div class="x-ov-toolbar-left">
+        <div class="filter-chips" id="thrOverviewChips">
+          <button class="chip active" data-status="all" onclick="setThrOverviewFilter(this)">All <span class="chip-count" id="throvchip-all">0</span></button>
+          <button class="chip" data-status="draft" onclick="setThrOverviewFilter(this)">📝 Draft <span class="chip-count" id="throvchip-draft">0</span></button>
+          <button class="chip" data-status="scheduled" onclick="setThrOverviewFilter(this)">🕐 Scheduled <span class="chip-count" id="throvchip-scheduled">0</span></button>
+          <button class="chip" data-status="posted" onclick="setThrOverviewFilter(this)">✅ Posted <span class="chip-count" id="throvchip-posted">0</span></button>
+        </div>
+      </div>
+      <div class="x-ov-toolbar-right">
+        <button class="btn btn-secondary" id="thrBulkSelectToggle" style="font-size:12px;padding:5px 12px;" onclick="thrToggleSelectMode()">☑ Select</button>
+        <div class="view-switch">
+          <button class="view-switch-btn active" id="thrOvsw-list" onclick="setThrOverviewView('list')">☰ List</button>
+          <button class="view-switch-btn" id="thrOvsw-board" onclick="setThrOverviewView('board')">⊞ Board</button>
+        </div>
+      </div>
+    </div>
+    <div class="x-ov-filters">
+      <input class="overview-search" id="thrOvSearch" type="text" placeholder="🔍 Search stories…" oninput="renderThrOverview()" />
+      <select class="filter-select" id="thrOvMarket" onchange="renderThrOverview()">
+        <option value="all">All Markets</option>
+        <option value="SG">🇸🇬 Singapore</option>
+        <option value="MY">🇲🇾 Malaysia</option>
+        <option value="PH">🇵🇭 Philippines</option>
+      </select>
+    </div>
+    <div class="x-ov-content">
+      <div id="thrOverviewListView">
+        <div id="thrBulkBar" class="x-bulk-bar" style="display:none;">
+          <span id="thrBulkCount">0 selected</span>
+          <button class="x-bulk-danger" onclick="thrBulkDelete()">✕ Delete selected</button>
+          <button onclick="thrClearSelection()">Clear</button>
+        </div>
+        <table class="posts-table">
+          <thead>
+            <tr>
+              <th class="x-cb-col" id="thrCbHeaderCell" style="display:none;"><input type="checkbox" class="x-select-cb" id="thrSelectAllCb" onchange="thrToggleSelectAll(this.checked)"></th>
+              <th>Content</th>
+              <th style="width:90px;">Market</th>
+              <th style="width:120px;">Status</th>
+              <th style="width:100px;">Scheduled</th>
+              <th style="width:100px;">Created</th>
+              <th style="width:70px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="thrListBody"></tbody>
+        </table>
+      </div>
+      <div id="thrOverviewBoardView" style="display:none;" class="board-wrap">
+        <div class="board-columns">
+          <div class="board-col" id="thrBCol-draft">
+            <div class="board-col-header">📝 Draft <span class="board-col-count" id="thrBCount-draft">0</span></div>
+            <div class="board-cards" id="thrBCards-draft"></div>
+          </div>
+          <div class="board-col" id="thrBCol-scheduled">
+            <div class="board-col-header">🕐 Scheduled <span class="board-col-count" id="thrBCount-scheduled">0</span></div>
+            <div class="board-cards" id="thrBCards-scheduled"></div>
+          </div>
+          <div class="board-col" id="thrBCol-posted">
+            <div class="board-col-header">✅ Posted <span class="board-col-count" id="thrBCount-posted">0</span></div>
+            <div class="board-cards" id="thrBCards-posted"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /thrOverviewPane -->
+
+  <!-- Threads Editor Pane -->
+  <div id="thrEditorPane" style="display:none; flex:1; overflow:hidden; flex-direction:column;">
+    <div class="x-toolbar">
+      <div class="x-toolbar-left">
+        <div class="x-status-chips" id="thrStatusChips">
+          <button class="chip active" data-status="all" onclick="setThrFilter(this)">All <span class="chip-count" id="thrchip-all">0</span></button>
+          <button class="chip" data-status="draft" onclick="setThrFilter(this)">📝 Draft <span class="chip-count" id="thrchip-draft">0</span></button>
+          <button class="chip" data-status="scheduled" onclick="setThrFilter(this)">🕐 Scheduled <span class="chip-count" id="thrchip-scheduled">0</span></button>
+          <button class="chip" data-status="posted" onclick="setThrFilter(this)">✅ Posted <span class="chip-count" id="thrchip-posted">0</span></button>
+        </div>
+      </div>
+      <div class="x-toolbar-right"></div>
+    </div>
+
+    <div class="x-layout">
+      <aside class="x-sidebar">
+        <div class="x-sidebar-top">
+          <input class="search-box" id="thrSearchBox" type="text" placeholder="Search stories…" oninput="renderThrPostList()" />
+        </div>
+        <div class="x-sidebar-bulk-bar" id="thrSidebarBulkBar">
+          <span id="thrSidebarBulkCount" style="font-size:12px;color:#fff;font-weight:600;flex:1;">0 selected</span>
+          <button class="x-bulk-danger" onclick="thrBulkDelete()" style="margin-right:4px;">✕ Delete</button>
+          <button onclick="thrClearSelection()">Clear</button>
+        </div>
+        <div class="x-status-tabs">
+          <button class="x-status-tab active" data-status="all" onclick="setThrSidebarFilter(this)">All</button>
+          <button class="x-status-tab" data-status="draft" onclick="setThrSidebarFilter(this)">Draft</button>
+          <button class="x-status-tab" data-status="scheduled" onclick="setThrSidebarFilter(this)">Scheduled</button>
+          <button class="x-status-tab" data-status="posted" onclick="setThrSidebarFilter(this)">Posted</button>
+        </div>
+        <div class="x-post-list" id="thrPostList"></div>
+      </aside>
+
+      <main class="x-editor-area">
+        <div class="x-no-post" id="thrNoPostState">
+          <div class="icon" style="font-size:28px;">
+            <svg width="32" height="32" viewBox="0 0 192 192" fill="currentColor"><path d="M141.537 88.988a66.667 66.667 0 0 0-2.518-1.143c-1.482-27.307-16.403-42.94-41.457-43.1h-.34c-14.986 0-27.449 6.396-35.12 18.036l13.779 9.452c5.73-8.695 14.724-10.548 21.348-10.548h.229c8.249.053 14.474 2.452 18.503 7.129 2.932 3.405 4.893 8.111 5.864 14.05-7.314-1.243-15.224-1.626-23.68-1.14-23.82 1.371-39.134 15.264-38.105 34.568.522 9.792 5.4 18.216 13.735 23.719 7.047 4.652 16.124 6.927 25.557 6.412 12.458-.683 22.231-5.436 29.049-14.127 5.178-6.6 8.453-15.153 9.899-25.93 5.937 3.583 10.337 8.298 12.767 13.966 4.132 9.635 4.373 25.468-8.546 38.376-11.319 11.308-24.925 16.2-45.488 16.351-22.809-.169-40.06-7.484-51.275-21.742C35.236 139.966 29.808 120.682 29.605 96c.203-24.682 5.63-43.966 16.133-57.317C56.954 24.425 74.206 17.11 97.015 16.94c22.975.17 40.526 7.52 52.171 21.847 5.71 7.026 10.015 15.86 12.853 26.162l16.147-4.308c-3.44-12.68-8.853-23.606-16.219-32.668C147.036 9.607 125.202.195 97.105 0h-.2C68.789.195 47.179 9.642 32.8 28.08 19.931 44.492 13.244 67.544 13.01 96v.04c.234 28.456 6.921 51.508 19.79 67.92C47.18 182.358 68.79 191.805 96.905 192h.2c24.96-.173 42.554-6.708 57.048-21.189 18.963-18.945 18.392-42.692 12.142-57.27-4.484-10.454-13.033-18.945-24.758-24.553z"/></svg>
+          </div>
+          <p>Select a story or create a new one</p>
+          <button class="btn btn-primary" onclick="openCreateThrModal()">＋ New Story</button>
+        </div>
+        <div id="thrEditorContent" style="display:none; flex:1; flex-direction:column; overflow:auto; padding:24px; gap:12px;">
+          <div id="thrSingleMode">
+            <div class="x-editor-header" style="margin-bottom:8px;">
+              <span>Post content</span>
+              <span class="x-char-count" id="thrCharCount">0 / 500</span>
+            </div>
+            <textarea class="x-textarea" id="thrContentInput" placeholder="Tell a story…" oninput="thrMarkDirty(); updateThrCharCount()" style="min-height:120px;"></textarea>
+          </div>
+          <div id="thrThreadMode" style="display:none; flex-direction:column; gap:8px;"></div>
+        </div>
+      </main>
+
+      <aside class="x-meta-panel" id="thrMetaPanel" style="display:none;">
+        <div class="meta-section">
+          <div class="meta-section-title">Status</div>
+          <div id="thrStatusBadge" class="x-status-badge draft">📝 Draft</div>
+          <select class="status-select" id="thrStatusSelect" onchange="handleThrStatusChange(this.value)">
+            <option value="draft">📝 Draft</option>
+            <option value="scheduled">🕐 Scheduled</option>
+            <option value="posted">✅ Posted</option>
+          </select>
+          <div id="thrScheduledSection" style="display:none; margin-top:10px;">
+            <div class="field-label">Scheduled date &amp; time</div>
+            <input class="field-input" id="thrScheduledAt" type="datetime-local" oninput="thrMarkDirty()" />
+          </div>
+          <div id="thrPostedSection" style="display:none; margin-top:10px;">
+            <div class="field-label">Post URL (optional)</div>
+            <input class="field-input" id="thrPostUrl" type="url" placeholder="https://www.threads.net/…" oninput="thrMarkDirty()" />
+          </div>
+        </div>
+        <div class="meta-section">
+          <div class="meta-section-title">Market</div>
+          <select class="field-input" id="thrMarket" onchange="thrMarkDirty()" style="cursor:pointer;">
+            <option value="">All Markets</option>
+            <option value="SG">🇸🇬 Singapore</option>
+            <option value="MY">🇲🇾 Malaysia</option>
+            <option value="PH">🇵🇭 Philippines</option>
+          </select>
+        </div>
+        <div class="meta-section">
+          <div class="meta-section-title">Actions</div>
+          <div class="action-buttons">
+            <button class="btn btn-primary" id="thrSaveBtn" onclick="saveThrPost()">↑ Save Changes</button>
+            <button class="btn btn-danger" onclick="deleteThrPost()">✕ Delete Post</button>
+          </div>
+        </div>
+        <div class="meta-section" id="thrTypefullySection" style="display:none;">
+          <div class="meta-section-title">Publish via Typefully</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;gap:6px;">
+              <button class="btn" id="thrSaveDraftBtn" onclick="thrPushToTypefully('draft')" style="flex:1;font-size:13px;">Save Draft</button>
+              <button class="btn btn-primary" id="thrPostNowBtn" onclick="thrPushToTypefully('now')" style="flex:1;font-size:13px;">Post Now ↗</button>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <input type="datetime-local" id="thrTypefullyScheduleDate" class="field-input" style="flex:1;font-size:12px;padding:4px 8px;" />
+              <button class="btn" id="thrScheduleBtn" onclick="thrPushToTypefully('schedule')" style="white-space:nowrap;font-size:13px;">Schedule ↗</button>
+            </div>
+            <div id="thrTypefullyResult" style="display:none;font-size:12px;font-weight:500;padding:6px 8px;border-radius:6px;"></div>
+          </div>
+        </div>
+        <div class="meta-section" id="thrAuditSection" style="display:none;">
+          <div class="meta-section-title">History</div>
+          <div id="thrAuditLog"></div>
+        </div>
+      </aside>
+    </div>
+  </div><!-- /thrEditorPane -->
+
+</div><!-- /threadsPlatform -->
+
 </div><!-- /mainContent -->
 
 <!-- Generate Modal -->
@@ -2972,6 +3167,74 @@
         <div style="display:flex;gap:8px;">
           <button class="btn" onclick="runThoughtLeadershipGenerate()" style="flex:1;font-size:13px;">Regenerate</button>
           <button class="btn btn-primary" onclick="useGeneratedThread()" style="flex:2;font-size:13px;">Use this thread →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Create Threads Post Modal -->
+<div class="modal-overlay" id="createThrModal">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-title">New Threads Story</div>
+    <div style="display:flex;gap:6px;margin-bottom:16px;">
+      <button id="createThrTabWrite" class="btn" style="flex:1;font-size:13px;" onclick="switchCreateThrTab('write')">✏️ Write</button>
+      <button id="createThrTabGenerate" class="btn btn-primary" style="flex:1;font-size:13px;" onclick="switchCreateThrTab('generate')">✨ Generate story</button>
+    </div>
+    <!-- Write mode -->
+    <div id="createThrWritePane">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <label class="modal-field-label" style="margin-bottom:0;">Content</label>
+        <span class="x-char-count" id="createThrCharCount">0 / 500</span>
+      </div>
+      <textarea class="modal-input" id="createThrContent" rows="6"
+        placeholder="Tell a story about a merchant and how payments changed for them…"
+        oninput="updateCreateThrCharCount()" style="resize:vertical;"></textarea>
+      <label class="modal-field-label">Market</label>
+      <select class="modal-select" id="createThrMarket">
+        <option value="">All Markets</option>
+        <option value="SG">🇸🇬 Singapore</option>
+        <option value="MY">🇲🇾 Malaysia</option>
+        <option value="PH">🇵🇭 Philippines</option>
+      </select>
+      <div class="modal-actions">
+        <button class="btn btn-cancel" onclick="closeCreateThrModal()">Cancel</button>
+        <button class="btn btn-primary" id="createThrBtn" onclick="submitCreateThrPost()">Create Story</button>
+      </div>
+    </div>
+    <!-- Generate mode -->
+    <div id="createThrGeneratePane" style="display:none;">
+      <label class="modal-field-label">Topic hint <span style="font-weight:400;color:var(--text-dim)">(optional)</span></label>
+      <input class="modal-input" id="createThrTopicHint" type="text"
+        placeholder="e.g. tourist payments, cross-border QR, cash to digital…"
+        style="margin-bottom:12px;" />
+      <label class="modal-field-label">Market</label>
+      <select class="modal-select" id="createThrGenerateMarket" style="margin-bottom:16px;">
+        <option value="">All Markets (SEA)</option>
+        <option value="SG">🇸🇬 Singapore</option>
+        <option value="MY">🇲🇾 Malaysia</option>
+        <option value="PH">🇵🇭 Philippines</option>
+      </select>
+      <label class="modal-field-label">Story length</label>
+      <div style="display:flex;gap:6px;margin-bottom:16px;">
+        <button class="btn" id="thrFmtBtn1" onclick="setThrStoryFormat(1)" style="flex:1;font-size:12px;">1 post</button>
+        <button class="btn btn-primary" id="thrFmtBtn3" onclick="setThrStoryFormat(3)" style="flex:1;font-size:12px;">3 posts</button>
+        <button class="btn" id="thrFmtBtn5" onclick="setThrStoryFormat(5)" style="flex:1;font-size:12px;">5 posts</button>
+      </div>
+      <div id="createThrGenerateActions" style="display:flex;gap:8px;margin-bottom:16px;">
+        <button class="btn btn-cancel" onclick="closeCreateThrModal()" style="flex:1;">Cancel</button>
+        <button class="btn btn-primary" id="createThrGenerateBtn" onclick="runThrStoryGenerate()" style="flex:2;">Generate 3-post story</button>
+      </div>
+      <div id="createThrGenerateLoading" style="display:none;text-align:center;padding:24px 0;color:var(--text-dim);font-size:13px;">
+        <div style="margin-bottom:8px;" id="createThrGenerateLoadingMsg">Generating story…</div>
+        <div style="font-size:11px;">This usually takes 5–10 seconds</div>
+      </div>
+      <div id="createThrGenerateResult" style="display:none;">
+        <div style="font-size:12px;font-weight:600;color:var(--text-dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em;" id="createThrGenerateTopic"></div>
+        <div id="createThrGeneratePosts" style="display:flex;flex-direction:column;gap:8px;max-height:320px;overflow-y:auto;margin-bottom:14px;"></div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn" onclick="runThrStoryGenerate()" style="flex:1;font-size:13px;">Regenerate</button>
+          <button class="btn btn-primary" onclick="useThrGeneratedStory()" style="flex:2;font-size:13px;">Use this story →</button>
         </div>
       </div>
     </div>
@@ -6217,11 +6480,16 @@ let currentPlatform = 'blog';
 function switchPlatform(platform) {
   currentPlatform = platform;
   const isBlog = platform === 'blog';
-  document.getElementById('blogPlatform').style.display = isBlog ? 'flex' : 'none';
-  document.getElementById('xPlatform').style.display    = isBlog ? 'none' : 'flex';
+  const isX = platform === 'x';
+  const isThreads = platform === 'threads';
+  document.getElementById('blogPlatform').style.display    = isBlog    ? 'flex' : 'none';
+  document.getElementById('xPlatform').style.display       = isX       ? 'flex' : 'none';
+  document.getElementById('threadsPlatform').style.display = isThreads ? 'flex' : 'none';
   document.getElementById('platformBtnBlog').classList.toggle('active', isBlog);
-  document.getElementById('platformBtnX').classList.toggle('active', !isBlog);
-  if (!isBlog) { loadXPosts(); switchXView('overview'); }
+  document.getElementById('platformBtnX').classList.toggle('active', isX);
+  document.getElementById('platformBtnThreads').classList.toggle('active', isThreads);
+  if (isX) { loadXPosts(); switchXView('overview'); }
+  if (isThreads) { loadThrPosts(); switchThrView('overview'); }
 }
 
 // ── X View switching ──────────────────────────────────────────────────────────
@@ -6984,6 +7252,670 @@ async function submitCreateXPost() {
 
 // Start
 init();
+
+// ── Threads Module ────────────────────────────────────────────────────────────
+
+let thrPosts = [];
+let currentThrPost = null;
+let thrStatusFilter = 'all';
+let thrIsDirty = false;
+let thrThreadMode = false;
+const THR_THREAD_SEP = '\n\n---\n\n';
+let thrSelectedIds = new Set();
+let thrSelectMode = false;
+let thrCurrentView = 'overview';
+let thrOverviewViewMode = 'list';
+
+// ── Load ──────────────────────────────────────────────────────────────────────
+async function loadThrPosts() {
+  const res = await fetch('/api/threads-posts');
+  if (!res.ok) return;
+  thrPosts = await res.json();
+  renderThrPostList();
+  renderThrChipCounts();
+  if (thrCurrentView === 'overview') renderThrOverview();
+}
+
+// ── View switching ────────────────────────────────────────────────────────────
+function switchThrView(view) {
+  thrCurrentView = view;
+  document.getElementById('thrOverviewPane').style.display = view === 'overview' ? 'flex' : 'none';
+  document.getElementById('thrEditorPane').style.display   = view === 'editor'   ? 'flex' : 'none';
+  document.getElementById('thrNavOverview').classList.toggle('active', view === 'overview');
+  document.getElementById('thrNavEditor').classList.toggle('active', view === 'editor');
+  if (view === 'overview') renderThrOverview();
+}
+
+function setThrOverviewView(v) {
+  thrOverviewViewMode = v;
+  document.getElementById('thrOvsw-list').classList.toggle('active', v === 'list');
+  document.getElementById('thrOvsw-board').classList.toggle('active', v === 'board');
+  document.getElementById('thrOverviewListView').style.display  = v === 'list'  ? 'block' : 'none';
+  document.getElementById('thrOverviewBoardView').style.display = v === 'board' ? 'flex'  : 'none';
+  renderThrOverview();
+}
+
+// ── Overview ──────────────────────────────────────────────────────────────────
+function setThrOverviewFilter(btn) {
+  document.querySelectorAll('#thrOverviewChips .chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  thrStatusFilter = btn.dataset.status;
+  document.querySelectorAll('#thrStatusChips .chip').forEach(c => c.classList.remove('active'));
+  const ec = document.querySelector(`#thrStatusChips .chip[data-status="${thrStatusFilter}"]`);
+  if (ec) ec.classList.add('active');
+  setThrSidebarFilterByStatus(thrStatusFilter);
+  thrSelectedIds.clear(); thrUpdateBulkBar();
+  renderThrOverview();
+}
+
+function renderThrOverview() {
+  renderThrChipCounts();
+  if (thrOverviewViewMode === 'list') renderThrListView();
+  else renderThrBoardView();
+}
+
+function _thrOvFiltered() {
+  const search = (document.getElementById('thrOvSearch')?.value || '').toLowerCase();
+  const mkt = document.getElementById('thrOvMarket')?.value || 'all';
+  return thrPosts.filter(p => {
+    if (thrStatusFilter !== 'all' && p.status !== thrStatusFilter) return false;
+    if (mkt !== 'all' && (p.market || '') !== mkt) return false;
+    if (search && !(p.content || '').toLowerCase().includes(search)) return false;
+    return true;
+  });
+}
+
+function renderThrListView() {
+  const filtered = _thrOvFiltered();
+  const tbody = document.getElementById('thrListBody');
+  const colspan = thrSelectMode ? '7' : '6';
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align:center;padding:40px;color:var(--text-dim);">No stories found</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = filtered.map(p => {
+    const isThread = (p.content || '').includes(THR_THREAD_SEP);
+    const preview = isThread ? (p.content || '').split(THR_THREAD_SEP)[0].slice(0, 100) : (p.content || '').slice(0, 120);
+    const statusLabel = { draft: '📝 Draft', scheduled: '🕐 Scheduled', posted: '✅ Posted' }[p.status] || p.status;
+    const market = p.market ? xMarketFlag(p.market) + ' ' + p.market : '—';
+    const scheduled = p.scheduled_at ? fmtDate(p.scheduled_at) : '—';
+    const threadBadge = isThread ? ' <span style="color:var(--text-muted);font-size:11px;">🧵</span>' : '';
+    const checked = thrSelectedIds.has(p.id) ? ' checked' : '';
+    const cbCell = thrSelectMode ? `<td class="x-cb-col" onclick="event.stopPropagation();"><input type="checkbox" class="x-select-cb" data-id="${p.id}"${checked} onchange="thrToggleSelect(${p.id}, this.checked)"></td>` : '';
+    const rowClick = thrSelectMode ? `onclick="thrRowClick(${p.id})"` : `onclick="openThrPostFromOverview(${p.id})"`;
+    const rowBg = thrSelectedIds.has(p.id) ? 'background:var(--surface2);' : '';
+    return `<tr style="cursor:pointer;${rowBg}" ${rowClick}>
+      ${cbCell}
+      <td style="max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;">${escHtml(preview)}${threadBadge}</td>
+      <td style="font-size:13px;">${market}</td>
+      <td><span class="x-status-badge ${p.status}" style="font-size:11px;padding:3px 9px;">${statusLabel}</span></td>
+      <td style="font-size:12px;color:var(--text-dim);">${scheduled}</td>
+      <td style="font-size:12px;color:var(--text-dim);">${p.created_at ? fmtDate(p.created_at) : '—'}</td>
+      <td><button class="btn btn-secondary" style="font-size:12px;padding:4px 10px;" onclick="event.stopPropagation();openThrPostFromOverview(${p.id})">Edit</button></td>
+    </tr>`;
+  }).join('');
+  const allCb = document.getElementById('thrSelectAllCb');
+  if (allCb) {
+    const ids = filtered.map(p => p.id);
+    allCb.checked = ids.length > 0 && ids.every(id => thrSelectedIds.has(id));
+    allCb.indeterminate = !allCb.checked && ids.some(id => thrSelectedIds.has(id));
+  }
+}
+
+function renderThrBoardView() {
+  const search = (document.getElementById('thrOvSearch')?.value || '').toLowerCase();
+  const mkt = document.getElementById('thrOvMarket')?.value || 'all';
+  ['draft', 'scheduled', 'posted'].forEach(status => {
+    const countEl = document.getElementById(`thrBCount-${status}`);
+    const cardsEl = document.getElementById(`thrBCards-${status}`);
+    const filtered = thrPosts.filter(p => {
+      if (p.status !== status) return false;
+      if (mkt !== 'all' && (p.market || '') !== mkt) return false;
+      if (search && !(p.content || '').toLowerCase().includes(search)) return false;
+      return true;
+    });
+    if (countEl) countEl.textContent = filtered.length;
+    if (!cardsEl) return;
+    if (!filtered.length) { cardsEl.innerHTML = '<div style="padding:12px;font-size:12px;color:var(--text-dim);">No stories</div>'; return; }
+    cardsEl.innerHTML = filtered.map(p => {
+      const isThread = (p.content || '').includes(THR_THREAD_SEP);
+      const preview = isThread ? (p.content || '').split(THR_THREAD_SEP)[0].slice(0, 120) : (p.content || '').slice(0, 120);
+      const market = p.market ? xMarketFlag(p.market) + ' ' + p.market : '';
+      return `<div class="x-board-card" onclick="openThrPostFromOverview(${p.id})">
+        <div class="x-board-card-preview">${escHtml(preview)}</div>
+        <div class="x-board-card-meta">
+          ${market ? `<span>${market}</span>` : ''}
+          ${isThread ? '<span>🧵 Thread</span>' : ''}
+          <span>${p.created_at ? fmtDate(p.created_at) : ''}</span>
+        </div>
+      </div>`;
+    }).join('');
+  });
+}
+
+function openThrPostFromOverview(id) {
+  switchThrView('editor');
+  openThrPost(id);
+}
+
+// ── Chip counts ───────────────────────────────────────────────────────────────
+function renderThrChipCounts() {
+  const counts = { all: thrPosts.length, draft: 0, scheduled: 0, posted: 0 };
+  thrPosts.forEach(p => { if (counts[p.status] !== undefined) counts[p.status]++; });
+  Object.entries(counts).forEach(([status, count]) => {
+    const el = document.getElementById(`thrchip-${status}`);
+    if (el) el.textContent = count;
+    const ov = document.getElementById(`throvchip-${status}`);
+    if (ov) ov.textContent = count;
+  });
+}
+
+// ── Sidebar list ──────────────────────────────────────────────────────────────
+function renderThrPostList() {
+  const search = (document.getElementById('thrSearchBox')?.value || '').toLowerCase();
+  const list = document.getElementById('thrPostList');
+  const filtered = thrPosts.filter(p => {
+    if (thrStatusFilter !== 'all' && p.status !== thrStatusFilter) return false;
+    if (search && !(p.content || '').toLowerCase().includes(search)) return false;
+    return true;
+  });
+  if (!filtered.length) { list.innerHTML = '<div style="padding:20px 14px;font-size:13px;color:var(--text-dim);">No stories found</div>'; return; }
+  list.innerHTML = filtered.map(p => {
+    const isActive = currentThrPost && currentThrPost.id === p.id ? ' active' : '';
+    const statusLabel = { draft: '📝', scheduled: '🕐', posted: '✅' }[p.status] || '';
+    const market = p.market ? `<span style="color:var(--text-dim);">${xMarketFlag(p.market)}</span>` : '';
+    const isThread = (p.content || '').includes(THR_THREAD_SEP);
+    const threadBadge = isThread ? `<span style="color:var(--text-muted);font-size:10px;">🧵 Thread</span>` : '';
+    const preview = isThread ? (p.content || '').split(THR_THREAD_SEP)[0].slice(0, 90) : (p.content || '').slice(0, 120);
+    return `<div class="x-post-item${isActive}" onclick="openThrPost(${p.id})">
+      <div class="x-post-item-preview">${escHtml(preview)}</div>
+      <div class="x-post-item-meta">${statusLabel} ${threadBadge} ${market} <span>${p.created_at ? fmtDate(p.created_at) : ''}</span></div>
+    </div>`;
+  }).join('');
+}
+
+// ── Filter handlers ───────────────────────────────────────────────────────────
+function setThrFilter(btn) {
+  document.querySelectorAll('#thrStatusChips .chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  thrStatusFilter = btn.dataset.status;
+  setThrSidebarFilterByStatus(thrStatusFilter);
+  renderThrPostList();
+}
+
+function setThrSidebarFilter(btn) {
+  document.querySelectorAll('#thrEditorPane .x-status-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  thrStatusFilter = btn.dataset.status;
+  document.querySelectorAll('#thrStatusChips .chip').forEach(c => c.classList.remove('active'));
+  const chip = document.querySelector(`#thrStatusChips .chip[data-status="${thrStatusFilter}"]`);
+  if (chip) chip.classList.add('active');
+  renderThrPostList();
+}
+
+function setThrSidebarFilterByStatus(status) {
+  document.querySelectorAll('#thrEditorPane .x-status-tab').forEach(t => t.classList.remove('active'));
+  const tab = document.querySelector(`#thrEditorPane .x-status-tab[data-status="${status}"]`);
+  if (tab) tab.classList.add('active');
+}
+
+// ── Open / Edit ───────────────────────────────────────────────────────────────
+async function openThrPost(id) {
+  if (thrIsDirty && currentThrPost) {
+    if (!confirm('You have unsaved changes. Discard them?')) return;
+  }
+  const res = await fetch(`/api/threads-posts/${id}`);
+  if (!res.ok) return;
+  currentThrPost = await res.json();
+  thrIsDirty = false;
+  populateThrEditor(currentThrPost);
+  renderThrPostList();
+}
+
+function populateThrEditor(post) {
+  document.getElementById('thrNoPostState').style.display = 'none';
+  document.getElementById('thrEditorContent').style.display = 'flex';
+  document.getElementById('thrMetaPanel').style.display = '';
+
+  const content = post.content || '';
+  if (content.includes(THR_THREAD_SEP)) {
+    _renderThrThreadEditor(content);
+  } else {
+    _renderThrSingleEditor(content);
+  }
+
+  document.getElementById('thrMarket').value = post.market || '';
+  document.getElementById('thrStatusSelect').value = post.status || 'draft';
+  toggleThrStatusFields(post.status || 'draft');
+  if (post.scheduled_at) {
+    const dt = new Date(post.scheduled_at);
+    document.getElementById('thrScheduledAt').value = new Date(dt.getTime() - dt.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  } else {
+    document.getElementById('thrScheduledAt').value = '';
+  }
+  document.getElementById('thrPostUrl').value = post.post_url || '';
+
+  const badge = document.getElementById('thrStatusBadge');
+  const labels = { draft: '📝 Draft', scheduled: '🕐 Scheduled', posted: '✅ Posted' };
+  badge.textContent = labels[post.status] || post.status;
+  badge.className = `x-status-badge ${post.status || 'draft'}`;
+
+  loadThrAuditLog(post.id);
+
+  const typefullySection = document.getElementById('thrTypefullySection');
+  if (typefullySection) {
+    typefullySection.style.display = window._config.typefully_enabled ? '' : 'none';
+    document.getElementById('thrTypefullyResult').style.display = 'none';
+    document.getElementById('thrTypefullyScheduleDate').value = '';
+  }
+}
+
+function _renderThrSingleEditor(content) {
+  thrThreadMode = false;
+  document.getElementById('thrSingleMode').style.display = '';
+  document.getElementById('thrThreadMode').style.display = 'none';
+  document.getElementById('thrContentInput').value = content;
+  updateThrCharCount();
+}
+
+function _renderThrThreadEditor(content) {
+  thrThreadMode = true;
+  document.getElementById('thrSingleMode').style.display = 'none';
+  const threadEl = document.getElementById('thrThreadMode');
+  threadEl.style.display = 'flex';
+  const parts = content.split(THR_THREAD_SEP);
+  threadEl.innerHTML = `
+    <div class="x-editor-header"><span>🧵 Thread &mdash; ${parts.length} posts</span></div>
+    ${parts.map((part, i) => `
+      <div class="x-thread-block">
+        <div class="x-thread-block-header">
+          <span class="x-thread-block-label">Post ${i + 1} / ${parts.length}</span>
+          <span class="x-char-count" id="thrThreadCount_${i}"></span>
+        </div>
+        <textarea class="x-textarea" id="thrThreadPost_${i}" style="min-height:80px;" oninput="thrMarkDirty(); updateThrThreadCount(${i})">${escHtml(part)}</textarea>
+      </div>
+      ${i < parts.length - 1 ? '<div class="x-thread-sep">↓</div>' : ''}
+    `).join('')}`;
+  parts.forEach((_, i) => updateThrThreadCount(i));
+}
+
+function updateThrThreadCount(i) {
+  const ta = document.getElementById(`thrThreadPost_${i}`);
+  const el = document.getElementById(`thrThreadCount_${i}`);
+  if (!ta || !el) return;
+  const len = ta.value.length;
+  el.textContent = `${len} / 500`;
+  el.className = 'x-char-count' + (len > 500 ? ' over' : len > 440 ? ' warn' : '');
+}
+
+function _getThrContent() {
+  if (thrThreadMode) {
+    const parts = [];
+    let i = 0;
+    while (document.getElementById(`thrThreadPost_${i}`)) {
+      parts.push(document.getElementById(`thrThreadPost_${i}`).value);
+      i++;
+    }
+    return parts.join(THR_THREAD_SEP);
+  }
+  return document.getElementById('thrContentInput').value;
+}
+
+function thrMarkDirty() { thrIsDirty = true; }
+
+function updateThrCharCount() {
+  const len = (document.getElementById('thrContentInput')?.value || '').length;
+  const el = document.getElementById('thrCharCount');
+  if (!el) return;
+  el.textContent = `${len} / 500`;
+  el.className = 'x-char-count' + (len > 500 ? ' over' : len > 440 ? ' warn' : '');
+}
+
+function updateCreateThrCharCount() {
+  const val = document.getElementById('createThrContent')?.value || '';
+  const el = document.getElementById('createThrCharCount');
+  if (!el) return;
+  if (val.includes(THR_THREAD_SEP)) {
+    const count = val.split(THR_THREAD_SEP).length;
+    el.textContent = `${count}-post thread`;
+    el.className = 'x-char-count';
+  } else {
+    const len = val.length;
+    el.textContent = `${len} / 500`;
+    el.className = 'x-char-count' + (len > 500 ? ' over' : len > 440 ? ' warn' : '');
+  }
+}
+
+function toggleThrStatusFields(status) {
+  document.getElementById('thrScheduledSection').style.display = status === 'scheduled' ? 'block' : 'none';
+  document.getElementById('thrPostedSection').style.display = status === 'posted' ? 'block' : 'none';
+}
+
+function handleThrStatusChange(status) {
+  toggleThrStatusFields(status);
+  thrMarkDirty();
+}
+
+// ── Save / Delete ─────────────────────────────────────────────────────────────
+async function saveThrPost() {
+  if (!currentThrPost) return;
+  const content = _getThrContent().trim();
+  if (!content) { showToast('Content cannot be empty', 'error'); return; }
+  const status = document.getElementById('thrStatusSelect').value;
+  const market = document.getElementById('thrMarket').value;
+  const scheduledAt = document.getElementById('thrScheduledAt').value || null;
+  const postUrl = document.getElementById('thrPostUrl').value.trim() || null;
+
+  const updateRes = await fetch(`/api/threads-posts/${currentThrPost.id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content, market: market || null, scheduled_at: scheduledAt }),
+  });
+  if (!updateRes.ok) { showToast('Save failed', 'error'); return; }
+
+  if (status !== currentThrPost.status) {
+    const statusRes = await fetch(`/api/threads-posts/${currentThrPost.id}/status`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status, scheduled_at: scheduledAt, post_url: postUrl }),
+    });
+    if (!statusRes.ok) { showToast('Status update failed', 'error'); return; }
+  }
+
+  thrIsDirty = false;
+  currentThrPost = { ...currentThrPost, content, market: market || null, status, scheduled_at: scheduledAt, post_url: postUrl };
+  const idx = thrPosts.findIndex(p => p.id === currentThrPost.id);
+  if (idx !== -1) thrPosts[idx] = { ...thrPosts[idx], ...currentThrPost };
+  renderThrPostList();
+  renderThrChipCounts();
+  if (thrCurrentView === 'overview') renderThrOverview();
+  showToast('Saved');
+  loadThrAuditLog(currentThrPost.id);
+}
+
+async function deleteThrPost() {
+  if (!currentThrPost) return;
+  if (!confirm('Delete this Threads story? This cannot be undone.')) return;
+  const res = await fetch(`/api/threads-posts/${currentThrPost.id}`, { method: 'DELETE' });
+  if (!res.ok) { showToast('Delete failed', 'error'); return; }
+  thrPosts = thrPosts.filter(p => p.id !== currentThrPost.id);
+  currentThrPost = null;
+  thrIsDirty = false;
+  document.getElementById('thrNoPostState').style.display = '';
+  document.getElementById('thrEditorContent').style.display = 'none';
+  document.getElementById('thrMetaPanel').style.display = 'none';
+  renderThrPostList();
+  renderThrChipCounts();
+  renderThrOverview();
+  showToast('Story deleted');
+}
+
+// ── Audit log ─────────────────────────────────────────────────────────────────
+async function loadThrAuditLog(postId) {
+  const res = await fetch(`/api/threads-posts/${postId}/audit-log`);
+  if (!res.ok) return;
+  const entries = await res.json();
+  const section = document.getElementById('thrAuditSection');
+  const logEl = document.getElementById('thrAuditLog');
+  if (!entries.length) { section.style.display = 'none'; return; }
+  section.style.display = '';
+  logEl.innerHTML = entries.map(e => {
+    const ts = e.timestamp ? new Date(e.timestamp).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+    const actor = (e.user_email || '').split('@')[0];
+    const actionLabel = { created: 'Created', edited: 'Edited', status_changed: 'Status changed', deleted: 'Deleted', pushed_to_typefully: 'Pushed to Typefully' }[e.action] || e.action;
+    let detail = '';
+    if (e.action === 'status_changed' && e.details) {
+      try { const d = typeof e.details === 'string' ? JSON.parse(e.details) : e.details; detail = `${d.from} → ${d.to}`; } catch {}
+    }
+    return `<div style="padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+      <div style="color:var(--text);font-weight:500;">${actionLabel}${detail ? ': ' + escHtml(detail) : ''}</div>
+      <div style="color:var(--text-dim);margin-top:2px;">${escHtml(actor)} · ${ts}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── Typefully ─────────────────────────────────────────────────────────────────
+async function thrPushToTypefully(mode) {
+  if (!currentThrPost) return;
+  const resultEl = document.getElementById('thrTypefullyResult');
+  const saveDraftBtn = document.getElementById('thrSaveDraftBtn');
+  const postNowBtn = document.getElementById('thrPostNowBtn');
+  const scheduleBtn = document.getElementById('thrScheduleBtn');
+
+  let scheduleDate = null;
+  if (mode === 'schedule') {
+    const val = document.getElementById('thrTypefullyScheduleDate').value;
+    if (!val) { showToast('Pick a date and time to schedule', 'error'); return; }
+    scheduleDate = new Date(val).toISOString();
+  }
+
+  [saveDraftBtn, postNowBtn, scheduleBtn].forEach(b => b && (b.disabled = true));
+  resultEl.style.display = 'none';
+
+  try {
+    const res = await fetch(`/api/threads-posts/${currentThrPost.id}/push-to-typefully`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ schedule_date: scheduleDate, post_now: mode === 'now' }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      resultEl.textContent = data.detail || 'Failed to push to Typefully';
+      resultEl.style.background = 'var(--danger-bg,#fee2e2)';
+      resultEl.style.color = 'var(--danger,#dc2626)';
+      resultEl.style.display = 'block';
+      return;
+    }
+    const msg = mode === 'now' ? 'Posted ✓' : mode === 'schedule' ? 'Scheduled ✓' : 'Saved as draft ✓';
+    const linkLabel = mode === 'draft' ? 'open & publish in Typefully ↗' : 'view in Typefully ↗';
+    resultEl.style.background = 'var(--success-bg,#dcfce7)';
+    resultEl.style.color = 'var(--success,#16a34a)';
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = data.typefully_url
+      ? `${msg} — <a href="${escHtml(data.typefully_url)}" target="_blank" style="color:inherit;">${linkLabel}</a>`
+      : msg;
+    await loadThrPosts();
+  } catch (e) {
+    resultEl.textContent = 'Network error — try again';
+    resultEl.style.background = 'var(--danger-bg,#fee2e2)';
+    resultEl.style.color = 'var(--danger,#dc2626)';
+    resultEl.style.display = 'block';
+  } finally {
+    [saveDraftBtn, postNowBtn, scheduleBtn].forEach(b => b && (b.disabled = false));
+  }
+}
+
+// ── Bulk select ───────────────────────────────────────────────────────────────
+function thrToggleSelectMode() {
+  thrSelectMode = !thrSelectMode;
+  if (!thrSelectMode) thrSelectedIds.clear();
+  const btn = document.getElementById('thrBulkSelectToggle');
+  if (btn) {
+    btn.textContent = thrSelectMode ? '✕ Cancel' : '☑ Select';
+    btn.style.background = thrSelectMode ? 'var(--accent)' : '';
+    btn.style.color = thrSelectMode ? '#fff' : '';
+    btn.style.borderColor = thrSelectMode ? 'var(--accent)' : '';
+  }
+  const cbHeader = document.getElementById('thrCbHeaderCell');
+  if (cbHeader) cbHeader.style.display = thrSelectMode ? '' : 'none';
+  thrUpdateBulkBar();
+  renderThrListView();
+}
+
+function thrRowClick(id) { thrToggleSelect(id, !thrSelectedIds.has(id)); renderThrListView(); }
+function thrToggleSelect(id, checked) { if (checked) thrSelectedIds.add(id); else thrSelectedIds.delete(id); thrUpdateBulkBar(); }
+
+function thrToggleSelectAll(checked) {
+  _thrOvFiltered().forEach(p => { if (checked) thrSelectedIds.add(p.id); else thrSelectedIds.delete(p.id); });
+  thrUpdateBulkBar();
+  renderThrListView();
+}
+
+function thrUpdateBulkBar() {
+  const n = thrSelectedIds.size;
+  const bar = document.getElementById('thrBulkBar');
+  const count = document.getElementById('thrBulkCount');
+  if (bar) bar.style.display = (thrSelectMode && n > 0) ? 'flex' : 'none';
+  if (count) count.textContent = `${n} selected`;
+  const sbar = document.getElementById('thrSidebarBulkBar');
+  const scount = document.getElementById('thrSidebarBulkCount');
+  if (sbar) sbar.style.display = n > 0 ? 'flex' : 'none';
+  if (scount) scount.textContent = `${n} selected`;
+}
+
+function thrClearSelection() {
+  thrSelectedIds.clear();
+  thrUpdateBulkBar();
+  if (thrSelectMode) renderThrListView();
+  renderThrPostList();
+}
+
+async function thrBulkDelete() {
+  const ids = [...thrSelectedIds];
+  if (!ids.length) return;
+  if (!confirm(`Delete ${ids.length} Threads stor${ids.length > 1 ? 'ies' : 'y'}? This cannot be undone.`)) return;
+  try {
+    const res = await fetch('/api/threads-posts/bulk-delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids }),
+    });
+    if (!res.ok) { showToast('Bulk delete failed', 'error'); return; }
+    const result = await res.json();
+    const deleted = new Set(result.deleted);
+    thrPosts = thrPosts.filter(p => !deleted.has(p.id));
+    if (currentThrPost && deleted.has(currentThrPost.id)) {
+      currentThrPost = null; thrIsDirty = false;
+      document.getElementById('thrNoPostState').style.display = '';
+      document.getElementById('thrEditorContent').style.display = 'none';
+      document.getElementById('thrMetaPanel').style.display = 'none';
+    }
+    thrSelectedIds.clear(); thrSelectMode = false;
+    const btn = document.getElementById('thrBulkSelectToggle');
+    if (btn) { btn.textContent = '☑ Select'; btn.style.background = ''; btn.style.color = ''; btn.style.borderColor = ''; }
+    const cbHeader = document.getElementById('thrCbHeaderCell');
+    if (cbHeader) cbHeader.style.display = 'none';
+    thrUpdateBulkBar();
+    renderThrPostList(); renderThrChipCounts(); renderThrOverview();
+    showToast(`Deleted ${result.deleted.length} stor${result.deleted.length > 1 ? 'ies' : 'y'}`, 'success');
+  } catch (e) { showToast('Error during bulk delete', 'error'); }
+}
+
+// ── Create modal ──────────────────────────────────────────────────────────────
+let _thrGeneratedStory = null;
+let _thrStoryFormat = 3;
+
+function setThrStoryFormat(n) {
+  _thrStoryFormat = n;
+  [1, 3, 5].forEach(i => {
+    const btn = document.getElementById(`thrFmtBtn${i}`);
+    if (btn) btn.className = i === n ? 'btn btn-primary' : 'btn';
+  });
+  const genBtn = document.getElementById('createThrGenerateBtn');
+  if (genBtn) genBtn.textContent = n === 1 ? 'Generate story' : `Generate ${n}-post story`;
+}
+
+function openCreateThrModal() {
+  document.getElementById('createThrContent').value = '';
+  document.getElementById('createThrMarket').value = '';
+  document.getElementById('createThrCharCount').textContent = '0 / 500';
+  document.getElementById('createThrTopicHint').value = '';
+  document.getElementById('createThrGenerateMarket').value = '';
+  _thrGeneratedStory = null;
+  setThrStoryFormat(3);
+  switchCreateThrTab('generate');
+  document.getElementById('createThrModal').classList.add('open');
+}
+
+function closeCreateThrModal() {
+  document.getElementById('createThrModal').classList.remove('open');
+}
+
+function switchCreateThrTab(tab) {
+  const isWrite = tab === 'write';
+  document.getElementById('createThrWritePane').style.display = isWrite ? '' : 'none';
+  document.getElementById('createThrGeneratePane').style.display = isWrite ? 'none' : '';
+  document.getElementById('createThrTabWrite').className = isWrite ? 'btn btn-primary' : 'btn';
+  document.getElementById('createThrTabGenerate').className = isWrite ? 'btn' : 'btn btn-primary';
+  if (!isWrite) {
+    document.getElementById('createThrGenerateActions').style.display = 'flex';
+    document.getElementById('createThrGenerateLoading').style.display = 'none';
+    document.getElementById('createThrGenerateResult').style.display = 'none';
+    setTimeout(() => document.getElementById('createThrTopicHint').focus(), 50);
+  }
+}
+
+async function runThrStoryGenerate() {
+  const topicHint = document.getElementById('createThrTopicHint').value.trim();
+  const market = document.getElementById('createThrGenerateMarket').value;
+
+  document.getElementById('createThrGenerateActions').style.display = 'none';
+  document.getElementById('createThrGenerateResult').style.display = 'none';
+  document.getElementById('createThrGenerateLoading').style.display = 'block';
+  const loadingMsg = document.getElementById('createThrGenerateLoadingMsg');
+  if (loadingMsg) loadingMsg.textContent = _thrStoryFormat === 1 ? 'Generating story…' : `Generating ${_thrStoryFormat}-post story…`;
+
+  try {
+    const res = await fetch('/api/threads-posts/generate-story', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ market: market || null, topic_hint: topicHint || null, thread_size: _thrStoryFormat }),
+    });
+    if (!res.ok) {
+      let errMsg = 'Generation failed — try again';
+      try { const e = await res.json(); if (e.detail) errMsg = e.detail; } catch (_) {}
+      throw new Error(errMsg);
+    }
+    const data = await res.json();
+    _thrGeneratedStory = data;
+
+    document.getElementById('createThrGenerateTopic').textContent = data.topic || 'Generated story';
+
+    const postsEl = document.getElementById('createThrGeneratePosts');
+    postsEl.innerHTML = (data.posts || []).map(p =>
+      `<div style="background:var(--bg-alt,#f7f7f7);border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.6;white-space:pre-wrap;">${escHtml(p)}</div>`
+    ).join('');
+
+    document.getElementById('createThrGenerateLoading').style.display = 'none';
+    document.getElementById('createThrGenerateResult').style.display = 'block';
+  } catch (e) {
+    document.getElementById('createThrGenerateLoading').style.display = 'none';
+    document.getElementById('createThrGenerateActions').style.display = 'flex';
+    showToast(e.message || 'Generation failed — try again', 'error');
+  }
+}
+
+function useThrGeneratedStory() {
+  if (!_thrGeneratedStory) return;
+  const posts = _thrGeneratedStory.posts || [];
+  const linkUrl = _thrGeneratedStory.link_url || 'https://hitpayapp.com/blog/hitpay-rates';
+  const resolvedPosts = posts.map(p => p.replace(/\[URL\]/g, linkUrl));
+  const content = resolvedPosts.length === 1 ? resolvedPosts[0] : resolvedPosts.join(THR_THREAD_SEP);
+  document.getElementById('createThrContent').value = content;
+  document.getElementById('createThrMarket').value = document.getElementById('createThrGenerateMarket').value;
+  updateCreateThrCharCount();
+  switchCreateThrTab('write');
+}
+
+async function submitCreateThrPost() {
+  const content = document.getElementById('createThrContent').value.trim();
+  if (!content) { showToast('Content cannot be empty', 'error'); return; }
+  const market = document.getElementById('createThrMarket').value;
+  const btn = document.getElementById('createThrBtn');
+  btn.disabled = true; btn.textContent = 'Creating…';
+  const res = await fetch('/api/threads-posts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content, market: market || null }),
+  });
+  btn.disabled = false; btn.textContent = 'Create Story';
+  if (!res.ok) { showToast('Failed to create story', 'error'); return; }
+  const { id } = await res.json();
+  closeCreateThrModal();
+  await loadThrPosts();
+  openThrPostFromOverview(id);
+  showToast('Story created');
+}
 </script>
 </body>
 </html>

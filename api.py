@@ -26,6 +26,7 @@ from config import (
     SECRET_KEY,
     TYPEFULLY_API_KEY,
     TYPEFULLY_SOCIAL_SET_ID,
+    TYPEFULLY_THREADS_SOCIAL_SET_ID,
 )
 from src.database import (
     delete_post,
@@ -958,6 +959,240 @@ def api_generate_random_x_post(
             raise HTTPException(503, "Claude API is busy right now — please try again in a few seconds")
         raise HTTPException(500, f"Generation error: {e}")
     return result
+
+
+# ── Threads Posts ─────────────────────────────────────────────────────────────
+
+from src.threads_database import (
+    list_threads_posts,
+    get_threads_post,
+    create_threads_post,
+    update_threads_post,
+    change_threads_post_status as _change_thr_status,
+    delete_threads_post,
+    log_threads_audit,
+    get_threads_audit_log,
+)
+
+
+class CreateThreadsPostRequest(BaseModel):
+    content: str
+    market: str | None = None
+    scheduled_at: str | None = None
+
+
+class UpdateThreadsPostRequest(BaseModel):
+    content: str | None = None
+    market: str | None = None
+    scheduled_at: str | None = None
+
+
+class ThreadsStatusRequest(BaseModel):
+    status: str
+    scheduled_at: str | None = None
+    post_url: str | None = None
+
+
+class ThreadsBulkDeleteRequest(BaseModel):
+    ids: list[int]
+
+
+class GenerateThreadsStoryRequest(BaseModel):
+    market: str | None = None
+    topic_hint: str | None = None
+    thread_size: int = 3  # 1, 3, or 5
+
+
+class ThreadsTypefullyRequest(BaseModel):
+    schedule_date: str | None = None
+    post_now: bool = False
+
+
+def _get_typefully_threads_social_set_id() -> str:
+    if TYPEFULLY_THREADS_SOCIAL_SET_ID:
+        return TYPEFULLY_THREADS_SOCIAL_SET_ID
+    return _get_typefully_social_set_id()
+
+
+@app.get("/api/threads-posts")
+def api_list_threads_posts(status: str = None, market: str = None, _: str = Depends(require_auth)):
+    return list_threads_posts(
+        status if status and status != "all" else None,
+        market if market and market != "all" else None,
+    )
+
+
+@app.post("/api/threads-posts")
+def api_create_threads_post(body: CreateThreadsPostRequest, user_email: str = Depends(require_auth)):
+    if not body.content.strip():
+        raise HTTPException(400, "Content cannot be empty")
+    post_id = create_threads_post(
+        content=body.content.strip(),
+        market=body.market or None,
+        scheduled_at=body.scheduled_at or None,
+        editor_email=user_email,
+    )
+    log_threads_audit(post_id, user_email, "created", {"market": body.market or ""})
+    return {"id": post_id}
+
+
+@app.get("/api/threads-posts/{post_id}")
+def api_get_threads_post(post_id: int, _: str = Depends(require_auth)):
+    post = get_threads_post(post_id)
+    if not post:
+        raise HTTPException(404, "Threads post not found")
+    return post
+
+
+@app.put("/api/threads-posts/{post_id}")
+def api_update_threads_post(post_id: int, body: UpdateThreadsPostRequest, user_email: str = Depends(require_auth)):
+    post = get_threads_post(post_id)
+    if not post:
+        raise HTTPException(404, "Threads post not found")
+    fields, changed = {}, []
+    if body.content is not None:
+        fields["content"] = body.content.strip()
+        changed.append("content")
+    if body.market is not None:
+        fields["market"] = body.market or None
+        changed.append("market")
+    if body.scheduled_at is not None:
+        fields["scheduled_at"] = body.scheduled_at or None
+        changed.append("scheduled_at")
+    if fields:
+        update_threads_post(post_id, fields)
+        log_threads_audit(post_id, user_email, "edited", {"fields": changed})
+    return {"ok": True}
+
+
+@app.post("/api/threads-posts/{post_id}/status")
+def api_change_threads_post_status(post_id: int, body: ThreadsStatusRequest, user_email: str = Depends(require_auth)):
+    valid = ["draft", "scheduled", "posted"]
+    if body.status not in valid:
+        raise HTTPException(400, f"Invalid status. Must be one of: {valid}")
+    post = get_threads_post(post_id)
+    if not post:
+        raise HTTPException(404, "Threads post not found")
+    _change_thr_status(post_id, body.status, scheduled_at=body.scheduled_at, post_url=body.post_url)
+    log_threads_audit(post_id, user_email, "status_changed", {"from": post.get("status"), "to": body.status})
+    return {"ok": True}
+
+
+@app.delete("/api/threads-posts/{post_id}")
+def api_delete_threads_post(post_id: int, user_email: str = Depends(require_auth)):
+    post = get_threads_post(post_id)
+    if not post:
+        raise HTTPException(404, "Threads post not found")
+    log_threads_audit(post_id, user_email, "deleted", {"content_preview": (post.get("content") or "")[:60]})
+    delete_threads_post(post_id)
+    return {"ok": True}
+
+
+@app.post("/api/threads-posts/bulk-delete")
+def api_bulk_delete_threads_posts(body: ThreadsBulkDeleteRequest, user_email: str = Depends(require_auth)):
+    deleted = []
+    for pid in body.ids:
+        post = get_threads_post(pid)
+        if post:
+            log_threads_audit(pid, user_email, "deleted", {"content_preview": (post.get("content") or "")[:60]})
+            delete_threads_post(pid)
+            deleted.append(pid)
+    return {"deleted": deleted}
+
+
+@app.get("/api/threads-posts/{post_id}/audit-log")
+def api_get_threads_audit_log(post_id: int, _: str = Depends(require_auth)):
+    return get_threads_audit_log(post_id)
+
+
+@app.post("/api/threads-posts/generate-story")
+def api_generate_threads_story(body: GenerateThreadsStoryRequest, _: str = Depends(require_auth)):
+    from src.threads_thought_leadership import generate_threads_story
+    try:
+        result = generate_threads_story(
+            market=body.market or None,
+            topic_hint=body.topic_hint or None,
+            thread_size=body.thread_size,
+        )
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+    except Exception as e:
+        if "overloaded_error" in str(e):
+            raise HTTPException(503, "Claude API is busy right now — please try again in a few seconds")
+        raise HTTPException(500, f"Generation error: {e}")
+    return result
+
+
+@app.post("/api/threads-posts/{post_id}/push-to-typefully")
+def api_threads_post_typefully(post_id: int, body: ThreadsTypefullyRequest,
+                               user_email: str = Depends(require_auth)):
+    if not TYPEFULLY_API_KEY:
+        raise HTTPException(400, "Typefully not configured — add TYPEFULLY_API_KEY to .env")
+    post = get_threads_post(post_id)
+    if not post:
+        raise HTTPException(404, "Threads post not found")
+    content = (post.get("content") or "").strip()
+    if not content:
+        raise HTTPException(400, "Post has no content")
+
+    THREAD_SEP = "\n\n---\n\n"
+    posts = [p.strip() for p in content.split(THREAD_SEP) if p.strip()]
+
+    payload: dict = {
+        "platforms": {
+            "threads": {
+                "enabled": True,
+                "posts": [{"text": p} for p in posts],
+            }
+        }
+    }
+    if body.schedule_date:
+        payload["publish_at"] = body.schedule_date
+    elif body.post_now:
+        from datetime import datetime, timezone, timedelta
+        payload["publish_at"] = (datetime.now(timezone.utc) + timedelta(minutes=2)).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    social_set_id = _get_typefully_threads_social_set_id()
+
+    try:
+        resp = httpx.post(
+            f"https://api.typefully.com/v2/social-sets/{social_set_id}/drafts",
+            headers={"Authorization": f"Bearer {TYPEFULLY_API_KEY}", "Content-Type": "application/json"},
+            json=payload,
+            timeout=15,
+        )
+        resp.raise_for_status()
+    except httpx.HTTPStatusError as e:
+        if e.response.status_code in (401, 403):
+            raise HTTPException(400, "Typefully API key is invalid — check TYPEFULLY_API_KEY")
+        elif e.response.status_code == 429:
+            raise HTTPException(429, "Typefully rate limit — wait a minute and retry")
+        else:
+            raise HTTPException(500, f"Typefully error {e.response.status_code}: {e.response.text[:200]}")
+    except httpx.TimeoutException:
+        raise HTTPException(504, "Typefully request timed out")
+
+    data = resp.json()
+    typefully_url = data.get("share_url") or data.get("private_url") or data.get("url") or ""
+    mode = "now" if body.post_now else ("scheduled" if body.schedule_date else "draft")
+
+    if body.post_now:
+        _change_thr_status(post_id, "posted")
+    elif body.schedule_date:
+        _change_thr_status(post_id, "scheduled", scheduled_at=body.schedule_date)
+    else:
+        _change_thr_status(post_id, "scheduled")
+
+    log_threads_audit(post_id, user_email, "pushed_to_typefully", {
+        "mode": mode,
+        "schedule_date": body.schedule_date,
+        "typefully_url": typefully_url,
+    })
+    return {
+        "typefully_url": typefully_url,
+        "posted": body.post_now,
+        "scheduled": bool(body.schedule_date),
+    }
 
 
 # ── Repurpose for Social ─────────────────────────────────────────────────────

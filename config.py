@@ -31,3 +31,4 @@ BASE_URL = os.getenv("BASE_URL", "http://localhost:8000").strip().rstrip("/")
 ALLOWED_DOMAIN = "hit-pay.com"
 TYPEFULLY_API_KEY = os.getenv("TYPEFULLY_API_KEY", "")
 TYPEFULLY_SOCIAL_SET_ID = os.getenv("TYPEFULLY_SOCIAL_SET_ID", "")
+TYPEFULLY_THREADS_SOCIAL_SET_ID = os.getenv("TYPEFULLY_THREADS_SOCIAL_SET_ID", "")
