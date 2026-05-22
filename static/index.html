@@ -4008,6 +4008,9 @@ async function startGenerate() {
         else if (data.type === 'done') {
           addLog('✓ Done!', 'log-done');
           newPostId = data.post_id;
+          if (data.link_warnings && data.link_warnings.length) {
+            data.link_warnings.forEach(w => addLog('⚠ ' + w, 'log-error'));
+          }
         } else if (data.type === 'error') {
           addLog('✗ ' + data.message, 'log-error');
         }
@@ -4105,6 +4108,9 @@ async function startRewrite() {
         else if (data.type === 'done') {
           addLog('✓ Done! Opening post…', 'log-done');
           newPostId = data.post_id;
+          if (data.link_warnings && data.link_warnings.length) {
+            data.link_warnings.forEach(w => addLog('⚠ ' + w, 'log-error'));
+          }
         } else if (data.type === 'error') {
           addLog('✗ ' + data.message, 'log-error');
         }

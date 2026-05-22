@@ -504,7 +504,10 @@ async def api_generate(body: GenerateRequest, user_email: str = Depends(require_
                 "country": body.country or "",
             })
 
-            yield f"data: {json.dumps({'type': 'done', 'post_id': post_id, 'title': post_data['title']})}\n\n"
+            done_payload: dict = {"type": "done", "post_id": post_id, "title": post_data["title"]}
+            if post_data.get("link_warnings"):
+                done_payload["link_warnings"] = post_data["link_warnings"]
+            yield f"data: {json.dumps(done_payload)}\n\n"
 
         except Exception as e:
             _err = str(e)
@@ -556,7 +559,10 @@ async def api_rewrite(body: RewriteRequest, user_email: str = Depends(require_au
                 "source_url": body.url,
             })
 
-            yield f"data: {json.dumps({'type': 'done', 'post_id': post_id, 'title': post_data['title']})}\n\n"
+            done_payload_rw: dict = {"type": "done", "post_id": post_id, "title": post_data["title"]}
+            if post_data.get("link_warnings"):
+                done_payload_rw["link_warnings"] = post_data["link_warnings"]
+            yield f"data: {json.dumps(done_payload_rw)}\n\n"
 
         except Exception as e:
             _err = str(e)

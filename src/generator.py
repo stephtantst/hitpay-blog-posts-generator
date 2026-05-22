@@ -77,6 +77,36 @@ def _load_blog_links() -> list[dict]:
     return data.get("posts", [])
 
 
+def _validate_blog_links(content: str, blog_links: list[dict]) -> list[str]:
+    """Check every hitpayapp.com/blog/ URL in content against the known-good list.
+
+    Returns a list of warning strings (empty = all clear).
+    """
+    import httpx as _httpx
+
+    found = re.findall(r"https://hitpayapp\.com/blog/[^\s\)\]\"']+", content)
+    if not found:
+        return []
+
+    known_urls = {link["url"].rstrip("/") for link in blog_links}
+    warnings = []
+
+    for url in found:
+        clean = url.rstrip(".,)/")
+        if clean not in known_urls:
+            warnings.append(f"Internal link not in approved list (possible hallucination): {clean}")
+            continue
+        # Live 404 check — same as _check_link_url used for X posts
+        try:
+            r = _httpx.head(clean, follow_redirects=True, timeout=6)
+            if r.status_code == 404:
+                warnings.append(f"Internal link returns 404: {clean}")
+        except Exception:
+            pass
+
+    return warnings
+
+
 # External link library keyed by market code (SG / MY / PH) and "SEA" for cross-regional.
 # Each entry: {"name": str, "url": str, "use_when": str}
 # Competitor entries also carry "competitor": True — they require rel="nofollow" and are only
@@ -731,6 +761,11 @@ Return the JSON object now."""
     else:
         post_data["slug"] = slugify(post_data["slug"])
 
+    link_warnings = _validate_blog_links(post_data.get("content", ""), blog_links)
+    if link_warnings:
+        post_data["link_warnings"] = link_warnings
+        status(f"Link warnings: {len(link_warnings)} issue(s) found")
+
     return post_data
 
 
@@ -917,6 +952,11 @@ Return the JSON object now."""
         post_data["slug"] = slugify(post_data["title"])
     else:
         post_data["slug"] = slugify(post_data["slug"])
+
+    link_warnings = _validate_blog_links(post_data.get("content", ""), blog_links)
+    if link_warnings:
+        post_data["link_warnings"] = link_warnings
+        status(f"Link warnings: {len(link_warnings)} issue(s) found")
 
     return post_data
 

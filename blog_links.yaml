@@ -1,5 +1,5 @@
 # HitPay Blog Post & Product Page Reference Links
-# Scraped from hitpayapp.com — last updated 2026-04-01
+# Scraped from hitpayapp.com — last updated 2026-05-22
 #
 # markets: SG | MY | PH | SEA | Global
 # If markets is empty/omitted, link is treated as globally relevant.
@@ -9,652 +9,1288 @@ posts:
 
   # ── Blog articles ──────────────────────────────────────────────────────────
 
-  - url: https://hitpayapp.com/blog/what-is-hitpay
-    title: What Is HitPay? A Complete Guide for Southeast Asian SMEs (2026)
-    topics: [hitpay, overview, payment platform, sme, southeast asia, features, onboarding]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/blog/credit-card-payment
-    title: Credit Card Payment for Small Businesses in Southeast Asia (2026)
-    topics: [credit card, visa, mastercard, card payment, online payment, pos]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/blog/upi-gateway
-    title: UPI Gateway — How It Works and What Businesses Need to Know (2026)
-    topics: [upi, india, cross-border, indian tourists, qr code, singapore]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/blog/invoice-payment
-    title: Invoice Payment — How It Works for SMEs in Singapore and Southeast Asia (2026)
-    topics: [invoice, invoicing, payment link, b2b, billing, sme, cash flow]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/blog/how-to-generate-qrph
-    title: How to Generate QR Ph for Your Business (2026 Step-by-Step Guide)
-    topics: [qr ph, philippines, gcash, maya, qr code, bsp, generate, static qr]
-    markets: [PH]
-
-  - url: https://hitpayapp.com/blog/online-payment-singapore
-    title: Online Payment Methods in Singapore
-    topics: [online payments, singapore, paynow, grabpay, ecommerce, checkout, card]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/blog/payment-gateway-singapore
-    title: Best Payment Gateway Singapore 2026 — HitPay vs Stripe vs Airwallex
-    topics: [payment gateway, singapore, paynow, grabpay, visa, mastercard, comparison, stripe, airwallex]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/blog/stripe-alternatives-singapore
-    title: Best Stripe Alternatives in Singapore (2026)
-    topics: [stripe, alternatives, singapore, paynow, pos, invoicing, comparison, payment gateway]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/blog/stripe-alternatives-malaysia
-    title: Stripe Alternatives Malaysia — Best Payment Gateways for Malaysian Businesses (2026)
-    topics: [stripe, alternatives, malaysia, fpx, duitnow, grabpay, touch n go, comparison, payment gateway]
-    markets: [MY]
-
-  - url: https://hitpayapp.com/blog/payment-gateway-philippines
-    title: Payment Gateway Philippines — Best Options for Philippine Businesses in 2026
-    topics: [payment gateway, philippines, gcash, maya, qr ph, instapay, pesonet, msme]
-    markets: [PH]
-
-  - url: https://hitpayapp.com/blog/qr-code-payments
-    title: QR Code Payments — How They Work and How to Accept Them
-    topics: [qr code, paynow, duitnow, qr ph, gcash, contactless, scan to pay, cross-border]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/blog/ecommerce-payment-solutions-southeast-asia
-    title: Ecommerce Payment Solutions for Southeast Asia (2026)
-    topics: [ecommerce, payment solutions, southeast asia, woocommerce, shopify, checkout]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/blog/hitpay-customer-service
-    title: HitPay Customer Service — How to Get Support Fast (2026)
-    topics: [support, customer service, live chat, whatsapp, help center, troubleshooting, onboarding]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/blog/pass-transaction-fees-to-customers
-    title: How to Lower Transaction Fees with HitPay Pass the Fees
-    topics: [transaction fees, pass fees, pricing, cost, paynow, fpx, woocommerce]
-    markets: [SG, MY]
-
   - url: https://hitpayapp.com/blog/alternative-payment-methods-southeast-asia
-    title: The Strategic Advantage — Harnessing Alternative Payment Methods in Southeast Asia
+    title: "The Strategic Advantage — Harnessing Alternative Payment Methods in Southeast Asia"
     topics: [alternative payments, digital wallets, qr code, unbanked, southeast asia, cross-border]
     markets: [SEA]
 
-  - url: https://hitpayapp.com/blog/singapore-pos-system
-    title: Singapore POS System Guide
-    topics: [pos system, singapore, point of sale, retail, f&b, paynow, grabpay, hardware, tap to pay]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/blog/hitpay-paynow-fees
-    title: HitPay PayNow Fees — What Singapore Merchants Pay
-    topics: [paynow, fees, pricing, singapore, transaction rate, cost, qr code]
-    markets: [SG]
-
   - url: https://hitpayapp.com/blog/b2b-multi-currency-payments-singapore
-    title: The Easiest Way to Manage B2B Multi-Currency Payments in Singapore
+    title: "The Easiest Way to Manage B2B Multi-Currency Payments in Singapore"
     topics: [b2b, multi-currency, international, singapore, cross-border, invoicing]
     markets: [SG]
 
-  - url: https://hitpayapp.com/blog/generate-free-payment-links-singapore
-    title: Generate Free Payment Links in Singapore — Accept PayNow and Card Payments on WhatsApp and Instagram
-    topics: [payment links, singapore, paynow, whatsapp, instagram, social commerce, free]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/blog/accepting-qris-payments-on-woocommerce-indonesia-cross-border-use-cases
-    title: Accepting QRIS Payments on WooCommerce — Indonesia & Cross-Border Use Cases
-    topics: [qris, indonesia, woocommerce, cross-border, qr code, integration]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/blog/hitpay-scan-to-pay
-    title: Enjoy Easier In-Person Payments with HitPay Scan to Pay
-    topics: [scan to pay, qr code, in-person, pos, contactless, mobile payment]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/blog/hitpay-philippines-scan-to-pay
-    title: Accept In-Person Payments with HitPay Scan to Pay (Philippines)
-    topics: [scan to pay, philippines, in-person, qr ph, gcash, pos]
-    markets: [PH]
-
-  - url: https://hitpayapp.com/paynow
-    title: Accept PayNow as a Cross-Border Payment Method for Philippines Merchants
-    topics: [paynow, philippines, cross-border, singapore, qr code, online payment, international]
-    markets: [PH]
-
-  - url: https://hitpayapp.com/blog/hitpay-now-offers-tap-to-pay-on-iphone-for-merchants-to-accept-contactless-payments
-    title: HitPay Now Offers Tap to Pay on iPhone for Contactless Payments
-    topics: [tap to pay, iphone, contactless, nfc, pos, in-person, apple pay]
+  - url: https://hitpayapp.com/blog/credit-card-payment
+    title: "Credit Card Payment for Small Businesses in Southeast Asia (2026)"
+    topics: [credit card, visa, mastercard, card payment, online payment, pos]
     markets: [SEA]
 
   - url: https://hitpayapp.com/blog/digital-wallet-vs-payment-gateways
-    title: Digital Wallet vs Payment Gateways — Understanding the Differences
+    title: "Digital Wallet vs Payment Gateways — Understanding the Differences"
     topics: [digital wallet, payment gateway, comparison, grabpay, gcash, paynow, ecommerce]
     markets: [SEA]
 
-  - url: https://hitpayapp.com/blog/xendit-payment-gateway-review
-    title: Xendit Payment Gateway Review — Alternatives, Pros, and Cons
-    topics: [xendit, payment gateway, review, comparison, philippines, indonesia, alternatives]
+  - url: https://hitpayapp.com/blog/ecommerce-payment-solutions-southeast-asia
+    title: "Ecommerce Payment Solutions for Southeast Asia (2026)"
+    topics: [ecommerce, payment solutions, southeast asia, woocommerce, shopify, checkout]
     markets: [SEA]
 
-  - url: https://hitpayapp.com/blog/stripe-payments-malaysia
-    title: Why Stripe Payments and HitPay Are a Must for Malaysian SMEs
-    topics: [stripe, malaysia, payment gateway, fpx, duitnow, touch n go, sme]
-    markets: [MY]
-
-  - url: https://hitpayapp.com/blog/recurring-billing-sg
-    title: Recurring Billing for Singapore Businesses (2026)
-    topics: [recurring billing, subscription, singapore, automatic payments, membership, saas]
+  - url: https://hitpayapp.com/blog/generate-free-payment-links-singapore
+    title: "Generate Free Payment Links in Singapore — Accept PayNow and Card Payments on WhatsApp and Instagram"
+    topics: [payment links, singapore, paynow, whatsapp, instagram, social commerce, free]
     markets: [SG]
 
+  - url: https://hitpayapp.com/blog/hitpay-customer-service
+    title: "HitPay Customer Service — How to Get Support Fast (2026)"
+    topics: [support, customer service, live chat, whatsapp, help center, troubleshooting, onboarding]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-dropin-ui
+    title: "Introducing HitPay.JS — Drop-In Checkout UI"
+    topics: [api, developer, javascript, checkout ui, integration, ecommerce]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-now-offers-tap-to-pay-on-iphone-for-merchants-to-accept-contactless-payments
+    title: "HitPay Now Offers Tap to Pay on iPhone for Contactless Payments"
+    topics: [tap to pay, iphone, contactless, nfc, pos, in-person, apple pay]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-philippines-scan-to-pay
+    title: "Accept In-Person Payments with HitPay Scan to Pay (Philippines)"
+    topics: [scan to pay, philippines, in-person, qr ph, gcash, pos]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/hitpay-scan-to-pay
+    title: "Enjoy Easier In-Person Payments with HitPay Scan to Pay"
+    topics: [scan to pay, qr code, in-person, pos, contactless, mobile payment]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/how-to-generate-qrph
+    title: "How to Generate QR Ph for Your Business (2026 Step-by-Step Guide)"
+    topics: [qr ph, philippines, gcash, maya, qr code, bsp, generate, static qr]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/invoice-payment
+    title: "Invoice Payment — How It Works for SMEs in Singapore and Southeast Asia (2026)"
+    topics: [invoice, invoicing, payment link, b2b, billing, sme, cash flow]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/online-payment-singapore
+    title: "Online Payment Methods in Singapore"
+    topics: [online payments, singapore, paynow, grabpay, ecommerce, checkout, card]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/pass-transaction-fees-to-customers
+    title: "How to Lower Transaction Fees with HitPay Pass the Fees"
+    topics: [transaction fees, pass fees, pricing, cost, paynow, fpx, woocommerce]
+    markets: [SG, MY]
+
+  - url: https://hitpayapp.com/blog/payment-gateway-philippines
+    title: "Payment Gateway Philippines — Best Options for Philippine Businesses in 2026"
+    topics: [payment gateway, philippines, gcash, maya, qr ph, instapay, pesonet, msme]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/payment-gateway-singapore
+    title: "Best Payment Gateway Singapore 2026 — HitPay vs Stripe vs Airwallex"
+    topics: [payment gateway, singapore, paynow, grabpay, visa, mastercard, comparison, stripe, airwallex]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/qr-code-payments
+    title: "QR Code Payments — How They Work and How to Accept Them"
+    topics: [qr code, paynow, duitnow, qr ph, gcash, contactless, scan to pay, cross-border]
+    markets: [SEA]
+
   - url: https://hitpayapp.com/blog/recurring-billing-my
-    title: Recurring Billing for Malaysia Businesses (2026)
+    title: "Recurring Billing for Malaysia Businesses (2026)"
     topics: [recurring billing, subscription, malaysia, automatic payments, membership, fpx]
     markets: [MY]
 
   - url: https://hitpayapp.com/blog/recurring-billing-ph
-    title: Recurring Billing for Philippines Businesses (2026)
+    title: "Recurring Billing for Philippines Businesses (2026)"
     topics: [recurring billing, subscription, philippines, automatic payments, gcash, membership]
     markets: [PH]
 
-  - url: https://hitpayapp.com/blog/hitpay-dropin-ui
-    title: Introducing HitPay.JS — Drop-In Checkout UI
-    topics: [api, developer, javascript, checkout ui, integration, ecommerce]
-    markets: [SEA]
-
-  # ── Payment method pages ────────────────────────────────────────────────────
-
-  - url: https://hitpayapp.com/sg/paynow
-    title: Accept PayNow Payments in Singapore with HitPay
-    topics: [paynow, singapore, qr code, instant payment, bank transfer, zero fee]
+  - url: https://hitpayapp.com/blog/recurring-billing-sg
+    title: "Recurring Billing for Singapore Businesses (2026)"
+    topics: [recurring billing, subscription, singapore, automatic payments, membership, saas]
     markets: [SG]
 
-  - url: https://hitpayapp.com/paynow
-    title: PayNow Payment Acceptance — HitPay
-    topics: [paynow, singapore, qr code, payment method]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/sg/paylah
-    title: Accept PayLah! Payments in Singapore
-    topics: [paylah, singapore, dbs, digital wallet, payment method]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/paylah
-    title: PayLah! Payment Acceptance — HitPay
-    topics: [paylah, singapore, dbs, wallet]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/sg/grabpay
-    title: Accept GrabPay in Singapore with HitPay
-    topics: [grabpay, singapore, digital wallet, grab, payment method]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/grabpay
-    title: GrabPay Payment Acceptance — HitPay
-    topics: [grabpay, southeast asia, digital wallet, grab]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/my/grabpay
-    title: Accept GrabPay in Malaysia with HitPay
-    topics: [grabpay, malaysia, digital wallet, grab, payment method]
+  - url: https://hitpayapp.com/blog/stripe-alternatives-malaysia
+    title: "Stripe Alternatives Malaysia — Best Payment Gateways for Malaysian Businesses (2026)"
+    topics: [stripe, alternatives, malaysia, fpx, duitnow, grabpay, touch n go, comparison, payment gateway]
     markets: [MY]
 
-  - url: https://hitpayapp.com/ph/grabpay
-    title: Accept GrabPay in the Philippines with HitPay
-    topics: [grabpay, philippines, digital wallet, grab, payment method]
+  - url: https://hitpayapp.com/blog/stripe-alternatives-singapore
+    title: "Best Stripe Alternatives in Singapore (2026)"
+    topics: [stripe, alternatives, singapore, paynow, pos, invoicing, comparison, payment gateway]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/stripe-payments-malaysia
+    title: "Why Stripe Payments and HitPay Are a Must for Malaysian SMEs"
+    topics: [stripe, malaysia, payment gateway, fpx, duitnow, touch n go, sme]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/upi-gateway
+    title: "UPI Gateway — How It Works and What Businesses Need to Know (2026)"
+    topics: [upi, india, cross-border, indian tourists, qr code, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/what-is-hitpay
+    title: "What Is HitPay? A Complete Guide for Southeast Asian SMEs (2026)"
+    topics: [hitpay, overview, payment platform, sme, southeast asia, features, onboarding]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/2025-bnpl-gateway-fees-in-malaysia-atome-vs-grab-paylater-vs-shopback-(and-what-hitpay-actually-charges)
+    title: "2025 BNPL Gateway Fees in Malaysia: Atome vs Grab PayLater vs ShopBack (and What HitPay Actually Charges) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [atome, bnpl, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/accept-credit-card-payments-malaysia
+    title: "Accept Credit Card Payments in Malaysia (2026) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [credit card, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/accept-international-payments-malaysia
+    title: "Accept International Payments in Malaysia | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/accept-promptpay-malaysia
+    title: "Accept PromptPay Payments in Malaysia | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/accept-shopeepay-payments-malaysia
+    title: "Accept ShopeePay in Malaysia — Business Guide 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [shopeepay, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/affordable-credit-card-machine-malaysia
+    title: "Affordable Credit Card Terminals in Malaysia: Everything You Need to Know - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [credit card, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/affordable-payment-gateway-malaysia
+    title: "The Best Affordable Payment Gateway for SMEs In Malaysia - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/b2b-payment-solutions-malaysia
+    title: "Best B2B Payment Solutions in Malaysia (2026) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/best-bnpl-options-malaysia-businesses
+    title: "Best BNPL Options for Malaysian Businesses (2026) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [bnpl, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/best-credit-card-terminal-malaysia-small-businesses
+    title: "Introducing the Best Credit Card Terminal in Malaysia for Small Businesses - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [credit card, card terminal, small business, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/best-ecommerce-website-builder-malaysia
+    title: "Best Ecommerce Website Builder Malaysia 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [ecommerce, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/best-fpx-payment-gateway-malaysia
+    title: "Best FPX Payment Gateway in Malaysia 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, fpx, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/best-invoice-generator-malaysia
+    title: "What's the Best Invoice Generator in Malaysia? - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [invoicing, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/best-invoicing-software-malaysia
+    title: "Best Invoicing Software for Malaysia SMBs (2026) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [invoicing, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/best-online-payment-solution-malaysia
+    title: "Best Online Payment Solution in Malaysia (2026) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/best-payment-gateway-malaysia
+    title: "Best Payment Gateway in Malaysia (2026) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/best-payment-gateway-shopify-malaysia
+    title: "Best Shopify Payment Gateway Malaysia 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, shopify, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/best-payment-solution-food-delivery-malaysia
+    title: "Best Payment Solutions for Food Delivery in Malaysia - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/best-pos-system-small-businesses-malaysia
+    title: "Best POS System for Small Businesses in Malaysia - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos, small business, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/best-recurring-billing-software-malaysia
+    title: "Best Recurring Billing Software in Malaysia 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [recurring billing, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/best-shopify-payment-gateway-malaysia
+    title: "What Is the Best Shopify Payment Gateway in Malaysia? - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, shopify, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/best-subscription-billing-software-malaysia
+    title: "Best Subscription Billing Software in Malaysia 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [subscription, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/boost-wallet-merchant-malaysia
+    title: "Accept Boost Wallet Payments in Malaysia | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/card-reader-malaysia-business
+    title: "Best Card Readers for Malaysian Businesses 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [card reader, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/cashless-payment-methods-malaysia
+    title: "Cashless Payments in Malaysia — What to Accept (2026) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment method, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/contactless-payments-malaysia
+    title: "Contactless Payments for Malaysian Businesses (2026) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [contactless, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/cross-border-payments-malaysia
+    title: "Cross-Border Payments for Malaysia Businesses (2026) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [cross-border, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/duitnow-api-integration-malaysia
+    title: "DuitNow API Integration Guide for Malaysian Businesses - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [duitnow, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/free-website-builder-malaysia
+    title: "The Top 13 Free Website Builders in Malaysia: Shopify vs Wix, Cococart, WooCommerce, HitPay, and More - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/hitpay-alternative-malaysia
+    title: "Best HitPay Alternative for Malaysian Businesses - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [malaysia, alternative]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/hitpay-integration-malaysia
+    title: "HitPay Integration Guide for Malaysia (2026) | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/hitpay-vs-paypal-malaysia
+    title: "HitPay vs PayPal Malaysia — Which Is Better for SMEs? - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [paypal, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/hitpay-vs-stripe-malaysia
+    title: "HitPay vs Stripe Malaysia — Which Is Better for SMBs? - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [stripe, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/how-to-accept-grabpay-malaysia
+    title: "Accept GrabPay in Malaysia — Business Guide 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [grabpay, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/how-to-become-atome-merchant-malaysia
+    title: "How to Become an Atome Merchant in Malaysia - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [atome, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/how-to-create-send-payment-link-malaysia
+    title: "Create & Send Payment Links in Malaysia | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment link, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/how-to-set-up-duitnow-qr-malaysia-business
+    title: "Set Up DuitNow QR for Your Business in Malaysia - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [duitnow, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/international-money-transfer-malaysia
+    title: "International Money Transfer from Malaysia (2026) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/invoice-payment-gateway-malaysia
+    title: "Invoice Payment Gateway Malaysia — SME Guide - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, invoicing, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/is-hitpay-safe-malaysia
+    title: "HitPay — Secure Payment Gateway for Malaysia (2026) | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/mae-maybank-qrpay-merchant-malaysia
+    title: "Accept MAE Maybank QRPay Payments in Malaysia - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/malaysia-payment-gateway-comparison
+    title: "Malaysia Payment Gateway Comparison: iPay88 vs. eGHL, SenangPay, HitPay, Razer, and more - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, malaysia, comparison]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/nfc-payments-malaysia
+    title: "NFC Payments Malaysia — How to Accept Them (2026) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/payment-gateway-api-malaysia
+    title: "Best Payment Gateway API in Malaysia (2026) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/payment-gateway-malaysia
+    title: "Payment Gateway Malaysia: Top Options for 2026 | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/payment-link-malaysia
+    title: "Payment Links for Malaysian Businesses — HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment link, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/payment-link-malaysia-small-businesses
+    title: "Payment Link: Send & Get Paid Instantly in Malaysia | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment link, small business, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/point-of-sale-software-comparison-malaysia
+    title: "6 Best POS systems for small businesses and SMEs in Malaysia – HitPay POS vs. Qashier, BigPOS and StoreHub - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [malaysia, comparison]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/popular-payment-methods-malaysia
+    title: "5 Popular Payment Methods in Malaysia For Small Businesses — DuitNow QR, FPX, Visa, Mastercard, and More - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment method, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/remittance-api-malaysia
+    title: "Remittance API for Malaysian Businesses (2026) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/shopeepay-bnpl-malaysia
+    title: "ShopeePay BNPL Malaysia — SPayLater for Merchants - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [shopeepay, bnpl, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/shopify-payment-gateway-malaysia
+    title: "How to receive payments on Shopify with HitPay Malaysia - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, shopify, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/tap-to-pay-malaysia
+    title: "Tap to Pay Malaysia — Accept Contactless Payments - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [tap to pay, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/touch-n-go-ewallet-merchant-malaysia
+    title: "Touch 'n Go eWallet Merchant Guide Malaysia 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/what-is-a-pos-system-malaysia
+    title: "What is a POS system? A Guide On Point Of Sale Software & Hardware - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/woocommerce-payment-gateway-malaysia
+    title: "Best WooCommerce Payment Gateway Malaysia 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, woocommerce, malaysia]
+    markets: [MY]
+
+  - url: https://hitpayapp.com/blog/accept-billease-philippines
+    title: "Your Ultimate Guide to BillEase: Accept Buy Now, Pay Later in the Philippines - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [philippines]
     markets: [PH]
 
-  - url: https://hitpayapp.com/sg/shopeepay
-    title: Accept ShopeePay in Singapore with HitPay
-    topics: [shopeepay, singapore, digital wallet, shopee, payment method]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/my/shopeepay
-    title: Accept ShopeePay in Malaysia with HitPay
-    topics: [shopeepay, malaysia, digital wallet, shopee, payment method]
-    markets: [MY]
-
-  - url: https://hitpayapp.com/shopeepay
-    title: ShopeePay Payment Acceptance — HitPay
-    topics: [shopeepay, southeast asia, digital wallet]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/my/spaylater
-    title: Accept SPayLater (BNPL) in Malaysia with HitPay
-    topics: [spaylater, bnpl, buy now pay later, malaysia, shopee, instalment]
-    markets: [MY]
-
-  - url: https://hitpayapp.com/sg/spaylater
-    title: Accept SPayLater (BNPL) in Singapore with HitPay
-    topics: [spaylater, bnpl, buy now pay later, singapore, shopee, instalment]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/ph/spaylater-philippines
-    title: Accept SPayLater in the Philippines with HitPay
-    topics: [spaylater, bnpl, philippines, shopee, buy now pay later]
+  - url: https://hitpayapp.com/blog/accept-grabpay-philippines
+    title: "Accept GrabPay Philippines — Setup Guide 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [grabpay, philippines]
     markets: [PH]
 
-  - url: https://hitpayapp.com/sg/bnpl-singapore
-    title: Buy Now Pay Later (BNPL) in Singapore — HitPay
-    topics: [bnpl, buy now pay later, singapore, atome, shopback, spaylater, grab paylater]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/ph/bnpl-philippines
-    title: Buy Now Pay Later (BNPL) in the Philippines — HitPay
-    topics: [bnpl, buy now pay later, philippines, billease, spaylater]
+  - url: https://hitpayapp.com/blog/accept-instapay-payments-philippines
+    title: "Accept InstaPay Payments in the Philippines — Guide - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [instapay, philippines]
     markets: [PH]
 
-  - url: https://hitpayapp.com/bnpl-malaysia
-    title: Buy Now Pay Later (BNPL) in Malaysia — HitPay
-    topics: [bnpl, buy now pay later, malaysia, atome, spaylater, grab paylater]
-    markets: [MY]
-
-  - url: https://hitpayapp.com/sg/paylater-grab
-    title: Accept Grab PayLater in Singapore with HitPay
-    topics: [grab paylater, bnpl, buy now pay later, singapore, grab]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/my/paylater-grab
-    title: Accept Grab PayLater in Malaysia with HitPay
-    topics: [grab paylater, bnpl, buy now pay later, malaysia, grab]
-    markets: [MY]
-
-  - url: https://hitpayapp.com/sg/atome-sg
-    title: Accept Atome BNPL in Singapore with HitPay
-    topics: [atome, bnpl, buy now pay later, singapore, instalment]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/my/atome-my
-    title: Accept Atome BNPL in Malaysia with HitPay
-    topics: [atome, bnpl, buy now pay later, malaysia, instalment]
-    markets: [MY]
-
-  - url: https://hitpayapp.com/atome-qr-code-in-person-payments
-    title: Atome QR Code In-Person BNPL Payments — HitPay
-    topics: [atome, bnpl, qr code, in-person, pos, buy now pay later]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/shopback
-    title: Accept ShopBack PayLater — HitPay
-    topics: [shopback, bnpl, buy now pay later, paylater, instalment]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/sg/shopback
-    title: Accept ShopBack PayLater in Singapore — HitPay
-    topics: [shopback, bnpl, singapore, paylater, instalment]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/my/shopback
-    title: Accept ShopBack PayLater in Malaysia — HitPay
-    topics: [shopback, bnpl, malaysia, paylater, instalment]
-    markets: [MY]
-
-  - url: https://hitpayapp.com/billease
-    title: Accept BillEase BNPL in the Philippines — HitPay
-    topics: [billease, bnpl, buy now pay later, philippines, instalment]
+  - url: https://hitpayapp.com/blog/accept-qrph-with-no-monthly-fees-gateway-comparison-2025
+    title: "Accept QRPH with no monthly fees: Gateway comparison 2025 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [comparison]
     markets: [PH]
 
-  - url: https://hitpayapp.com/my/duitnow-qr-business
-    title: Accept DuitNow QR for Your Malaysia Business — HitPay
-    topics: [duitnow, duitnow qr, malaysia, qr code, instant payment, bank transfer]
-    markets: [MY]
-
-  - url: https://hitpayapp.com/duitnow
-    title: DuitNow Payment Acceptance — HitPay
-    topics: [duitnow, malaysia, qr code, bank transfer, fpx]
-    markets: [MY]
-
-  - url: https://hitpayapp.com/ph/qr-ph
-    title: Accept QR Ph Payments in the Philippines — HitPay
-    topics: [qr ph, philippines, gcash, maya, bsp, qr code, instapay]
+  - url: https://hitpayapp.com/blog/accepting-gcash-qr-ph-on-your-restaurant-pos-a-2025-philippines-playbook
+    title: "Accepting GCash & QR Ph on Your Restaurant POS: A 2025 Philippines Playbook - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos, gcash, qr ph, philippines]
     markets: [PH]
 
-  - url: https://hitpayapp.com/gcash
-    title: Accept GCash Payments — HitPay
-    topics: [gcash, philippines, digital wallet, payment method, e-wallet]
+  - url: https://hitpayapp.com/blog/activating-qr-ph-for-your-brick-and-mortar-store-in-2025-hitpay-scan-to-pay-vs-maya-qr
+    title: "Activating QR Ph for Your Brick-and-Mortar Store in 2025: HitPay 'Scan to Pay' vs. Maya QR - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [qr ph, maya, scan to pay]
     markets: [PH]
 
-  - url: https://hitpayapp.com/upi
-    title: Accept UPI Payments — HitPay
-    topics: [upi, india, cross-border, indian customers, qr code, payment method]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/sg/upi
-    title: Accept UPI Payments in Singapore — HitPay
-    topics: [upi, singapore, india, indian tourists, cross-border, qr code]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/alipay-plus
-    title: Accept Alipay+ Payments — HitPay
-    topics: [alipay, alipay plus, cross-border, china, tourist payments, qr code]
-    markets: [MY, PH]
-
-  - url: https://hitpayapp.com/sg/wechatpay
-    title: Accept WeChat Pay in Singapore — HitPay
-    topics: [wechat pay, singapore, china, cross-border, tourist payments, qr code]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/wechatpay
-    title: WeChat Pay Payment Acceptance — HitPay
-    topics: [wechat pay, cross-border, china, tourist, qr code]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/my/wechatpay
-    title: Accept WeChat Pay in Malaysia — HitPay
-    topics: [wechat pay, malaysia, china, cross-border, tourist payments]
-    markets: [MY]
-
-  - url: https://hitpayapp.com/touch-n-go
-    title: Accept Touch 'n Go eWallet — HitPay
-    topics: [touch n go, tng, malaysia, digital wallet, payment method, ewallet]
-    markets: [MY]
-
-  - url: https://hitpayapp.com/qris
-    title: Accept QRIS Payments — HitPay
-    topics: [qris, indonesia, qr code, cross-border, payment method]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/sg/giro
-    title: Accept GIRO Payments in Singapore — HitPay
-    topics: [giro, singapore, direct debit, recurring, bank transfer, subscription]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/sg/crypto-payment-gateway-singapore
-    title: Crypto Payment Gateway in Singapore — HitPay
-    topics: [crypto, cryptocurrency, bitcoin, singapore, payment gateway]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/crypto-payment-gateway-hitpay
-    title: Accept Crypto Payments — HitPay
-    topics: [crypto, cryptocurrency, digital asset, payment gateway, bitcoin]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/hitpay-borderless-qr-payments
-    title: HitPay Borderless QR Payments — Cross-Border QR Acceptance
-    topics: [cross-border, qr code, international, borderless, multi-currency]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/sg/japan-payment-gateway-singapore
-    title: Accept Japanese Payment Methods in Singapore — HitPay
-    topics: [japan, japanese tourists, cross-border, singapore, qr code, payment gateway]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/korean-ewallet-payment-gateway
-    title: Accept Korean eWallet Payments — HitPay
-    topics: [korea, korean tourists, cross-border, kakaopay, payco, line pay, qr code]
-    markets: [SEA]
-
-  # ── Platform integrations ───────────────────────────────────────────────────
-
-  - url: https://hitpayapp.com/shopify
-    title: HitPay Shopify Plugin — Accept Payments on Shopify
-    topics: [shopify, ecommerce, plugin, integration, online store, checkout]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/sg/shopify
-    title: HitPay Shopify Plugin for Singapore
-    topics: [shopify, singapore, paynow, grabpay, ecommerce, integration]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/my/shopify
-    title: HitPay Shopify Plugin for Malaysia
-    topics: [shopify, malaysia, fpx, duitnow, grabpay, ecommerce, integration]
-    markets: [MY]
-
-  - url: https://hitpayapp.com/ph/shopify
-    title: HitPay Shopify Plugin for the Philippines
-    topics: [shopify, philippines, gcash, qr ph, ecommerce, integration]
+  - url: https://hitpayapp.com/blog/best-card-terminal-for-msmes-in-the-philippines
+    title: "Best Card Terminal for MSMEs in the Philippines - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [card terminal, sme, philippines]
     markets: [PH]
 
-  - url: https://hitpayapp.com/woocommerce
-    title: HitPay WooCommerce Plugin — Accept Payments on WooCommerce
-    topics: [woocommerce, wordpress, ecommerce, plugin, integration, checkout]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/sg/woocommerce
-    title: HitPay WooCommerce Plugin for Singapore
-    topics: [woocommerce, singapore, paynow, grabpay, ecommerce, wordpress]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/my/woocommerce
-    title: HitPay WooCommerce Plugin for Malaysia
-    topics: [woocommerce, malaysia, fpx, duitnow, grabpay, wordpress, ecommerce]
-    markets: [MY]
-
-  - url: https://hitpayapp.com/ph/woocommerce
-    title: HitPay WooCommerce Plugin for the Philippines
-    topics: [woocommerce, philippines, gcash, qr ph, maya, wordpress, ecommerce]
+  - url: https://hitpayapp.com/blog/best-card-terminal-philippines-smes
+    title: "Best Card Terminal for SMEs in the Philippines 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [card terminal, sme, philippines]
     markets: [PH]
 
-  - url: https://hitpayapp.com/wix
-    title: HitPay Wix Payment Integration
-    topics: [wix, ecommerce, website builder, integration, checkout, online store]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/sg/wix-ecommerce-integration-singapore
-    title: HitPay Wix Ecommerce Integration for Singapore
-    topics: [wix, singapore, paynow, ecommerce, website builder, checkout]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/my/wix-payment-gateway-malaysia
-    title: HitPay Wix Payment Gateway for Malaysia
-    topics: [wix, malaysia, fpx, duitnow, ecommerce, website builder]
-    markets: [MY]
-
-  - url: https://hitpayapp.com/ph/wix-payments-philippines
-    title: HitPay Wix Payments for the Philippines
-    topics: [wix, philippines, gcash, qr ph, ecommerce, website builder]
+  - url: https://hitpayapp.com/blog/best-credit-card-machine-small-businesses-philippines
+    title: "Best Credit Card Machine for Small Businesses in the Philippines - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [credit card, small business, philippines]
     markets: [PH]
 
-  - url: https://hitpayapp.com/magento
-    title: HitPay Magento Integration
-    topics: [magento, ecommerce, integration, plugin, checkout, online store]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/opencart
-    title: HitPay OpenCart Integration
-    topics: [opencart, ecommerce, integration, plugin, checkout]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/ecwid
-    title: HitPay Ecwid Integration
-    topics: [ecwid, ecommerce, integration, checkout, online store]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/shoplazza
-    title: HitPay Shoplazza Integration
-    topics: [shoplazza, ecommerce, integration, checkout, online store]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/shopcada
-    title: HitPay Shopcada Integration
-    topics: [shopcada, ecommerce, integration, checkout, online store, singapore]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/sitegiant
-    title: HitPay SiteGiant Integration
-    topics: [sitegiant, malaysia, ecommerce, integration, checkout, online store]
-    markets: [MY]
-
-  - url: https://hitpayapp.com/zapier
-    title: HitPay Zapier Integration — Automate Payment Workflows
-    topics: [zapier, automation, integration, workflow, api, payments]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/cal.com
-    title: HitPay Cal.com Integration — Accept Payments for Bookings
-    topics: [cal.com, booking, scheduling, appointment, payment, integration]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/simplybookme
-    title: HitPay SimplyBook.me Integration
-    topics: [simplybook, booking, appointment, scheduling, payment]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/google-forms-plugins
-    title: HitPay Google Forms Payment Plugin
-    topics: [google forms, plugin, payment link, integration, forms]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/sg/xero
-    title: HitPay Xero Accounting Integration for Singapore
-    topics: [xero, accounting, integration, singapore, reconciliation, invoicing]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/ewallets-recurring-payments-subscriptions
-    title: eWallet Recurring Payments & Subscriptions — HitPay
-    topics: [recurring payments, subscription, ewallet, digital wallet, automated billing]
-    markets: [SEA]
-
-  # ── In-person & hardware ────────────────────────────────────────────────────
-
-  - url: https://hitpayapp.com/sg/tap-to-pay
-    title: Tap to Pay in Singapore — Accept Contactless Payments on iPhone
-    topics: [tap to pay, iphone, contactless, nfc, singapore, pos, in-person]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/my/tap-to-pay
-    title: Tap to Pay in Malaysia — Accept Contactless Payments on iPhone
-    topics: [tap to pay, iphone, contactless, nfc, malaysia, pos, in-person]
-    markets: [MY]
-
-  - url: https://hitpayapp.com/sg/tap-to-pay-singapore
-    title: Tap to Pay Singapore — HitPay Contactless POS
-    topics: [tap to pay, singapore, nfc, contactless, pos, iphone, in-person]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/sg/hitpay-terminal-outpost-climbing
-    title: HitPay Terminal — Outpost Climbing Case Study (Singapore)
-    topics: [pos terminal, singapore, case study, retail, climbing gym, in-person]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/sg/payment-soundbox
-    title: HitPay Payment Soundbox — Audio Payment Confirmation (Singapore)
-    topics: [soundbox, payment confirmation, audio, singapore, pos, paynow, qr code]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/sg/paynow-alerts-soundbox-singapore
-    title: PayNow Alerts & Soundbox for Singapore Merchants
-    topics: [paynow, soundbox, alerts, singapore, pos, in-person, notification]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/ph/payment-soundbox-philippines
-    title: HitPay Payment Soundbox Philippines
-    topics: [soundbox, payment confirmation, philippines, pos, qr ph, gcash]
+  - url: https://hitpayapp.com/blog/best-ecommerce-website-builder-philippines
+    title: "Best Ecommerce Website Builder Philippines 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [ecommerce, philippines]
     markets: [PH]
 
-  - url: https://hitpayapp.com/sg/static-qr
-    title: Static QR Code for Singapore Merchants — HitPay
-    topics: [static qr, singapore, paynow, qr code, in-person, display]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/ph/static-qr
-    title: Static QR Code for Philippines Merchants — HitPay
-    topics: [static qr, philippines, qr ph, gcash, qr code, in-person]
+  - url: https://hitpayapp.com/blog/best-invoicing-software-philippines
+    title: "Best Invoicing Software for Philippines (2026) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [invoicing, philippines]
     markets: [PH]
 
-  - url: https://hitpayapp.com/donation-kiosk
-    title: HitPay Donation Kiosk — Accept Donations In-Person
-    topics: [donation, kiosk, charity, ngo, in-person, fundraising]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/shopping-mall-gto-integration
-    title: HitPay Shopping Mall GTO Integration
-    topics: [shopping mall, gto, gross turnover, retail, pos integration, singapore]
-    markets: [SG]
-
-  # ── Product features & use cases ────────────────────────────────────────────
-
-  - url: https://hitpayapp.com/free-invoice-generator
-    title: Free Invoice Generator — HitPay
-    topics: [invoice, invoicing, free, generator, billing, sme, payment link]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/donation-link
-    title: HitPay Donation Link — Collect Donations Online
-    topics: [donation, charity, ngo, payment link, fundraising, online]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/ecommerce-website-builder
-    title: HitPay Ecommerce Website Builder — Build a Free Online Store
-    topics: [website builder, ecommerce, online store, free, shop]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/free-ecommerce-website-templates
-    title: Free Ecommerce Website Templates — HitPay
-    topics: [website template, ecommerce, free, online store, design]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/philippines-payout-api
-    title: Philippines Payout API — HitPay
-    topics: [payout, api, philippines, disbursement, b2b, remittance]
+  - url: https://hitpayapp.com/blog/best-mobile-pos-app-philippines
+    title: "Best Mobile POS App in the Philippines: Download HitPay POS App for Free - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos, philippines]
     markets: [PH]
 
-  - url: https://hitpayapp.com/remittance-api-cross-border-payouts
-    title: Remittance API — Cross-Border Payouts with HitPay
-    topics: [remittance, payout, api, cross-border, b2b, disbursement, international]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/hitpay-cross-border-qris-integration-indonesia
-    title: HitPay Cross-Border QRIS Integration for Indonesia
-    topics: [qris, indonesia, cross-border, integration, qr code, southeast asia]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/sg/pricecal-hitpay-payment-api
-    title: HitPay Payment API Integration with PriceCal (Singapore)
-    topics: [api, integration, singapore, pricecal, developer, custom checkout]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/solutions/retail
-    title: HitPay for Retail — Payment Solutions for Retail Businesses
-    topics: [retail, pos, in-person, point of sale, physical store, payments]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/solutions/ecommerce
-    title: HitPay for Ecommerce — Payment Solutions for Online Stores
-    topics: [ecommerce, online store, checkout, payment gateway, shopify, woocommerce]
-    markets: [SEA]
-
-  - url: https://hitpayapp.com/sg/stripe-alternative
-    title: HitPay as a Stripe Alternative in Singapore
-    topics: [stripe alternative, singapore, paynow, grabpay, payment gateway, comparison]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/my/payment-gateway-reseller-malaysia-pos-integration
-    title: HitPay Payment Gateway Reseller & POS Integration in Malaysia
-    topics: [reseller, pos integration, malaysia, payment gateway, partner, white label]
-    markets: [MY]
-
-  # ── Customer stories ────────────────────────────────────────────────────────
-
-  - url: https://hitpayapp.com/sg/woocommerce-payment-plugin-four-seasons-catering
-    title: Four Seasons Catering — HitPay WooCommerce Case Study (Singapore)
-    topics: [woocommerce, catering, f&b, singapore, case study, online ordering]
-    markets: [SG]
-
-  - url: https://hitpayapp.com/ph/hitpay-review-philippines-travel
-    title: HitPay Review — Philippines Travel Business
-    topics: [review, philippines, travel, tourism, case study, payment acceptance]
+  - url: https://hitpayapp.com/blog/best-online-payment-solution-philippines
+    title: "Best Online Payment Solution Philippines 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [philippines]
     markets: [PH]
 
-  - url: https://hitpayapp.com/my/hitpay-review-malaysia-gym
-    title: HitPay Review — Malaysia Gym Business
-    topics: [review, malaysia, gym, fitness, membership, recurring billing, case study]
-    markets: [MY]
+  - url: https://hitpayapp.com/blog/best-online-store-builder-philippines
+    title: "Best Online Store Builder for Philippines Businesses (2026) | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [online store, philippines]
+    markets: [PH]
 
-  - url: https://hitpayapp.com/my/hitpay-review-malaysia-events-payments
-    title: HitPay Review — Malaysia Events & Payments
-    topics: [review, malaysia, events, ticketing, payment, case study]
-    markets: [MY]
+  - url: https://hitpayapp.com/blog/best-payment-gateway-api-philippines
+    title: "Best Payment Gateway API in the Philippines 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, philippines]
+    markets: [PH]
 
-  - url: https://hitpayapp.com/hitpay-review-borobudur-sunrise
-    title: HitPay Review — Borobudur Sunrise Tour (Indonesia)
-    topics: [review, indonesia, tourism, travel, cross-border, qris, case study]
+  - url: https://hitpayapp.com/blog/best-payment-gateway-gcash-philippines
+    title: "Best Payment Gateway for GCash Philippines 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, gcash, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/best-payment-gateway-philippines
+    title: "Best Payment Gateway in the Philippines 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/best-payment-gateway-shopify-philippines
+    title: "Best Shopify Payment Gateway Philippines 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, shopify, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/best-payment-gateways-philippines
+    title: "Best Payment Gateways in the Philippines - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/best-pos-system-small-businesses-philippines
+    title: "Best POS System for Small Businesses Philippines 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos, small business, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/best-recurring-payment-solution-philippines
+    title: "Best Recurring Payments for Philippines Businesses - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [recurring billing, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/best-subscription-billing-software-philippines
+    title: "Best Subscription Billing Software Philippines 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [subscription, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/bsp-protectyourmoney
+    title: "Protect Your Money: Financial Consumer Protection Philippines - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/cashless-payment-methods-philippines
+    title: "Cashless Payment Methods for Philippines Businesses - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment method, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/create-invoice-philippines
+    title: "Create Invoices with Ease: Excel, Word, HitPay Philippines - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [invoicing, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/ecommerce-payment-gateways-philippines
+    title: "Ecommerce Payment Gateways for Philippine MSMEs: No-Monthly-Fee Options (2026) | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, ecommerce, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/gcash-api-integration-philippines
+    title: "GCash API Integration Guide for Philippines Businesses - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [gcash, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/gcash-hitpay
+    title: "HitPay GCash Integration — Accept GCash Payments | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [gcash]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/gcash-payment-gateway-philippines
+    title: "GCash Payment Gateway: Accept GCash payments from customers in the Philippines - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, gcash, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/hitpay-gcash-partner-philippines
+    title: "HitPay and GCash partner to offer cashless and credit payments for Philippine merchants - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [gcash, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/hitpay-ops-license-philippines
+    title: "HitPay secures OPS payment license in the Philippines - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/hitpay-ph-payment-gateway
+    title: "Introducing HitPay — Best payment gateway in the Philippines - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/hitpay-vs-paymongo-fees-in-2025-which-payment-gateway-saves-philippine-smes-more
+    title: "HitPay vs PayMongo Fees in 2025: Which Payment Gateway Saves Philippine SMEs More? - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, sme]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/hitpay-vs-paymongo-for-qr-ph-payments-2025-fee-payout-and-feature-showdown
+    title: "HitPay vs. PayMongo for QR Ph Payments: 2025 Fee, Payout, and Feature Showdown - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [qr ph]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/how-to-accept-gcash-payments-philippines
+    title: "Accept GCash Payments in the Philippines (2026) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [gcash, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/how-to-accept-qr-code-payments-philippines
+    title: "Accept QR Code Payments in the Philippines (2026) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [qr code, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/how-to-create-payment-link-philippines
+    title: "How to Create a Payment Link in the Philippines - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment link, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/most-affordable-mobile-card-readers-with-built-in-gcash-2025-buyer-s-guide
+    title: "Most Affordable Mobile Card Readers with Built-in GCash — 2025 Buyer’s Guide - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [gcash, card reader]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/paymaya-philippines-alternative
+    title: "Best PayMaya Alternative for Small Businesses: Next-Day Payouts & No Setup Fees - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [maya, philippines, alternative]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/payout-apis-disbursements
+    title: "HitPay Introduces Payout APIs — Supports FAST, RTGS, InstaPay, and PESONet Disbursements - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/philippines-payment-gateway-shopify
+    title: "The Best Payment Gateway for Shopify in the Philippines - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, shopify, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/pos-system-cost-philippines-2024
+    title: "How Much Does the Best POS System Cost in the Philippines? - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/qr-payment-soundbox-philippines
+    title: "QR Payment Soundbox Philippines — How It Works - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/qrph-payment
+    title: "QRPH Payment: How It Works in the Philippines (2026) | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/recurring-billing-philippines-subscription-payments
+    title: "A Quick Guide to Recurring Billing in the Philippines: Simplifying Subscription Payments - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [recurring billing, subscription, philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/sell-digital-downloads-philippines
+    title: "How to Sell Digital Downloads in the Philippines: A Comprehensive Guide - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/start-online-business-philippines
+    title: "How to Start an Online Business in the Philippines: A Comprehensive Step-by-Step Guide - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [philippines]
+    markets: [PH]
+
+  - url: https://hitpayapp.com/blog/2025-guide-add-paynow-to-your-shopify-store-using-hitpay-(full-setup-ux-tips)
+    title: "2025 Guide: Add PayNow to Your Shopify Store Using HitPay (Full Setup + UX Tips) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [paynow, shopify]
     markets: [SEA]
 
-  - url: https://hitpayapp.com/customers/durian-bakery
-    title: Durian Bakery — HitPay Customer Story
-    topics: [f&b, bakery, singapore, case study, paynow, pos, online ordering]
+  - url: https://hitpayapp.com/blog/2025-guide-enhance-your-wix-store-with-hitpay-integration-for-seamless-asian-payments
+    title: "2025 Guide: Enhance Your Wix Store with HitPay Integration for Seamless Asian Payments - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/2025-guide-to-card-readers-with-no-monthly-fees-in-new-zealand-(hitpay-vs-square-zettle-more)
+    title: "2025 Guide to Card Readers with No Monthly Fees in New Zealand (HitPay vs Square, Zettle & more) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [card reader]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/2025-price-breakdown-the-most-affordable-portable-card-readers-philippine-smes-can-buy-today
+    title: "2025 Price Breakdown: The Most Affordable Portable Card Readers Philippine SMEs Can Buy Today - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [card reader, sme]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/accept-pos-payments-without-credit-card-terminal
+    title: "How to accept POS payments without a credit card terminal - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos, credit card, card terminal]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/adding-atome-bnpl-to-your-in-store-checkout-integration-steps-fees-and-roi-for-businesses-in-asia
+    title: "Adding Atome BNPL to Your In-Store Checkout: Integration Steps, Fees, and ROI for Businesses in Asia - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [atome, bnpl]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/announcing-our-seed-funding
+    title: "Announcing Our Seed Funding - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/are-payment-gateways-safe
+    title: "Are Payment Gateways Safe and Secure? - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/atome-merchant-payments-hitpay
+    title: "Atome Merchant Payments with HitPay QR Code (2026) | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [atome]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/best-ecommerce-inventory-management-software
+    title: "Best E-commerce Inventory Management Software in 2023 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [ecommerce]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/best-mobile-card-reader-for-malaysian-small-businesses-in-2025-hitpay-wisepad-3-vs-ipay88-plug-n-pay-vs-cimb-plug-n-pay
+    title: "Best Mobile Card Reader for Malaysian Small Businesses in 2025: HitPay WisePad 3 vs. iPay88 Plug-n-Pay vs. CIMB Plug-n-Pay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [card reader, small business, malaysia]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/best-mobile-card-readers-for-hawker-stalls-in-2025-hitpay-vs-nets-and-other-options
+    title: "Best Mobile Card Readers for Hawker Stalls in 2025: HitPay vs. NETS and Other Options - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [card reader]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/best-payment-gateway
+    title: "How To Find The Best Payment Gateway for Your Business - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/best-payment-gateway-hitpay-usa
+    title: "Introducing HitPay US — One-stop payment processor for small businesses - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/best-square-alternative
+    title: "Is Square Down? Try the Best Square Alternative That's Free - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [alternative]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/best-website-builder
+    title: "The Best Website Builders: Top Picks Compared - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/billplz-pricing-comparison
+    title: "BillPlz vs HitPay Pricing Comparison - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [comparison]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/bnpl-at-checkout-enabling-atome-shopback-paylater-on-retail-pos-to-boost-basket-size-in-2025
+    title: "BNPL at Checkout: Enabling Atome & ShopBack PayLater on Retail POS to Boost Basket Size in 2025 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos, atome, bnpl]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/cara-berjualan-luar-negeri-dengan-hitpay
+    title: "Cara Mudah Berjualan di Pameran Luar Negeri dengan Payment Gateway HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/credit-card-chargebacks
+    title: "Guide to credit card chargebacks on HitPay — How to prevent fraudulent disputes on your store - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [credit card]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/customise-payment-receipts-invoices
+    title: "Customise Payment Receipts and Invoices on HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [invoicing]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/different-types-pos-systems-benefits-industries
+    title: "Understanding the Different Types of POS Systems and Their Benefits in Various Industries - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/digital-product-examples-you-can-sell-online
+    title: "Digital Product Ideas You Can Sell Online: A Complete Guide - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [digital products]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/digital-products
+    title: "How To Sell Digital Products Online: An Ultimate Guide - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [digital products]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/do-you-still-need-a-terminal-tap-to-pay-on-iphone-vs-dedicated-apple-pay-hardware-for-small-shops
+    title: "Do You Still Need a Terminal? Tap to Pay on iPhone vs. Dedicated Apple Pay Hardware for Small Shops - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [tap to pay]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/dti-registration-business
+    title: "How to register your business with DTI in the Philippines: Step-by-step DTI registration guide - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/duitnow-qr-payment-gateway-shopify-xero
+    title: "How to Accept DuitNow QR Payments Online — DuitNow Payment Gateway for Shopify, WooCommerce, Xero, and More - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, duitnow, shopify, xero]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/essential-retail-pos-system-benefits
+    title: "The Essential Retail POS System: Why Retailers Need a Point of Sale Solution - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/fpx-payments
+    title: "Unlock Seamless Transactions with FPX Payment in Malaysia Using HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [fpx]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/free-small-business-software-hitpay
+    title: "7 must-have small business software that are completely free - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [small business]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/free-squarespace-alternative
+    title: "Free alternative to Squarespace for your e-commerce business - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [alternative]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/free-website-builder-new-zealand
+    title: "Top 8 Free Website Builders for New Zealand Businesses in 2024 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/google-analytics-integration
+    title: "How to Integrate Google Analytics on the HitPay Online Store - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/google-form-plugin
+    title: "Easily collect payments on Google Forms with HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-app
+    title: "HitPay App — Features, Setup & How It Works | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-enable-payment-methods
+    title: "Enable different payment methods on sales channels with HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment method]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-grab-partnership
+    title: "HitPay partners Grab to support SMEs in South East Asia - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-payment-solutions
+    title: "HitPay Payment Solutions — Full Overview (2026) | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-payout-guide
+    title: "HitPay Payout Guide: Fast Settlements for SE Asia (2026) | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-paypal-comparison
+    title: "Comparing HitPay with PayPal: Which Is the Better Payment Solution for SMEs? - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [paypal, comparison]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-pos-software
+    title: "Accept payments easily with the HitPay POS system for merchants — Credit Card Terminal and Tap To Pay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-pos-vs-qashier-vs-storehub-(2025)-which-suits-a-fashion-boutique
+    title: "HitPay POS vs Qashier vs StoreHub (2025): Which Suits a Fashion Boutique? - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-rates
+    title: "HitPay Rates — Full Pricing Breakdown (2026) | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-review-bob-the-baker-boy
+    title: "Bob the Baker Boy: The story behind Singapore's craziest cakes - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-review-hay-dairies
+    title: "Hay Dairies: How Leon Hay became a farmer-entrepreneur in Singapore - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-sandbox
+    title: "HitPay Sandbox — Complete Testing Guide for Developers | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-scan-to-pay-10-minute-set-up-checklist-for-philippine-merchants
+    title: "HitPay Scan to Pay: 10-Minute Set-Up Checklist for Philippine Merchants - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [scan to pay]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-security-features
+    title: "HitPay security features: How to keep your HitPay account safe - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-series-a
+    title: "HitPay raises US$15.75m in Series A funding round - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-sign-up
+    title: "HitPay Sign Up — Step-by-Step Registration Guide | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-tap-to-pay-ios
+    title: "HitPay Launches Tap to Pay on iOS in Australia, France, the UK, and the US - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [tap to pay]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hitpay-transaction-fee
+    title: "HitPay Transaction Fee — Full Pricing Breakdown (2026) | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/hong-kong-payment-gateway-why-hitpay-is-the-ultimate-choice-for-smbs
+    title: "Hong Kong Payment Gateway: Why HitPay is the Ultimate Choice for SMBs - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/how-hitpay-s-pos-integration-with-eber-helps-smbs-turn-every-sale-into-lasting-loyalty
+    title: "How HitPay’s POS Integration With Eber Helps SMBs Turn Every Sale Into Lasting Loyalty - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/how-much-to-build-website-uk
+    title: "How Much Does a Website Cost? UK Pricing Guide - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/how-to-accept-duitnow-qr-and-visa-on-one-portable-reader-2025-step-by-step-for-malaysian-merchants
+    title: "How to Accept DuitNow QR and Visa on One Portable Reader: 2025 Step-by-Step for Malaysian Merchants - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [duitnow, malaysia]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/how-to-accept-payments-online
+    title: "How to Accept Payments Online: Integrate a Payment Gateway for Your Website - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/how-to-accept-paynow-on-your-e-commerce-store-step-by-step-setup-on-desktop-and-mobile
+    title: "How to accept PayNow on your e-commerce store — Step-by-step setup on desktop and mobile - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [paynow]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/how-to-build-your-own-payment-gateway
+    title: "How to Build Your Own Payment Gateway: A Comprehensive Guide - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/how-to-choose-the-best-e-commerce-platform-for-your-small-business-e-commerce-platform-comparison-2021
+    title: "How to choose the best e-commerce platform for your small business — E-commerce platform comparison 2023 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [small business, comparison]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/how-to-connect-paynow-to-your-retail-pos-in-30-minutes-a-step-by-step-hitpay-tutorial-(2025-edition)
+    title: "How to Connect PayNow to Your Retail POS in 30 Minutes: A Step-by-Step HitPay Tutorial (2025 Edition) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos, paynow]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/how-to-create-profitable-digital-products
+    title: "The Benefits of Selling Digital Products: How to Create a Profitable Digital Product - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [digital products]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/how-to-integrate-duitnow-qr-into-your-retail-pos-(step-by-step-hitpay-implementation-for-2025)
+    title: "How to Integrate DuitNow QR into Your Retail POS (Step-by-Step HitPay Implementation for 2025) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos, duitnow]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/how-to-monetize-instagram
+    title: "How to Monetize Instagram: The Ultimate Guide to Boosting Your Revenue - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/how-to-sell-on-instagram-without-a-website
+    title: "How to sell on Instagram without a website - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/how-to-start-an-ecommerce-business
+    title: "How to start an e-commerce business with HitPay’s online store — Step-by-step guide - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [ecommerce]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/how-to-use-recurring-billing
+    title: "Automate subscription payments in Singapore with HitPay’s Recurring Billing - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [recurring billing]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/is-payment-gateway-a-pos
+    title: "Payment Gateway vs POS: Understanding the Roles of Payment Processors and Virtual POS - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, pos]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/monetize-tiktok
+    title: "How to Monetize TikTok: A Complete Guide to TikTok Monetization - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/multi-location-pos-system-hitpay
+    title: "How to use HitPay’s multi-location POS system to manage sales across multiple stores - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/online-bir-registration
+    title: "BIR Registration: In-Person and Online BIR Registration Guide in the Philippines - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/online-invoice-generator-hitpay
+    title: "Create and send invoices with HitPay’s Online Invoicing Generator - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [invoicing]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/payment-api-southeast-asia
+    title: "Payment API in Southeast Asia (2026) | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment api]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/payment-gateway
+    title: "Payment Gateway Guide for Southeast Asia (2026) | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/payment-link
+    title: "Payment Link — Send, Share & Get Paid Instantly | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment link]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/payment-links
+    title: "Get paid in seconds with HitPay’s payment links - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment link]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/payment-processing-online-store
+    title: "Payment Processing for Online Stores in SEA (2026) | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [online store]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/point-of-sale-southeast-asia
+    title: "Point of Sale Systems for Southeast Asia (2026) | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/pos-system
+    title: "Ultimate Guide to Point of Sale Systems: What Is a POS System? - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/receipt-maker-for-small-business
+    title: "Turn your receipts into powerful marketing tools with HitPay’s receipt maker for businesses - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [small business]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/recurring-payment-link
+    title: "HitPay’s Recurring Payment Links: Sell Subscription Plans with One Link - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment link, recurring billing]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/same-day-payouts-with-portable-nfc-readers-what-food-stall-owners-must-know-before-holiday-2025
+    title: "Same-Day Payouts with Portable NFC Readers: What Food-Stall Owners Must Know Before Holiday 2025 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/scaling-payments-not-false-positives-hitpay-strengthens-compliance-framework-with-flagright
+    title: "Scaling Payments, Not False Positives: HitPay Strengthens Compliance Framework with Flagright	 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/sell-digital-products-hitpay-online-store
+    title: "Sell Digital Products Online with the HitPay Online Store - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [digital products, online store]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/seo-ecommerce
+    title: "What Is SEO for E-Commerce?: SEO Best Practices 2023 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [ecommerce]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/statement-on-illegal-impersonation-of-hitpay
+    title: "Statement on Illegal Impersonation of HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/surcharge-fees-taxes-tips
+    title: "Add Surcharge Fees, Taxes, and Tips on HitPay POS Checkout - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/understanding-best-payment-gateways-who-uses-them
+    title: "Understanding The Best Payment Gateways: Who Uses Them? - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/understanding-pos-system-how-it-works
+    title: "Understanding the POS System: What Is a Point of Sale System and How Does It Work? - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/user-management
+    title: "How to add and manage users on your HitPay account - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/what-are-digital-products
+    title: "What Is a Digital Product? How to Start Selling Profitable Digital Products Through Online Stores - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [digital products]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/what-is-a-cashless-payment-a-simple-guide
+    title: "What is a Cashless Payment? A Simple Guide - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [hitpay, payments]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/what-is-a-payment-gateway
+    title: "Understanding Payment Gateways: How They Work and Examples - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/what-is-the-difference-between-a-bank-and-a-payment-gateway
+    title: "What is the Difference Between a Bank and a Payment Gateway? - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/why-do-you-need-a-payment-gateway
+    title: "Why Do You Need a Payment Gateway? - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/xero-payment-gateway
+    title: "The Ultimate Guide to Choosing a Xero Payment Gateway - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, xero]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/zeller-alternative
+    title: "Looking for a Zeller Alternative? Discover a Streamlined Solution for SMEs - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [alternative]
+    markets: [SEA]
+
+  - url: https://hitpayapp.com/blog/2025-guide-generating-a-paynow-static-qr-for-your-singapore-caf%C3%A9-using-hitpay-fees-limits-setup-time
+    title: "2025 Guide: Generating a PayNow Static QR for Your Singapore Café Using HitPay—Fees, Limits & Setup Time - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [paynow, singapore]
     markets: [SG]
+
+  - url: https://hitpayapp.com/blog/2025-guide-to-choosing-a-pos-for-singapore-hawker-stalls-paynow-grabpay-the-new-sgqr
+    title: "2025 Guide to Choosing a POS for Singapore Hawker Stalls: PayNow, GrabPay & the New SGQR+ - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos, paynow, grabpay, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/7-reasons-why-every-online-store-needs-paynow-in-2021-best-paynow-payment-gateway-in-singapore
+    title: "7 Reasons Every Online Store Needs PayNow in Singapore — Best PayNow Payment Gateway in Singapore - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, paynow, online store, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/accept-online-payments-singapore
+    title: "Accept Online Payments in Singapore — Full Guide - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/affordable-payment-gateway-cost-singapore
+    title: "How Much Does a Payment Gateway Cost? Discover the Most Affordable Payment Gateway in Singapore - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/best-ecommerce-website-builder-singapore
+    title: "Top 12 Online Website Builders for SMEs in Singapore: Shopify vs. WooCommerce, Wix, Cococart (2024) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [ecommerce, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/best-invoicing-software-singapore
+    title: "Best invoicing software for small businesses in Singapore (2023): Comparison of QuickBooks, Zoho, HitPay, and more - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [invoicing, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/best-payment-gateway-singapore
+    title: "Best Payment Gateway in Singapore 2026 - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/bnpl-singapore-buy-now-pay-later
+    title: "BNPL Singapore: How to accept Buy Now Pay Later online and in-store - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [bnpl, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/generate-paynow-qr-code-singapore
+    title: "How to Easily and Effectively Generate PayNow QR Codes for Customers in Singapore - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [paynow, qr code, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/hitpay-atome-singapore
+    title: "HitPay and Atome launch 0% interest BNPL payments for Singapore merchants - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [atome, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/hitpay-singapore
+    title: "HitPay Singapore — Payment Gateway and POS Platform (2026) | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/hitpay-vs-adyen-which-payment-gateway-best-integrates-with-woocommerce-in-singapore
+    title: "HitPay vs. Adyen: Which Payment Gateway Best Integrates with WooCommerce in Singapore? - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, woocommerce, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/how-to-accept-apple-pay-in-store-with-a-hitpay-terminal-(singapore-q4-2025)
+    title: "How to Accept Apple Pay In-Store With a HitPay Terminal (Singapore, Q4 2025) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/how-to-accept-qr-payments-in-singapore-hitpay-setup-guide
+    title: "How to accept QR payments in Singapore: HitPay setup guide - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/how-to-enable-paynow-payments-on-woocommerce-with-hitpay-(singapore-2025-edition)
+    title: "How to Enable PayNow Payments on WooCommerce with HitPay (Singapore, 2025 Edition) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [paynow, woocommerce, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/how-to-pick-a-retail-pos-system-in-singapore-(2025)-a-paynow-grabpay-ready-checklist
+    title: "How to Pick a Retail POS System in Singapore (2025): A PayNow & GrabPay-Ready Checklist - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos, paynow, grabpay, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/introducing-s-0-rental-credit-card-terminal-singapore-wireless-pos-terminal-solutions
+    title: "Introducing Credit Card Terminal for small businesses in Singapore — with no recurring fees - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos, credit card, card terminal, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/lower-payment-processing-fees-singapore
+    title: "3 Ways to Lower Payment Processing Fees in Singapore - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/most-affordable-pos-system-psg-grant-for-singapore-businesses
+    title: "Most Affordable POS System: PSG Grant for Singapore Businesses - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/payment-link-software-comparison-singapore
+    title: "Best payment link software in 2023: Which online payment link provider should you use? - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment link, singapore, comparison]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/paynow-shopify-payment-gateway-singapore
+    title: "How to Accept PayNow on Shopify: Discover the Best Payment Gateway for Shopify in Singapore - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, paynow, shopify, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/point-of-sale-system-comparison-singapore
+    title: "Singapore 2025: Best POS Software for Small Retail Stores Accepting PayNow & GrabPay (HitPay vs. Local Alternatives) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [singapore, comparison]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/pop-up-ready-payments-adding-paynow-grabpay-to-hitpay-pos-for-weekend-markets-in-singapore
+    title: "Pop-Up-Ready Payments: Adding PayNow & GrabPay to HitPay POS for Weekend Markets in Singapore - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos, paynow, grabpay, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/pop-up-shop-in-singapore
+    title: "7 secrets for a successful pop-up shop in Singapore - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/popular-payment-methods-in-singapore
+    title: "5 Popular Payment Methods in Singapore for Small Businesses — Accept PayNow QR, Credit Cards, Atome BNPL, and More - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment method, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/pos-system-singapore
+    title: "Singapore POS System: How to Choose the Right One (2026) | HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/singapore-2025-best-pos-software-for-small-retail-stores-accepting-paynow-grabpay-(hitpay-vs-local-alternatives)
+    title: "Singapore 2025: Best POS Software for Small Retail Stores Accepting PayNow & GrabPay (HitPay vs. Local Alternatives) - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [pos, paynow, grabpay, singapore, alternative]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/singapore-paynow-qr-payment-gateway-low-cost-efficient-payments-for-singapore-based-e-commerce-merchants
+    title: "PayNow QR API and Payment Gateway Integration - HitPay - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, paynow, singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/start-online-business-singapore
+    title: "Singapore Company Registration: A Step-by-Step Guide For Entrepreneurs - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [singapore]
+    markets: [SG]
+
+  - url: https://hitpayapp.com/blog/top-payment-gateway-providers-singapore
+    title: "7 Top Payment Gateway Providers in Singapore: Discover the Best Payment Gateway Solution - HitPay Blog | Your Guide to Payments and Business Growth"
+    topics: [payment gateway, singapore]
+    markets: [SG]
+
