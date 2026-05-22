@@ -2838,6 +2838,13 @@
       </div>
     </div>
     <div class="rp2-body" id="rp2Body">
+      <div id="rp2FormatBar" style="padding:10px 20px 0;flex-shrink:0;display:flex;gap:6px;align-items:center;">
+        <span style="font-size:12px;color:var(--text-dim);white-space:nowrap;margin-right:2px;">Format:</span>
+        <button class="btn" id="rpFmtBtn1" onclick="setRpThreadFormat(1)" style="font-size:12px;">1 tweet</button>
+        <button class="btn" id="rpFmtBtn3" onclick="setRpThreadFormat(3)" style="font-size:12px;">3 tweets</button>
+        <button class="btn" id="rpFmtBtn5" onclick="setRpThreadFormat(5)" style="font-size:12px;">5 tweets</button>
+        <button class="btn btn-primary" id="rpFmtBtn7" onclick="setRpThreadFormat(7)" style="font-size:12px;">7 tweets</button>
+      </div>
       <div class="rp2-carousel-wrap" id="rp2CarouselWrap">
         <div class="repurpose-empty" style="margin:auto;padding:60px 20px;text-align:center;">
           Preparing content…
@@ -3000,6 +3007,19 @@ let _repurposeData = null;
 let _repurposeActiveFormat = 'stat_hook';
 let _repurposeAbortController = null;
 let _repurposeSaveTimer = null;
+let _rpThreadFormat = 7;
+
+function _isThreadSchema(data) {
+  return !!(data && Array.isArray(data.tweets) && !data.choices);
+}
+
+function setRpThreadFormat(n) {
+  _rpThreadFormat = n;
+  [1, 3, 5, 7].forEach(i => {
+    const btn = document.getElementById(`rpFmtBtn${i}`);
+    if (btn) btn.className = i === n ? 'btn btn-primary' : 'btn';
+  });
+}
 let _rp2ActiveCard = 0;
 let _rp2CardAbort = {};
 const FORMAT_LABELS = {
@@ -4709,6 +4729,7 @@ async function openRepurposeModal() {
   _repurposeActiveFormat = 'stat_hook';
   _repurposeContext = {};
   _rp2ActiveCard = 0;
+  setRpThreadFormat(7);
   document.getElementById('repurposeModal').classList.add('open');
   const regenBtn = document.getElementById('repurposeRegenBtn');
   if (regenBtn) regenBtn.style.display = 'none';
@@ -4720,7 +4741,12 @@ async function openRepurposeModal() {
       const data = await res.json();
       if (data && data.twitter) {
         _repurposeData = data.twitter;
-        if (_isNewSchema(_repurposeData)) {
+        if (_isThreadSchema(_repurposeData)) {
+          const tc = _repurposeData.tweets.length;
+          const fmt = [1, 3, 5, 7].includes(tc) ? tc : 7;
+          setRpThreadFormat(fmt);
+          renderThreadResult(_repurposeData);
+        } else if (_isNewSchema(_repurposeData)) {
           renderCarousel();
         } else {
           _renderLegacyModal(_repurposeData);
@@ -5514,19 +5540,20 @@ async function startRepurpose() {
   const regenBtn = document.getElementById('repurposeRegenBtn');
   if (regenBtn) { regenBtn.disabled = true; regenBtn.style.display = ''; }
   document.getElementById('rp2NavRow').style.display = 'none';
+  const label = _rpThreadFormat === 1 ? 'tweet' : `${_rpThreadFormat}-tweet thread`;
   document.getElementById('rp2CarouselWrap').innerHTML =
-    `<div class="repurpose-generating" style="margin:auto;"><div class="spinner"></div><div>Generating X content…</div><div class="repurpose-status-log" id="repurposeStatusLog">Calling Claude API…</div></div>`;
+    `<div class="repurpose-generating" style="margin:auto;"><div class="spinner"></div><div>Generating ${label}…</div><div class="repurpose-status-log" id="repurposeStatusLog">Calling Claude API…</div></div>`;
 
   const slowTimer = setTimeout(() => {
     const log = document.getElementById('repurposeStatusLog');
-    if (log) log.textContent = 'Still generating — this takes 30–60s for a full post…';
-  }, 20000);
+    if (log) log.textContent = 'Still working — this usually takes 10–20 seconds…';
+  }, 15000);
 
   try {
-    const res = await fetch(`/api/posts/${currentPost.id}/repurpose`, {
+    const res = await fetch(`/api/posts/${currentPost.id}/repurpose-thread`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ platform: 'twitter' }),
+      body: JSON.stringify({ thread_size: _rpThreadFormat }),
       signal,
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -5553,11 +5580,7 @@ async function startRepurpose() {
           if (currentPost) currentPost.repurposed_content = { twitter: _repurposeData };
           updateRepurposeBtn();
           if (regenBtn) { regenBtn.disabled = false; regenBtn.style.display = ''; }
-          if (_isNewSchema(_repurposeData)) {
-            renderCarousel();
-          } else {
-            _renderLegacyModal(_repurposeData);
-          }
+          renderThreadResult(_repurposeData);
         } else if (msg.type === 'error') {
           throw new Error(msg.message);
         }
@@ -5571,6 +5594,160 @@ async function startRepurpose() {
     if (regenBtn) { regenBtn.disabled = false; regenBtn.style.display = ''; }
   }
   clearTimeout(slowTimer);
+}
+
+
+function renderThreadResult(result) {
+  const wrap = document.getElementById('rp2CarouselWrap');
+  const navRow = document.getElementById('rp2NavRow');
+  if (!wrap) return;
+  if (navRow) navRow.style.display = 'none';
+
+  const tweets = result.tweets || [];
+  const linkUrl = result.link_url || _getBlogUrl();
+  const isSingle = tweets.length === 1;
+
+  const tweetsHtml = tweets.map((t, i) => {
+    const rows = Math.min(Math.max(2, Math.ceil(t.length / 55)), 7);
+    const label = isSingle ? 'Tweet' : (i === 0 ? `1/${tweets.length} (hook)` : i === tweets.length - 1 ? `${tweets.length}/${tweets.length} (CTA)` : `${i + 1}/${tweets.length}`);
+    return `<div style="display:flex;flex-direction:column;gap:3px;margin-bottom:8px;">
+      <div style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;">${label}</div>
+      <textarea class="tweet-input" rows="${rows}" data-rptweet="${i}"
+        style="width:100%;font-size:13px;line-height:1.5;resize:vertical;">${escHtml(t)}</textarea>
+      <div style="text-align:right;font-size:11px;color:var(--text-muted);">${t.length}/280</div>
+    </div>`;
+  }).join('');
+
+  const linkReplyVal = `Full post: ${linkUrl}`;
+  const linkHtml = `<div style="display:flex;flex-direction:column;gap:3px;margin-bottom:8px;">
+    <div style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;">Link reply</div>
+    <textarea class="tweet-input" rows="1" data-rptweet="link_reply"
+      style="width:100%;font-size:12px;resize:vertical;">${escHtml(linkReplyVal)}</textarea>
+  </div>`;
+
+  const visualHtml = result.visual_note
+    ? `<div class="rp2-visual-note"><span class="rp2-visual-note-icon">💡</span><span>${escHtml(result.visual_note)}</span></div>`
+    : '';
+
+  const typefullyEnabled = window._config && window._config.typefully_enabled;
+  const typefullyHtml = typefullyEnabled ? `
+    <div class="typefully-panel" style="margin-top:8px;">
+      <h4>Publish via Typefully</h4>
+      <div style="display:flex;gap:6px;margin-bottom:8px;">
+        <button class="btn" style="flex:1;font-size:12px;" onclick="rpThreadTypefully('draft')">Save Draft</button>
+        <button class="btn btn-primary" style="flex:1;font-size:12px;" onclick="rpThreadTypefully('now')">Post Now ↗</button>
+      </div>
+      <div class="typefully-date">
+        <label>Schedule:</label>
+        <input type="datetime-local" id="rpThreadScheduleDate" class="field-input" style="flex:1;font-size:12px;padding:4px 8px;" />
+        <button class="btn" onclick="rpThreadTypefully('schedule')" style="font-size:12px;white-space:nowrap;">Schedule ↗</button>
+      </div>
+      <div id="rpThreadTypefullyResult" class="typefully-result" style="display:none;margin-top:6px;"></div>
+    </div>` : '';
+
+  wrap.innerHTML = `<div class="rp2-card" style="flex:1;">
+    <div class="rp2-card-header">
+      <div class="rp2-card-meta">
+        <span class="rp2-card-label">${isSingle ? 'Tweet' : `${tweets.length}-Tweet Thread`}</span>
+      </div>
+      ${result.topic ? `<div class="rp2-card-title">${escHtml(result.topic)}</div>` : ''}
+    </div>
+    <div class="rp2-card-body">
+      ${tweetsHtml}${linkHtml}${visualHtml}${typefullyHtml}
+    </div>
+    <div class="rp2-card-footer">
+      <button class="rp2-regen-btn" onclick="startRepurpose()">↺ Regen</button>
+      <button class="btn" style="font-size:12px;padding:4px 10px;" onclick="rpThreadCopy()">Copy</button>
+      <button class="btn btn-primary" style="font-size:12px;padding:4px 10px;" onclick="rpThreadAddToXDraft()">+ Add to Drafts</button>
+    </div>
+  </div>`;
+}
+
+function _getRpThreadTweets() {
+  const tweets = [];
+  for (let i = 0; ; i++) {
+    const el = document.querySelector(`[data-rptweet="${i}"]`);
+    if (!el) break;
+    tweets.push(el.value);
+  }
+  return tweets;
+}
+
+function _getRpLinkReply() {
+  const el = document.querySelector('[data-rptweet="link_reply"]');
+  return el ? el.value : '';
+}
+
+function rpThreadCopy() {
+  const tweets = _getRpThreadTweets();
+  const linkReply = _getRpLinkReply();
+  const parts = [...tweets];
+  if (linkReply) parts.push('---\n' + linkReply);
+  navigator.clipboard.writeText(parts.join('\n---\n')).then(() => showToast('Copied', 'success'));
+}
+
+async function rpThreadAddToXDraft() {
+  if (!currentPost) return;
+  const tweets = _getRpThreadTweets();
+  const linkReply = _getRpLinkReply();
+  if (!tweets.length) { showToast('No content to add', 'error'); return; }
+  try {
+    const res = await fetch(`/api/posts/${currentPost.id}/repurpose-to-x-drafts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        format_key: 'thread',
+        blog_url: _getBlogUrl(),
+        tweets,
+        link_reply: linkReply,
+        market: currentPost.country || null,
+      }),
+    });
+    if (!res.ok) { showToast('Failed to add to X drafts', 'error'); return; }
+    showToast('Added to X Drafts', 'success');
+  } catch (e) {
+    showToast('Error adding to X drafts', 'error');
+  }
+}
+
+async function rpThreadTypefully(mode) {  // 'draft' | 'now' | 'schedule'
+  if (!currentPost) return;
+  const tweets = _getRpThreadTweets();
+  const linkReply = _getRpLinkReply();
+  let scheduleDate = null;
+  if (mode === 'schedule') {
+    const val = document.getElementById('rpThreadScheduleDate')?.value;
+    if (!val) { showToast('Pick a date and time first', 'error'); return; }
+    scheduleDate = new Date(val).toISOString();
+  }
+  const resultEl = document.getElementById('rpThreadTypefullyResult');
+  try {
+    const res = await fetch(`/api/posts/${currentPost.id}/typefully`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        format_key: 'thread',
+        blog_url: _getBlogUrl(),
+        schedule_date: scheduleDate,
+        post_now: mode === 'now',
+        tweets,
+        link_reply: linkReply,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) { showToast(data.detail || 'Typefully error', 'error'); return; }
+    const msg = mode === 'now' ? 'Posted ✓' : mode === 'schedule' ? 'Scheduled ✓' : 'Saved as draft ✓';
+    const linkLabel = mode === 'draft' ? 'open in Typefully ↗' : 'view ↗';
+    if (resultEl) {
+      resultEl.style.display = 'block';
+      resultEl.innerHTML = data.typefully_url
+        ? `${msg} — <a href="${escHtml(data.typefully_url)}" target="_blank" style="color:inherit;">${linkLabel}</a>`
+        : msg;
+    }
+    showToast(msg, 'success');
+  } catch (e) {
+    showToast('Error pushing to Typefully', 'error');
+  }
 }
 
 // ── Editor avatar helpers ─────────────────────────────────────────────────────

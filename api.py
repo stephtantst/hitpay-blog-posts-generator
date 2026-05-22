@@ -921,7 +921,7 @@ def api_generate_thought_leadership(
 
 # ── Repurpose for Social ─────────────────────────────────────────────────────
 
-from src.repurposer import repurpose_for_platform, push_to_typefully, _cap_tweet, _move_url_to_reply
+from src.repurposer import repurpose_for_platform, push_to_typefully, _cap_tweet, _move_url_to_reply, repurpose_post_as_thread
 
 
 class RepurposeRequest(BaseModel):
@@ -932,6 +932,7 @@ class TypefullyRequest(BaseModel):
     format_key: str
     blog_url: str
     schedule_date: str | None = None
+    post_now: bool = False
     tweets: list[str] | None = None
     link_reply: str | None = None
 
@@ -1040,6 +1041,34 @@ async def api_repurpose_card(post_id: int, body: RepurposeCardRequest,
     return StreamingResponse(stream(), media_type="text/event-stream")
 
 
+class RepurposeThreadRequest(BaseModel):
+    thread_size: int = 7  # 1, 3, 5, or 7
+
+
+@app.post("/api/posts/{post_id}/repurpose-thread")
+async def api_repurpose_thread(post_id: int, body: RepurposeThreadRequest,
+                                user_email: str = Depends(require_auth)):
+    post = get_post(post_id)
+    if not post:
+        raise HTTPException(404, "Post not found")
+
+    async def stream():
+        loop = asyncio.get_event_loop()
+        try:
+            label = "tweet" if body.thread_size == 1 else f"{body.thread_size}-tweet thread"
+            yield f"data: {json.dumps({'type': 'status', 'message': f'Generating {label}…'})}\n\n"
+            result = await loop.run_in_executor(
+                None, lambda: repurpose_post_as_thread(post, body.thread_size)
+            )
+            update_repurposed_content(post_id, "twitter", result)
+            log_audit(post_id, user_email, "repurposed", {"platform": "twitter", "thread_size": body.thread_size})
+            yield f"data: {json.dumps({'type': 'done', 'result': result})}\n\n"
+        except Exception as e:
+            yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
+
+    return StreamingResponse(stream(), media_type="text/event-stream")
+
+
 @app.get("/api/posts/{post_id}/repurposed")
 def api_get_repurposed(post_id: int, _: str = Depends(require_auth)):
     post = get_post(post_id)
@@ -1070,12 +1099,17 @@ def api_push_typefully(post_id: int, body: TypefullyRequest,
         raise HTTPException(404, "Post not found")
     repurposed = get_repurposed_content(post_id)
     twitter_data = (repurposed or {}).get("twitter", {})
+    if body.post_now:
+        from datetime import datetime, timezone, timedelta
+        schedule_date = (datetime.now(timezone.utc) + timedelta(minutes=2)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    else:
+        schedule_date = body.schedule_date or None
     try:
         result = push_to_typefully(
             twitter_data=twitter_data,
             format_key=body.format_key,
             blog_url=body.blog_url,
-            schedule_date=body.schedule_date or None,
+            schedule_date=schedule_date,
             api_key=TYPEFULLY_API_KEY,
             tweets_override=body.tweets,
             link_reply_override=body.link_reply,

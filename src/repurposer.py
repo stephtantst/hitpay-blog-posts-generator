@@ -820,3 +820,128 @@ def _build_typefully_content(twitter_data: dict, format_key: str, blog_url: str)
         return single(d["tweet"], d["link_reply"])
 
     raise ValueError(f"Unknown format_key: {format_key}")
+
+
+# ── Repurpose-as-thread (same structure as thought leadership) ────────────────
+
+_RP_FALLBACK_URL = "https://hitpayapp.com/blog/hitpay-rates"
+
+
+def _build_repurpose_thread_prompt(thread_size: int) -> str:
+    if thread_size == 1:
+        format_section = """CONTENT FORMAT: Single standalone tweet
+- Exactly 1 tweet, no numbering
+- 200–280 chars, fully self-contained
+- Ends with a natural HitPay mention + [URL] as a literal placeholder"""
+        tweets_example = '"tweets": ["...single tweet... [URL]"]'
+    else:
+        format_section = (
+            f"CONTENT FORMAT: Thread of exactly {thread_size} tweets\n"
+            f'- Exactly {thread_size} tweets numbered "1/{thread_size} ...", '
+            f'"2/{thread_size} ...", etc. No more, no fewer.\n'
+            "- Tweet 1: hook — the most surprising or useful fact from the post — end with 🧵\n"
+            "- Middle tweets: one key insight per tweet, drawn directly from the post content\n"
+            f"- Final tweet ({thread_size}/{thread_size}): actionable takeaway + natural HitPay "
+            "mention + [URL] as a literal placeholder\n"
+            "- Each tweet: 200–280 chars, self-contained"
+        )
+        example_tweets = [f'"1/{thread_size} ..."'] + \
+                         [f'"{i}/{thread_size} ..."' for i in range(2, thread_size)] + \
+                         [f'"{thread_size}/{thread_size} ... [URL]"']
+        tweets_example = f'"tweets": [{", ".join(example_tweets)}]'
+
+    return f"""You are the official X content writer for HitPay, a regulated payments FinTech helping SMEs grow faster in Southeast Asia.
+
+BRAND: HitPay — MAS-licensed (SG), BNM-approved (MY), BSP OPS-licensed (PH). No monthly fees. 50+ payment methods.
+TONE: Direct, factual, confident but not corporate. Expert without jargon.
+AUDIENCE: SME founders, merchants, and finance managers in Southeast Asia (SG/MY/PH).
+
+Your task: repurpose the provided HitPay blog post into high-quality X content.
+Extract the most compelling facts, insights, and actionable takeaways directly from the post.
+Do NOT add statistics, claims, or information not present in the source post.
+
+{format_section}
+
+STYLE RULES:
+- Use specific numbers from the post: rates, percentages, time frames, named outcomes
+- Em-dashes (—) are fine, used sparingly
+- No hashtags, no @ mentions
+- No URLs in any tweet except the final one — use [URL] as a literal placeholder there only
+- No promotional language until the final tweet
+- Banned words: seamlessly, unlock, revolutionise, game-changer, cutting-edge, empower,
+  leverage, utilise, transformative, innovative, robust
+
+OUTPUT: Return a raw JSON object only. No markdown fences, no preamble.
+{{"topic": "<3-7 word topic from the post>", {tweets_example}, "link_url": "[BLOG_URL]", "visual_note": "<suggestion or null>"}}
+
+IMPORTANT: [URL] in the tweet(s) is a literal placeholder — never substitute the real URL into tweet text.
+link_url must be exactly: [BLOG_URL]"""
+
+
+def repurpose_post_as_thread(post: dict, thread_size: int) -> dict:
+    """Repurpose a blog post as an X thread of the specified size.
+
+    Returns: {"topic": str, "tweets": list[str], "link_url": str, "visual_note": str | None}
+    """
+    if thread_size not in (1, 3, 5, 7):
+        raise ValueError(f"thread_size must be 1, 3, 5, or 7 — got {thread_size}")
+
+    slug = (post.get("slug") or "").strip()
+    blog_url = f"https://hitpayapp.com/blog/{slug}" if slug else _RP_FALLBACK_URL
+
+    system = _build_repurpose_thread_prompt(thread_size).replace("[BLOG_URL]", blog_url)
+
+    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+
+    market = (post.get("country") or "").strip()
+    market_line = f"\nMARKET: {market}" if market else ""
+
+    user_message = (
+        f"POST TITLE: {post.get('title', '')}\n"
+        f"PRIMARY KEYWORD: {post.get('keyword', '')}"
+        f"{market_line}\n\n"
+        f"BLOG POST CONTENT:\n{post.get('content', '')}\n\n"
+        f"Generate exactly {thread_size} tweet(s) as specified."
+    )
+
+    msg = _messages_create_with_retry(
+        client,
+        model=CLAUDE_MODEL,
+        max_tokens=2500,
+        system=system,
+        messages=[{"role": "user", "content": user_message}],
+    )
+
+    raw = msg.content[0].text.strip()
+    json_match = re.search(r'\{.*\}', raw, re.DOTALL)
+    if json_match:
+        raw = json_match.group(0)
+    else:
+        raw = re.sub(r"^```(?:json)?\s*", "", raw)
+        raw = re.sub(r"\s*```$", "", raw)
+
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        try:
+            from json_repair import repair_json
+            data = json.loads(repair_json(raw))
+        except Exception as e:
+            raise ValueError(f"Could not parse repurpose-thread response: {e}")
+
+    tweets = data.get("tweets")
+    if not isinstance(tweets, list) or len(tweets) < 1:
+        raise ValueError(f"Expected tweets array, got: {tweets!r}")
+
+    tweets = tweets[:thread_size]
+    if len(tweets) < thread_size:
+        raise ValueError(f"Expected {thread_size} tweet(s), got {len(tweets)}")
+
+    tweets = [_cap_tweet(t) for t in tweets]
+
+    return {
+        "topic": data.get("topic", ""),
+        "tweets": tweets,
+        "link_url": blog_url,  # always use the post's own URL
+        "visual_note": data.get("visual_note"),
+    }
