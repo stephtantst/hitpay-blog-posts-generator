@@ -15,13 +15,19 @@ def _cap_tweet(text: str, limit: int = 280) -> str:
     return text[:cutoff] + "…"
 
 
+def _strip_url_from_body(text: str) -> str:
+    """Remove any stray URLs from a tweet body. URLs belong in link_reply only."""
+    cleaned = _URL_RE.sub("", text)
+    return re.sub(r'[\s\-—.,]+$', '', cleaned).strip()
+
+
 def _cap_all_tweets(data: dict) -> None:
-    """Apply 280-char cap in-place to every tweet field in the repurpose data structure."""
+    """Strip URLs then apply 280-char cap in-place to every tweet field."""
     for choice in data.get("choices") or []:
         if choice.get("tweet"):
-            choice["tweet"] = _cap_tweet(choice["tweet"])
+            choice["tweet"] = _cap_tweet(_strip_url_from_body(choice["tweet"]))
         if choice.get("tweets"):
-            choice["tweets"] = [_cap_tweet(t) for t in choice["tweets"]]
+            choice["tweets"] = [_cap_tweet(_strip_url_from_body(t)) for t in choice["tweets"]]
 
 
 _URL_RE = re.compile(r'https?://\S+')
@@ -545,9 +551,9 @@ def _generate_twitter_card(post: dict, card_type: str, hook_style: str, on_statu
     raw = re.sub(r"\s*```$", "", raw)
     card = json.loads(raw)
     if card.get("tweet"):
-        card["tweet"] = _cap_tweet(card["tweet"])
+        card["tweet"] = _cap_tweet(_strip_url_from_body(card["tweet"]))
     if card.get("tweets"):
-        card["tweets"] = [_cap_tweet(t) for t in card["tweets"]]
+        card["tweets"] = [_cap_tweet(_strip_url_from_body(t)) for t in card["tweets"]]
     return card
 
 
@@ -937,7 +943,7 @@ def repurpose_post_as_thread(post: dict, thread_size: int) -> dict:
     if len(tweets) < thread_size:
         raise ValueError(f"Expected {thread_size} tweet(s), got {len(tweets)}")
 
-    tweets = [_cap_tweet(t) for t in tweets]
+    tweets = [_cap_tweet(_strip_url_from_body(t)) for t in tweets]
 
     return {
         "topic": data.get("topic", ""),

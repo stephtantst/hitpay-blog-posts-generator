@@ -1370,6 +1370,23 @@
     .type-badge.new    { background: #dcfce7; color: #166534; }
     .type-badge.rewrite { background: #ede9fe; color: #5b21b6; }
 
+    /* ── Hide status column when filtered to a single status ── */
+    .posts-table.hide-status-col .tbl-col-status { display: none; }
+
+    /* ── Repurposed platform icons ──────────────────── */
+    .repurposed-icons-cell { display: flex; gap: 5px; align-items: center; }
+    .repurposed-icon { display: inline-flex; align-items: center; justify-content: center; color: var(--text-muted); transition: color 0.12s; }
+    .repurposed-icon:hover { color: var(--text); }
+
+    /* ── Table action dropdown ───────────────────────── */
+    .tbl-action-wrap { position: relative; display: inline-block; }
+    .tbl-action-btn { background: none; border: 1px solid var(--border); border-radius: 5px; color: var(--text-muted); padding: 3px 8px; font-size: 11px; cursor: pointer; transition: border-color 0.12s, color 0.12s; font-family: inherit; white-space: nowrap; }
+    .tbl-action-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .tbl-action-menu { display: none; position: absolute; right: 0; top: calc(100% + 3px); background: var(--surface); border: 1px solid var(--border); border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); min-width: 170px; z-index: 300; overflow: hidden; }
+    .tbl-action-menu.open { display: block; }
+    .tbl-action-menu-item { display: block; width: 100%; background: none; border: none; padding: 8px 14px; text-align: left; font-size: 12px; color: var(--text); cursor: pointer; transition: background 0.12s; font-family: inherit; white-space: nowrap; }
+    .tbl-action-menu-item:hover { background: var(--surface2); }
+
     /* ── Board view ─────────────────────────────────── */
     .board-wrap {
       flex: 1;
@@ -2228,13 +2245,12 @@
             </th>
             <th class="sortable sort-active" id="th-title" onclick="sortBy('title')">Title <span class="sort-arrow" id="sa-title">↓</span></th>
             <th style="width:80px;">Type</th>
-            <th class="sortable" id="th-status" onclick="sortBy('status')">Status <span class="sort-arrow" id="sa-status"></span></th>
+            <th class="sortable tbl-col-status" id="th-status" onclick="sortBy('status')">Status <span class="sort-arrow" id="sa-status"></span></th>
             <th style="width:60px;">Editor</th>
             <th class="sortable" id="th-country" onclick="sortBy('country')">Market <span class="sort-arrow" id="sa-country"></span></th>
             <th class="sortable" id="th-created_at" onclick="sortBy('created_at')">Created <span class="sort-arrow" id="sa-created_at"></span></th>
-            <th class="sortable" id="th-updated_at" onclick="sortBy('updated_at')">Updated <span class="sort-arrow" id="sa-updated_at"></span></th>
-            <th class="sortable" id="th-date" onclick="sortBy('date')">Publish Date <span class="sort-arrow" id="sa-date"></span></th>
-            <th style="width:70px;">Actions</th>
+            <th style="width:64px;" title="Repurposed to social platforms">Social</th>
+            <th style="width:90px;">Actions</th>
           </tr>
         </thead>
         <tbody id="listBody"></tbody>
@@ -3076,6 +3092,8 @@ function setStatusFilter(btn) {
   document.querySelectorAll('.status-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
   statusFilter = btn.dataset.status;
+  const tbl = document.querySelector('.posts-table');
+  if (tbl) tbl.classList.toggle('hide-status-col', statusFilter !== 'all');
   renderPostList();
 
   // Sync the overview filter chips and re-render board/list view
@@ -4414,6 +4432,24 @@ function fmtDate(str) {
 const MARKET_LABEL = { SG: '🇸🇬 SG', MY: '🇲🇾 MY', PH: '🇵🇭 PH' };
 function marketLabel(c) { return MARKET_LABEL[c] || (c ? c : '—'); }
 
+function repurposedIcons(p) {
+  let rc = p.repurposed_content;
+  if (!rc) return '<span style="color:var(--text-dim);font-size:11px;">—</span>';
+  if (typeof rc === 'string') { try { rc = JSON.parse(rc); } catch(_) { return ''; } }
+  const icons = [];
+  if (rc.twitter && (rc.twitter.stat_hook || rc.twitter.cards || rc.twitter.tweets || rc.twitter.hook_variants)) {
+    icons.push(`<span class="repurposed-icon" title="Repurposed for X">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </span>`);
+  }
+  if (rc.threads) {
+    icons.push(`<span class="repurposed-icon" title="Repurposed for Threads">
+      <svg width="13" height="13" viewBox="0 0 192 192" fill="currentColor"><path d="M141.537 88.988a66.667 66.667 0 0 0-2.518-1.143c-1.482-27.307-16.403-42.94-41.457-43.1h-.34c-14.986 0-27.449 6.396-35.12 18.036l13.779 9.452c5.73-8.695 14.724-10.548 21.348-10.548h.229c8.249.053 14.474 2.452 18.503 7.129 2.932 3.405 4.893 8.111 5.864 14.05-7.314-1.243-15.224-1.626-23.68-1.14-23.82 1.371-39.134 15.264-38.105 34.568.522 9.792 5.4 18.216 13.735 23.719 7.047 4.652 16.124 6.927 25.557 6.412 12.458-.683 22.231-5.436 29.049-14.127 5.178-6.6 8.453-15.153 9.899-25.93 5.937 3.583 10.337 8.298 12.767 13.966 4.132 9.635 4.373 25.468-8.546 38.376-11.319 11.308-24.925 16.2-45.488 16.351-22.809-.169-40.06-7.484-51.275-21.742C35.236 139.966 29.808 120.682 29.605 96c.203-24.682 5.63-43.966 16.133-57.317C56.954 24.425 74.206 17.11 97.015 16.94c22.975.17 40.526 7.52 52.171 21.847 5.71 7.026 10.015 15.86 12.853 26.162l16.147-4.308c-3.44-12.68-8.853-23.606-16.219-32.668C147.036 9.607 125.202.195 97.105 0h-.2C68.789.195 47.179 9.642 32.8 28.08 19.931 44.492 13.244 67.544 13.01 96v.04c.234 28.456 6.921 51.508 19.79 67.92C47.18 182.358 68.79 191.805 96.905 192h.2c24.96-.173 42.554-6.708 57.048-21.189 18.963-18.945 18.392-42.692 12.142-57.27-4.484-10.454-13.033-18.945-24.758-24.553z"/></svg>
+    </span>`);
+  }
+  return icons.length ? `<div class="repurposed-icons-cell">${icons.join('')}</div>` : '<span style="color:var(--text-dim);font-size:11px;">—</span>';
+}
+
 const STATUS_LABEL = { generated: '✨ Generated', editing: '✏️ Editing', ready_to_publish: '🔵 Ready', published: '✅ Published' };
 
 // ── List view ─────────────────────────────────────────────────────────────────
@@ -4439,7 +4475,7 @@ function getSortedPosts(arr) {
 }
 
 function updateSortHeaders() {
-  const fields = ['title', 'status', 'country', 'created_at', 'updated_at', 'date'];
+  const fields = ['title', 'status', 'country', 'created_at'];
   fields.forEach(f => {
     const th = document.getElementById(`th-${f}`);
     const sa = document.getElementById(`sa-${f}`);
@@ -4460,7 +4496,7 @@ function renderListView(filtered) {
   const tbody = document.getElementById('listBody');
 
   if (sorted.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="10" style="padding:32px; text-align:center; color:var(--text-dim); font-size:13px;">No posts found</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="9" style="padding:32px; text-align:center; color:var(--text-dim); font-size:13px;">No posts found</td></tr>`;
     return;
   }
 
@@ -4482,17 +4518,20 @@ function renderListView(filtered) {
         ${p.keyword ? `<div class="post-row-kw">${escHtml(p.keyword)}</div>` : ''}
       </td>
       <td>${p.source_url ? '<span class="type-badge rewrite">Rewrite</span>' : '<span class="type-badge new">New</span>'}</td>
-      <td><span class="tbl-status ${p.status}"><span class="tbl-status-dot"></span>${STATUS_LABEL[p.status] || p.status}</span></td>
+      <td class="tbl-col-status"><span class="tbl-status ${p.status}"><span class="tbl-status-dot"></span>${STATUS_LABEL[p.status] || p.status}</span></td>
       <td><select class="inline-editor-sel" onchange="setEditorInline(${p.id}, this.value)" onclick="event.stopPropagation()">${editorOptions(p.editor_email)}</select></td>
       <td>${p.country ? `<span class="market-badge">${marketLabel(p.country)}</span>` : '<span style="color:var(--text-dim);font-size:11px;">—</span>'}</td>
       <td class="dt-cell">${fmtDatetime(p.created_at)}</td>
-      <td class="dt-cell">${fmtDatetime(p.updated_at)}</td>
-      <td class="dt-cell-dim">${fmtDate(p.date)}</td>
+      <td>${repurposedIcons(p)}</td>
       <td>
-        <button onclick="openPost(${p.id})" title="Open in editor"
-          style="background:none;border:1px solid var(--border);border-radius:5px;color:var(--text-muted);padding:3px 9px;font-size:11px;cursor:pointer;"
-          onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
-          onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Edit</button>
+        <div class="tbl-action-wrap">
+          <button class="tbl-action-btn" onclick="toggleTblActionMenu(event,${p.id})">Actions ▾</button>
+          <div class="tbl-action-menu" id="tbl-action-menu-${p.id}">
+            <button class="tbl-action-menu-item" onclick="openPost(${p.id});closeTblActionMenus()">Edit</button>
+            <button class="tbl-action-menu-item" onclick="tblRepurposeX(${p.id})">Repurpose for X</button>
+            <button class="tbl-action-menu-item" onclick="tblRepurposeThreads(${p.id})">Repurpose for Threads</button>
+          </div>
+        </div>
       </td>
     </tr>`;
   }).join('');
@@ -4718,6 +4757,28 @@ function updateRepurposeBtn() {
 function _isNewSchema(data) {
   return !!(data && Array.isArray(data.choices));
 }
+
+function toggleTblActionMenu(e, postId) {
+  e.stopPropagation();
+  const menu = document.getElementById(`tbl-action-menu-${postId}`);
+  const isOpen = menu.classList.contains('open');
+  closeTblActionMenus();
+  if (!isOpen) menu.classList.add('open');
+}
+function closeTblActionMenus() {
+  document.querySelectorAll('.tbl-action-menu.open').forEach(m => m.classList.remove('open'));
+}
+async function tblRepurposeX(postId) {
+  closeTblActionMenus();
+  await openPost(postId);
+  openRepurposeModal();
+}
+async function tblRepurposeThreads(postId) {
+  closeTblActionMenus();
+  await openPost(postId);
+  openRepurposeModal();
+}
+document.addEventListener('click', () => closeTblActionMenus());
 
 async function openRepurposeModal() {
   if (!currentPost) return;
@@ -5322,9 +5383,8 @@ async function addCardToXDraft(cardIdx) {
     });
     if (!res.ok) { showToast('Failed to add to X drafts', 'error'); return; }
     const result = await res.json();
-    if (btn) { btn.textContent = '✓ Added'; }
+    if (btn) { btn.textContent = '✓ Added'; btn.disabled = false; }
     showToast(`Added ${result.created_ids.length} post(s) to X Drafts`, 'success');
-    setTimeout(() => { if (btn) { btn.textContent = '+ Add to Drafts'; btn.disabled = false; } }, 2000);
   } catch (e) {
     showToast('Error adding to X drafts', 'error');
     if (btn) { btn.textContent = '+ Add to Drafts'; btn.disabled = false; }
@@ -5659,7 +5719,7 @@ function renderThreadResult(result) {
     <div class="rp2-card-footer">
       <button class="rp2-regen-btn" onclick="startRepurpose()">↺ Regen</button>
       <button class="btn" style="font-size:12px;padding:4px 10px;" onclick="rpThreadCopy()">Copy</button>
-      <button class="btn btn-primary" style="font-size:12px;padding:4px 10px;" onclick="rpThreadAddToXDraft()">+ Add to Drafts</button>
+      <button class="btn btn-primary" id="rpThreadAddDraftBtn" style="font-size:12px;padding:4px 10px;" onclick="rpThreadAddToXDraft()">+ Add to Drafts</button>
     </div>
   </div>`;
 }
@@ -5692,6 +5752,8 @@ async function rpThreadAddToXDraft() {
   const tweets = _getRpThreadTweets();
   const linkReply = _getRpLinkReply();
   if (!tweets.length) { showToast('No content to add', 'error'); return; }
+  const btn = document.getElementById('rpThreadAddDraftBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
   try {
     const res = await fetch(`/api/posts/${currentPost.id}/repurpose-to-x-drafts`, {
       method: 'POST',
@@ -5704,10 +5766,12 @@ async function rpThreadAddToXDraft() {
         market: currentPost.country || null,
       }),
     });
-    if (!res.ok) { showToast('Failed to add to X drafts', 'error'); return; }
+    if (!res.ok) { showToast('Failed to add to X drafts', 'error'); if (btn) { btn.textContent = '+ Add to Drafts'; btn.disabled = false; } return; }
+    if (btn) { btn.textContent = '✓ Added'; btn.disabled = false; }
     showToast('Added to X Drafts', 'success');
   } catch (e) {
     showToast('Error adding to X drafts', 'error');
+    if (btn) { btn.textContent = '+ Add to Drafts'; btn.disabled = false; }
   }
 }
 
@@ -5737,6 +5801,9 @@ async function rpThreadTypefully(mode) {  // 'draft' | 'now' | 'schedule'
     });
     const data = await res.json();
     if (!res.ok) { showToast(data.detail || 'Typefully error', 'error'); return; }
+    if (data.link_warning) {
+      showToast(`⚠ ${data.link_warning} — update the link before publishing`, 'error');
+    }
     const msg = mode === 'now' ? 'Posted ✓' : mode === 'schedule' ? 'Scheduled ✓' : 'Saved as draft ✓';
     const linkLabel = mode === 'draft' ? 'open in Typefully ↗' : 'view ↗';
     if (resultEl) {
@@ -6624,6 +6691,9 @@ async function xPushToTypefully(mode) {  // mode: 'draft' | 'now' | 'schedule'
       resultEl.style.color = 'var(--danger, #dc2626)';
       resultEl.style.display = 'block';
       return;
+    }
+    if (data.link_warning) {
+      showToast(`⚠ ${data.link_warning} — update the link before publishing`, 'error');
     }
     const msg = mode === 'now' ? 'Posted ✓' : mode === 'schedule' ? 'Scheduled ✓' : 'Saved as draft ✓';
     const linkLabel = mode === 'draft' ? 'open & publish in Typefully ↗' : 'view in Typefully ↗';

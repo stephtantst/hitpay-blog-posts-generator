@@ -816,6 +816,20 @@ def _get_typefully_social_set_id() -> str:
         raise HTTPException(500, f"Could not fetch Typefully social sets: {e.response.text[:200]}")
 
 
+def _check_link_url(content: str) -> str | None:
+    """Return a warning string if any https://hitpayapp.com/blog/* URL in content is a 404."""
+    import re as _re
+    urls = _re.findall(r"https://hitpayapp\.com/blog/[^\s\)\"']+", content)
+    for url in urls:
+        try:
+            r = httpx.head(url, follow_redirects=True, timeout=6)
+            if r.status_code == 404:
+                return f"Link returns 404: {url}"
+        except Exception:
+            pass
+    return None
+
+
 @app.post("/api/x-posts/{post_id}/push-to-typefully")
 def api_x_post_typefully(post_id: int, body: XTypefullyRequest,
                          user_email: str = Depends(require_auth)):
@@ -884,6 +898,7 @@ def api_x_post_typefully(post_id: int, body: XTypefullyRequest,
         # Saved as draft in Typefully — mark scheduled so it shows as "in queue"
         _change_x_status(post_id, "scheduled")
 
+    link_warning = _check_link_url(content)
     log_x_audit(post_id, user_email, "pushed_to_typefully", {
         "mode": mode,
         "schedule_date": body.schedule_date,
@@ -892,6 +907,7 @@ def api_x_post_typefully(post_id: int, body: XTypefullyRequest,
     return {
         "typefully_url": typefully_url,
         "posted": body.post_now,
+        "link_warning": link_warning,
         "scheduled": bool(body.schedule_date),
     }
 
@@ -1147,6 +1163,10 @@ def api_push_typefully(post_id: int, body: TypefullyRequest,
         )
     except ValueError as e:
         raise HTTPException(400, str(e))
+    check_content = body.blog_url or ""
+    if body.link_reply:
+        check_content += " " + body.link_reply
+    result["link_warning"] = _check_link_url(check_content)
     log_audit(post_id, user_email, "pushed_to_typefully", {"format": body.format_key})
     return result
 

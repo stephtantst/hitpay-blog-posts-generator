@@ -1,11 +1,42 @@
 import json
 import random
 import re
+import time
 
 import anthropic
+import requests
 
 from config import ANTHROPIC_API_KEY, CLAUDE_MODEL
 from src.generator import COUNTRY_CONTEXT, _load_relevant_docs, _messages_create_with_retry
+
+_SITEMAP_URL = "https://hitpayapp.com/sitemap_en.xml"
+_blog_slugs_cache: list[str] | None = None
+_blog_slugs_cache_ts: float = 0
+_SLUG_CACHE_TTL = 3600  # 1 hour
+
+
+def _fetch_live_blog_slugs() -> list[str]:
+    """Return all live blog post slugs from the sitemap. Cached for 1 hour."""
+    global _blog_slugs_cache, _blog_slugs_cache_ts
+    if _blog_slugs_cache and (time.time() - _blog_slugs_cache_ts) < _SLUG_CACHE_TTL:
+        return _blog_slugs_cache
+    try:
+        resp = requests.get(_SITEMAP_URL, timeout=8)
+        resp.raise_for_status()
+        all_urls = re.findall(r"<loc>(https://hitpayapp\.com/blog/[^<]+)</loc>", resp.text)
+        slugs = [
+            u.replace("https://hitpayapp.com/blog/", "")
+            for u in all_urls
+            if "/categories/" not in u and "/tags/" not in u and u != "https://hitpayapp.com/blog"
+        ]
+        if slugs:
+            _blog_slugs_cache = slugs
+            _blog_slugs_cache_ts = time.time()
+            return slugs
+    except Exception:
+        pass
+    # Fall back to hardcoded list
+    return [url.replace("https://hitpayapp.com/blog/", "") for _, url in VALID_BLOG_URLS]
 
 
 def _cap_tweet(text: str, limit: int = 280) -> str:
@@ -47,12 +78,17 @@ VALID_BLOG_URLS: list[tuple[str, str]] = [
     ("Payment Link Philippines", "https://hitpayapp.com/blog/how-to-create-payment-link-philippines"),
 ]
 
-_VALID_URL_SET = {url for _, url in VALID_BLOG_URLS}
 _FALLBACK_URL = "https://hitpayapp.com/blog/hitpay-rates"
 
 
+def _is_valid_blog_url(url: str) -> bool:
+    """Accept any hitpayapp.com/blog/{slug} URL — not just the old hardcoded 22."""
+    return bool(re.match(r"^https://hitpayapp\.com/blog/[a-zA-Z0-9_\-()]+$", url))
+
+
 def _build_storytelling_prompt(thread_size: int) -> str:
-    urls_list = "\n".join(f'  - "{title}": {url}' for title, url in VALID_BLOG_URLS)
+    slugs = _fetch_live_blog_slugs()
+    urls_list = "\n".join(f"  {s}" for s in slugs)
 
     if thread_size == 1:
         format_section = """CONTENT FORMAT: Single standalone tweet
@@ -119,10 +155,11 @@ NARRATIVE THEMES — pick the most resonant if no hint is given:
 - The difference between a payment tool and payment infrastructure
 
 LINK URL RULE — critical, no exceptions:
-You MUST set link_url to one of the following verified HitPay blog URLs only.
-Do NOT invent or guess any other URL. Pick the most topically relevant one.
-If no clear match, default to the Rates & Pricing URL.
+Set link_url to https://hitpayapp.com/blog/{{slug}} using the most topically relevant slug below.
+All slugs are live pages. Pick the closest match to the topic. If no clear match, default to: hitpay-rates
+Do NOT invent slugs not in this list.
 
+LIVE BLOG SLUGS:
 {urls_list}
 
 OUTPUT: Return a raw JSON object only. No markdown fences, no preamble.
@@ -132,7 +169,8 @@ IMPORTANT: [URL] in the tweet(s) is a literal placeholder — never substitute t
 
 
 def _build_thought_leadership_prompt(thread_size: int) -> str:
-    urls_list = "\n".join(f'  - "{title}": {url}' for title, url in VALID_BLOG_URLS)
+    slugs = _fetch_live_blog_slugs()
+    urls_list = "\n".join(f"  {s}" for s in slugs)
 
     if thread_size == 1:
         format_section = """CONTENT FORMAT: Single standalone tweet
@@ -209,10 +247,11 @@ TOPIC POOL — pick the most relevant if no hint is given:
 - Recurring billing and subscription payment mechanics
 
 LINK URL RULE — critical, no exceptions:
-You MUST set link_url to one of the following verified HitPay blog URLs only.
-Do NOT invent or guess any other URL. Pick the most topically relevant one.
-If no clear match, default to the Rates & Pricing URL.
+Set link_url to https://hitpayapp.com/blog/{{slug}} using the most topically relevant slug below.
+All slugs are live pages. Pick the closest match to the topic. If no clear match, default to: hitpay-rates
+Do NOT invent slugs not in this list.
 
+LIVE BLOG SLUGS:
 {urls_list}
 
 OUTPUT: Return a raw JSON object only. No markdown fences, no preamble.
@@ -381,7 +420,7 @@ def generate_thought_leadership_thread(
 
     # Enforce verified URL — no dead links
     link_url = data.get("link_url") or _FALLBACK_URL
-    if link_url not in _VALID_URL_SET:
+    if not _is_valid_blog_url(link_url):
         link_url = _FALLBACK_URL
 
     return {
