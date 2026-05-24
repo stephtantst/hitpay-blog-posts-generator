@@ -1,0 +1,8 @@
+# SME Growth Hub — Internal Blog Post Links
+# Add post slugs here as the blog grows.
+# Format mirrors blog_links.yaml.
+#
+# markets: SG | MY | PH | SEA | Global
+# If markets is empty/omitted, link is treated as globally relevant.
+
+posts: []

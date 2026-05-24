@@ -19,8 +19,8 @@ def list_x_posts(status: str = None, market: str = None, brand: str = None) -> l
         clauses.append("(market = :market OR market IS NULL OR market = '')")
         params["market"] = market
     if brand:
-        clauses.append("(brand = :brand OR brand IS NULL)")
-        params["brand"] = brand
+        safe = brand.replace("'", "''")
+        clauses.append(f"(brand = '{safe}' OR brand IS NULL)")
     where = ("WHERE " + " AND ".join(clauses)) if clauses else ""
     rows = conn.run(f"SELECT * FROM x_posts {where} ORDER BY created_at DESC", **params)
     return _rows_to_dicts(conn, rows)

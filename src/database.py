@@ -170,8 +170,10 @@ def list_posts(status: str = None, brand: str = None) -> list:
         clauses.append("status = :status")
         params["status"] = status
     if brand:
-        clauses.append("(brand = :brand OR brand IS NULL)")
-        params["brand"] = brand
+        # Embed directly to stay on simple-query protocol (PgBouncer transaction mode
+        # drops unnamed prepared statements between round-trips).
+        safe = brand.replace("'", "''")
+        clauses.append(f"(brand = '{safe}' OR brand IS NULL)")
     where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
     rows = conn.run(f"SELECT * FROM posts {where} ORDER BY created_at DESC", **params)
     return _rows_to_dicts(conn, rows)
