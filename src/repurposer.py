@@ -489,13 +489,87 @@ opening with I/We, curiosity hooks, reply CTAs, cliffhangers.
 Hard max 280 chars per tweet. Facts from source post only — do not invent statistics."""
 
 
+SME_TWITTER_SYSTEM_PROMPT = """You are the X content writer for SME Growth Hub, an independent editorial resource for small business operators across Southeast Asia.
+
+VOICE: Independent peer advisor — not a brand, not an influencer. Write like someone who has spent time around these businesses and wants to share what actually works.
+TONE: Direct, warm, and specific. Not corporate. Not promotional. Human.
+TARGET AUDIENCE: SME owners, operators, and finance managers in SG/MY/PH across F&B, retail, services, e-commerce, and freelancing.
+
+You repurpose SME Growth Hub articles into 3 high-value X posts/threads for SEA business owners.
+
+OUTPUT FORMAT
+Return a single raw JSON object — no markdown fences, no preamble, no trailing text:
+{
+  "choices": [
+    {
+      "type": "quick_win",
+      "label": "Quick Win",
+      "hook_style": "Result",
+      "tweet": "tweet text — no URL",
+      "visual_note": "optional: suggest a poll, image, or video — or null",
+      "link_reply": "Full article: [URL]"
+    },
+    {
+      "type": "thread",
+      "label": "Thread",
+      "hook_style": "Curiosity",
+      "tweets": ["1/ hook + promise", "2/ insight", "3/ insight", "Final/ TL;DR + CTA"],
+      "visual_note": "optional: suggest a visual or poll for tweet 1 — or null",
+      "link_reply": "Full article: [URL]"
+    },
+    {
+      "type": "contextual",
+      "label": "How-to Thread",
+      "subtype": "howto",
+      "hook_style": "Mistake",
+      "tweets": ["1/ ...", "2/ ...", "Final/ ..."],
+      "tweet": null,
+      "visual_note": "optional: suggest a visual or video — or null",
+      "link_reply": "Full article: [URL]"
+    }
+  ],
+  "hook_variants": [
+    {"style": "Curiosity", "hook": "opening line text only — no URL"},
+    {"style": "Contrarian", "hook": "..."},
+    {"style": "Result", "hook": "..."},
+    {"style": "Mistake", "hook": "..."},
+    {"style": "List", "hook": "..."}
+  ]
+}
+
+SCHEMA RULES:
+choices is always exactly 3 items in order: quick_win, thread, contextual.
+hook_variants is always exactly 5 items in order: Curiosity, Contrarian, Result, Mistake, List.
+hook in hook_variants is the opening line TEXT ONLY — no URL, no [URL] placeholder, just the hook sentence.
+visual_note is a short suggestion string or null — never omit the key.
+Use [URL] as a literal placeholder in every link_reply field only.
+
+CONTENT STRATEGY:
+1. Lead with the SMB owner's problem or a surprising insight — not a brand name.
+2. Short sentences. Concrete specifics: actual numbers, named tools, real business scenarios.
+3. Threads: every tweet numbered "1/", "2/", etc. Each self-contained.
+4. Encourage replies > likes: end quick_win with a question or A/B choice.
+5. Keep tweets 100–180 chars. Hard max 280.
+6. HitPay may be mentioned in payment-related articles as a peer recommendation ("For Singapore SMBs, HitPay is the simplest starting point") — but never as the subject of the tweet.
+7. In non-payment articles (hiring, cash flow, registration, marketing), do not mention HitPay.
+
+CARD 1 — quick_win: single highly-quotable tweet, 100–180 chars, most surprising or useful fact, reply CTA.
+CARD 2 — thread: 5–7 tweets. "1/" hook + promise, middle tweets = one insight each, final = TL;DR + CTA.
+CARD 3 — contextual: best format for the article (howto/comparison/deep_dive).
+
+BANNED: hashtags, URLs in tweet/hook fields, banned words (seamlessly, unlock, revolutionise, game-changer, cutting-edge, empower, leverage, utilise, transformative, innovative, robust), opening with "I" or "We".
+
+SOURCE DISCIPLINE: Extract all facts only from the article provided. Do not invent statistics or claims not in the source."""
+
+
 def repurpose_for_platform(post: dict, platform: str, on_status=None) -> dict:
+    brand = post.get("brand", "hitpay")
     if platform == "twitter":
-        return _generate_twitter(post, on_status)
+        return _generate_twitter(post, on_status, brand=brand)
     raise ValueError(f"Unsupported platform: {platform}")
 
 
-def _generate_twitter(post: dict, on_status=None) -> dict:
+def _generate_twitter(post: dict, on_status=None, brand: str = "hitpay") -> dict:
     def status(msg):
         if on_status:
             on_status(msg)
@@ -503,13 +577,15 @@ def _generate_twitter(post: dict, on_status=None) -> dict:
     status("Building content strategy prompt...")
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
+    system = SME_TWITTER_SYSTEM_PROMPT if brand == "smegrowthhub" else TWITTER_SYSTEM_PROMPT
+
     status("Generating 3 choices with Claude...")
     response = _messages_create_with_retry(
         client,
         model=CLAUDE_MODEL,
         max_tokens=4000,
-        system=TWITTER_SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": _build_twitter_prompt(post)}],
+        system=system,
+        messages=[{"role": "user", "content": _build_twitter_prompt(post, brand=brand)}],
     )
 
     status("Parsing output...")
@@ -557,15 +633,23 @@ def _generate_twitter_card(post: dict, card_type: str, hook_style: str, on_statu
     return card
 
 
-def _build_twitter_prompt(post: dict) -> str:
+def _build_twitter_prompt(post: dict, brand: str = "hitpay") -> str:
     market = post.get("country", "") or "all markets (SG, MY, PH)"
-    return f"""Repurpose the following HitPay blog post into 3 Twitter/X choices + 5 hook variants.
+    if brand == "smegrowthhub":
+        audience = "SME owners and operators in Southeast Asia"
+        goals = "(1) Drive engagement — replies and shares, (2) Position SME Growth Hub as the go-to independent resource, (3) Deliver genuine value to SEA business owners"
+        source_label = "SME Growth Hub article"
+    else:
+        audience = "Merchants, founders, and finance managers in Southeast Asia"
+        goals = "(1) Drive engagement — replies and shares, (2) Position HitPay as expert, (3) Promote subtly"
+        source_label = "HitPay blog post"
+    return f"""Repurpose the following {source_label} into 3 Twitter/X choices + 5 hook variants.
 
 POST TITLE: {post.get("title", "")}
 PRIMARY KEYWORD: {post.get("keyword", "")}
 MARKET: {market}
-TARGET AUDIENCE: Merchants, founders, and finance managers in Southeast Asia
-GOALS: (1) Drive engagement — replies and shares, (2) Position HitPay as expert, (3) Promote subtly
+TARGET AUDIENCE: {audience}
+GOALS: {goals}
 BLOG SLUG (use [URL] as placeholder in all link_reply fields): {post.get("slug", "")}
 
 FULL POST CONTENT:
@@ -674,14 +758,16 @@ def _validate_twitter_output(data: dict, post: dict) -> list[str]:
         if len(hook_text) > 160:
             errors.append(f"hook_variants[{i}].hook: {len(hook_text)} chars — keep under 160")
 
-    # HitPay presence check
-    all_text = " ".join(filter(None, [
-        c.get("tweet", "") or "" for c in choices
-    ] + [
-        t for c in choices for t in (c.get("tweets") or [])
-    ]))
-    if "hitpay" not in all_text.lower():
-        errors.append("HitPay not mentioned in any card — add factual anchor")
+    # HitPay presence check — only required for HitPay brand posts
+    brand = post.get("brand", "hitpay")
+    if brand != "smegrowthhub":
+        all_text = " ".join(filter(None, [
+            c.get("tweet", "") or "" for c in choices
+        ] + [
+            t for c in choices for t in (c.get("tweets") or [])
+        ]))
+        if "hitpay" not in all_text.lower():
+            errors.append("HitPay not mentioned in any card — add factual anchor")
 
     return errors
 
@@ -892,8 +978,11 @@ def repurpose_post_as_thread(post: dict, thread_size: int) -> dict:
     if thread_size not in (1, 3, 5, 7):
         raise ValueError(f"thread_size must be 1, 3, 5, or 7 — got {thread_size}")
 
+    from src.brand_config import get_brand_config
+    brand = post.get("brand", "hitpay")
+    bc = get_brand_config(brand)
     slug = (post.get("slug") or "").strip()
-    blog_url = f"https://hitpayapp.com/blog/{slug}" if slug else _RP_FALLBACK_URL
+    blog_url = f"{bc.blog_base_url}/{slug}" if slug else _RP_FALLBACK_URL
 
     system = _build_repurpose_thread_prompt(thread_size).replace("[BLOG_URL]", blog_url)
 

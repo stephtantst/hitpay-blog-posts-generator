@@ -30,9 +30,9 @@ from src.mcp_client import search_knowledge, get_changelog, get_news
 from src.competitor_db import get_relevant_competitors, format_for_prompt
 
 
-def _load_relevant_docs(keyword: str, max_chars: int = 30000) -> str:
-    """Pull sections from hitpay_docs.md that are relevant to the keyword."""
-    docs_path = Path(__file__).parent.parent / "hitpay_docs.md"
+def _load_relevant_docs(keyword: str, docs_file: str = "hitpay_docs.md", max_chars: int = 30000) -> str:
+    """Pull sections from a brand docs file that are relevant to the keyword."""
+    docs_path = Path(__file__).parent.parent / docs_file
     if not docs_path.exists():
         return ""
 
@@ -67,24 +67,26 @@ def _load_relevant_docs(keyword: str, max_chars: int = 30000) -> str:
     return "\n\n---\n\n".join(parts)
 
 
-def _load_blog_links() -> list[dict]:
-    """Load the HitPay blog post reference links from blog_links.yaml."""
-    links_path = Path(__file__).parent.parent / "blog_links.yaml"
+def _load_blog_links(links_file: str = "blog_links.yaml") -> list[dict]:
+    """Load blog post reference links from a YAML file."""
+    links_path = Path(__file__).parent.parent / links_file
     if not links_path.exists():
         return []
     with open(links_path, "r", encoding="utf-8") as f:
         data = yaml.safe_load(f)
-    return data.get("posts", [])
+    return data.get("posts", []) if data else []
 
 
-def _validate_blog_links(content: str, blog_links: list[dict]) -> list[str]:
-    """Check every hitpayapp.com/blog/ URL in content against the known-good list.
+def _validate_blog_links(content: str, blog_links: list[dict], blog_base_url: str = "https://hitpayapp.com/blog") -> list[str]:
+    """Check every brand blog URL in content against the known-good list.
 
     Returns a list of warning strings (empty = all clear).
     """
     import httpx as _httpx
 
-    found = re.findall(r"https://hitpayapp\.com/blog/[^\s\)\]\"']+", content)
+    # Build URL pattern from the base URL
+    escaped = re.escape(blog_base_url)
+    found = re.findall(rf"{escaped}/[^\s\)\]\"']+", content)
     if not found:
         return []
 
@@ -566,6 +568,117 @@ Return ONLY a valid JSON object with exactly these fields (no markdown code fenc
 }
 """
 
+SME_BLOG_SYSTEM_PROMPT = """You are an independent editorial writer for SME Growth Hub, a peer advisory resource for small and medium-sized business operators across Southeast Asia. You are not a brand. You are not an analyst. You write directly to business owners as a trusted peer — someone who has seen what works, and is sharing it plainly.
+
+## Voice & Persona
+- Use "you" and "your" freely: "your checkout flow", "your first hire", "your cash position"
+- Warm and direct: "here's what actually works" over "businesses should consider"
+- Conversational but not casual — no slang, no filler enthusiasm
+- Earned authority: "in practice, most Singapore SMBs find X easier to start with"
+- Never declarative authority from above. Never position yourself as an expert lecturing — position yourself as a peer who's done the reading
+
+## What to Avoid, Always
+- Words and phrases: seamlessly, revolutionise, game-changing, cutting-edge, empower, leverage → use specific, verifiable claims instead
+- Treating HitPay as the subject of the article: lead with the SMB's problem, not HitPay's solution
+- MAS licence as a trust signal — trust is earned through voice, specificity, and accuracy
+- Fabricated statistics — use real sources, or no stat at all
+- Forcing HitPay into every article — mention naturally within payment-relevant content only. In non-payment articles, do not mention HitPay at all
+
+## How HitPay Gets Mentioned (Payment-Related Content Only)
+HitPay appears as a peer recommendation — the kind a knowledgeable peer would give:
+✓ "For most Singapore SMBs, HitPay is the simplest starting point — no monthly fees, PayNow built in, setup takes under a day."
+✓ "If you're in Malaysia and want to accept DuitNow and cards without a monthly fee, HitPay is worth looking at first."
+✗ "HitPay is a leading payment gateway that supports PayNow, PayLah!, credit cards…"
+
+In comparison articles, treat competitors fairly. HitPay wins on criteria that matter to SMBs (cost, simplicity, local payment methods) — not by dismissing alternatives. This makes the recommendation credible.
+
+## Topic Scope
+This is a broad SME resource, not a payments blog:
+- Operations: business registration (ACRA/SSM), hiring, contracts, tools
+- Finance: cash flow, invoicing, accounting software, cross-border payments
+- Growth: marketing, pricing strategy, customer retention
+- Payments: gateways, QR codes, BNPL, fraud prevention
+
+HitPay is mentioned only in payment-related content. The breadth is what makes the site credibly independent.
+
+## SEO & Search Intent
+Every article maps to one intent — match the format to it:
+- Informational ("what is a payment gateway") → educate, define, give examples
+- Comparison ("best payment gateway Singapore") → table, pros/cons, clear verdict
+- How-to ("how to accept PayNow") → numbered steps, screenshot-worthy clarity
+
+Do not write an essay when someone wants steps. Do not write a listicle when someone wants depth.
+
+### Keywords
+- Primary keyword in: H1 (title), first 100 words, one H2, meta description
+- Natural variants throughout — do not repeat exact phrase more than 3×
+- Long-tail questions make ideal H2s and FAQ entries
+
+### Titles & Meta
+- H1/title: lead with keyword, add specificity — "Best Payment Gateways in Singapore (2026): Compared for SMBs"
+- Meta description: 150–160 characters, include keyword, end with a soft hook — not a CTA
+- Avoid clickbait — titles should describe exactly what's in the article
+
+### Structure
+- One H1 per page — do NOT include it in the output (added by CMS separately)
+- H2s as logical sections phrased as real search questions — these are what search engines surface in snippets
+- Short paragraphs — 3 sentences max before a break
+- Tables and lists wherever comparison or enumeration is needed
+- Minimum 800 words informational; 1,200+ for comparisons and how-tos
+
+## AEO Layer (Answer Engine Optimisation)
+1. **Quick Answer block (REQUIRED — always first):** The very first element, before any intro prose:
+   `**Quick Answer:** [2–3 sentences that directly answer the article's primary search query. Self-contained — an AI engine should be able to read this alone and fully answer the query.]`
+
+2. **H2/H3 as questions:** Every section heading phrased as a real user search query.
+
+3. **FAQ section (REQUIRED):** Close every article with `## Frequently Asked Questions` containing 3–5 Q&A pairs.
+   - Questions phrased exactly as users would type them
+   - Each answer opens with the direct answer, then elaborates — never bury the lead
+   - Format exactly as:
+     ```
+     **Q: Question phrased as a user would type it?**
+     Answer text. Opens with direct answer. 2–4 sentences.
+     ```
+
+4. **Numbered lists for processes** — whenever a process is described, use a numbered list. One action per step.
+
+5. **At least one comparison table** where the topic calls for it.
+
+### Schema block (REQUIRED at end)
+After the FAQ section:
+```
+[SCHEMA: FAQPage, HowTo]
+```
+Include FAQPage on every article. Add HowTo if the article has a step-by-step process. Add Product if you describe a specific tool or service.
+
+## Local Specificity
+Generic advice is useless. Every article must be grounded in Southeast Asia:
+- Name the market: Singapore, Malaysia, Philippines — not "the region"
+- Reference real infrastructure: PayNow, DuitNow, GCash, GrabPay, PromptPay, ACRA, SSM, BSP
+- Real business types: hawker stalls going digital, boutique F&B, freelancers, Shopee/Lazada sellers, clinics, tuition centres
+- Local keywords outperform generic ones: "payment gateway Singapore" over "payment gateway Asia"
+
+## Internal Links
+You will be provided internal blog links. Include at least 2 naturally in-content — woven into sentences, never dumped as a list.
+
+## External Links
+You will be provided exactly 3 pre-selected external links. Use all 3 in context as specified.
+
+## Output
+Return ONLY a valid JSON object — no markdown fences, no extra text:
+{
+  "title": "Keyword-rich, specific title under 65 chars",
+  "meta_title": "SEO title tag 55–60 chars",
+  "meta_description": "150–160 char description including keyword, ending with soft hook",
+  "overview": "2–3 sentence exec summary. State the problem and what the reader will learn.",
+  "slug": "url-friendly-slug-here",
+  "categories": ["Primary Category", "Secondary Category"],
+  "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"],
+  "content": "Full markdown: (1) **Quick Answer:** block first; (2) intro; (3) H2/H3 as search questions; (4) ## Frequently Asked Questions with 3–5 **Q: ...** formatted pairs; (5) [SCHEMA] block. No H1. At least 2 internal links + 3 external links. 900–1100 words body excluding FAQ."
+}
+"""
+
 COUNTRY_CONTEXT = {
     "SG": {
         "name": "Singapore",
@@ -613,7 +726,7 @@ COUNTRY_CONTEXT = {
 }
 
 
-def generate_blog_post(keyword: str, country: str = None, aeo_prompt: str = None, category: str = None, max_tokens: int = 16000, on_status=None) -> dict:
+def generate_blog_post(keyword: str, country: str = None, aeo_prompt: str = None, category: str = None, max_tokens: int = 16000, on_status=None, brand: str = "hitpay") -> dict:
     """Generate a blog post for the given keyword.
 
     Args:
@@ -623,18 +736,22 @@ def generate_blog_post(keyword: str, country: str = None, aeo_prompt: str = None
         category: Optional preferred category hint
         max_tokens: Claude response token limit (use 32000 for bulk/longer posts)
         on_status: Optional callback(message: str) for progress updates
+        brand: Brand to generate for — "hitpay" or "smegrowthhub"
     """
+    from src.brand_config import get_brand_config
+    brand_config = get_brand_config(brand)
+
     def status(msg):
         if on_status:
             on_status(msg)
 
-    # Step 1: Gather MCP knowledge
-    status("Querying HitPay knowledge base...")
+    # Step 1: Gather MCP knowledge (HitPay MCP is used for payment context across both brands)
+    status("Querying knowledge base...")
     mcp_context = _gather_mcp_context(keyword, status)
 
-    # Step 1c: Load relevant product docs
+    # Step 1c: Load relevant product docs for the active brand
     status("Loading relevant product documentation...")
-    product_docs = _load_relevant_docs(keyword)
+    product_docs = _load_relevant_docs(keyword, docs_file=brand_config.docs_file)
     if product_docs:
         status("Found relevant sections in product docs")
 
@@ -647,7 +764,7 @@ def generate_blog_post(keyword: str, country: str = None, aeo_prompt: str = None
         status(f"Found data for {len(competitors)} relevant competitors")
 
     # Step 2: Build blog links reference — filtered to target market
-    blog_links = _load_blog_links()
+    blog_links = _load_blog_links(links_file=brand_config.blog_links_file)
     links_section = ""
     if blog_links:
         # Keep links that match the target market, SEA (always relevant), or have no market tag.
@@ -665,8 +782,8 @@ def generate_blog_post(keyword: str, country: str = None, aeo_prompt: str = None
                 m in ("SEA", "Global") for m in markets
             )
         filtered_links = [l for l in blog_links if _link_ok(l)]
-        links_section = "\n## HitPay URLs — Use 3 as Internal Backlinks\n"
-        links_section += f"Market: {country or 'SEA'}. Pick the 3 most relevant URLs. Link naturally in-content — never force a link or dump as a list.\n\n"
+        links_section = f"\n## {brand_config.name} URLs — Use as Internal Backlinks\n"
+        links_section += f"Market: {country or 'SEA'}. Pick the most relevant URLs. Link naturally in-content — never force a link or dump as a list.\n\n"
         for link in filtered_links:
             topics_str = ", ".join(link.get("topics", []))
             markets_str = "/".join(link.get("markets", []))
@@ -696,19 +813,21 @@ Before returning your JSON, verify every payment method name, currency, and plac
         status(f"Country focus set to {ctx['flag']} {ctx['name']}")
 
     # Step 3: Generate with Claude
-    system_prompt = BLOG_SYSTEM_PROMPT_AUTHORITY
-    status("Generating blog post with Claude Opus...")
+    system_prompt = SME_BLOG_SYSTEM_PROMPT if brand == "smegrowthhub" else BLOG_SYSTEM_PROMPT_AUTHORITY
+    status("Generating blog post with Claude...")
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
-    docs_section = f"\n## HitPay Product Documentation — Feature & Flow Accuracy\n{product_docs}\n" if product_docs else ""
+    docs_section = f"\n## {brand_config.name} Product & Topic Documentation — Use for Factual Accuracy\n{product_docs}\n" if product_docs else ""
     external_links_section = _build_external_links_section(country, keyword)
 
     aeo_line = f'\nPrimary AEO question this post must answer: "{aeo_prompt}"\n' if aeo_prompt else ""
     category_line = f'\nPreferred category for this post: {category}\n' if category else ""
 
+    internal_links_count = "at least 2" if brand == "smegrowthhub" else "exactly 3"
+
     user_prompt = f"""Write a blog post about: "{keyword}"
 {aeo_line}{category_line}{country_section}
-## HitPay Knowledge Base — Use for Factual Accuracy
+## Knowledge Base — Use for Factual Accuracy
 {mcp_context}
 {docs_section}
 {competitor_context}
@@ -716,7 +835,7 @@ Before returning your JSON, verify every payment method name, currency, and plac
 {external_links_section}
 Ground your post in the knowledge base and product documentation above. If they contain specific features, merchant use cases, flows, or product details relevant to this topic, incorporate them naturally. Do not invent facts or statistics not present in these sources or the system prompt.
 
-Remember: include exactly 3 internal backlinks from the HitPay URL list above and exactly 3 external links from the External Link Library above. All links must be woven naturally into the content — never listed at the end.
+Remember: include {internal_links_count} internal backlinks from the URL list above and exactly 3 external links from the External Link Library above. All links must be woven naturally into the content — never listed at the end.
 
 OUTPUT LENGTH REQUIREMENT: The content field must be 900–1100 words maximum (body only, excluding FAQ). Each FAQ answer must be 2–4 sentences. Do not pad or over-explain — concise and factual is better. The entire JSON response must fit within a reasonable token budget.
 
@@ -754,6 +873,7 @@ Return the JSON object now."""
     post_data["keyword"] = keyword
     post_data["country"] = country or ""
     post_data["status"] = "generated"
+    post_data["brand"] = brand
 
     # Ensure slug is clean
     if not post_data.get("slug"):
@@ -761,7 +881,7 @@ Return the JSON object now."""
     else:
         post_data["slug"] = slugify(post_data["slug"])
 
-    link_warnings = _validate_blog_links(post_data.get("content", ""), blog_links)
+    link_warnings = _validate_blog_links(post_data.get("content", ""), blog_links, blog_base_url=brand_config.blog_base_url)
     if link_warnings:
         post_data["link_warnings"] = link_warnings
         status(f"Link warnings: {len(link_warnings)} issue(s) found")

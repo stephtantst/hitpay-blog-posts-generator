@@ -1,0 +1,22 @@
+name: Weekly Auto-Post (X + Threads)
+
+on:
+  schedule:
+    # Tue/Wed/Thu at 02:00 UTC = 10:00am SGT (UTC+8)
+    - cron: '0 2 * * 2,3,4'
+  # Remove or re-comment this after testing
+  workflow_dispatch:
+
+jobs:
+  auto-post:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Random delay 0–30 min
+        # Spreads the publish time across the 10:00–10:30am SGT window
+        run: sleep $((RANDOM % 1801))
+
+      - name: Trigger weekly auto-post
+        run: |
+          curl -sf -X POST "${{ secrets.APP_BASE_URL }}/api/automation/weekly-post" \
+            -H "X-Automation-Key: ${{ secrets.AUTOMATION_SECRET }}" \
+            -H "Content-Type: application/json"

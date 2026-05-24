@@ -18,3 +18,4 @@ venv/
 
 # Exports
 posts/exports/
+.vercel

@@ -79,6 +79,7 @@ VALID_BLOG_URLS: list[tuple[str, str]] = [
 ]
 
 _FALLBACK_URL = "https://hitpayapp.com/blog/hitpay-rates"
+_SME_FALLBACK_URL = "https://smegrowthhub.com/blog"
 
 
 def _is_valid_blog_url(url: str) -> bool:
@@ -260,6 +261,170 @@ OUTPUT: Return a raw JSON object only. No markdown fences, no preamble.
 IMPORTANT: [URL] in the tweet(s) is a literal placeholder — never substitute the real URL into the tweet text itself."""
 
 
+SME_TOPIC_POOL = [
+    "How to manage cash flow when customers pay late",
+    "When to hire your first employee — and what it actually costs",
+    "Business registration in Singapore: sole proprietor vs Pte Ltd",
+    "How to reduce payment processing fees without switching everything",
+    "E-commerce in SEA: marketplace vs own store — the real trade-off",
+    "Why your payment gateway choice affects your cash position",
+    "What SMBs get wrong about B2B invoicing",
+    "GST/SST registration: when you need it and when you don't",
+    "Digital marketing on a tight budget for SEA SMBs",
+    "How to pick accounting software you'll actually use",
+    "Cross-border payments for small businesses — simpler than you think",
+    "The hidden cost of cash for small businesses",
+]
+
+SME_STORYTELLING_TOPIC_POOL = [
+    "The moment you realised cash was silently costing you",
+    "Hiring your first employee — what nobody tells you",
+    "The accounting tool switch that changed everything",
+    "Late payments and what they actually cost",
+    "When a sale nearly didn't happen because of payment friction",
+    "The invoice that never got paid — and what you learned",
+    "Why moving from marketplace to own store felt impossible at first",
+    "The week you realised your pricing was wrong",
+    "What changed when you started separating business and personal finances",
+    "The supplier payment that nearly broke the relationship",
+]
+
+
+def _build_sme_educational_prompt(thread_size: int) -> str:
+    from src.brand_config import get_brand_config
+    bc = get_brand_config("smegrowthhub")
+
+    if thread_size == 1:
+        format_section = """CONTENT FORMAT: Single standalone tweet
+- Exactly 1 tweet, no numbering
+- 200–280 chars, fully self-contained
+- Ends with a reference to the article + [URL] as a literal placeholder"""
+        output_example = (
+            '{"topic": "cash flow management", '
+            '"tweets": ["Most Singapore SMBs invoice at the end of the month. '
+            'That habit alone adds 14 days to your average collection time. Invoice immediately after delivery: [URL]"], '
+            f'"link_url": "{bc.blog_base_url}/cash-flow-invoicing", "visual_note": null}}'
+        )
+    elif thread_size == 2:
+        format_section = (
+            "CONTENT FORMAT: Thread of exactly 2 tweets\n"
+            "- Tweet 1/2: introduce the concept clearly with a key fact — end with 🧵\n"
+            "- Tweet 2/2: concrete example or actionable takeaway + article reference + [URL]\n"
+            "- Each tweet: 200–280 chars"
+        )
+        output_example = (
+            '{"topic": "...", "tweets": ["1/2 ... 🧵", "2/2 ... [URL]"], '
+            f'"link_url": "{bc.blog_base_url}/article-slug", "visual_note": null}}'
+        )
+    else:
+        format_section = (
+            f"CONTENT FORMAT: Thread of exactly {thread_size} tweets\n"
+            f"- {thread_size} tweets numbered \"1/{thread_size} ...\", etc.\n"
+            "- Tweet 1: introduce the concept clearly — definition or hook — end with 🧵\n"
+            "- Middle tweets: specific facts, numbers, concrete examples from the SEA context\n"
+            f"- Final tweet: actionable takeaway + article reference + [URL] as literal placeholder\n"
+            "- Each tweet: 200–280 chars, self-contained"
+        )
+        example_tweets = [f'"{i}/{thread_size} ..."' for i in range(1, thread_size + 1)]
+        example_tweets[-1] = f'"{thread_size}/{thread_size} ... [URL]"'
+        output_example = (
+            '{"topic": "...", "tweets": [' + ", ".join(example_tweets) + '], '
+            f'"link_url": "{bc.blog_base_url}/article-slug", "visual_note": null}}'
+        )
+
+    return f"""You are the X content writer for SME Growth Hub, an independent editorial resource for small business operators across Southeast Asia.
+Write practical, peer-to-peer content that teaches SEA SME owners something genuinely useful — the kind a trusted peer would share after doing the research.
+
+VOICE: Independent advisor, not a brand account. Direct, warm, specific.
+AUDIENCE: SME owners and operators in SG/MY/PH across F&B, retail, services, e-commerce, freelancing.
+
+{format_section}
+
+STYLE RULES:
+- Use specific numbers and concrete examples — "a 2-week delay on RM3,000 invoice" beats "late payments are costly"
+- Em-dashes (—) are fine, sparingly
+- No hashtags, no @ mentions
+- No URLs in any tweet except the final one — use [URL] as a literal placeholder there only
+- No promotional language
+- HitPay may be mentioned in payment-related content as a peer recommendation — e.g. "For Singapore SMBs, HitPay is the simplest starting point". Never as the main subject.
+- Banned words: seamlessly, unlock, revolutionise, game-changer, cutting-edge, empower, leverage, utilise, transformative, innovative, robust
+
+TOPIC POOL — pick the most relevant if no hint is given:
+{chr(10).join(f'- {t}' for t in SME_TOPIC_POOL)}
+
+LINK URL RULE:
+Set link_url to {bc.blog_base_url}/{{slug}} using a descriptive slug matching the topic.
+If no specific slug is available, default to: {bc.blog_base_url}
+
+OUTPUT: Return a raw JSON object only. No markdown fences, no preamble.
+{output_example}
+
+IMPORTANT: [URL] in the tweet(s) is a literal placeholder — never substitute the real URL into the tweet text itself."""
+
+
+def _build_sme_storytelling_prompt(thread_size: int) -> str:
+    from src.brand_config import get_brand_config
+    bc = get_brand_config("smegrowthhub")
+
+    if thread_size == 1:
+        format_section = """CONTENT FORMAT: Single standalone tweet
+- Exactly 1 tweet, no numbering
+- 200–280 chars
+- A compact narrative arc: observation → insight or tension → resolution
+- Ends with a reference to the article + [URL] as literal placeholder"""
+        output_example = (
+            '{"topic": "late payments", '
+            '"tweets": ["Most SMBs track late invoices. Few track what they cost in working capital. '
+            'A 30-day delay on a S$5,000 invoice is roughly S$25 of lost cash value at the bank. '
+            'The fix is simpler than chasing: [URL]"], '
+            f'"link_url": "{bc.blog_base_url}/late-payments", "visual_note": null}}'
+        )
+    else:
+        format_section = (
+            f"CONTENT FORMAT: Storytelling thread of exactly {thread_size} tweets\n"
+            f"- {thread_size} tweets numbered \"1/{thread_size} ...\", etc.\n"
+            "- Tweet 1: open with an observation or tension — something a business owner feels but rarely names. End with 🧵\n"
+            "- Middle tweets: deepen with a concrete scenario. Still no pitch.\n"
+            f"- Final tweet: resolution or reframe. Where the article's insight fits naturally. End with [URL].\n"
+            "- Each tweet: 180–280 chars, short punchy sentences"
+        )
+        example_tweets = [f'"{i}/{thread_size} ..."' for i in range(1, thread_size + 1)]
+        example_tweets[-1] = f'"{thread_size}/{thread_size} ... [URL]"'
+        output_example = (
+            '{"topic": "...", "tweets": [' + ", ".join(example_tweets) + '], '
+            f'"link_url": "{bc.blog_base_url}/article-slug", "visual_note": null}}'
+        )
+
+    return f"""You are the X storytelling writer for SME Growth Hub, an independent resource for Southeast Asian business operators.
+Write posts that make SMB owners pause and recognise something they already feel but couldn't quite name.
+
+VOICE: Peer who has spent time around these businesses. Reflective, honest, slightly philosophical. Not a brand.
+AUDIENCE: SME founders and operators in Southeast Asia (SG/MY/PH).
+
+{format_section}
+
+STYLE RULES:
+- No statistics in middle tweets (sparingly in final only)
+- Short declarative sentences. Fragments are fine.
+- No hashtags, no @ mentions
+- No URLs except final tweet — use [URL] as literal placeholder
+- No promotional language until the final tweet
+- HitPay may appear in the final tweet only if the topic is payment-related — as a natural peer recommendation, never as a pitch
+- Banned words: seamlessly, unlock, revolutionise, game-changer, cutting-edge, empower, leverage, utilise, transformative, innovative, robust
+
+NARRATIVE THEMES — pick the most resonant if no hint is given:
+{chr(10).join(f'- {t}' for t in SME_STORYTELLING_TOPIC_POOL)}
+
+LINK URL RULE:
+Set link_url to {bc.blog_base_url}/{{slug}} using a descriptive slug matching the topic.
+If no specific slug is available, default to: {bc.blog_base_url}
+
+OUTPUT: Return a raw JSON object only. No markdown fences, no preamble.
+{output_example}
+
+IMPORTANT: [URL] in the tweet(s) is a literal placeholder — never substitute the real URL."""
+
+
 TOPIC_POOL = [
     "MDR (Merchant Discount Rate) and interchange fees explained",
     "Payment settlement timelines: T+0, T+1, T+2 and why they matter",
@@ -305,7 +470,7 @@ _AUTOMATION_VARIANTS: list[tuple[str, int]] = [
 _AUTOMATION_MARKETS = ["SG", "MY", "PH", None]  # None = SEA broadly
 
 
-def generate_random_x_post(market: str = None, topic_hint: str = None) -> dict:
+def generate_random_x_post(market: str = None, topic_hint: str = None, brand: str = "hitpay") -> dict:
     """Pick a random style + thread_size and generate a standalone X post.
 
     Designed as the single entry point for automated 3x/week scheduling.
@@ -322,6 +487,7 @@ def generate_random_x_post(market: str = None, topic_hint: str = None) -> dict:
         topic_hint=topic_hint,
         thread_size=thread_size,
         style=style,
+        brand=brand,
     )
     result["style"] = style
     result["thread_size"] = thread_size
@@ -334,6 +500,7 @@ def generate_thought_leadership_thread(
     topic_hint: str = None,
     thread_size: int = 7,
     style: str = "educational",
+    brand: str = "hitpay",
 ) -> dict:
     """Generate a standalone thought leadership X post or thread on a payments topic.
 
@@ -354,6 +521,9 @@ def generate_thought_leadership_thread(
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
     context_parts = []
 
+    from src.brand_config import get_brand_config
+    bc = get_brand_config(brand)
+
     if market and market in COUNTRY_CONTEXT:
         ctx = COUNTRY_CONTEXT[market]
         context_parts.append(
@@ -366,12 +536,13 @@ def generate_thought_leadership_thread(
         context_parts.append("TARGET MARKET: Southeast Asia broadly (SG, MY, PH)")
 
     if topic_hint:
-        product_docs = _load_relevant_docs(topic_hint, max_chars=8000)
+        product_docs = _load_relevant_docs(topic_hint, docs_file=bc.docs_file, max_chars=8000)
         if product_docs:
-            context_parts.append(f"HITPAY PRODUCT CONTEXT:\n{product_docs}")
+            context_parts.append(f"KNOWLEDGE BASE CONTEXT:\n{product_docs}")
         context_parts.append(f"TOPIC: Write the content about: {topic_hint}")
     else:
-        context_parts.append("Pick the best topic from the topic pool for a general SEA payments audience.")
+        default_pool = "topic pool for a general SEA SMB audience" if brand == "smegrowthhub" else "topic pool for a general SEA payments audience"
+        context_parts.append(f"Pick the best topic from the {default_pool}.")
 
     context_parts.append(
         f"FORMAT: Generate exactly {thread_size} tweet(s) as specified."
@@ -379,7 +550,11 @@ def generate_thought_leadership_thread(
 
     user_message = "\n\n".join(context_parts)
 
-    prompt_builder = _build_storytelling_prompt if style == "storytelling" else _build_thought_leadership_prompt
+    if brand == "smegrowthhub":
+        prompt_builder = _build_sme_storytelling_prompt if style == "storytelling" else _build_sme_educational_prompt
+    else:
+        prompt_builder = _build_storytelling_prompt if style == "storytelling" else _build_thought_leadership_prompt
+
     msg = _messages_create_with_retry(
         client,
         model=CLAUDE_MODEL,
@@ -418,10 +593,11 @@ def generate_thought_leadership_thread(
 
     tweets = [_cap_tweet(t) for t in tweets]
 
-    # Enforce verified URL — no dead links
-    link_url = data.get("link_url") or _FALLBACK_URL
-    if not _is_valid_blog_url(link_url):
-        link_url = _FALLBACK_URL
+    # Enforce valid URL — fall back to brand default
+    fallback = _SME_FALLBACK_URL if brand == "smegrowthhub" else _FALLBACK_URL
+    link_url = data.get("link_url") or fallback
+    if brand != "smegrowthhub" and not _is_valid_blog_url(link_url):
+        link_url = fallback
 
     return {
         "topic": data.get("topic", ""),

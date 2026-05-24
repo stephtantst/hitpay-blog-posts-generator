@@ -3,7 +3,7 @@ import json
 from src.database import get_connection, _rows_to_dicts
 
 
-def list_x_posts(status: str = None, market: str = None) -> list:
+def list_x_posts(status: str = None, market: str = None, brand: str = None) -> list:
     conn = get_connection()
     # Auto-flip overdue scheduled posts to posted
     conn.run(
@@ -18,6 +18,9 @@ def list_x_posts(status: str = None, market: str = None) -> list:
     if market:
         clauses.append("(market = :market OR market IS NULL OR market = '')")
         params["market"] = market
+    if brand:
+        clauses.append("(brand = :brand OR brand IS NULL)")
+        params["brand"] = brand
     where = ("WHERE " + " AND ".join(clauses)) if clauses else ""
     rows = conn.run(f"SELECT * FROM x_posts {where} ORDER BY created_at DESC", **params)
     return _rows_to_dicts(conn, rows)
@@ -31,16 +34,18 @@ def get_x_post(post_id: int) -> dict | None:
 
 
 def create_x_post(content: str, market: str = None, scheduled_at=None,
-                  editor_email: str = None, source_blog_post_id: int = None) -> int:
+                  editor_email: str = None, source_blog_post_id: int = None,
+                  brand: str = "hitpay") -> int:
     conn = get_connection()
     rows = conn.run(
         """
-        INSERT INTO x_posts (content, market, status, scheduled_at, editor_email, source_blog_post_id)
-        VALUES (:content, :market, 'draft', :scheduled_at, :editor_email, :source_blog_post_id)
+        INSERT INTO x_posts (content, market, brand, status, scheduled_at, editor_email, source_blog_post_id)
+        VALUES (:content, :market, :brand, 'draft', :scheduled_at, :editor_email, :source_blog_post_id)
         RETURNING id
         """,
         content=content,
         market=market or None,
+        brand=brand,
         scheduled_at=scheduled_at,
         editor_email=editor_email,
         source_blog_post_id=source_blog_post_id,

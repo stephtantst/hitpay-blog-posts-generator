@@ -32,3 +32,11 @@ ALLOWED_DOMAIN = "hit-pay.com"
 TYPEFULLY_API_KEY = os.getenv("TYPEFULLY_API_KEY", "")
 TYPEFULLY_SOCIAL_SET_ID = os.getenv("TYPEFULLY_SOCIAL_SET_ID", "")
 TYPEFULLY_THREADS_SOCIAL_SET_ID = os.getenv("TYPEFULLY_THREADS_SOCIAL_SET_ID", "")
+
+# SME Growth Hub brand config
+SME_BLOG_BASE_URL = os.getenv("SME_BLOG_BASE_URL", "https://smegrowthhub.com/blog")
+TYPEFULLY_SME_SOCIAL_SET_ID = os.getenv("TYPEFULLY_SME_SOCIAL_SET_ID", "")
+TYPEFULLY_SME_THREADS_SOCIAL_SET_ID = os.getenv("TYPEFULLY_SME_THREADS_SOCIAL_SET_ID", "")
+
+# Secret key for the automation endpoint (GitHub Actions weekly-post trigger)
+AUTOMATION_SECRET = os.getenv("AUTOMATION_SECRET", "")

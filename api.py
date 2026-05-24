@@ -17,8 +17,11 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from starlette.middleware.sessions import SessionMiddleware
 
+import random
+
 from config import (
     ALLOWED_DOMAIN,
+    AUTOMATION_SECRET,
     BASE_URL,
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET,
@@ -35,6 +38,7 @@ from src.database import (
     get_post_by_slug,
     get_repurposed_content,
     init_db,
+    migrate_brand_column,
     list_feedback,
     list_logins,
     list_posts,
@@ -64,6 +68,10 @@ GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
+    try:
+        migrate_brand_column()
+    except Exception:
+        pass  # column may already exist; non-fatal
     for d in ["generated", "editing", "ready_to_publish", "published", "exports"]:
         try:
             Path(POSTS_DIR, d).mkdir(parents=True, exist_ok=True)
@@ -203,8 +211,11 @@ def _serialise_with_content(post: dict) -> dict:
 
 
 @app.get("/api/posts")
-def api_list_posts(status: str = None, _: str = Depends(require_auth)):
-    posts = list_posts(status if status and status != "all" else None)
+def api_list_posts(status: str = None, brand: str = None, _: str = Depends(require_auth)):
+    posts = list_posts(
+        status if status and status != "all" else None,
+        brand if brand and brand != "all" else None,
+    )
     return [_serialise(p) for p in posts]
 
 
@@ -465,6 +476,7 @@ class GenerateRequest(BaseModel):
     aeo_prompt: str | None = None
     category: str | None = None
     max_tokens: int = 16000
+    brand: str = "hitpay"
 
 
 @app.post("/api/generate")
@@ -482,7 +494,7 @@ async def api_generate(body: GenerateRequest, user_email: str = Depends(require_
             yield f"data: {json.dumps({'type': 'status', 'message': 'Starting generation...'})}\n\n"
 
             post_data = await loop.run_in_executor(
-                None, lambda: generate_blog_post(body.keyword, country=body.country, aeo_prompt=body.aeo_prompt, category=body.category, max_tokens=body.max_tokens, on_status=on_status)
+                None, lambda: generate_blog_post(body.keyword, country=body.country, aeo_prompt=body.aeo_prompt, category=body.category, max_tokens=body.max_tokens, on_status=on_status, brand=body.brand)
             )
 
             for msg in messages:
@@ -685,6 +697,7 @@ class CreateXPostRequest(BaseModel):
     content: str
     market: str | None = None
     scheduled_at: str | None = None
+    brand: str = "hitpay"
 
 
 class UpdateXPostRequest(BaseModel):
@@ -700,10 +713,11 @@ class XStatusRequest(BaseModel):
 
 
 @app.get("/api/x-posts")
-def api_list_x_posts(status: str = None, market: str = None, _: str = Depends(require_auth)):
+def api_list_x_posts(status: str = None, market: str = None, brand: str = None, _: str = Depends(require_auth)):
     posts = list_x_posts(
         status if status and status != "all" else None,
         market if market and market != "all" else None,
+        brand if brand else None,
     )
     return posts
 
@@ -717,6 +731,7 @@ def api_create_x_post(body: CreateXPostRequest, user_email: str = Depends(requir
         market=body.market or None,
         scheduled_at=body.scheduled_at or None,
         editor_email=user_email,
+        brand=body.brand or "hitpay",
     )
     log_x_audit(post_id, user_email, "created", {"market": body.market or ""})
     return {"id": post_id}
@@ -837,11 +852,8 @@ def _check_link_url(content: str) -> str | None:
     return None
 
 
-@app.post("/api/x-posts/{post_id}/push-to-typefully")
-def api_x_post_typefully(post_id: int, body: XTypefullyRequest,
-                         user_email: str = Depends(require_auth)):
-    if not TYPEFULLY_API_KEY:
-        raise HTTPException(400, "Typefully not configured — add TYPEFULLY_API_KEY to .env")
+def _do_push_x_post(post_id: int, post_now: bool, schedule_date: str | None) -> dict:
+    """Push an X post to Typefully. Returns the Typefully response dict."""
     post = get_x_post(post_id)
     if not post:
         raise HTTPException(404, "X post not found")
@@ -852,7 +864,7 @@ def api_x_post_typefully(post_id: int, body: XTypefullyRequest,
     THREAD_SEP = "\n\n---\n\n"
     tweets = [_cap_tweet(t.strip()) for t in content.split(THREAD_SEP) if t.strip()]
 
-    will_autopublish = body.post_now or bool(body.schedule_date)
+    will_autopublish = post_now or bool(schedule_date)
     if will_autopublish:
         # X policy blocks API publishing when any tweet body contains a URL.
         # Move the URL from the last tweet into a standalone reply so the body is URL-free.
@@ -866,9 +878,9 @@ def api_x_post_typefully(post_id: int, body: XTypefullyRequest,
             }
         }
     }
-    if body.schedule_date:
-        payload["publish_at"] = body.schedule_date
-    elif body.post_now:
+    if schedule_date:
+        payload["publish_at"] = schedule_date
+    elif post_now:
         from datetime import datetime, timezone, timedelta
         payload["publish_at"] = (datetime.now(timezone.utc) + timedelta(minutes=2)).strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -894,29 +906,38 @@ def api_x_post_typefully(post_id: int, body: XTypefullyRequest,
 
     data = resp.json()
     typefully_url = data.get("share_url") or data.get("private_url") or data.get("url") or ""
-    mode = "now" if body.post_now else ("scheduled" if body.schedule_date else "draft")
+    mode = "now" if post_now else ("scheduled" if schedule_date else "draft")
 
-    # Update local status to reflect where the post now lives
-    if body.post_now:
+    if post_now:
         _change_x_status(post_id, "posted")
-    elif body.schedule_date:
-        _change_x_status(post_id, "scheduled", scheduled_at=body.schedule_date)
+    elif schedule_date:
+        _change_x_status(post_id, "scheduled", scheduled_at=schedule_date)
     else:
         # Saved as draft in Typefully — mark scheduled so it shows as "in queue"
         _change_x_status(post_id, "scheduled")
 
-    link_warning = _check_link_url(content)
-    log_x_audit(post_id, user_email, "pushed_to_typefully", {
-        "mode": mode,
-        "schedule_date": body.schedule_date,
-        "typefully_url": typefully_url,
-    })
     return {
         "typefully_url": typefully_url,
-        "posted": body.post_now,
-        "link_warning": link_warning,
-        "scheduled": bool(body.schedule_date),
+        "posted": post_now,
+        "link_warning": _check_link_url(content),
+        "scheduled": bool(schedule_date),
+        "mode": mode,
     }
+
+
+@app.post("/api/x-posts/{post_id}/push-to-typefully")
+def api_x_post_typefully(post_id: int, body: XTypefullyRequest,
+                         user_email: str = Depends(require_auth)):
+    if not TYPEFULLY_API_KEY:
+        raise HTTPException(400, "Typefully not configured — add TYPEFULLY_API_KEY to .env")
+    result = _do_push_x_post(post_id, body.post_now, body.schedule_date)
+    log_x_audit(post_id, user_email, "pushed_to_typefully", {
+        "mode": result["mode"],
+        "schedule_date": body.schedule_date,
+        "typefully_url": result["typefully_url"],
+    })
+    result.pop("mode", None)
+    return result
 
 
 class GenerateThoughtLeadershipRequest(BaseModel):
@@ -924,6 +945,7 @@ class GenerateThoughtLeadershipRequest(BaseModel):
     topic_hint: str | None = None
     thread_size: int = 7  # 1, 2, 3, 5, or 7
     style: str = "educational"  # "educational" or "storytelling"
+    brand: str = "hitpay"
 
 
 @app.post("/api/x-posts/generate-thought-leadership")
@@ -938,6 +960,7 @@ def api_generate_thought_leadership(
             topic_hint=body.topic_hint or None,
             thread_size=body.thread_size,
             style=body.style,
+            brand=body.brand,
         )
     except ValueError as e:
         raise HTTPException(422, str(e))
@@ -952,12 +975,13 @@ def api_generate_thought_leadership(
 def api_generate_random_x_post(
     market: str | None = None,
     topic_hint: str | None = None,
+    brand: str = "hitpay",
     _: str = Depends(require_auth),
 ):
     """Generate a post with randomized style + thread_size — entry point for automated scheduling."""
     from src.thought_leadership import generate_random_x_post
     try:
-        result = generate_random_x_post(market=market or None, topic_hint=topic_hint or None)
+        result = generate_random_x_post(market=market or None, topic_hint=topic_hint or None, brand=brand)
     except ValueError as e:
         raise HTTPException(422, str(e))
     except Exception as e:
@@ -985,6 +1009,7 @@ class CreateThreadsPostRequest(BaseModel):
     content: str
     market: str | None = None
     scheduled_at: str | None = None
+    brand: str = "hitpay"
 
 
 class UpdateThreadsPostRequest(BaseModel):
@@ -1007,6 +1032,7 @@ class GenerateThreadsStoryRequest(BaseModel):
     market: str | None = None
     topic_hint: str | None = None
     thread_size: int = 3  # 1, 3, or 5
+    brand: str = "hitpay"
 
 
 class ThreadsTypefullyRequest(BaseModel):
@@ -1021,10 +1047,11 @@ def _get_typefully_threads_social_set_id() -> str:
 
 
 @app.get("/api/threads-posts")
-def api_list_threads_posts(status: str = None, market: str = None, _: str = Depends(require_auth)):
+def api_list_threads_posts(status: str = None, market: str = None, brand: str = None, _: str = Depends(require_auth)):
     return list_threads_posts(
         status if status and status != "all" else None,
         market if market and market != "all" else None,
+        brand if brand else None,
     )
 
 
@@ -1037,6 +1064,7 @@ def api_create_threads_post(body: CreateThreadsPostRequest, user_email: str = De
         market=body.market or None,
         scheduled_at=body.scheduled_at or None,
         editor_email=user_email,
+        brand=body.brand or "hitpay",
     )
     log_threads_audit(post_id, user_email, "created", {"market": body.market or ""})
     return {"id": post_id}
@@ -1119,6 +1147,7 @@ def api_generate_threads_story(body: GenerateThreadsStoryRequest, _: str = Depen
             market=body.market or None,
             topic_hint=body.topic_hint or None,
             thread_size=body.thread_size,
+            brand=body.brand,
         )
     except ValueError as e:
         raise HTTPException(422, str(e))
@@ -1129,11 +1158,8 @@ def api_generate_threads_story(body: GenerateThreadsStoryRequest, _: str = Depen
     return result
 
 
-@app.post("/api/threads-posts/{post_id}/push-to-typefully")
-def api_threads_post_typefully(post_id: int, body: ThreadsTypefullyRequest,
-                               user_email: str = Depends(require_auth)):
-    if not TYPEFULLY_API_KEY:
-        raise HTTPException(400, "Typefully not configured — add TYPEFULLY_API_KEY to .env")
+def _do_push_threads_post(post_id: int, post_now: bool, schedule_date: str | None) -> dict:
+    """Push a Threads post to Typefully. Returns the Typefully response dict."""
     post = get_threads_post(post_id)
     if not post:
         raise HTTPException(404, "Threads post not found")
@@ -1152,9 +1178,9 @@ def api_threads_post_typefully(post_id: int, body: ThreadsTypefullyRequest,
             }
         }
     }
-    if body.schedule_date:
-        payload["publish_at"] = body.schedule_date
-    elif body.post_now:
+    if schedule_date:
+        payload["publish_at"] = schedule_date
+    elif post_now:
         from datetime import datetime, timezone, timedelta
         payload["publish_at"] = (datetime.now(timezone.utc) + timedelta(minutes=2)).strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -1180,25 +1206,36 @@ def api_threads_post_typefully(post_id: int, body: ThreadsTypefullyRequest,
 
     data = resp.json()
     typefully_url = data.get("share_url") or data.get("private_url") or data.get("url") or ""
-    mode = "now" if body.post_now else ("scheduled" if body.schedule_date else "draft")
+    mode = "now" if post_now else ("scheduled" if schedule_date else "draft")
 
-    if body.post_now:
+    if post_now:
         _change_thr_status(post_id, "posted")
-    elif body.schedule_date:
-        _change_thr_status(post_id, "scheduled", scheduled_at=body.schedule_date)
+    elif schedule_date:
+        _change_thr_status(post_id, "scheduled", scheduled_at=schedule_date)
     else:
         _change_thr_status(post_id, "scheduled")
 
-    log_threads_audit(post_id, user_email, "pushed_to_typefully", {
-        "mode": mode,
-        "schedule_date": body.schedule_date,
-        "typefully_url": typefully_url,
-    })
     return {
         "typefully_url": typefully_url,
-        "posted": body.post_now,
-        "scheduled": bool(body.schedule_date),
+        "posted": post_now,
+        "scheduled": bool(schedule_date),
+        "mode": mode,
     }
+
+
+@app.post("/api/threads-posts/{post_id}/push-to-typefully")
+def api_threads_post_typefully(post_id: int, body: ThreadsTypefullyRequest,
+                               user_email: str = Depends(require_auth)):
+    if not TYPEFULLY_API_KEY:
+        raise HTTPException(400, "Typefully not configured — add TYPEFULLY_API_KEY to .env")
+    result = _do_push_threads_post(post_id, body.post_now, body.schedule_date)
+    log_threads_audit(post_id, user_email, "pushed_to_typefully", {
+        "mode": result["mode"],
+        "schedule_date": body.schedule_date,
+        "typefully_url": result["typefully_url"],
+    })
+    result.pop("mode", None)
+    return result
 
 
 # ── Repurpose for Social ─────────────────────────────────────────────────────
@@ -1208,6 +1245,7 @@ from src.repurposer import repurpose_for_platform, push_to_typefully, _cap_tweet
 
 class RepurposeRequest(BaseModel):
     platform: str = "twitter"
+    brand: str | None = None  # if None, inherits from the post's brand field
 
 
 class TypefullyRequest(BaseModel):
@@ -1470,6 +1508,7 @@ def api_repurpose_to_x_drafts(post_id: int, body: RepurposeToXRequest,
         market=market,
         editor_email=user_email,
         source_blog_post_id=post_id,
+        brand=post.get("brand", "hitpay"),
     )
     log_x_audit(xid, user_email, "created", {
         "source": f"repurpose:{body.format_key}",
@@ -1477,6 +1516,58 @@ def api_repurpose_to_x_drafts(post_id: int, body: RepurposeToXRequest,
     })
     log_audit(post_id, user_email, "added_to_x_drafts", {"format": body.format_key, "count": 1})
     return {"ok": True, "created_ids": [xid]}
+
+
+# ── Automation ────────────────────────────────────────────────────────────────
+
+@app.post("/api/automation/weekly-post")
+def api_automation_weekly_post(request: Request):
+    """Called by GitHub Actions on Tue/Wed/Thu to auto-generate and publish X + Threads posts."""
+    key = request.headers.get("X-Automation-Key", "")
+    if not key or not AUTOMATION_SECRET or key != AUTOMATION_SECRET:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    if not TYPEFULLY_API_KEY:
+        raise HTTPException(400, "Typefully not configured — add TYPEFULLY_API_KEY to .env")
+
+    from src.thought_leadership import generate_random_x_post
+    from src.threads_thought_leadership import generate_threads_story
+
+    _MARKETS = ["SG", "MY", "PH", None]
+
+    # Generate and publish X post
+    x_market = random.choice(_MARKETS)
+    x_data = generate_random_x_post(market=x_market, brand="hitpay")
+    x_content = "\n\n---\n\n".join(x_data["tweets"])
+    x_id = create_x_post(
+        content=x_content,
+        market=x_data.get("market"),
+        editor_email="automation@hit-pay.com",
+        brand="hitpay",
+    )
+    log_x_audit(x_id, "automation@hit-pay.com", "created", {"source": "weekly_automation", "market": x_data.get("market") or ""})
+    x_result = _do_push_x_post(x_id, post_now=True, schedule_date=None)
+    log_x_audit(x_id, "automation@hit-pay.com", "pushed_to_typefully", {"mode": "now", "typefully_url": x_result["typefully_url"]})
+
+    # Generate and publish Threads post
+    t_market = random.choice(_MARKETS)
+    t_data = generate_threads_story(market=t_market, brand="hitpay")
+    t_content = "\n\n---\n\n".join(t_data["posts"])
+    t_id = create_threads_post(
+        content=t_content,
+        market=t_data.get("market"),
+        editor_email="automation@hit-pay.com",
+        brand="hitpay",
+    )
+    log_threads_audit(t_id, "automation@hit-pay.com", "created", {"source": "weekly_automation", "market": t_data.get("market") or ""})
+    t_result = _do_push_threads_post(t_id, post_now=True, schedule_date=None)
+    log_threads_audit(t_id, "automation@hit-pay.com", "pushed_to_typefully", {"mode": "now", "typefully_url": t_result["typefully_url"]})
+
+    return {
+        "x_post_id": x_id,
+        "x_typefully_url": x_result["typefully_url"],
+        "threads_post_id": t_id,
+        "threads_typefully_url": t_result["typefully_url"],
+    }
 
 
 if __name__ == "__main__":

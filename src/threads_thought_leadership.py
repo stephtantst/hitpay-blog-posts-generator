@@ -9,6 +9,7 @@ from src.generator import _messages_create_with_retry
 from src.thought_leadership import _fetch_live_blog_slugs
 
 _FALLBACK_URL = "https://hitpayapp.com/blog/hitpay-rates"
+_SME_FALLBACK_URL = "https://smegrowthhub.com/blog"
 
 # (business_type, location, customer_type, hitpay_product)
 _STORY_SEEDS: dict[str, list[tuple]] = {
@@ -63,6 +64,64 @@ STORYTELLING RULES:
 - The resolution is functional and quiet — not a miracle, just: it works now
 - The brand closer ("That's the kind of thing we build for.") should feel earned, not appended
 - Callbacks: if you introduce a detail in Post 1, bring it back in the final post
+
+DO NOT include: hashtags, statistics or percentages, product feature lists, emojis (except 🧵 at the end of Post 1 in multi-part threads), marketing buzzwords (seamless, empower, innovate, frictionless, cutting-edge, robust)"""
+
+
+# SME Growth Hub story seeds — broader than payment scenarios
+# (business_type, location, scenario, lesson)
+_SME_STORY_SEEDS: dict[str, list[tuple]] = {
+    "SG": [
+        ("freelance designer", "Tanjong Pagar", "chasing late invoices from a client", "setting clear payment terms"),
+        ("hawker stall", "Maxwell Food Centre", "moving from cash to digital payments", "separating business and personal finances"),
+        ("boutique F&B", "Tiong Bahru", "hiring first part-time staff", "understanding CPF obligations"),
+        ("tuition centre", "Bukit Timah", "switching accounting tools mid-year", "finding one that handles GST"),
+        ("provision shop", "Toa Payoh", "realising the cost of holding too much inventory", "cash flow forecasting"),
+        ("home baker", "Jurong East", "growing from marketplace to own website", "managing payment processing fees"),
+    ],
+    "MY": [
+        ("freelance consultant", "Bangsar", "waiting 60 days on a RM8,000 invoice", "invoice payment terms"),
+        ("kopitiam", "Petaling Jaya", "hiring first employee and discovering EPF paperwork", "payroll compliance"),
+        ("home-based baker", "Johor Bahru", "switching from just Shopee to own website", "e-commerce platform choices"),
+        ("tailoring shop", "Bukit Bintang", "realising cash didn't add up at month end", "bookkeeping basics"),
+        ("beauty salon", "KLCC", "first SST registration threshold reached", "accounting software choice"),
+        ("event caterer", "Ipoh", "managing seasonality and cash gaps", "cash flow planning"),
+    ],
+    "PH": [
+        ("freelance developer", "BGC", "a client who paid in three separate currencies", "cross-border payment options"),
+        ("sari-sari store", "Quezon City", "tracking daily sales without a system", "basic bookkeeping"),
+        ("online fashion shop", "Makati", "first hire through an agency vs direct", "hiring costs"),
+        ("surf school", "Siargao", "accepting foreign tourists without peso", "payment methods for tourists"),
+        ("home cook", "Cebu", "growing from Facebook Marketplace to proper setup", "business registration steps"),
+        ("freelance photographer", "Davao", "late-paying client and what changed after", "invoice terms"),
+    ],
+    "SEA": [
+        ("freelance consultant", "a city CBD", "an unpaid invoice that changed how they work", "payment terms"),
+        ("small café", "a heritage neighbourhood", "the first hire that nearly broke the budget", "hiring costs"),
+        ("online seller", "a growing city", "realising the marketplace was eating their margin", "own store vs marketplace"),
+        ("home baker", "a suburban area", "cash that never seemed to add up", "basic bookkeeping"),
+        ("event vendor", "a tourist town", "a season that left them short on cash", "cash flow management"),
+    ],
+}
+
+SME_THREADS_SYSTEM_PROMPT = """You are the Threads storyteller for SME Growth Hub, an independent editorial resource for small business operators across Southeast Asia.
+
+You write short-form narratives for Meta Threads — the kind that feel human, specific, and earned. Your stories are told from the perspective of the business owner or a peer who knows them well. They're about the daily friction, the workarounds, and what changes when a business owner learns something that actually helps.
+
+VOICE:
+- Warm and observational. Write as someone who has spent time listening to these business owners.
+- Specific and concrete: name cities, name the human details (a stack of unpaid invoices, a notebook of hand-written totals, a phone call to chase a client).
+- Understated. The emotional weight comes from detail, not adjectives.
+- No superlatives. No marketing language. No claims. Just story.
+- First person is fine: "I've seen this" or simply describe what happened in third person.
+
+STORYTELLING RULES:
+- Every story needs a human detail — something physical or behavioural that anchors the owner's world
+- The problem is shown, not explained
+- The tension builds through repetition or accumulation
+- The resolution is functional and quiet — not a miracle, just: it works now
+- If you mention HitPay, it must feel like a peer recommendation in a payment-related story, not a brand placement
+- In non-payment stories (hiring, cash flow, invoicing, registration), do not mention HitPay
 
 DO NOT include: hashtags, statistics or percentages, product feature lists, emojis (except 🧵 at the end of Post 1 in multi-part threads), marketing buzzwords (seamless, empower, innovate, frictionless, cutting-edge, robust)"""
 
@@ -137,6 +196,74 @@ Return raw JSON only — no markdown fences:
 {{"topic": "...", "posts": [...], "link_url": "https://hitpayapp.com/blog/..."}}"""
 
 
+def _build_sme_story_prompt(market: str | None, topic_hint: str | None, thread_size: int) -> str:
+    from src.brand_config import get_brand_config
+    bc = get_brand_config("smegrowthhub")
+
+    market_key = market if market in _SME_STORY_SEEDS else "SEA"
+    biz, location, scenario, lesson = random.choice(_SME_STORY_SEEDS[market_key])
+
+    if topic_hint:
+        seed_ctx = f"Topic direction: {topic_hint}\nStill ground it in a specific business owner's story."
+    else:
+        seed_ctx = (
+            f"Story seed (use as inspiration, not verbatim):\n"
+            f"- Business: {biz} in {location}\n"
+            f"- Scenario: {scenario}\n"
+            f"- What they learned: {lesson}"
+        )
+
+    if market == "MY":
+        mkt_ctx = "Market: Malaysia. Reference real places (Bangsar, PJ, JB, Penang), real costs (EPF, SST), real tools."
+    elif market == "SG":
+        mkt_ctx = "Market: Singapore. Reference real places (Tanjong Pagar, Tiong Bahru, Jurong), real obligations (CPF, GST)."
+    elif market == "PH":
+        mkt_ctx = "Market: Philippines. Reference real places (BGC, Makati, Cebu, Siargao), real systems (BIR, DTI)."
+    else:
+        mkt_ctx = "Market: Southeast Asia broadly. Pick the most vivid and specific location from MY, SG, or PH."
+
+    if thread_size == 1:
+        fmt = (
+            "Single post (no numbering): a complete micro-story. "
+            "Human detail → friction → what changed. 200–450 characters."
+        )
+    elif thread_size == 3:
+        fmt = (
+            "3-part thread:\n"
+            "Post 1/3 — The Scene: introduce the business owner, location, a specific human detail that reveals the problem. End with 🧵\n"
+            "Post 2/3 — The Tension: the workaround, the cost, the moment it got frustrating.\n"
+            "Post 3/3 — The Shift: what they changed or learned. Quiet resolution. End with a callback to the opening detail."
+        )
+    else:  # 5
+        fmt = (
+            "5-part thread:\n"
+            "Post 1/5 — The Scene: business owner, location, the telling human detail. End with 🧵\n"
+            "Post 2/5 — The Problem: how it kept coming up.\n"
+            "Post 3/5 — The Breaking Point: one specific moment when it mattered most.\n"
+            "Post 4/5 — The Shift: what changed and how they found the answer.\n"
+            "Post 5/5 — The Close: callback to the opening detail. A quiet, earned ending."
+        )
+
+    return f"""Write an SME Growth Hub Threads story.
+
+{seed_ctx}
+
+{mkt_ctx}
+
+FORMAT:
+{fmt}
+
+Each post: 200–450 characters. No hashtags. No emojis except 🧵 noted above. Warm, specific, observational tone.
+Do not mention HitPay unless the story is directly about payments — and even then, only as a quiet peer recommendation.
+
+LINK URL RULE:
+Set link_url to {bc.blog_base_url}/{{slug}} using a descriptive slug matching the story topic.
+If no specific slug, default to: {bc.blog_base_url}
+
+Return raw JSON only — no markdown fences:
+{{"topic": "...", "posts": [...], "link_url": "{bc.blog_base_url}/..."}}"""
+
+
 def _cap_post(text: str, limit: int = 500) -> str:
     if len(text) <= limit:
         return text
@@ -150,15 +277,26 @@ def generate_threads_story(
     market: str = None,
     topic_hint: str = None,
     thread_size: int = 3,
+    brand: str = "hitpay",
 ) -> dict:
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-    prompt = _build_story_prompt(market, topic_hint, thread_size)
+
+    if brand == "smegrowthhub":
+        system = SME_THREADS_SYSTEM_PROMPT
+        prompt = _build_sme_story_prompt(market, topic_hint, thread_size)
+        fallback = _SME_FALLBACK_URL
+        url_pattern = None  # skip strict pattern check for SME
+    else:
+        system = THREADS_SYSTEM_PROMPT
+        prompt = _build_story_prompt(market, topic_hint, thread_size)
+        fallback = _FALLBACK_URL
+        url_pattern = r"^https://hitpayapp\.com/blog/[a-zA-Z0-9_\-()/]+$"
 
     response = _messages_create_with_retry(
         client,
         model=CLAUDE_MODEL,
         max_tokens=2000,
-        system=THREADS_SYSTEM_PROMPT,
+        system=system,
         messages=[{"role": "user", "content": prompt}],
     )
 
@@ -173,9 +311,9 @@ def generate_threads_story(
 
     data["posts"] = [_cap_post(p) for p in posts]
 
-    link_url = data.get("link_url") or _FALLBACK_URL
-    if not re.match(r"^https://hitpayapp\.com/blog/[a-zA-Z0-9_\-()/]+$", link_url):
-        link_url = _FALLBACK_URL
+    link_url = data.get("link_url") or fallback
+    if url_pattern and not re.match(url_pattern, link_url):
+        link_url = fallback
     data["link_url"] = link_url
 
     return data

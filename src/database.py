@@ -37,6 +37,15 @@ def init_db():
     pass
 
 
+def migrate_brand_column():
+    """Add brand column to posts, x_posts, threads_posts if missing."""
+    conn = get_connection()
+    for table in ("posts", "x_posts", "threads_posts"):
+        conn.run(
+            f"ALTER TABLE {table} ADD COLUMN IF NOT EXISTS brand VARCHAR(50) DEFAULT 'hitpay'"
+        )
+
+
 def save_feedback(user_email: str, message: str) -> int:
     conn = get_connection()
     rows = conn.run(
@@ -110,10 +119,10 @@ def save_post(post_data: dict, file_path: str) -> int:
     conn = get_connection()
     rows = conn.run(
         """
-        INSERT INTO posts (title, slug, keyword, country, status, date, meta_title,
+        INSERT INTO posts (title, slug, keyword, country, brand, status, date, meta_title,
                            meta_description, overview, categories, tags, file_path, word_count, content, source_url,
                            editor_email)
-        VALUES (:title, :slug, :keyword, :country, :status, :date, :meta_title,
+        VALUES (:title, :slug, :keyword, :country, :brand, :status, :date, :meta_title,
                 :meta_description, :overview, :categories, :tags, :file_path, :word_count, :content, :source_url,
                 :editor_email)
         RETURNING id
@@ -122,6 +131,7 @@ def save_post(post_data: dict, file_path: str) -> int:
         slug=post_data["slug"],
         keyword=post_data.get("keyword", ""),
         country=post_data.get("country", ""),
+        brand=post_data.get("brand", "hitpay"),
         status=post_data.get("status", "writing"),
         date=post_data["date"],
         meta_title=post_data.get("meta_title", ""),
@@ -152,15 +162,18 @@ def get_post_by_slug(slug: str) -> dict | None:
     return result[0] if result else None
 
 
-def list_posts(status: str = None) -> list:
+def list_posts(status: str = None, brand: str = None) -> list:
     conn = get_connection()
+    clauses = []
+    params = {}
     if status:
-        rows = conn.run(
-            "SELECT * FROM posts WHERE status = :status ORDER BY created_at DESC",
-            status=status,
-        )
-    else:
-        rows = conn.run("SELECT * FROM posts ORDER BY created_at DESC")
+        clauses.append("status = :status")
+        params["status"] = status
+    if brand:
+        clauses.append("(brand = :brand OR brand IS NULL)")
+        params["brand"] = brand
+    where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+    rows = conn.run(f"SELECT * FROM posts {where} ORDER BY created_at DESC", **params)
     return _rows_to_dicts(conn, rows)
 
 

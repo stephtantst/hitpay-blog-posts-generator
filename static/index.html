@@ -48,6 +48,10 @@
     .logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; letter-spacing: -0.3px; color: var(--text); }
     .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
     .header-spacer { flex: 1; }
+    .brand-switcher { display: flex; align-items: center; gap: 2px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 2px; margin-left: 12px; }
+    .brand-btn { padding: 3px 10px; border-radius: 4px; border: none; background: none; font-size: 12px; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: all 0.15s; font-family: inherit; white-space: nowrap; }
+    .brand-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.08); font-weight: 600; }
+    .brand-btn:hover:not(.active) { color: var(--text); }
     .save-indicator { font-size: 12px; color: var(--text-muted); opacity: 0; transition: opacity 0.3s; }
     .save-indicator.visible { opacity: 1; }
 
@@ -1896,7 +1900,11 @@
 <header>
   <div class="logo">
     <div class="logo-dot"></div>
-    HitPay Blog
+    <span id="headerBrandName">HitPay Blog</span>
+  </div>
+  <div class="brand-switcher">
+    <button class="brand-btn active" id="brandBtnHitpay" onclick="setBrand('hitpay')">HitPay</button>
+    <button class="brand-btn" id="brandBtnSme" onclick="setBrand('smegrowthhub')">SME Growth Hub</button>
   </div>
   <div class="header-spacer"></div>
   <span class="save-indicator" id="saveIndicator">✓ Saved</span>
@@ -2888,7 +2896,7 @@
 <div class="modal-overlay" id="generateModal">
   <div class="modal">
     <div class="modal-title">Generate New Post</div>
-    <div class="modal-sub">Enter a keyword or topic. Select a market for country-accurate payment methods and context.</div>
+    <div class="modal-sub">Enter a keyword or topic. Select a market for country-accurate payment methods and context. Generating for: <strong id="generateModalBrandLabel">HitPay Blog</strong></div>
     <label class="modal-field-label">Keyword / Topic</label>
     <input
       class="modal-input"
@@ -3261,6 +3269,7 @@
 
 <script>
 // ── State ─────────────────────────────────────────────────────────────────────
+let activeBrand = localStorage.getItem('activeBrand') || 'hitpay';
 let posts = [];
 let currentPost = null;
 let mde = null;
@@ -3328,6 +3337,7 @@ async function init() {
   }
   currentUser = await meRes.json();
   renderUserInfo();
+  initBrandSwitcher();
   const params = new URLSearchParams(window.location.search);
   if (params.get('auth_error')) window.history.replaceState({}, '', '/');
   const [,, cfgRes] = await Promise.all([loadPosts(), initKnownUsers(), fetch('/api/config').then(r => r.ok ? r.json() : {})]);
@@ -3342,8 +3352,27 @@ function renderUserInfo() {
   el.innerHTML = `<span style="font-size:12px;color:var(--text-muted);">${escHtml(currentUser.email)}</span><a href="/auth/logout" style="font-size:12px;color:var(--text-dim);text-decoration:none;margin-left:8px;padding:3px 8px;border:1px solid var(--border);border-radius:4px;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text-dim)'">Sign out</a>`;
 }
 
+function initBrandSwitcher() {
+  const brandLabel = activeBrand === 'smegrowthhub' ? 'SME Growth Hub' : 'HitPay Blog';
+  document.getElementById('headerBrandName').textContent = brandLabel;
+  document.getElementById('brandBtnHitpay').classList.toggle('active', activeBrand === 'hitpay');
+  document.getElementById('brandBtnSme').classList.toggle('active', activeBrand === 'smegrowthhub');
+  const genLabel = document.getElementById('generateModalBrandLabel');
+  if (genLabel) genLabel.textContent = brandLabel;
+}
+
+function setBrand(brand) {
+  if (brand === activeBrand) return;
+  activeBrand = brand;
+  localStorage.setItem('activeBrand', brand);
+  initBrandSwitcher();
+  loadPosts();
+  loadXPosts();
+  loadThrPosts();
+}
+
 async function loadPosts() {
-  const res = await fetch('/api/posts');
+  const res = await fetch(`/api/posts?brand=${activeBrand}`);
   posts = await res.json();
   refreshEditorFilter();
   renderPostList();
@@ -3856,6 +3885,8 @@ function openGenerateModal() {
   document.getElementById('generateBtn').disabled = false;
   document.getElementById('generateBtn').textContent = 'Generate Post';
   document.getElementById('minimizeBtn').style.display = 'none';
+  const genLabel = document.getElementById('generateModalBrandLabel');
+  if (genLabel) genLabel.textContent = activeBrand === 'smegrowthhub' ? 'SME Growth Hub' : 'HitPay Blog';
   document.getElementById('generateModal').classList.add('open');
   setTimeout(() => document.getElementById('keywordInput').focus(), 150);
 }
@@ -3985,7 +4016,7 @@ async function startGenerate() {
     const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ keyword, country }),
+      body: JSON.stringify({ keyword, country, brand: activeBrand }),
     });
 
     const reader = res.body.getReader();
@@ -6750,7 +6781,7 @@ let xSelectMode = false;
 
 // ── X Load & Render ───────────────────────────────────────────────────────────
 async function loadXPosts() {
-  const res = await fetch('/api/x-posts');
+  const res = await fetch(`/api/x-posts?brand=${activeBrand}`);
   if (!res.ok) return;
   xPosts = await res.json();
   renderXPostList();
@@ -7174,7 +7205,7 @@ async function runThoughtLeadershipGenerate() {
     const res = await fetch('/api/x-posts/generate-thought-leadership', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ market: market || null, topic_hint: topicHint || null, thread_size: _threadFormat }),
+      body: JSON.stringify({ market: market || null, topic_hint: topicHint || null, thread_size: _threadFormat, brand: activeBrand }),
     });
     if (!res.ok) {
       let errMsg = 'Generation failed — try again';
@@ -7244,7 +7275,7 @@ async function submitCreateXPost() {
   const res = await fetch('/api/x-posts', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ content, market: market || null }),
+    body: JSON.stringify({ content, market: market || null, brand: activeBrand }),
   });
   btn.disabled = false;
   btn.textContent = 'Create Post';
@@ -7274,7 +7305,7 @@ let thrOverviewViewMode = 'list';
 
 // ── Load ──────────────────────────────────────────────────────────────────────
 async function loadThrPosts() {
-  const res = await fetch('/api/threads-posts');
+  const res = await fetch(`/api/threads-posts?brand=${activeBrand}`);
   if (!res.ok) return;
   thrPosts = await res.json();
   renderThrPostList();
@@ -7865,7 +7896,7 @@ async function runThrStoryGenerate() {
     const res = await fetch('/api/threads-posts/generate-story', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ market: market || null, topic_hint: topicHint || null, thread_size: _thrStoryFormat }),
+      body: JSON.stringify({ market: market || null, topic_hint: topicHint || null, thread_size: _thrStoryFormat, brand: activeBrand }),
     });
     if (!res.ok) {
       let errMsg = 'Generation failed — try again';
@@ -7912,7 +7943,7 @@ async function submitCreateThrPost() {
   const res = await fetch('/api/threads-posts', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ content, market: market || null }),
+    body: JSON.stringify({ content, market: market || null, brand: activeBrand }),
   });
   btn.disabled = false; btn.textContent = 'Create Story';
   if (!res.ok) { showToast('Failed to create story', 'error'); return; }
