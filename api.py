@@ -1556,7 +1556,9 @@ def api_automation_weekly_post(request: Request):
         # Generate and publish Threads post
         t_market = random.choice(_MARKETS)
         t_data = generate_threads_story(market=t_market, brand="hitpay")
-        t_content = "\n\n---\n\n".join(t_data["posts"])
+        raw_posts = t_data["posts"]
+        t_posts = [p["text"] if isinstance(p, dict) else str(p) for p in raw_posts]
+        t_content = "\n\n---\n\n".join(t_posts)
         t_id = create_threads_post(
             content=t_content,
             market=t_data.get("market"),
