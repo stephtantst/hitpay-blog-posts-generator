@@ -1523,51 +1523,60 @@ def api_repurpose_to_x_drafts(post_id: int, body: RepurposeToXRequest,
 @app.post("/api/automation/weekly-post")
 def api_automation_weekly_post(request: Request):
     """Called by GitHub Actions on Tue/Wed/Thu to auto-generate and publish X + Threads posts."""
+    import traceback
     key = request.headers.get("X-Automation-Key", "")
     if not key or not AUTOMATION_SECRET or key != AUTOMATION_SECRET:
         raise HTTPException(status_code=401, detail="Unauthorized")
     if not TYPEFULLY_API_KEY:
         raise HTTPException(400, "Typefully not configured — add TYPEFULLY_API_KEY to .env")
 
-    from src.thought_leadership import generate_random_x_post
-    from src.threads_thought_leadership import generate_threads_story
+    try:
+        from src.thought_leadership import generate_random_x_post
+        from src.threads_thought_leadership import generate_threads_story
+    except Exception as e:
+        raise HTTPException(500, f"Import error: {traceback.format_exc()}")
 
-    _MARKETS = ["SG", "MY", "PH", None]
+    try:
+        _MARKETS = ["SG", "MY", "PH", None]
 
-    # Generate and publish X post
-    x_market = random.choice(_MARKETS)
-    x_data = generate_random_x_post(market=x_market, brand="hitpay")
-    x_content = "\n\n---\n\n".join(x_data["tweets"])
-    x_id = create_x_post(
-        content=x_content,
-        market=x_data.get("market"),
-        editor_email="automation@hit-pay.com",
-        brand="hitpay",
-    )
-    log_x_audit(x_id, "automation@hit-pay.com", "created", {"source": "weekly_automation", "market": x_data.get("market") or ""})
-    x_result = _do_push_x_post(x_id, post_now=True, schedule_date=None)
-    log_x_audit(x_id, "automation@hit-pay.com", "pushed_to_typefully", {"mode": "now", "typefully_url": x_result["typefully_url"]})
+        # Generate and publish X post
+        x_market = random.choice(_MARKETS)
+        x_data = generate_random_x_post(market=x_market, brand="hitpay")
+        x_content = "\n\n---\n\n".join(x_data["tweets"])
+        x_id = create_x_post(
+            content=x_content,
+            market=x_data.get("market"),
+            editor_email="automation@hit-pay.com",
+            brand="hitpay",
+        )
+        log_x_audit(x_id, "automation@hit-pay.com", "created", {"source": "weekly_automation", "market": x_data.get("market") or ""})
+        x_result = _do_push_x_post(x_id, post_now=True, schedule_date=None)
+        log_x_audit(x_id, "automation@hit-pay.com", "pushed_to_typefully", {"mode": "now", "typefully_url": x_result["typefully_url"]})
 
-    # Generate and publish Threads post
-    t_market = random.choice(_MARKETS)
-    t_data = generate_threads_story(market=t_market, brand="hitpay")
-    t_content = "\n\n---\n\n".join(t_data["posts"])
-    t_id = create_threads_post(
-        content=t_content,
-        market=t_data.get("market"),
-        editor_email="automation@hit-pay.com",
-        brand="hitpay",
-    )
-    log_threads_audit(t_id, "automation@hit-pay.com", "created", {"source": "weekly_automation", "market": t_data.get("market") or ""})
-    t_result = _do_push_threads_post(t_id, post_now=True, schedule_date=None)
-    log_threads_audit(t_id, "automation@hit-pay.com", "pushed_to_typefully", {"mode": "now", "typefully_url": t_result["typefully_url"]})
+        # Generate and publish Threads post
+        t_market = random.choice(_MARKETS)
+        t_data = generate_threads_story(market=t_market, brand="hitpay")
+        t_content = "\n\n---\n\n".join(t_data["posts"])
+        t_id = create_threads_post(
+            content=t_content,
+            market=t_data.get("market"),
+            editor_email="automation@hit-pay.com",
+            brand="hitpay",
+        )
+        log_threads_audit(t_id, "automation@hit-pay.com", "created", {"source": "weekly_automation", "market": t_data.get("market") or ""})
+        t_result = _do_push_threads_post(t_id, post_now=True, schedule_date=None)
+        log_threads_audit(t_id, "automation@hit-pay.com", "pushed_to_typefully", {"mode": "now", "typefully_url": t_result["typefully_url"]})
 
-    return {
-        "x_post_id": x_id,
-        "x_typefully_url": x_result["typefully_url"],
-        "threads_post_id": t_id,
-        "threads_typefully_url": t_result["typefully_url"],
-    }
+        return {
+            "x_post_id": x_id,
+            "x_typefully_url": x_result["typefully_url"],
+            "threads_post_id": t_id,
+            "threads_typefully_url": t_result["typefully_url"],
+        }
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(500, f"Automation error: {traceback.format_exc()}")
 
 
 if __name__ == "__main__":
