@@ -14,3 +14,4 @@ lxml>=5.0.0
 markdown>=3.6
 itsdangerous>=2.1.0
 json-repair>=0.30.0
+requests>=2.31.0
