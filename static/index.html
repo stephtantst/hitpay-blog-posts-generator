@@ -1686,11 +1686,11 @@
     .x-char-count.warn { color: var(--yellow); }
     .x-char-count.over { color: var(--red); }
     .x-textarea {
-      flex: 1; max-height: 220px;
+      flex: 1;
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 14px;
       font-size: 15px; font-family: var(--font); color: var(--text);
-      line-height: 1.6; resize: none; outline: none;
+      line-height: 1.6; resize: vertical; outline: none;
       transition: border-color 0.15s;
     }
     .x-textarea:focus { border-color: var(--accent); }
@@ -2629,6 +2629,7 @@
               id="xContentInput"
               placeholder="What's happening at HitPay?"
               oninput="xMarkDirty(); updateXCharCount()"
+              style="min-height:140px;"
             ></textarea>
           </div>
           <!-- thread mode (rendered dynamically) -->
