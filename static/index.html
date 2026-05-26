@@ -1865,6 +1865,168 @@
       font-size: 11px; color: var(--text-dim);
     }
 
+  /* ── Editor Modal ───────────────────────────────────────────────────────────── */
+  .editor-modal-backdrop {
+    position: fixed; inset: 0; z-index: 400;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+  #xEditorPane.as-modal,
+  #thrEditorPane.as-modal {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(1080px, calc(100vw - 40px));
+    height: calc(100vh - 60px);
+    z-index: 401;
+    border-radius: 10px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.28);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .editor-modal-close-btn {
+    display: none;
+    background: none; border: none;
+    font-size: 18px; line-height: 1; cursor: pointer;
+    color: var(--text-muted); padding: 4px 6px; border-radius: 4px;
+    transition: color 0.12s, background 0.12s;
+  }
+  .editor-modal-close-btn:hover { color: var(--text); background: var(--surface2); }
+  #xEditorPane.as-modal .editor-modal-close-btn,
+  #thrEditorPane.as-modal .editor-modal-close-btn { display: block; }
+
+  /* ── Calendar View ─────────────────────────────────────────────────────────── */
+  .cal-wrap { display: flex; flex: 1; overflow: hidden; }
+
+  .cal-draft-sidebar {
+    width: 220px; flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+    overflow-y: auto; overflow-x: hidden;
+    overscroll-behavior: contain;
+    position: relative;
+  }
+  .cal-draft-sidebar::-webkit-scrollbar { width: 4px; }
+  .cal-draft-sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .cal-draft-sidebar-header {
+    padding: 10px 12px 8px;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--text-muted);
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 1;
+    background: var(--surface);
+  }
+  .cal-draft-count {
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text-dim); font-size: 10px; font-weight: 700;
+    padding: 1px 6px; border-radius: 10px;
+  }
+  .cal-draft-list {
+    padding: 6px;
+    display: flex; flex-direction: column; gap: 5px;
+  }
+  .cal-draft-card {
+    background: #fef3c7; border: 1px solid #fde68a;
+    border-radius: 6px; padding: 8px 10px;
+    font-size: 12px; color: #b45309; line-height: 1.4;
+    cursor: grab; user-select: none;
+    transition: opacity 0.15s, box-shadow 0.15s;
+    overflow: hidden;
+  }
+  .cal-draft-card-preview {
+    display: -webkit-box; -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .cal-draft-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-color: #b45309; }
+  .cal-draft-card:active { cursor: grabbing; }
+  .cal-draft-card.dragging { opacity: 0.35; }
+  .cal-draft-card-market { font-size: 10px; color: #92400e; margin-top: 4px; font-weight: 600; }
+  .cal-draft-card-date { font-size: 10px; color: #a16207; margin-top: 6px; text-align: right; opacity: 0.7; }
+
+  .cal-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg); }
+  .cal-nav {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 16px; border-bottom: 1px solid var(--border);
+    background: var(--surface); flex-shrink: 0;
+  }
+  .cal-nav-label { font-size: 15px; font-weight: 700; color: var(--text); min-width: 180px; }
+  .cal-nav-spacer { flex: 1; }
+  .cal-nav-btn {
+    background: none; border: 1px solid var(--border); border-radius: 5px;
+    padding: 4px 10px; font-size: 13px; font-weight: 600;
+    color: var(--text-muted); cursor: pointer; font-family: inherit;
+    transition: all 0.12s; line-height: 1;
+  }
+  .cal-nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .cal-grid-wrap { flex: 1; overflow: hidden; }
+
+  .cal-month-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    border-left: 1px solid var(--border); border-top: 1px solid var(--border);
+  }
+  .cal-month-dow {
+    padding: 6px 0; text-align: center;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
+    color: var(--text-muted);
+    border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .cal-day {
+    min-height: 110px; padding: 5px;
+    min-width: 0; overflow: hidden;
+    border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    background: var(--surface); position: relative; transition: background 0.1s;
+  }
+  .cal-day.other-month { background: var(--surface2); }
+  .cal-day.today { background: rgba(37,99,235,0.04); }
+  .cal-day.today .cal-day-num { color: var(--accent); font-weight: 700; }
+  .cal-day.drag-over { background: #dbeafe !important; outline: 2px dashed var(--accent); outline-offset: -2px; }
+  .cal-day-num { font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 4px; display: block; }
+
+  .cal-event {
+    display: block; padding: 2px 6px; border-radius: 4px;
+    font-size: 11px; font-weight: 500; line-height: 1.5; margin-bottom: 2px;
+    cursor: pointer; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    transition: filter 0.1s;
+  }
+  .cal-event:hover { filter: brightness(0.9); }
+  .cal-event.draft    { background: #fef3c7; color: #b45309; }
+  .cal-event.scheduled { background: #dbeafe; color: #1d4ed8; }
+  .cal-event.posted   { background: #dcfce7; color: #16a34a; }
+  .cal-event-overflow {
+    display: block; font-size: 10px; font-weight: 600; color: var(--text-dim);
+    padding: 1px 4px; cursor: pointer;
+  }
+  .cal-event-overflow:hover { color: var(--accent); }
+
+  .cal-week-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: auto 1fr;
+    border-left: 1px solid var(--border); border-top: 1px solid var(--border);
+  }
+  .cal-week-dow-header {
+    padding: 8px 6px; text-align: center;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
+    color: var(--text-muted);
+    border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .cal-week-dow-header.today-col { color: var(--accent); }
+  .cal-week-dow-num { display: block; font-size: 20px; font-weight: 700; line-height: 1.2; margin-bottom: 2px; }
+  .cal-week-day-col {
+    border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 6px 4px; background: var(--surface);
+    min-height: 160px; min-width: 0; overflow: hidden; align-content: start;
+    position: relative; transition: background 0.1s;
+  }
+  .cal-week-day-col.today-col { background: rgba(37,99,235,0.03); }
+  .cal-week-day-col.drag-over { background: #dbeafe !important; outline: 2px dashed var(--accent); outline-offset: -2px; }
+
   </style>
 </head>
 <body>
@@ -2509,8 +2671,9 @@
       <div class="x-ov-toolbar-right">
         <button class="btn btn-secondary" id="xBulkSelectToggle" style="font-size:12px;padding:5px 12px;" onclick="xToggleSelectMode()">☑ Select</button>
         <div class="view-switch">
-          <button class="view-switch-btn active" id="xOvsw-list" onclick="setXOverviewView('list')">☰ List</button>
+          <button class="view-switch-btn" id="xOvsw-list" onclick="setXOverviewView('list')">☰ List</button>
           <button class="view-switch-btn" id="xOvsw-board" onclick="setXOverviewView('board')">⊞ Board</button>
+          <button class="view-switch-btn active" id="xOvsw-cal" onclick="setXOverviewView('calendar')">&#9632; Cal</button>
         </div>
       </div>
     </div>
@@ -2529,7 +2692,7 @@
     <!-- Overview Content -->
     <div class="x-ov-content">
       <!-- List View -->
-      <div id="xOverviewListView">
+      <div id="xOverviewListView" style="display:none;">
         <div id="xBulkBar" class="x-bulk-bar" style="display:none;">
           <span id="xBulkCount">0 selected</span>
           <button class="x-bulk-danger" onclick="xBulkDelete()">✕ Delete selected</button>
@@ -2568,9 +2731,39 @@
           </div>
         </div>
       </div>
+      <!-- Calendar View -->
+      <div id="xOverviewCalView" style="display:flex;" class="cal-wrap">
+        <div class="cal-draft-sidebar">
+          <div class="cal-draft-sidebar-header">
+            Unscheduled Drafts
+            <span class="cal-draft-count" id="xCalDraftCount">0</span>
+          </div>
+          <div class="cal-draft-list" id="xCalDraftList"></div>
+        </div>
+        <div class="cal-main">
+          <div class="cal-nav">
+            <button class="cal-nav-btn" onclick="calToday('x')">Today</button>
+            <button class="cal-nav-btn" onclick="calPrev('x')">&#8249;</button>
+            <button class="cal-nav-btn" onclick="calNext('x')">&#8250;</button>
+            <span class="cal-nav-label" id="xCalNavLabel"></span>
+            <div class="cal-nav-spacer"></div>
+            <div class="view-switch">
+              <button class="view-switch-btn active" id="xCalSw-month" onclick="setXCalViewMode('month')">Month</button>
+              <button class="view-switch-btn" id="xCalSw-week" onclick="setXCalViewMode('week')">Week</button>
+            </div>
+          </div>
+          <div class="cal-grid-wrap">
+            <div id="xCalMonthGrid" class="cal-month-grid"></div>
+            <div id="xCalWeekGrid" class="cal-week-grid" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div><!-- /xOverviewPane -->
+
+  <!-- X Editor Modal Backdrop -->
+  <div id="xEditorModalBackdrop" class="editor-modal-backdrop" style="display:none;" onclick="closeXEditorModal()"></div>
 
   <!-- X Editor Pane -->
   <div id="xEditorPane" style="display:none; flex:1; overflow:hidden; flex-direction:column;">
@@ -2585,7 +2778,9 @@
           <button class="chip" data-status="posted" onclick="setXFilter(this)">✅ Posted <span class="chip-count" id="xchip-posted">0</span></button>
         </div>
       </div>
-      <div class="x-toolbar-right"></div>
+      <div class="x-toolbar-right">
+        <button class="editor-modal-close-btn" onclick="closeXEditorModal()" title="Close">✕</button>
+      </div>
     </div>
 
     <!-- X Layout: sidebar + editor + meta -->
@@ -2728,8 +2923,9 @@
       <div class="x-ov-toolbar-right">
         <button class="btn btn-secondary" id="thrBulkSelectToggle" style="font-size:12px;padding:5px 12px;" onclick="thrToggleSelectMode()">☑ Select</button>
         <div class="view-switch">
-          <button class="view-switch-btn active" id="thrOvsw-list" onclick="setThrOverviewView('list')">☰ List</button>
+          <button class="view-switch-btn" id="thrOvsw-list" onclick="setThrOverviewView('list')">☰ List</button>
           <button class="view-switch-btn" id="thrOvsw-board" onclick="setThrOverviewView('board')">⊞ Board</button>
+          <button class="view-switch-btn active" id="thrOvsw-cal" onclick="setThrOverviewView('calendar')">&#9632; Cal</button>
         </div>
       </div>
     </div>
@@ -2743,7 +2939,7 @@
       </select>
     </div>
     <div class="x-ov-content">
-      <div id="thrOverviewListView">
+      <div id="thrOverviewListView" style="display:none;">
         <div id="thrBulkBar" class="x-bulk-bar" style="display:none;">
           <span id="thrBulkCount">0 selected</span>
           <button class="x-bulk-danger" onclick="thrBulkDelete()">✕ Delete selected</button>
@@ -2781,8 +2977,38 @@
           </div>
         </div>
       </div>
+      <!-- Calendar View -->
+      <div id="thrOverviewCalView" style="display:flex;" class="cal-wrap">
+        <div class="cal-draft-sidebar">
+          <div class="cal-draft-sidebar-header">
+            Unscheduled Drafts
+            <span class="cal-draft-count" id="thrCalDraftCount">0</span>
+          </div>
+          <div class="cal-draft-list" id="thrCalDraftList"></div>
+        </div>
+        <div class="cal-main">
+          <div class="cal-nav">
+            <button class="cal-nav-btn" onclick="calToday('thr')">Today</button>
+            <button class="cal-nav-btn" onclick="calPrev('thr')">&#8249;</button>
+            <button class="cal-nav-btn" onclick="calNext('thr')">&#8250;</button>
+            <span class="cal-nav-label" id="thrCalNavLabel"></span>
+            <div class="cal-nav-spacer"></div>
+            <div class="view-switch">
+              <button class="view-switch-btn active" id="thrCalSw-month" onclick="setThrCalViewMode('month')">Month</button>
+              <button class="view-switch-btn" id="thrCalSw-week" onclick="setThrCalViewMode('week')">Week</button>
+            </div>
+          </div>
+          <div class="cal-grid-wrap">
+            <div id="thrCalMonthGrid" class="cal-month-grid"></div>
+            <div id="thrCalWeekGrid" class="cal-week-grid" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div><!-- /thrOverviewPane -->
+
+  <!-- Threads Editor Modal Backdrop -->
+  <div id="thrEditorModalBackdrop" class="editor-modal-backdrop" style="display:none;" onclick="closeThrEditorModal()"></div>
 
   <!-- Threads Editor Pane -->
   <div id="thrEditorPane" style="display:none; flex:1; overflow:hidden; flex-direction:column;">
@@ -2795,7 +3021,9 @@
           <button class="chip" data-status="posted" onclick="setThrFilter(this)">✅ Posted <span class="chip-count" id="thrchip-posted">0</span></button>
         </div>
       </div>
-      <div class="x-toolbar-right"></div>
+      <div class="x-toolbar-right">
+        <button class="editor-modal-close-btn" onclick="closeThrEditorModal()" title="Close">✕</button>
+      </div>
     </div>
 
     <div class="x-layout">
@@ -3137,6 +3365,17 @@
 
     <!-- Generate mode -->
     <div id="createXGeneratePane" style="display:none;">
+      <label class="modal-field-label">Post type <span style="font-weight:400;color:var(--text-dim)">(optional — defaults to educational thread)</span></label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:14px;" id="createXTypeGrid">
+        <button class="btn" id="xtype-educational_breakdown" onclick="setXCreateType('educational_breakdown')" style="font-size:11px;text-align:left;padding:6px 10px;">📚 Educational</button>
+        <button class="btn" id="xtype-stat_hook"             onclick="setXCreateType('stat_hook')"             style="font-size:11px;text-align:left;padding:6px 10px;">📊 Stat Hook</button>
+        <button class="btn" id="xtype-case_study"            onclick="setXCreateType('case_study')"            style="font-size:11px;text-align:left;padding:6px 10px;">🏪 Case Study</button>
+        <button class="btn" id="xtype-feature_update"        onclick="setXCreateType('feature_update')"        style="font-size:11px;text-align:left;padding:6px 10px;">🚀 Feature Update</button>
+        <button class="btn" id="xtype-hot_take"              onclick="setXCreateType('hot_take')"              style="font-size:11px;text-align:left;padding:6px 10px;">🔥 Hot Take</button>
+        <button class="btn" id="xtype-deep_dive"             onclick="setXCreateType('deep_dive')"             style="font-size:11px;text-align:left;padding:6px 10px;">🔬 Deep Dive</button>
+        <button class="btn" id="xtype-behind_scenes"         onclick="setXCreateType('behind_scenes')"         style="font-size:11px;text-align:left;padding:6px 10px;">🏗️ Behind the Scenes</button>
+      </div>
+
       <label class="modal-field-label">Topic hint <span style="font-weight:400;color:var(--text-dim)">(optional)</span></label>
       <input
         class="modal-input"
@@ -3153,12 +3392,14 @@
         <option value="PH">🇵🇭 Philippines</option>
       </select>
 
-      <label class="modal-field-label">Format</label>
-      <div style="display:flex;gap:6px;margin-bottom:16px;">
-        <button class="btn" id="fmtBtn1" onclick="setThreadFormat(1)" style="flex:1;font-size:12px;">1 tweet</button>
-        <button class="btn" id="fmtBtn3" onclick="setThreadFormat(3)" style="flex:1;font-size:12px;">3 tweets</button>
-        <button class="btn" id="fmtBtn5" onclick="setThreadFormat(5)" style="flex:1;font-size:12px;">5 tweets</button>
-        <button class="btn btn-primary" id="fmtBtn7" onclick="setThreadFormat(7)" style="flex:1;font-size:12px;">7 tweets</button>
+      <div id="createXFormatRow">
+        <label class="modal-field-label">Format</label>
+        <div style="display:flex;gap:6px;margin-bottom:16px;">
+          <button class="btn" id="fmtBtn1" onclick="setThreadFormat(1)" style="flex:1;font-size:12px;">1 tweet</button>
+          <button class="btn" id="fmtBtn3" onclick="setThreadFormat(3)" style="flex:1;font-size:12px;">3 tweets</button>
+          <button class="btn" id="fmtBtn5" onclick="setThreadFormat(5)" style="flex:1;font-size:12px;">5 tweets</button>
+          <button class="btn btn-primary" id="fmtBtn7" onclick="setThreadFormat(7)" style="flex:1;font-size:12px;">7 tweets</button>
+        </div>
       </div>
 
       <!-- Generate button -->
@@ -6608,7 +6849,7 @@ function switchPlatform(platform) {
 
 // ── X View switching ──────────────────────────────────────────────────────────
 let xCurrentView = 'overview';
-let xOverviewViewMode = 'list';
+let xOverviewViewMode = 'calendar';
 
 function switchXView(view) {
   xCurrentView = view;
@@ -6636,17 +6877,25 @@ function setXOverviewFilter(btn) {
 
 function setXOverviewView(v) {
   xOverviewViewMode = v;
+  const isCal = v === 'calendar';
   document.getElementById('xOvsw-list').classList.toggle('active', v === 'list');
   document.getElementById('xOvsw-board').classList.toggle('active', v === 'board');
-  document.getElementById('xOverviewListView').style.display  = v === 'list'  ? 'block' : 'none';
-  document.getElementById('xOverviewBoardView').style.display = v === 'board' ? 'flex'  : 'none';
+  document.getElementById('xOvsw-cal').classList.toggle('active', isCal);
+  document.getElementById('xOverviewListView').style.display  = v === 'list'     ? 'block' : 'none';
+  document.getElementById('xOverviewBoardView').style.display = v === 'board'    ? 'flex'  : 'none';
+  document.getElementById('xOverviewCalView').style.display   = isCal            ? 'flex'  : 'none';
+  const filters = document.querySelector('#xOverviewPane .x-ov-filters');
+  const bulkBtn = document.getElementById('xBulkSelectToggle');
+  if (filters) filters.style.display = isCal ? 'none' : '';
+  if (bulkBtn) bulkBtn.style.display = isCal ? 'none' : '';
   renderXOverview();
 }
 
 function renderXOverview() {
   renderXChipCounts();
   if (xOverviewViewMode === 'list') renderXListView();
-  else renderXBoardView();
+  else if (xOverviewViewMode === 'board') renderXBoardView();
+  else if (xOverviewViewMode === 'calendar') renderCalView('x');
 }
 
 function _xOvFiltered() {
@@ -6746,8 +6995,21 @@ function renderXBoardView() {
 }
 
 function openXPostFromOverview(id) {
-  switchXView('editor');
+  const pane = document.getElementById('xEditorPane');
+  const backdrop = document.getElementById('xEditorModalBackdrop');
+  pane.classList.add('as-modal');
+  pane.style.display = 'flex';
+  backdrop.style.display = 'block';
   openXPost(id);
+}
+
+function closeXEditorModal() {
+  const pane = document.getElementById('xEditorPane');
+  const backdrop = document.getElementById('xEditorModalBackdrop');
+  pane.classList.remove('as-modal');
+  pane.style.display = 'none';
+  backdrop.style.display = 'none';
+  if (xOverviewViewMode === 'calendar') renderCalView('x');
 }
 
 // ── X Bulk Select ─────────────────────────────────────────────────────────────
@@ -7231,6 +7493,33 @@ async function loadXAuditLog(postId) {
 let _generatedThread = null;
 let _threadFormat = 7;
 
+let _xCreateContentType = null;
+
+const _X_TYPE_LABELS = {
+  educational_breakdown: { label: 'educational thread', size: 7 },
+  stat_hook:             { label: 'stat hook tweet', size: 1 },
+  case_study:            { label: '3-tweet case study', size: 3 },
+  feature_update:        { label: '2-tweet feature update', size: 2 },
+  hot_take:              { label: 'hot take tweet', size: 1 },
+  deep_dive:             { label: '5-tweet deep dive', size: 5 },
+  behind_scenes:         { label: 'behind-the-scenes tweet', size: 1 },
+};
+
+function setXCreateType(type) {
+  _xCreateContentType = _xCreateContentType === type ? null : type; // toggle off if clicked again
+  document.querySelectorAll('#createXTypeGrid .btn').forEach(b => b.classList.remove('btn-primary'));
+  const formatRow = document.getElementById('createXFormatRow');
+  const genBtn = document.getElementById('createXGenerateBtn');
+  if (_xCreateContentType) {
+    document.getElementById(`xtype-${_xCreateContentType}`)?.classList.add('btn-primary');
+    formatRow.style.display = 'none';
+    genBtn.textContent = `Generate ${_X_TYPE_LABELS[_xCreateContentType].label}`;
+  } else {
+    formatRow.style.display = '';
+    setThreadFormat(_threadFormat); // restore format button label
+  }
+}
+
 function setThreadFormat(n) {
   _threadFormat = n;
   [1, 3, 5, 7].forEach(i => {
@@ -7251,6 +7540,9 @@ function openCreateXModal() {
   document.getElementById('createXTopicHint').value = '';
   document.getElementById('createXGenerateMarket').value = '';
   _generatedThread = null;
+  _xCreateContentType = null;
+  document.querySelectorAll('#createXTypeGrid .btn').forEach(b => b.classList.remove('btn-primary'));
+  document.getElementById('createXFormatRow').style.display = '';
   setThreadFormat(7);
   switchCreateXTab('write');
   document.getElementById('createXModal').classList.add('open');
@@ -7291,7 +7583,7 @@ async function runThoughtLeadershipGenerate() {
     const res = await fetch('/api/x-posts/generate-thought-leadership', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ market: market || null, topic_hint: topicHint || null, thread_size: _threadFormat, brand: activeBrand }),
+      body: JSON.stringify({ market: market || null, topic_hint: topicHint || null, thread_size: _threadFormat, brand: activeBrand, content_type: _xCreateContentType || null }),
     });
     if (!res.ok) {
       let errMsg = 'Generation failed — try again';
@@ -7387,7 +7679,7 @@ const THR_THREAD_SEP = '\n\n---\n\n';
 let thrSelectedIds = new Set();
 let thrSelectMode = false;
 let thrCurrentView = 'overview';
-let thrOverviewViewMode = 'list';
+let thrOverviewViewMode = 'calendar';
 
 // ── Load ──────────────────────────────────────────────────────────────────────
 async function loadThrPosts() {
@@ -7411,10 +7703,17 @@ function switchThrView(view) {
 
 function setThrOverviewView(v) {
   thrOverviewViewMode = v;
+  const isCal = v === 'calendar';
   document.getElementById('thrOvsw-list').classList.toggle('active', v === 'list');
   document.getElementById('thrOvsw-board').classList.toggle('active', v === 'board');
-  document.getElementById('thrOverviewListView').style.display  = v === 'list'  ? 'block' : 'none';
-  document.getElementById('thrOverviewBoardView').style.display = v === 'board' ? 'flex'  : 'none';
+  document.getElementById('thrOvsw-cal').classList.toggle('active', isCal);
+  document.getElementById('thrOverviewListView').style.display  = v === 'list'     ? 'block' : 'none';
+  document.getElementById('thrOverviewBoardView').style.display = v === 'board'    ? 'flex'  : 'none';
+  document.getElementById('thrOverviewCalView').style.display   = isCal            ? 'flex'  : 'none';
+  const filters = document.querySelector('#thrOverviewPane .x-ov-filters');
+  const bulkBtn = document.getElementById('thrBulkSelectToggle');
+  if (filters) filters.style.display = isCal ? 'none' : '';
+  if (bulkBtn) bulkBtn.style.display = isCal ? 'none' : '';
   renderThrOverview();
 }
 
@@ -7434,7 +7733,8 @@ function setThrOverviewFilter(btn) {
 function renderThrOverview() {
   renderThrChipCounts();
   if (thrOverviewViewMode === 'list') renderThrListView();
-  else renderThrBoardView();
+  else if (thrOverviewViewMode === 'board') renderThrBoardView();
+  else if (thrOverviewViewMode === 'calendar') renderCalView('thr');
 }
 
 function _thrOvFiltered() {
@@ -7519,8 +7819,21 @@ function renderThrBoardView() {
 }
 
 function openThrPostFromOverview(id) {
-  switchThrView('editor');
+  const pane = document.getElementById('thrEditorPane');
+  const backdrop = document.getElementById('thrEditorModalBackdrop');
+  pane.classList.add('as-modal');
+  pane.style.display = 'flex';
+  backdrop.style.display = 'block';
   openThrPost(id);
+}
+
+function closeThrEditorModal() {
+  const pane = document.getElementById('thrEditorPane');
+  const backdrop = document.getElementById('thrEditorModalBackdrop');
+  pane.classList.remove('as-modal');
+  pane.style.display = 'none';
+  backdrop.style.display = 'none';
+  if (thrOverviewViewMode === 'calendar') renderCalView('thr');
 }
 
 // ── Chip counts ───────────────────────────────────────────────────────────────
@@ -8043,6 +8356,282 @@ async function submitCreateThrPost() {
   openThrPostFromOverview(id);
   showToast('Story created');
 }
+
+// Close editor modals on Escape
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (document.getElementById('xEditorPane')?.classList.contains('as-modal')) closeXEditorModal();
+  if (document.getElementById('thrEditorPane')?.classList.contains('as-modal')) closeThrEditorModal();
+});
+
+// ── Calendar View ─────────────────────────────────────────────────────────────
+let xCalViewMode = 'month';
+let xCalDate = new Date();
+let thrCalViewMode = 'month';
+let thrCalDate = new Date();
+let _calDragPostId = null;
+let _calDragPlatform = null;
+let _calDropDateKey = null;
+
+// Platform helpers
+function calGetPosts(p)      { return p === 'x' ? xPosts : thrPosts; }
+function calGetDate(p)       { return p === 'x' ? xCalDate : thrCalDate; }
+function calSetDate(p, d)    { if (p === 'x') xCalDate = d; else thrCalDate = d; }
+function calGetViewMode(p)   { return p === 'x' ? xCalViewMode : thrCalViewMode; }
+function calPfx(p)           { return p === 'x' ? 'x' : 'thr'; }
+
+function calDateKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function calBuildPostMap(posts) {
+  const map = new Map();
+  posts.forEach(p => {
+    const ts = p.scheduled_at || p.posted_at;
+    if (!ts) return;
+    const key = calDateKey(new Date(ts));
+    if (!map.has(key)) map.set(key, []);
+    map.get(key).push(p);
+  });
+  return map;
+}
+
+function calEventChipHtml(p, platform) {
+  const fn = platform === 'x' ? 'openXPostFromOverview' : 'openThrPostFromOverview';
+  const mkt = p.market ? xMarketFlag(p.market) + ' ' : '';
+  const preview = escHtml((p.content || '').slice(0, 50));
+  return `<span class="cal-event ${escHtml(p.status)}"
+    onclick="event.stopPropagation();${fn}(${p.id})"
+    title="${escHtml((p.content||'').slice(0,200))}">${mkt}${preview}</span>`;
+}
+
+function calUpdateNavLabel(platform) {
+  const anchor = calGetDate(platform);
+  const el = document.getElementById(`${calPfx(platform)}CalNavLabel`);
+  if (!el) return;
+  if (calGetViewMode(platform) === 'month') {
+    el.textContent = anchor.toLocaleDateString('en-SG', { month: 'long', year: 'numeric' });
+  } else {
+    const ws = new Date(anchor); ws.setDate(anchor.getDate() - anchor.getDay());
+    const we = new Date(ws); we.setDate(ws.getDate() + 6);
+    const s = ws.toLocaleDateString('en-SG', { day: 'numeric', month: 'short' });
+    const e = we.toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' });
+    el.textContent = `${s} – ${e}`;
+  }
+}
+
+function calPrev(p) {
+  const d = calGetDate(p);
+  calSetDate(p, calGetViewMode(p) === 'month'
+    ? new Date(d.getFullYear(), d.getMonth() - 1, 1)
+    : new Date(d.getFullYear(), d.getMonth(), d.getDate() - 7));
+  renderCalView(p);
+}
+function calNext(p) {
+  const d = calGetDate(p);
+  calSetDate(p, calGetViewMode(p) === 'month'
+    ? new Date(d.getFullYear(), d.getMonth() + 1, 1)
+    : new Date(d.getFullYear(), d.getMonth(), d.getDate() + 7));
+  renderCalView(p);
+}
+function calToday(p) { calSetDate(p, new Date()); renderCalView(p); }
+function setXCalViewMode(v)   { xCalViewMode  = v; renderCalView('x'); }
+function setThrCalViewMode(v) { thrCalViewMode = v; renderCalView('thr'); }
+
+function renderCalDraftSidebar(platform) {
+  const pfx = calPfx(platform);
+  const drafts = calGetPosts(platform).filter(p => p.status === 'draft' && !p.scheduled_at);
+  const countEl = document.getElementById(`${pfx}CalDraftCount`);
+  const listEl  = document.getElementById(`${pfx}CalDraftList`);
+  if (!countEl || !listEl) return;
+  countEl.textContent = drafts.length;
+  if (!drafts.length) {
+    listEl.innerHTML = `<div style="padding:12px;font-size:12px;color:var(--text-dim);">No unscheduled drafts</div>`;
+    return;
+  }
+  listEl.innerHTML = drafts.map(p => {
+    const preview = escHtml((p.content || '').slice(0, 90));
+    const mkt = p.market ? `<div class="cal-draft-card-market">${xMarketFlag(p.market)} ${p.market}</div>` : '';
+    const dateStr = p.created_at ? fmtDate(p.created_at) : '';
+    const dateLine = dateStr ? `<div class="cal-draft-card-date">${escHtml(dateStr)}</div>` : '';
+    const openFn = platform === 'x' ? 'openXPostFromOverview' : 'openThrPostFromOverview';
+    return `<div class="cal-draft-card" draggable="true"
+      ondragstart="calDragStart(event,${p.id},'${platform}')"
+      ondragend="calDragEnd(event)"
+      onclick="${openFn}(${p.id})"><div class="cal-draft-card-preview">${preview}</div>${mkt}${dateLine}</div>`;
+  }).join('');
+}
+
+function renderCalMonthGrid(platform) {
+  const pfx = calPfx(platform);
+  const anchor = calGetDate(platform);
+  const year = anchor.getFullYear(), month = anchor.getMonth();
+  const postMap = calBuildPostMap(calGetPosts(platform));
+  const todayKey = calDateKey(new Date());
+  const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  const firstOfMonth = new Date(year, month, 1);
+  const start = new Date(firstOfMonth); start.setDate(1 - firstOfMonth.getDay());
+  const last  = new Date(year, month + 1, 0);
+  const end   = new Date(last); end.setDate(last.getDate() + (6 - last.getDay()));
+
+  let html = DOW.map(d => `<div class="cal-month-dow">${d}</div>`).join('');
+  const cur = new Date(start);
+  while (cur <= end) {
+    const key = calDateKey(cur);
+    const dayPosts = postMap.get(key) || [];
+    const MAX = 3;
+    const chips = dayPosts.slice(0, MAX).map(p => calEventChipHtml(p, platform)).join('');
+    const more  = dayPosts.length > MAX
+      ? `<span class="cal-event-overflow">+${dayPosts.length - MAX} more</span>` : '';
+    html += `<div class="cal-day${cur.getMonth() !== month ? ' other-month' : ''}${key === todayKey ? ' today' : ''}"
+      ondragover="calDragOver(event)" ondragleave="calDragLeave(event)"
+      ondrop="calDrop(event,'${key}','${platform}')">
+      <span class="cal-day-num">${cur.getDate()}</span>${chips}${more}</div>`;
+    cur.setDate(cur.getDate() + 1);
+  }
+  const el = document.getElementById(`${pfx}CalMonthGrid`);
+  if (el) el.innerHTML = html;
+}
+
+function renderCalWeekGrid(platform) {
+  const pfx = calPfx(platform);
+  const anchor = calGetDate(platform);
+  const ws = new Date(anchor); ws.setDate(anchor.getDate() - anchor.getDay());
+  const postMap = calBuildPostMap(calGetPosts(platform));
+  const todayKey = calDateKey(new Date());
+  const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  let html = '';
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(ws); d.setDate(ws.getDate() + i);
+    const key = calDateKey(d);
+    html += `<div class="cal-week-dow-header${key === todayKey ? ' today-col' : ''}">
+      <span class="cal-week-dow-num">${d.getDate()}</span>${DOW[i].slice(0,3)}</div>`;
+  }
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(ws); d.setDate(ws.getDate() + i);
+    const key = calDateKey(d);
+    const chips = (postMap.get(key) || []).map(p => calEventChipHtml(p, platform)).join('');
+    html += `<div class="cal-week-day-col${key === todayKey ? ' today-col' : ''}"
+      ondragover="calDragOver(event)" ondragleave="calDragLeave(event)"
+      ondrop="calDrop(event,'${key}','${platform}')">${chips}</div>`;
+  }
+  const el = document.getElementById(`${pfx}CalWeekGrid`);
+  if (el) el.innerHTML = html;
+}
+
+function renderCalView(platform) {
+  const pfx = calPfx(platform);
+  const vm = calGetViewMode(platform);
+  const monthEl = document.getElementById(`${pfx}CalMonthGrid`);
+  const weekEl  = document.getElementById(`${pfx}CalWeekGrid`);
+  if (monthEl) monthEl.style.display = vm === 'month' ? 'grid' : 'none';
+  if (weekEl)  weekEl.style.display  = vm === 'week'  ? 'grid' : 'none';
+  document.getElementById(`${pfx}CalSw-month`)?.classList.toggle('active', vm === 'month');
+  document.getElementById(`${pfx}CalSw-week`)?.classList.toggle('active',  vm === 'week');
+  calUpdateNavLabel(platform);
+  renderCalDraftSidebar(platform);
+  if (vm === 'month') renderCalMonthGrid(platform);
+  else renderCalWeekGrid(platform);
+}
+
+// Drag-and-drop
+function calDragStart(event, postId, platform) {
+  _calDragPostId = postId; _calDragPlatform = platform;
+  event.dataTransfer.effectAllowed = 'move';
+  event.dataTransfer.setData('text/plain', String(postId));
+  event.currentTarget.classList.add('dragging');
+}
+function calDragEnd(event) {
+  event.currentTarget.classList.remove('dragging');
+  document.querySelectorAll('.cal-day.drag-over, .cal-week-day-col.drag-over')
+    .forEach(el => el.classList.remove('drag-over'));
+}
+function calDragOver(event) {
+  event.preventDefault();
+  event.dataTransfer.dropEffect = 'move';
+  event.currentTarget.classList.add('drag-over');
+}
+function calDragLeave(event) {
+  if (!event.currentTarget.contains(event.relatedTarget))
+    event.currentTarget.classList.remove('drag-over');
+}
+function calDrop(event, dateKey, platform) {
+  event.preventDefault();
+  event.currentTarget.classList.remove('drag-over');
+  const postId = parseInt(event.dataTransfer.getData('text/plain'), 10);
+  if (!postId) return;
+  _calDropDateKey = dateKey;
+  _calDragPostId  = postId;
+  _calDragPlatform = platform;
+  // Show time-picker popover near cursor
+  const pop   = document.getElementById('calSchedulePopover');
+  const label = document.getElementById('calPopoverLabel');
+  const d = new Date(dateKey + 'T12:00:00');
+  label.textContent = `Schedule for ${d.toLocaleDateString('en-SG', { weekday:'short', day:'numeric', month:'short' })}`;
+  document.getElementById('calPopoverTime').value = '10:30';
+  const x = Math.min(event.clientX, window.innerWidth - 260);
+  const y = Math.min(event.clientY + 8, window.innerHeight - 170);
+  pop.style.left = `${x}px`; pop.style.top = `${y}px`;
+  pop.style.display = 'block';
+  setTimeout(() => document.addEventListener('click', _calPopoverOutside, { once: true }), 0);
+}
+function _calPopoverOutside(e) {
+  if (!document.getElementById('calSchedulePopover').contains(e.target)) calCancelSchedule();
+}
+function calCancelSchedule() {
+  document.getElementById('calSchedulePopover').style.display = 'none';
+  _calDropDateKey = null;
+}
+async function calConfirmSchedule() {
+  document.getElementById('calSchedulePopover').style.display = 'none';
+  const timeVal  = document.getElementById('calPopoverTime').value || '10:30';
+  const platform = _calDragPlatform;
+  const postId   = _calDragPostId;
+  const dateKey  = _calDropDateKey;
+  _calDropDateKey = null;
+  if (!postId || !dateKey) return;
+  // Convert local SGT time to UTC ISO using +08:00 offset
+  const scheduledAt = new Date(`${dateKey}T${timeVal}:00+08:00`).toISOString();
+  const base = platform === 'x' ? '/api/x-posts' : '/api/threads-posts';
+  try {
+    const r1 = await fetch(`${base}/${postId}`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ scheduled_at: scheduledAt })
+    });
+    if (!r1.ok) { showToast('Failed to update post', 'error'); return; }
+    const r2 = await fetch(`${base}/${postId}/status`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'scheduled', scheduled_at: scheduledAt })
+    });
+    if (!r2.ok) { showToast('Failed to update status', 'error'); return; }
+    // Optimistic local update
+    const posts = calGetPosts(platform);
+    const idx = posts.findIndex(p => p.id === postId);
+    if (idx !== -1) posts[idx] = { ...posts[idx], scheduled_at: scheduledAt, status: 'scheduled' };
+    renderCalView(platform);
+    if (platform === 'x') { renderXChipCounts(); renderXPostList(); }
+    else { renderThrChipCounts(); renderThrPostList(); }
+    const disp = new Date(scheduledAt).toLocaleString('en-SG', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    showToast(`Scheduled for ${disp}`);
+  } catch { showToast('Network error — could not schedule', 'error'); }
+}
 </script>
+
+<!-- Calendar schedule time-picker popover -->
+<div id="calSchedulePopover" style="display:none; position:fixed; z-index:9999;
+  background:var(--surface); border:1px solid var(--border); border-radius:8px;
+  padding:14px 16px; box-shadow:0 4px 20px rgba(0,0,0,0.18); min-width:230px;">
+  <div id="calPopoverLabel" style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:10px;"></div>
+  <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">Time (SGT)</div>
+  <input type="time" id="calPopoverTime" value="10:30"
+    style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:5px;
+    font-size:13px;font-family:inherit;margin-bottom:12px;box-sizing:border-box;" />
+  <div style="display:flex;gap:6px;">
+    <button class="btn btn-primary" style="flex:1;font-size:12px;" onclick="calConfirmSchedule()">Schedule</button>
+    <button class="btn btn-secondary" style="flex:1;font-size:12px;" onclick="calCancelSchedule()">Cancel</button>
+  </div>
+</div>
 </body>
 </html>

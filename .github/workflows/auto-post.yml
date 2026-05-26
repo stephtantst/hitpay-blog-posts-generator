@@ -1,25 +1,17 @@
-name: Auto-Post Phase 1 — Generate Drafts (10am SGT)
+name: Weekly X Drafts — Generate 7 posts (Sunday 9am SGT)
 
 on:
   schedule:
-    # Every day at 02:00 UTC = 10:00am SGT (UTC+8)
-    - cron: '0 2 * * *'
+    # Every Sunday at 01:00 UTC = 09:00am SGT (UTC+8)
+    - cron: '0 1 * * 0'
   workflow_dispatch:
-    inputs:
-      dry_run:
-        description: 'Dry run — generate & save as draft only, skip Typefully (always true for scheduled runs)'
-        type: boolean
-        default: true
 
 jobs:
   generate:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate drafts
+      - name: Generate 7 weekly X draft posts
         run: |
-          # Schedule trigger always uses dry_run=true so posts land as reviewable drafts.
-          # workflow_dispatch respects the input (default true).
-          DRY_RUN=${{ inputs.dry_run != '' && inputs.dry_run || 'true' }}
-          curl -sf -X POST "${{ secrets.APP_BASE_URL }}/api/automation/weekly-post?dry_run=${DRY_RUN}" \
+          curl -sf -X POST "${{ secrets.APP_BASE_URL }}/api/automation/generate-weekly-drafts" \
             -H "X-Automation-Key: ${{ secrets.AUTOMATION_SECRET }}" \
             -H "Content-Type: application/json"

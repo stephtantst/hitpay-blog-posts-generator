@@ -846,7 +846,8 @@ Return the JSON object now."""
         model=CLAUDE_MODEL,
         max_tokens=max_tokens,
         system=system_prompt,
-        messages=[{"role": "user", "content": user_prompt}]
+        messages=[{"role": "user", "content": user_prompt}],
+        metadata={"user_id": "blog-generation"}
     )
 
     if response.stop_reason == "max_tokens":
@@ -1043,7 +1044,8 @@ Return the JSON object now."""
         model=CLAUDE_MODEL,
         max_tokens=16000,
         system=system_prompt,
-        messages=[{"role": "user", "content": user_prompt}]
+        messages=[{"role": "user", "content": user_prompt}],
+        metadata={"user_id": "blog-rewrite"}
     )
 
     if response.stop_reason == "max_tokens":

@@ -946,6 +946,7 @@ class GenerateThoughtLeadershipRequest(BaseModel):
     thread_size: int = 7  # 1, 2, 3, 5, or 7
     style: str = "educational"  # "educational" or "storytelling"
     brand: str = "hitpay"
+    content_type: str | None = None  # if set, routes to generate_random_x_post with fixed format
 
 
 @app.post("/api/x-posts/generate-thought-leadership")
@@ -953,15 +954,23 @@ def api_generate_thought_leadership(
     body: GenerateThoughtLeadershipRequest,
     _: str = Depends(require_auth),
 ):
-    from src.thought_leadership import generate_thought_leadership_thread
+    from src.thought_leadership import generate_thought_leadership_thread, generate_random_x_post, CONTENT_TYPE_CONFIGS
     try:
-        result = generate_thought_leadership_thread(
-            market=body.market or None,
-            topic_hint=body.topic_hint or None,
-            thread_size=body.thread_size,
-            style=body.style,
-            brand=body.brand,
-        )
+        if body.content_type and body.content_type in CONTENT_TYPE_CONFIGS:
+            result = generate_random_x_post(
+                market=body.market or None,
+                topic_hint=body.topic_hint or None,
+                brand=body.brand,
+                content_type=body.content_type,
+            )
+        else:
+            result = generate_thought_leadership_thread(
+                market=body.market or None,
+                topic_hint=body.topic_hint or None,
+                thread_size=body.thread_size,
+                style=body.style,
+                brand=body.brand,
+            )
     except ValueError as e:
         raise HTTPException(422, str(e))
     except Exception as e:
@@ -1643,6 +1652,56 @@ def api_automation_weekly_post(request: Request, dry_run: bool = True):
         "threads_post_id": t_id,
         "threads_typefully_url": t_result["typefully_url"],
     }
+
+
+@app.post("/api/automation/generate-weekly-drafts")
+def api_generate_weekly_drafts(request: Request):
+    """Generate 7 X post drafts — one per content type — for the upcoming week.
+
+    Called by GitHub Actions on Sunday. Posts land in Unscheduled Drafts for
+    manual scheduling via the calendar drag-and-drop.
+    """
+    key = request.headers.get("X-Automation-Key", "")
+    if not key or not AUTOMATION_SECRET or key != AUTOMATION_SECRET:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    import threading
+    from src.thought_leadership import generate_random_x_post, HITPAY_TOPIC_POOL, CONTENT_TYPE_CONFIGS
+
+    _MARKETS = ["SG", "MY", "PH", None]
+    content_types = list(CONTENT_TYPE_CONFIGS.keys())  # all 7 types
+    results = []
+    errors = []
+    lock = threading.Lock()
+
+    def _gen(content_type: str):
+        try:
+            market = random.choice(_MARKETS)
+            topic = random.choice(HITPAY_TOPIC_POOL)
+            data = generate_random_x_post(market=market, topic_hint=topic, brand="hitpay", content_type=content_type)
+            link = data.get("link_url") or ""
+            content = "\n\n---\n\n".join(_cap_tweet(t.replace("[URL]", link)) for t in data["tweets"])
+            post_id = create_x_post(
+                content=content,
+                market=data.get("market"),
+                editor_email="automation@hit-pay.com",
+                brand="hitpay",
+            )
+            log_x_audit(post_id, "automation@hit-pay.com", "created", {
+                "source": "weekly_batch", "content_type": content_type,
+                "market": data.get("market") or "", "topic": topic,
+            })
+            with lock:
+                results.append({"content_type": content_type, "post_id": post_id, "market": data.get("market")})
+        except Exception as e:
+            with lock:
+                errors.append({"content_type": content_type, "error": str(e)})
+
+    threads = [threading.Thread(target=_gen, args=(ct,)) for ct in content_types]
+    for t in threads: t.start()
+    for t in threads: t.join()
+
+    return {"generated": results, "errors": errors, "total": len(results)}
 
 
 @app.post("/api/automation/push-pending")

@@ -598,17 +598,29 @@ CONTENT FORMAT: Product update thread of exactly 2 tweets
 - Tweet 2/2: Introduce what HitPay built to solve it. Focus on merchant outcome, not tech specs. End with [URL]
 - Each tweet: 200-280 chars
 
-HITPAY FEATURES TO DRAW FROM:
-- Payment links (shareable, one-click payment for any amount)
-- PayNow / DuitNow / QR Ph QR code generation
-- Recurring billing and subscription management
+HITPAY FEATURES TO DRAW FROM (verified from changelog — use these, not generic descriptions):
+- Tap to Pay on iPhone: accept in-person card & e-wallet payments using your iPhone as the terminal — no hardware needed
+- Recurring Bulk Subscriptions: create subscriptions for multiple customers at once from one dashboard upload (launched Sep 2025)
+- Shareable Carts: generate a cart link pre-loaded with items that customers open and pay instantly
+- Touch 'n Go Offline (MY): accept TnG e-wallet in-person via POS terminal (launched Apr 2025)
+- GrabPay & PayLater by Grab Offline (MY): accept Grab wallets in-person at checkout (launched Apr 2025)
+- GCash Offline (PH): accept GCash in-person via HitPay POS terminal (launched Apr 2025)
+- ShopeePay for Subscriptions (SG & PH): charge ShopeePay for recurring/subscription payments
+- PayLater by Grab Online (MY): merchants can offer Grab BNPL at online checkout
+- HitPay Payout Rails: own settlement infrastructure for SG, MY, PH — domestic payouts next business day
+- Save Payment Details: returning customers pay in one tap — card details saved securely (tokenisation)
+- Online Store Templates: launch a branded online store without a developer using built-in templates
+- Payment links (shareable, one-click payment for any amount or invoice)
+- PayNow / DuitNow / QR Ph QR code generation for in-person or remote collection
 - WooCommerce, Shopify, Wix, Magento integrations
-- POS terminal for in-person card and e-wallet payments
-- Multi-currency checkout for cross-border sales
+- Multi-currency checkout for cross-border sales across 12 APAC markets
 - Automatic payment reconciliation and export
-- Next business day payouts (domestic)
-- Invoice generation and sending
-- Analytics dashboard for payment trends
+- Invoice generation with payment tracking
+
+CRITICAL — NEVER DISPARAGE HITPAY'S OWN PRODUCTS:
+HitPay sells card terminals (Ingenico S1F2, DX4000) and supports in-person card payments.
+NEVER frame card terminals, POS hardware, or in-person card acceptance as expensive, outdated, or inferior.
+The problem in tweet 1 must be a PROCESS pain (reconciliation, checkout friction, multi-market complexity, chasing invoices) — not a dig at any payment method or hardware HitPay offers.
 
 STYLE RULES:
 - Tweet 1 names the pain only — no solution hint
@@ -654,16 +666,21 @@ CONTENT FORMAT: Single text-only tweet (no URL)
 - NO URL in tweet — text-only format performs best for opinion posts on brand accounts
 - No HitPay product mention — the brand speaks through the opinion, not a pitch
 
+CRITICAL — NEVER ATTACK HITPAY'S OWN PRODUCTS:
+HitPay sells card terminals (Ingenico S1F2, DX4000) and supports in-person card payments.
+NEVER write anything that frames card terminals, POS hardware, or in-person card acceptance as outdated, legacy, or inferior.
+The hot take must attack PROCESSES or BEHAVIOURS, not payment methods or hardware that HitPay offers.
+
 HOT TAKE TOPICS — pick the sharpest angle if no hint is given:
 - Paper cheques in 2026 (still common in MY/PH businesses)
 - Manual bank transfer reconciliation eating finance team hours
-- Paying 3-4% card MDR when real-time alternatives cost 0.65%
-- Businesses that still do not accept QR or e-wallets in 2026
+- Businesses that only accept one payment method in a market with 50+
 - Late payment culture and the damage it does to SME cash flow
 - The myth that cash is simpler for a growing business
-- Why businesses still accept card fraud risk when instant payment removes it
 - The hidden labour cost of chasing unpaid invoices
-- Checkout pages with 1 payment method in a market with 50+
+- Finance teams spending hours on manual reconciliation that software eliminates
+- Checkout pages with 1 payment method losing customers who prefer QR or e-wallets
+- Businesses that delay going digital losing customers to competitors who already have
 
 STYLE RULES:
 - One clear argument — not a list
@@ -761,6 +778,67 @@ STORYTELLING_TOPIC_POOL = [
     "How payment friction becomes a business culture problem",
 ]
 
+# Shared topic pool used for automated X and Threads generation when no topic_hint is supplied
+HITPAY_TOPIC_POOL: list[str] = [
+    # How payments work
+    "MDR explained: who keeps your 2.8% card fee and why",
+    "Payment settlement timelines: T+0, T+1, T+2 and what they mean for cash flow",
+    "How a payment gateway differs from a payment processor",
+    "How chargebacks work and what merchants can do to fight them",
+    "Buy Now Pay Later economics from the merchant's perspective",
+    "How recurring billing and subscription payments actually work",
+    "What interchange fees are and why they vary by card type",
+    "How QR code payments work end-to-end for a merchant",
+    # Costs & fees
+    "The real cost of accepting cash: errors, time, and operational risk",
+    "Why free payment terminals are rarely actually free",
+    "How to reduce card processing fees without rebuilding your stack",
+    "The hidden cost of a slow or broken checkout page",
+    "What 'no monthly fee' really means for a growing business",
+    "Fee transparency: understanding every line item on your payment provider invoice",
+    "Paying 3% MDR when real-time alternatives cost under 1.5%: the maths",
+    # Operations
+    "Payment reconciliation: why it eats hours and how to automate it",
+    "POS vs payment link vs invoice: when to use which",
+    "How to handle a payment dispute and protect your revenue",
+    "How to accept cross-border payments from tourists in Southeast Asia",
+    "Multi-currency checkout: when it makes sense for a small business",
+    "How to create and share a payment link for instant collections",
+    "Setting up PayNow, DuitNow, or QR Ph for your business: what to expect",
+    # Cash flow & business impact
+    "How late invoices damage SME cash flow more than transaction fees do",
+    "Why next business day payouts matter for small business working capital",
+    "The checkout abandonment problem: how missing payment methods cost you sales",
+    "How accepting e-wallets changes customer spending behaviour in SEA",
+    "How payment method choice affects customer trust at checkout",
+    "Cash flow impact of T+1 vs T+2 settlement: what the difference adds up to",
+    "The gap between a sale and the money in your account — and how to close it",
+    # Market & adoption
+    "Real-time payments in Southeast Asia: PayNow, DuitNow, and QR Ph compared",
+    "E-wallet landscape in Malaysia: GrabPay, TnG eWallet, ShopeePay for merchants",
+    "QR code payments replacing card terminals in SG, MY, and PH",
+    "Cross-border QR payments: accepting tourists from Thailand, Indonesia, and China",
+    "How digital payments are changing F&B businesses across Southeast Asia",
+    "The shift from cash to QR in Philippine sari-sari stores and wet markets",
+    # Merchant-specific
+    "Payment strategy for Shopify and WooCommerce stores in SEA",
+    "How subscription businesses should think about their payment method mix",
+    "Invoice payment best practices for service businesses in SEA",
+    "Why B2B merchants lose more to late payment than to high fees",
+    "How to optimise checkout for mobile-first customers in Southeast Asia",
+    # Real HitPay product features (from changelog)
+    "Tap to Pay on iPhone: accepting card payments in-person without a card terminal",
+    "How recurring bulk subscriptions save time for businesses with many subscribers",
+    "Shareable cart links: a faster way to sell without a full online store",
+    "Touch n Go, GrabPay, and PayLater by Grab now available offline for Malaysian merchants",
+    "GCash offline payments: what it means for Philippine merchants at the counter",
+    "ShopeePay for subscriptions: accepting recurring payments via e-wallet in SG and PH",
+    "PayLater by Grab for online merchants in Malaysia: offering BNPL without building anything",
+    "How HitPay Payout Rails give SG, MY, and PH merchants faster, more reliable settlements",
+    "Save payment details: how one-tap checkout for returning customers increases conversion",
+    "Launching an online store without a developer using HitPay's built-in templates",
+]
+
 # All valid (style, thread_size) combinations — used for randomized automation
 _AUTOMATION_VARIANTS: list[tuple[str, int]] = [
     ("educational", 1),
@@ -809,6 +887,8 @@ def generate_random_x_post(
     Returns dict with keys: topic, tweets, link_url, visual_note, style, thread_size, market, content_type
     """
     if brand == "hitpay":
+        if topic_hint is None:
+            topic_hint = random.choice(HITPAY_TOPIC_POOL)
         if content_type is None:
             weekday = _datetime.utcnow().weekday()
             content_type = CONTENT_TYPE_BY_WEEKDAY.get(weekday, "educational_breakdown")
@@ -913,6 +993,7 @@ def generate_thought_leadership_thread(
         max_tokens=2500,
         system=prompt_builder(thread_size),
         messages=[{"role": "user", "content": user_message}],
+        metadata={"user_id": "x-generation"}
     )
 
     raw = msg.content[0].text.strip()

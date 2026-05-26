@@ -279,7 +279,12 @@ def generate_threads_story(
     thread_size: int = 3,
     brand: str = "hitpay",
 ) -> dict:
+    import random
+    from src.thought_leadership import HITPAY_TOPIC_POOL
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+
+    if brand == "hitpay" and topic_hint is None:
+        topic_hint = random.choice(HITPAY_TOPIC_POOL)
 
     if brand == "smegrowthhub":
         system = SME_THREADS_SYSTEM_PROMPT
@@ -298,6 +303,7 @@ def generate_threads_story(
         max_tokens=2000,
         system=system,
         messages=[{"role": "user", "content": prompt}],
+        metadata={"user_id": "threads-generation"}
     )
 
     raw = response.content[0].text.strip()
