@@ -948,11 +948,26 @@ def generate_thought_leadership_thread(
     # hot_take posts are intentionally text-only — no URL attached
     if content_type == "hot_take":
         link_url = None
+        # Strip any stray [URL] or ellipsis Claude may have added
+        tweets[-1] = tweets[-1].replace("[URL]", "").rstrip()\
+            .rstrip("…").rstrip(".").rstrip()
     else:
         fallback = _SME_FALLBACK_URL if brand == "smegrowthhub" else _FALLBACK_URL
         link_url = data.get("link_url") or fallback
         if brand != "smegrowthhub" and not _is_valid_blog_url(link_url):
             link_url = fallback
+
+        # Ensure the last tweet carries the [URL] placeholder.
+        # Claude sometimes outputs … (U+2026) or ... instead of [URL].
+        last = tweets[-1]
+        if "[URL]" not in last:
+            for ellipsis in ("…", "..."):
+                if last.endswith(ellipsis):
+                    tweets[-1] = last[: -len(ellipsis)].rstrip() + " [URL]"
+                    break
+            else:
+                # No ellipsis either — append [URL] after a space
+                tweets[-1] = _cap_tweet(last.rstrip() + " [URL]")
 
     return {
         "topic": data.get("topic", ""),

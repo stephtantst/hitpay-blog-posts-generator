@@ -2628,7 +2628,7 @@
               class="x-textarea"
               id="xContentInput"
               placeholder="What's happening at HitPay?"
-              oninput="xMarkDirty(); updateXCharCount()"
+              oninput="xMarkDirty(); updateXCharCount(); autoResizeTa(this)"
               style="min-height:140px;"
             ></textarea>
           </div>
@@ -2831,7 +2831,7 @@
               <span>Post content</span>
               <span class="x-char-count" id="thrCharCount">0 / 500</span>
             </div>
-            <textarea class="x-textarea" id="thrContentInput" placeholder="Tell a story…" oninput="thrMarkDirty(); updateThrCharCount()" style="min-height:120px;"></textarea>
+            <textarea class="x-textarea" id="thrContentInput" placeholder="Tell a story…" oninput="thrMarkDirty(); updateThrCharCount(); autoResizeTa(this)" style="min-height:120px;"></textarea>
           </div>
           <div id="thrThreadMode" style="display:none; flex-direction:column; gap:8px;"></div>
         </div>
@@ -6954,11 +6954,18 @@ async function openXPost(id) {
   renderXPostList();
 }
 
+function autoResizeTa(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.max(140, el.scrollHeight) + 'px';
+}
+
 function _renderXSingleEditor(content) {
   xThreadMode = false;
   document.getElementById('xSingleMode').style.display = '';
   document.getElementById('xThreadMode').style.display = 'none';
-  document.getElementById('xContentInput').value = content;
+  const ta = document.getElementById('xContentInput');
+  ta.value = content;
+  autoResizeTa(ta);
   updateXCharCount();
 }
 
@@ -7632,7 +7639,9 @@ function _renderThrSingleEditor(content) {
   thrThreadMode = false;
   document.getElementById('thrSingleMode').style.display = '';
   document.getElementById('thrThreadMode').style.display = 'none';
-  document.getElementById('thrContentInput').value = content;
+  const ta = document.getElementById('thrContentInput');
+  ta.value = content;
+  autoResizeTa(ta);
   updateThrCharCount();
 }
 
