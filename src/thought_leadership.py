@@ -2,8 +2,10 @@ import json
 import random
 import re
 import time
+from datetime import datetime as _datetime
 
 import anthropic
+import json
 import requests
 
 from config import ANTHROPIC_API_KEY, CLAUDE_MODEL
@@ -425,6 +427,285 @@ OUTPUT: Return a raw JSON object only. No markdown fences, no preamble.
 IMPORTANT: [URL] in the tweet(s) is a literal placeholder — never substitute the real URL."""
 
 
+
+def _build_stat_hook_prompt(thread_size: int) -> str:
+    slugs = _fetch_live_blog_slugs()
+    urls_list = "\n".join(f"  {s}" for s in slugs)
+    example = json.dumps({
+        "topic": "invoice payment delays",
+        "tweets": [
+            "Finance teams in SEA spend 14 hours a week chasing overdue invoices. "
+            "That is 2 full workdays lost to follow-up, not growth. "
+            "HitPay payment links get you paid in one click: [URL]"
+        ],
+        "link_url": "https://hitpayapp.com/blog/payment-link",
+        "visual_note": "High-contrast stat graphic: 14 hours/week lost to invoice chasing",
+    }, ensure_ascii=False)
+    return f"""You are the @hitpay_app content writer for X (Twitter) — Tuesday slot: Did You Know? stat post.
+Write a single tweet that opens with a surprising, data-backed insight about payments or B2B commerce in Southeast Asia.
+
+BRAND: HitPay — MAS-licensed (SG), BNM-approved (MY), BSP OPS-licensed (PH). No monthly fees. 50+ payment methods. Next business day payouts.
+TONE: Sharp, factual, slightly alarming. The stat should make a merchant stop scrolling.
+AUDIENCE: SME founders, merchants, and finance managers in Southeast Asia.
+
+CONTENT FORMAT: Single data-driven tweet
+- Exactly 1 tweet, no numbering
+- 200-280 chars
+- Open with a surprising stat or data point that feels specific and credible
+- Follow with a one-line implication: what that stat costs the merchant
+- End with HitPay as the practical fix + [URL] as a literal placeholder
+- Suggest a visual in visual_note: "High-contrast statistic graphic" or "Poll: [question]"
+
+STAT TOPICS - pick the sharpest angle if no hint is given:
+- Time lost to manual payment reconciliation per week
+- Cost of failed payments or checkout abandonment
+- QR payment adoption in SEA (PayNow, DuitNow, QR Ph stats)
+- Average days to receive invoice payment from B2B buyers in SEA
+- Percentage of SMB payments still made by cash or cheque
+- Cost difference between card MDR and real-time payment fees
+- Cart abandonment caused by limited payment options
+
+STYLE RULES:
+- Stat must feel specific: "14 hours/week", "1 in 3 SMBs", "RM 2.4B lost annually"
+- Implication is one direct sentence: "That is X - not Y, just Z"
+- No hashtags, no @ mentions
+- Banned words: seamlessly, unlock, revolutionise, game-changer, cutting-edge, empower, leverage, utilise, transformative, innovative, robust
+- [URL] is a literal placeholder - never substitute the real URL
+
+LINK URL RULE:
+Set link_url to https://hitpayapp.com/blog/{{slug}} using the most topically relevant slug.
+If no clear match, default to: hitpay-rates
+
+LIVE BLOG SLUGS:
+{urls_list}
+
+OUTPUT: Return a raw JSON object only. No markdown fences, no preamble.
+{example}"""
+
+
+def _build_case_study_prompt(thread_size: int) -> str:
+    slugs = _fetch_live_blog_slugs()
+    urls_list = "\n".join(f"  {s}" for s in slugs)
+    example = json.dumps({
+        "topic": "F&B payment reconciliation",
+        "tweets": [
+            "1/3 A restaurant owner in KL was spending every Monday morning reconciling "
+            "weekend sales — 4 hours matching card, e-wallet, and cash receipts by hand. "
+            "Meanwhile, tables waited for menus. 🧵",
+            "2/3 She switched to a single POS connected to all payment methods. "
+            "Reconciliation became automatic. Monday mornings went back to prepping for the week.",
+            "3/3 Result: 4 hours reclaimed every week. RM 0 in reconciliation errors. "
+            "HitPay does this for F&B businesses across Malaysia: [URL]",
+        ],
+        "link_url": "https://hitpayapp.com/blog/best-payment-gateway-malaysia",
+        "visual_note": None,
+    }, ensure_ascii=False)
+    return f"""You are the @hitpay_app content writer for X (Twitter) — Wednesday slot: Customer Case Study.
+Write a 3-tweet before-and-after case study about a real-type Southeast Asian merchant problem that HitPay solves.
+
+BRAND: HitPay — MAS-licensed (SG), BNM-approved (MY), BSP OPS-licensed (PH). No monthly fees. 50+ payment methods.
+TONE: Narrative, empathetic, specific. Like a journalist telling a business story — not a brand writing a press release.
+AUDIENCE: SME founders and merchants in Singapore, Malaysia, or Philippines.
+
+CONTENT FORMAT: Before-and-after thread of exactly 3 tweets
+- Exactly 3 tweets numbered "1/3 ...", "2/3 ...", "3/3 ..."
+- Tweet 1/3: Set up the merchant before state — name the business type, the pain, the hidden cost. Specific and visceral. End with 🧵
+- Tweet 2/3: The turning point — what changed when they switched. One concrete improvement per sentence. No product pitch.
+- Tweet 3/3: The outcome — specific time or money saved + HitPay as the reason + [URL]
+- Each tweet: 200-280 chars
+
+MERCHANT ARCHETYPES — use one specific type:
+- F&B: cafe, restaurant, hawker stall, catering business
+- Retail: boutique fashion store, electronics shop, pharmacy
+- Services: freelance designer, tuition centre, cleaning company, personal trainer
+- E-commerce: Shopify/WooCommerce seller, social commerce seller
+
+PAIN POINTS — pick the most impactful scenario:
+- Manual reconciliation eating hours every week
+- Late invoices hurting cash flow
+- Customers unable to pay due to missing payment methods
+- High card fees on every transaction
+- Checkout abandonment from a slow or broken payment page
+
+STYLE RULES:
+- Name a real-feeling archetype (e.g. "A cafe owner in Orchard Road") — not "Company X"
+- Include specific numbers in tweet 3: hours saved, cost reduced
+- Short punchy sentences, no jargon
+- No hashtags, no @ mentions
+- Banned words: seamlessly, unlock, revolutionise, game-changer, cutting-edge, empower, leverage, utilise, transformative, innovative, robust
+- [URL] is a literal placeholder in tweet 3 only
+
+LINK URL RULE:
+Set link_url to https://hitpayapp.com/blog/{{slug}} using the most topically relevant slug.
+If no clear match, default to: hitpay-rates
+
+LIVE BLOG SLUGS:
+{urls_list}
+
+OUTPUT: Return a raw JSON object only. No markdown fences, no preamble.
+{example}"""
+
+
+def _build_feature_update_prompt(thread_size: int) -> str:
+    slugs = _fetch_live_blog_slugs()
+    urls_list = "\n".join(f"  {s}" for s in slugs)
+    example = json.dumps({
+        "topic": "payment link with reminders",
+        "tweets": [
+            "1/2 Ever sent an invoice, followed up, resent when the link expired, then chased again. "
+            "All for a payment that should have taken 30 seconds. 🧵",
+            "2/2 HitPay payment links now support custom expiry, auto-reminders, and one-click resend. "
+            "Less chasing, more getting paid. Set yours up in two minutes: [URL]",
+        ],
+        "link_url": "https://hitpayapp.com/blog/payment-link",
+        "visual_note": "Annotated screenshot of the payment link dashboard",
+    }, ensure_ascii=False)
+    return f"""You are the @hitpay_app content writer for X (Twitter) — Thursday slot: Product Feature / Shipping Update.
+Write a 2-tweet post about a HitPay feature. Lead with the customer problem — not the technology.
+
+BRAND: HitPay — MAS-licensed (SG), BNM-approved (MY), BSP OPS-licensed (PH). No monthly fees. 50+ payment methods.
+TONE: Direct, builder's pride. Problem-first, feature-second. Like a founder explaining what they just shipped.
+AUDIENCE: SME founders and merchants in Southeast Asia.
+
+CONTENT FORMAT: Product update thread of exactly 2 tweets
+- Exactly 2 tweets numbered "1/2 ...", "2/2 ..."
+- Tweet 1/2: Lead with the customer pain point — not the solution. The merchant should feel seen before sold to. End with 🧵
+- Tweet 2/2: Introduce what HitPay built to solve it. Focus on merchant outcome, not tech specs. End with [URL]
+- Each tweet: 200-280 chars
+
+HITPAY FEATURES TO DRAW FROM:
+- Payment links (shareable, one-click payment for any amount)
+- PayNow / DuitNow / QR Ph QR code generation
+- Recurring billing and subscription management
+- WooCommerce, Shopify, Wix, Magento integrations
+- POS terminal for in-person card and e-wallet payments
+- Multi-currency checkout for cross-border sales
+- Automatic payment reconciliation and export
+- Next business day payouts (domestic)
+- Invoice generation and sending
+- Analytics dashboard for payment trends
+
+STYLE RULES:
+- Tweet 1 names the pain only — no solution hint
+- Tweet 2 opens with "Just shipped:", "Now available:", or "We built this because:"
+- No hashtags, no @ mentions
+- Banned words: seamlessly, unlock, revolutionise, game-changer, cutting-edge, empower, leverage, utilise, transformative, innovative, robust
+- visual_note should suggest a dashboard screenshot or short demo clip
+- [URL] is a literal placeholder in tweet 2 only
+
+LINK URL RULE:
+Set link_url to https://hitpayapp.com/blog/{{slug}} using the most topically relevant slug.
+If no clear match, default to: hitpay-rates
+
+LIVE BLOG SLUGS:
+{urls_list}
+
+OUTPUT: Return a raw JSON object only. No markdown fences, no preamble.
+{example}"""
+
+
+def _build_hot_take_prompt(thread_size: int) -> str:
+    example = json.dumps({
+        "topic": "paper cheques in 2026",
+        "tweets": [
+            "If your vendor payment process still involves printing a cheque, "
+            "waiting for it to clear, and calling to confirm — you are not saving money. "
+            "You are paying 3 hours of salary to move RM 500."
+        ],
+        "link_url": None,
+        "visual_note": None,
+    }, ensure_ascii=False)
+    return f"""You are the @hitpay_app content writer for X (Twitter) — Friday slot: Hot Take / Market Rant.
+Write a single, text-only tweet with a direct, slightly contrarian stance on broken or outdated payment practices in Southeast Asia.
+
+BRAND: HitPay — the voice is authoritative but not preachy. This is the founder talking.
+TONE: Opinionated, direct, confident. Like a CFO who has run out of patience with legacy systems.
+AUDIENCE: SME owners, finance managers, and founders in SEA who already feel the pain you are naming.
+
+CONTENT FORMAT: Single text-only tweet (no URL)
+- Exactly 1 tweet, no numbering
+- 200-280 chars
+- Contrarian, direct, slightly provocative
+- NO URL in tweet — text-only format performs best for opinion posts on brand accounts
+- No HitPay product mention — the brand speaks through the opinion, not a pitch
+
+HOT TAKE TOPICS — pick the sharpest angle if no hint is given:
+- Paper cheques in 2026 (still common in MY/PH businesses)
+- Manual bank transfer reconciliation eating finance team hours
+- Paying 3-4% card MDR when real-time alternatives cost 0.65%
+- Businesses that still do not accept QR or e-wallets in 2026
+- Late payment culture and the damage it does to SME cash flow
+- The myth that cash is simpler for a growing business
+- Why businesses still accept card fraud risk when instant payment removes it
+- The hidden labour cost of chasing unpaid invoices
+- Checkout pages with 1 payment method in a market with 50+
+
+STYLE RULES:
+- One clear argument — not a list
+- Specific enough to feel real: include a cost, timeframe, or concrete scenario
+- Can be framed as: "If X still happens in your business in 2026, here is what it is costing you"
+- No hashtags, no @ mentions, no URL of any kind
+- Banned words: seamlessly, unlock, revolutionise, game-changer, cutting-edge, empower, leverage, utilise, transformative, innovative, robust
+
+OUTPUT: Return a raw JSON object only. No markdown fences, no preamble.
+Set link_url to null. Set visual_note to null.
+{example}"""
+
+
+def _build_behind_scenes_prompt(thread_size: int) -> str:
+    slugs = _fetch_live_blog_slugs()
+    urls_list = "\n".join(f"  {s}" for s in slugs)
+    example = json.dumps({
+        "topic": "transaction milestone",
+        "tweets": [
+            "Our engineering team just processed the 10 millionth PayNow transaction on HitPay. "
+            "No fanfare — just merchants getting paid in real time, every day. "
+            "That is the whole point. ☕"
+        ],
+        "link_url": None,
+        "visual_note": "Milestone counter screenshot or team photo",
+    }, ensure_ascii=False)
+    return f"""You are the @hitpay_app content writer for X (Twitter) — Sunday slot: Behind the Scenes / Build in Public.
+Write a single humanizing tweet that celebrates a HitPay milestone, team moment, or honest reflection on building the product.
+
+BRAND: HitPay — MAS-licensed (SG), BNM-approved (MY), BSP OPS-licensed (PH).
+TONE: Warm, honest, proud without bragging. Like a founder reflecting on a quiet Sunday.
+AUDIENCE: Anyone following HitPay — merchants, investors, other founders, team members.
+
+CONTENT FORMAT: Single humanizing tweet
+- Exactly 1 tweet, no numbering
+- 200-280 chars
+- One concrete detail anchors it: a number, a milestone, a specific moment
+- Tone: genuine pride, not marketing polish
+- A small emoji is fine if natural (coffee cup, celebration, wrench) — one maximum
+- [URL] only if the milestone naturally links to a resource — otherwise set link_url to null
+
+MILESTONE IDEAS — pick the most resonant if no hint is given:
+- Transaction volume milestone (millions processed, payouts sent)
+- New regulatory approval or licence milestone
+- Feature shipped after months of work
+- Team growth milestone
+- Merchant count milestone
+- A stat reflecting real impact (dollars processed this year)
+- Honest reflection on building payments infrastructure
+- A customer who grew significantly using HitPay
+
+STYLE RULES:
+- Warmth over polish — imperfect is more human
+- One concrete anchor per tweet
+- No hashtags, no @ mentions
+- Banned words: seamlessly, unlock, revolutionise, game-changer, cutting-edge, empower, leverage, utilise, transformative, innovative, robust
+
+LINK URL RULE (optional):
+Set link_url to https://hitpayapp.com/blog/{{slug}} only if it fits naturally. Otherwise null.
+
+LIVE BLOG SLUGS:
+{urls_list}
+
+OUTPUT: Return a raw JSON object only. No markdown fences, no preamble.
+{example}"""
+
+
 TOPIC_POOL = [
     "MDR (Merchant Discount Rate) and interchange fees explained",
     "Payment settlement timelines: T+0, T+1, T+2 and why they matter",
@@ -469,29 +750,63 @@ _AUTOMATION_VARIANTS: list[tuple[str, int]] = [
 
 _AUTOMATION_MARKETS = ["SG", "MY", "PH", None]  # None = SEA broadly
 
+CONTENT_TYPE_BY_WEEKDAY: dict[int, str] = {
+    0: "educational_breakdown",  # Monday
+    1: "stat_hook",              # Tuesday
+    2: "case_study",             # Wednesday
+    3: "feature_update",         # Thursday
+    4: "hot_take",               # Friday
+    5: "deep_dive",              # Saturday
+    6: "behind_scenes",          # Sunday
+}
 
-def generate_random_x_post(market: str = None, topic_hint: str = None, brand: str = "hitpay") -> dict:
-    """Pick a random style + thread_size and generate a standalone X post.
+CONTENT_TYPE_CONFIGS: dict[str, dict] = {
+    "educational_breakdown": {"thread_size": 3, "style": "educational"},
+    "stat_hook":             {"thread_size": 1, "style": "educational"},
+    "case_study":            {"thread_size": 3, "style": "storytelling"},
+    "feature_update":        {"thread_size": 2, "style": "educational"},
+    "hot_take":              {"thread_size": 1, "style": "storytelling"},
+    "deep_dive":             {"thread_size": 7, "style": "educational"},
+    "behind_scenes":         {"thread_size": 1, "style": "storytelling"},
+}
 
-    Designed as the single entry point for automated 3x/week scheduling.
 
-    Returns: {
-        "topic": str, "tweets": list[str], "link_url": str, "visual_note": str | None,
-        "style": str, "thread_size": int, "market": str | None
-    }
+
+def generate_random_x_post(
+    market: str = None,
+    topic_hint: str = None,
+    brand: str = "hitpay",
+    content_type: str | None = None,
+) -> dict:
+    """Generate an X post using day-of-week content type (hitpay) or random variant (other brands).
+
+    Pass content_type to override day-of-week detection (useful for testing specific formats).
+    Returns dict with keys: topic, tweets, link_url, visual_note, style, thread_size, market, content_type
     """
-    style, thread_size = random.choice(_AUTOMATION_VARIANTS)
+    if brand == "hitpay":
+        if content_type is None:
+            weekday = _datetime.utcnow().weekday()
+            content_type = CONTENT_TYPE_BY_WEEKDAY.get(weekday, "educational_breakdown")
+        config = CONTENT_TYPE_CONFIGS[content_type]
+        thread_size = config["thread_size"]
+        style = config["style"]
+    else:
+        style, thread_size = random.choice(_AUTOMATION_VARIANTS)
+        content_type = None
+
     chosen_market = market if market is not None else random.choice(_AUTOMATION_MARKETS)
     result = generate_thought_leadership_thread(
         market=chosen_market,
         topic_hint=topic_hint,
         thread_size=thread_size,
         style=style,
+        content_type=content_type,
         brand=brand,
     )
     result["style"] = style
     result["thread_size"] = thread_size
     result["market"] = chosen_market
+    result["content_type"] = content_type
     return result
 
 
@@ -500,6 +815,7 @@ def generate_thought_leadership_thread(
     topic_hint: str = None,
     thread_size: int = 7,
     style: str = "educational",
+    content_type: str | None = None,
     brand: str = "hitpay",
 ) -> dict:
     """Generate a standalone thought leadership X post or thread on a payments topic.
@@ -552,6 +868,17 @@ def generate_thought_leadership_thread(
 
     if brand == "smegrowthhub":
         prompt_builder = _build_sme_storytelling_prompt if style == "storytelling" else _build_sme_educational_prompt
+    elif content_type:
+        _ct_map = {
+            "educational_breakdown": _build_thought_leadership_prompt,
+            "stat_hook":             _build_stat_hook_prompt,
+            "case_study":            _build_case_study_prompt,
+            "feature_update":        _build_feature_update_prompt,
+            "hot_take":              _build_hot_take_prompt,
+            "deep_dive":             _build_thought_leadership_prompt,
+            "behind_scenes":         _build_behind_scenes_prompt,
+        }
+        prompt_builder = _ct_map.get(content_type, _build_thought_leadership_prompt)
     else:
         prompt_builder = _build_storytelling_prompt if style == "storytelling" else _build_thought_leadership_prompt
 
@@ -593,11 +920,14 @@ def generate_thought_leadership_thread(
 
     tweets = [_cap_tweet(t) for t in tweets]
 
-    # Enforce valid URL — fall back to brand default
-    fallback = _SME_FALLBACK_URL if brand == "smegrowthhub" else _FALLBACK_URL
-    link_url = data.get("link_url") or fallback
-    if brand != "smegrowthhub" and not _is_valid_blog_url(link_url):
-        link_url = fallback
+    # hot_take posts are intentionally text-only — no URL attached
+    if content_type == "hot_take":
+        link_url = None
+    else:
+        fallback = _SME_FALLBACK_URL if brand == "smegrowthhub" else _FALLBACK_URL
+        link_url = data.get("link_url") or fallback
+        if brand != "smegrowthhub" and not _is_valid_blog_url(link_url):
+            link_url = fallback
 
     return {
         "topic": data.get("topic", ""),

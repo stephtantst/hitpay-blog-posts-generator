@@ -1581,14 +1581,15 @@ def api_automation_weekly_post(request: Request, dry_run: bool = False):
     # Generate X post
     x_market = random.choice(_MARKETS)
     x_data = generate_random_x_post(market=x_market, brand="hitpay")
-    x_content = "\n\n---\n\n".join(x_data["tweets"])
+    _x_link = x_data.get("link_url") or ""
+    x_content = "\n\n---\n\n".join(t.replace("[URL]", _x_link) for t in x_data["tweets"])
     x_id = create_x_post(
         content=x_content,
         market=x_data.get("market"),
         editor_email="automation@hit-pay.com",
         brand="hitpay",
     )
-    log_x_audit(x_id, "automation@hit-pay.com", "created", {"source": "weekly_automation", "market": x_data.get("market") or "", "dry_run": dry_run})
+    log_x_audit(x_id, "automation@hit-pay.com", "created", {"source": "weekly_automation", "market": x_data.get("market") or "", "content_type": x_data.get("content_type"), "dry_run": dry_run})
 
     if not dry_run:
         x_result = _do_push_x_post(x_id, post_now=True, schedule_date=None)
