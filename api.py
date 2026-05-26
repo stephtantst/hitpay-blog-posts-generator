@@ -1574,49 +1574,66 @@ def api_automation_weekly_post(request: Request, dry_run: bool = True):
     if not dry_run and not TYPEFULLY_API_KEY:
         raise HTTPException(400, "Typefully not configured — add TYPEFULLY_API_KEY to .env")
 
+    import threading
     from src.thought_leadership import generate_random_x_post
     from src.threads_thought_leadership import generate_threads_story
 
     _MARKETS = ["SG", "MY", "PH", None]
+    x_result_box: list = []
+    t_result_box: list = []
 
-    # Generate X post
-    x_market = random.choice(_MARKETS)
-    x_data = generate_random_x_post(market=x_market, brand="hitpay")
-    _x_link = x_data.get("link_url") or ""
-    x_content = "\n\n---\n\n".join(t.replace("[URL]", _x_link) for t in x_data["tweets"])
-    x_id = create_x_post(
-        content=x_content,
-        market=x_data.get("market"),
-        editor_email="automation@hit-pay.com",
-        brand="hitpay",
-    )
-    log_x_audit(x_id, "automation@hit-pay.com", "created", {"source": "weekly_automation", "market": x_data.get("market") or "", "content_type": x_data.get("content_type"), "dry_run": dry_run})
+    def _gen_x():
+        x_market = random.choice(_MARKETS)
+        x_data = generate_random_x_post(market=x_market, brand="hitpay")
+        _x_link = x_data.get("link_url") or ""
+        x_content = "\n\n---\n\n".join(t.replace("[URL]", _x_link) for t in x_data["tweets"])
+        x_id = create_x_post(
+            content=x_content,
+            market=x_data.get("market"),
+            editor_email="automation@hit-pay.com",
+            brand="hitpay",
+        )
+        log_x_audit(x_id, "automation@hit-pay.com", "created", {
+            "source": "weekly_automation", "market": x_data.get("market") or "",
+            "content_type": x_data.get("content_type"), "dry_run": dry_run,
+        })
+        if not dry_run:
+            res = _do_push_x_post(x_id, post_now=True, schedule_date=None)
+            log_x_audit(x_id, "automation@hit-pay.com", "pushed_to_typefully", {"mode": "now", "typefully_url": res["typefully_url"]})
+        else:
+            res = {"typefully_url": ""}
+        x_result_box.append((x_id, res))
 
-    if not dry_run:
-        x_result = _do_push_x_post(x_id, post_now=True, schedule_date=None)
-        log_x_audit(x_id, "automation@hit-pay.com", "pushed_to_typefully", {"mode": "now", "typefully_url": x_result["typefully_url"]})
-    else:
-        x_result = {"typefully_url": ""}
+    def _gen_t():
+        t_market = random.choice(_MARKETS)
+        t_data = generate_threads_story(market=t_market, brand="hitpay")
+        raw_posts = t_data["posts"]
+        t_posts = [p["text"] if isinstance(p, dict) else str(p) for p in raw_posts]
+        t_content = "\n\n---\n\n".join(t_posts)
+        t_id = create_threads_post(
+            content=t_content,
+            market=t_data.get("market"),
+            editor_email="automation@hit-pay.com",
+            brand="hitpay",
+        )
+        log_threads_audit(t_id, "automation@hit-pay.com", "created", {
+            "source": "weekly_automation", "market": t_data.get("market") or "", "dry_run": dry_run,
+        })
+        if not dry_run:
+            res = _do_push_threads_post(t_id, post_now=True, schedule_date=None)
+            log_threads_audit(t_id, "automation@hit-pay.com", "pushed_to_typefully", {"mode": "now", "typefully_url": res["typefully_url"]})
+        else:
+            res = {"typefully_url": ""}
+        t_result_box.append((t_id, res))
 
-    # Generate Threads post
-    t_market = random.choice(_MARKETS)
-    t_data = generate_threads_story(market=t_market, brand="hitpay")
-    raw_posts = t_data["posts"]
-    t_posts = [p["text"] if isinstance(p, dict) else str(p) for p in raw_posts]
-    t_content = "\n\n---\n\n".join(t_posts)
-    t_id = create_threads_post(
-        content=t_content,
-        market=t_data.get("market"),
-        editor_email="automation@hit-pay.com",
-        brand="hitpay",
-    )
-    log_threads_audit(t_id, "automation@hit-pay.com", "created", {"source": "weekly_automation", "market": t_data.get("market") or "", "dry_run": dry_run})
+    # Run both Claude generations concurrently — cuts wall-clock time roughly in half
+    tx = threading.Thread(target=_gen_x)
+    tt = threading.Thread(target=_gen_t)
+    tx.start(); tt.start()
+    tx.join(); tt.join()
 
-    if not dry_run:
-        t_result = _do_push_threads_post(t_id, post_now=True, schedule_date=None)
-        log_threads_audit(t_id, "automation@hit-pay.com", "pushed_to_typefully", {"mode": "now", "typefully_url": t_result["typefully_url"]})
-    else:
-        t_result = {"typefully_url": ""}
+    x_id, x_result = x_result_box[0]
+    t_id, t_result = t_result_box[0]
 
     return {
         "dry_run": dry_run,
