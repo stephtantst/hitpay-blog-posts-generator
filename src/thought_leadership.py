@@ -458,12 +458,18 @@ CONTENT FORMAT: Single data-driven tweet
 
 STAT TOPICS - pick the sharpest angle if no hint is given:
 - Time lost to manual payment reconciliation per week
-- Cost of failed payments or checkout abandonment
 - QR payment adoption in SEA (PayNow, DuitNow, QR Ph stats)
 - Average days to receive invoice payment from B2B buyers in SEA
 - Percentage of SMB payments still made by cash or cheque
 - Cost difference between card MDR and real-time payment fees
-- Cart abandonment caused by limited payment options
+
+STAT ACCURACY RULES — STRICTLY ENFORCED:
+- Only use stats you are highly confident are accurate and sourced (e.g., from central banks, industry bodies, or widely-cited research)
+- NEVER invent or estimate SEA-specific checkout abandonment percentages — this is a known hallucination risk
+- The widely-cited ~70% cart abandonment figure is a global average from Baymard Institute covering ALL abandonment reasons (price, UX, account creation, etc.) — do NOT reframe it as a payment-method-availability stat or a SEA-specific stat
+- Prefer conservative, well-established figures: PayNow/DuitNow transaction volumes, central bank-published QR adoption rates, SME survey data from MAS/BNM/BSP reports
+- If you are unsure of the exact figure, use a range ("1 in 3", "up to 40%") with an obviously conservative framing, or drop the stat and use operational pain (time, steps, cost) instead
+- A wrong stat damages brand credibility far more than a vague one
 
 STYLE RULES:
 - Stat must feel specific: "14 hours/week", "1 in 3 SMBs", "RM 2.4B lost annually"

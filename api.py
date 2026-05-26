@@ -1586,7 +1586,8 @@ def api_automation_weekly_post(request: Request, dry_run: bool = True):
         x_market = random.choice(_MARKETS)
         x_data = generate_random_x_post(market=x_market, brand="hitpay")
         _x_link = x_data.get("link_url") or ""
-        x_content = "\n\n---\n\n".join(t.replace("[URL]", _x_link) for t in x_data["tweets"])
+        # Cap AFTER URL substitution — [URL] placeholder is 5 chars but real URLs are 38+
+        x_content = "\n\n---\n\n".join(_cap_tweet(t.replace("[URL]", _x_link)) for t in x_data["tweets"])
         x_id = create_x_post(
             content=x_content,
             market=x_data.get("market"),
