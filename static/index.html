@@ -2240,6 +2240,8 @@
   <div class="bulk-bar" id="bulkBar" style="display:none;">
     <span class="bulk-bar-count" id="bulkCount">0 selected</span>
     <button class="btn-bulk" onclick="bulkExportSelected()">↓ Export CSV for Framer</button>
+    <button class="btn-bulk" onclick="bulkRepurpose('x')">𝕏 Repurpose for X</button>
+    <button class="btn-bulk" onclick="bulkRepurpose('threads')">⊕ Repurpose for Threads</button>
     <button class="btn-bulk" style="background:var(--red);" onclick="bulkDeleteSelected()">✕ Delete Selected</button>
     <button class="btn-bulk-clear" onclick="clearSelection()">✕ Clear selection</button>
   </div>
@@ -2542,6 +2544,7 @@
               <th style="width:120px;">Status</th>
               <th style="width:100px;">Scheduled</th>
               <th style="width:100px;">Created</th>
+              <th style="width:110px;">Editor</th>
               <th style="width:70px;">Actions</th>
             </tr>
           </thead>
@@ -2754,6 +2757,7 @@
               <th style="width:120px;">Status</th>
               <th style="width:100px;">Scheduled</th>
               <th style="width:100px;">Created</th>
+              <th style="width:110px;">Editor</th>
               <th style="width:70px;">Actions</th>
             </tr>
           </thead>
@@ -3297,12 +3301,15 @@ function _isThreadSchema(data) {
   return !!(data && Array.isArray(data.tweets) && !data.choices);
 }
 
-function setRpThreadFormat(n) {
+function setRpThreadFormat(n, { silent = false } = {}) {
+  const prev = _rpThreadFormat;
   _rpThreadFormat = n;
   [1, 3, 5, 7].forEach(i => {
     const btn = document.getElementById(`rpFmtBtn${i}`);
     if (btn) btn.className = i === n ? 'btn btn-primary' : 'btn';
   });
+  // Auto-regenerate when the user picks a different format while content is showing
+  if (!silent && _repurposeData && n !== prev) startRepurpose();
 }
 let _rp2ActiveCard = 0;
 let _rp2CardAbort = {};
@@ -4946,6 +4953,68 @@ async function bulkExportSelected() {
   }
 }
 
+async function bulkRepurpose(platform) {
+  const ids = [...selectedPostIds];
+  if (ids.length === 0) return;
+  const label = platform === 'x' ? '𝕏 X' : 'Threads';
+  const ok = confirm(`Repurpose ${ids.length} post${ids.length !== 1 ? 's' : ''} for ${label}?\n\nA random format (1, 3, 5, or 7 tweets) will be auto-selected for each post.`);
+  if (!ok) return;
+
+  // Use a sticky progress bar above the bulk-bar instead of the auto-hiding toast
+  const bar = document.getElementById('bulkBar');
+  const origContent = bar ? bar.innerHTML : '';
+  function setProgress(text) {
+    if (bar) bar.innerHTML = `<span class="bulk-bar-count">${text}</span>`;
+  }
+  function restoreBar() {
+    if (bar) bar.innerHTML = origContent;
+  }
+
+  setProgress(`Repurposing 1 / ${ids.length}…`);
+  let done = 0, errors = 0;
+
+  try {
+    const res = await fetch('/api/posts/bulk-repurpose', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ post_ids: ids, platform }),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buf = '';
+    while (true) {
+      const { done: streamDone, value } = await reader.read();
+      if (streamDone) break;
+      buf += decoder.decode(value, { stream: true });
+      const parts = buf.split('\n\n');
+      buf = parts.pop();
+      for (const part of parts) {
+        if (!part.startsWith('data: ')) continue;
+        let msg;
+        try { msg = JSON.parse(part.slice(6)); } catch (_) { continue; }
+        if (msg.type === 'progress') {
+          setProgress(`Repurposing ${msg.index + 1} / ${msg.total}…`);
+        } else if (msg.type === 'done_one') {
+          done++;
+        } else if (msg.type === 'error_one') {
+          errors++;
+        } else if (msg.type === 'done_all') {
+          restoreBar();
+          const errNote = errors > 0 ? ` (${errors} failed)` : '';
+          showToast(`${done} post${done !== 1 ? 's' : ''} repurposed for ${label}${errNote}`, errors > 0 ? 'error' : 'success');
+          await loadPosts();
+          renderOverview();
+        }
+      }
+    }
+  } catch (e) {
+    restoreBar();
+    showToast(`Bulk repurpose failed: ${e.message}`, 'error');
+  }
+}
+
 // ── AI Edit Modal ─────────────────────────────────────────────────────────────
 let _aiEditSelection = '';
 
@@ -5086,7 +5155,7 @@ async function openRepurposeModal() {
   _repurposeActiveFormat = 'stat_hook';
   _repurposeContext = {};
   _rp2ActiveCard = 0;
-  setRpThreadFormat(7);
+  setRpThreadFormat(7, { silent: true });
   document.getElementById('repurposeModal').classList.add('open');
   const regenBtn = document.getElementById('repurposeRegenBtn');
   if (regenBtn) regenBtn.style.display = 'none';
@@ -5101,7 +5170,7 @@ async function openRepurposeModal() {
         if (_isThreadSchema(_repurposeData)) {
           const tc = _repurposeData.tweets.length;
           const fmt = [1, 3, 5, 7].includes(tc) ? tc : 7;
-          setRpThreadFormat(fmt);
+          setRpThreadFormat(fmt, { silent: true });
           renderThreadResult(_repurposeData);
         } else if (_isNewSchema(_repurposeData)) {
           renderCarousel();
@@ -5114,9 +5183,11 @@ async function openRepurposeModal() {
     }
   } catch (_) {}
 
-  // No cached content — show empty state; user picks format then generates
-  renderRepurposeEmpty();
+  // No cached content — auto-pick a random format and start generating immediately
+  const autoSize = [1, 3, 5, 7][Math.floor(Math.random() * 4)];
+  setRpThreadFormat(autoSize, { silent: true });
   if (regenBtn) regenBtn.style.display = '';
+  startRepurpose();
 }
 
 function closeRepurposeModal() {
@@ -5896,6 +5967,7 @@ async function startRepurpose() {
 
   const regenBtn = document.getElementById('repurposeRegenBtn');
   if (regenBtn) { regenBtn.disabled = true; regenBtn.style.display = ''; }
+  rp2SetFooterStatus('');
   document.getElementById('rp2NavRow').style.display = 'none';
   const label = _rpThreadFormat === 1 ? 'tweet' : `${_rpThreadFormat}-tweet thread`;
   document.getElementById('rp2CarouselWrap').innerHTML =
@@ -5937,6 +6009,10 @@ async function startRepurpose() {
           if (currentPost) currentPost.repurposed_content = { twitter: _repurposeData };
           updateRepurposeBtn();
           if (regenBtn) { regenBtn.disabled = false; regenBtn.style.display = ''; }
+          if (msg.usage) {
+            const cost = (msg.usage.input_tokens * 3 + msg.usage.output_tokens * 15) / 1_000_000;
+            rp2SetFooterStatus(`Cost: ~$${cost.toFixed(3)}`);
+          }
           renderThreadResult(_repurposeData);
         } else if (msg.type === 'error') {
           throw new Error(msg.message);
@@ -6586,7 +6662,7 @@ function _xOvFiltered() {
 function renderXListView() {
   const filtered = _xOvFiltered();
   const tbody = document.getElementById('xListBody');
-  const colspan = xSelectMode ? '7' : '6';
+  const colspan = xSelectMode ? '8' : '7';
   if (!filtered.length) {
     tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align:center;padding:40px;color:var(--text-dim);">No posts found</td></tr>`;
     return;
@@ -6600,6 +6676,7 @@ function renderXListView() {
     const market = p.market ? xMarketFlag(p.market) + ' ' + p.market : '—';
     const scheduled = p.scheduled_at ? fmtDate(p.scheduled_at) : '—';
     const created = p.created_at ? fmtDate(p.created_at) : '—';
+    const editor = p.editor_email ? escHtml(p.editor_email.split('@')[0]) : '—';
     const threadBadge = isThread ? ' <span style="color:var(--text-muted);font-size:11px;">🧵</span>' : '';
     const checked = xSelectedIds.has(p.id) ? ' checked' : '';
     const cbCell = xSelectMode
@@ -6616,6 +6693,7 @@ function renderXListView() {
       <td><span class="x-status-badge ${p.status}" style="font-size:11px; padding:3px 9px;">${statusLabel}</span></td>
       <td style="font-size:12px; color:var(--text-dim);">${scheduled}</td>
       <td style="font-size:12px; color:var(--text-dim);">${created}</td>
+      <td style="font-size:12px; color:var(--text-dim);">${editor}</td>
       <td><button class="btn btn-secondary" style="font-size:12px; padding:4px 10px;" onclick="event.stopPropagation(); openXPostFromOverview(${p.id})">Edit</button></td>
     </tr>`;
   }).join('');
@@ -7365,7 +7443,7 @@ function _thrOvFiltered() {
 function renderThrListView() {
   const filtered = _thrOvFiltered();
   const tbody = document.getElementById('thrListBody');
-  const colspan = thrSelectMode ? '7' : '6';
+  const colspan = thrSelectMode ? '8' : '7';
   if (!filtered.length) {
     tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align:center;padding:40px;color:var(--text-dim);">No stories found</td></tr>`;
     return;
@@ -7376,6 +7454,7 @@ function renderThrListView() {
     const statusLabel = { draft: '📝 Draft', scheduled: '🕐 Scheduled', posted: '✅ Posted' }[p.status] || p.status;
     const market = p.market ? xMarketFlag(p.market) + ' ' + p.market : '—';
     const scheduled = p.scheduled_at ? fmtDate(p.scheduled_at) : '—';
+    const editor = p.editor_email ? escHtml(p.editor_email.split('@')[0]) : '—';
     const threadBadge = isThread ? ' <span style="color:var(--text-muted);font-size:11px;">🧵</span>' : '';
     const checked = thrSelectedIds.has(p.id) ? ' checked' : '';
     const cbCell = thrSelectMode ? `<td class="x-cb-col" onclick="event.stopPropagation();"><input type="checkbox" class="x-select-cb" data-id="${p.id}"${checked} onchange="thrToggleSelect(${p.id}, this.checked)"></td>` : '';
@@ -7388,6 +7467,7 @@ function renderThrListView() {
       <td><span class="x-status-badge ${p.status}" style="font-size:11px;padding:3px 9px;">${statusLabel}</span></td>
       <td style="font-size:12px;color:var(--text-dim);">${scheduled}</td>
       <td style="font-size:12px;color:var(--text-dim);">${p.created_at ? fmtDate(p.created_at) : '—'}</td>
+      <td style="font-size:12px;color:var(--text-dim);">${editor}</td>
       <td><button class="btn btn-secondary" style="font-size:12px;padding:4px 10px;" onclick="event.stopPropagation();openThrPostFromOverview(${p.id})">Edit</button></td>
     </tr>`;
   }).join('');

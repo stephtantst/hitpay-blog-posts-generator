@@ -1039,4 +1039,8 @@ def repurpose_post_as_thread(post: dict, thread_size: int) -> dict:
         "tweets": tweets,
         "link_url": blog_url,  # always use the post's own URL
         "visual_note": data.get("visual_note"),
+        "usage": {
+            "input_tokens": msg.usage.input_tokens,
+            "output_tokens": msg.usage.output_tokens,
+        },
     }

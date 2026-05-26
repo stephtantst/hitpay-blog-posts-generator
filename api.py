@@ -1384,13 +1384,54 @@ async def api_repurpose_thread(post_id: int, body: RepurposeThreadRequest,
             result = await loop.run_in_executor(
                 None, lambda: repurpose_post_as_thread(post, body.thread_size)
             )
+            usage = result.pop("usage", None)
             update_repurposed_content(post_id, "twitter", result)
             log_audit(post_id, user_email, "repurposed", {"platform": "twitter", "thread_size": body.thread_size})
-            yield f"data: {json.dumps({'type': 'done', 'result': result})}\n\n"
+            yield f"data: {json.dumps({'type': 'done', 'result': result, 'usage': usage})}\n\n"
         except Exception as e:
             _err = str(e)
             _msg = "Claude API is busy right now — please try again in a few seconds" if "overloaded_error" in _err else _err
             yield f"data: {json.dumps({'type': 'error', 'message': _msg})}\n\n"
+
+    return StreamingResponse(stream(), media_type="text/event-stream")
+
+
+class BulkRepurposeRequest(BaseModel):
+    post_ids: list[int]
+    platform: str = "x"        # "x" or "threads"
+    thread_size: int | None = None  # None = random per post
+
+
+@app.post("/api/posts/bulk-repurpose")
+async def api_bulk_repurpose(body: BulkRepurposeRequest,
+                              user_email: str = Depends(require_auth)):
+    sizes = [1, 3, 5, 7]
+
+    async def stream():
+        loop = asyncio.get_event_loop()
+        total = len(body.post_ids)
+        for i, post_id in enumerate(body.post_ids):
+            size = body.thread_size if body.thread_size else random.choice(sizes)
+            post = get_post(post_id)
+            if not post:
+                yield f"data: {json.dumps({'type': 'skip', 'post_id': post_id, 'reason': 'not found'})}\n\n"
+                continue
+            try:
+                yield f"data: {json.dumps({'type': 'progress', 'index': i, 'total': total, 'post_id': post_id, 'title': post.get('title', '')})}\n\n"
+                _size = size
+                result = await loop.run_in_executor(
+                    None, lambda: repurpose_post_as_thread(post, _size)
+                )
+                result.pop("usage", None)
+                update_repurposed_content(post_id, "twitter", result)
+                log_audit(post_id, user_email, "repurposed", {
+                    "platform": body.platform, "thread_size": _size, "bulk": True
+                })
+                yield f"data: {json.dumps({'type': 'done_one', 'post_id': post_id, 'thread_size': _size})}\n\n"
+            except Exception as e:
+                _err = str(e)
+                yield f"data: {json.dumps({'type': 'error_one', 'post_id': post_id, 'message': _err})}\n\n"
+        yield f"data: {json.dumps({'type': 'done_all', 'total': total})}\n\n"
 
     return StreamingResponse(stream(), media_type="text/event-stream")
 
@@ -1521,12 +1562,15 @@ def api_repurpose_to_x_drafts(post_id: int, body: RepurposeToXRequest,
 # ── Automation ────────────────────────────────────────────────────────────────
 
 @app.post("/api/automation/weekly-post")
-def api_automation_weekly_post(request: Request):
-    """Called by GitHub Actions on Tue/Wed/Thu to auto-generate and publish X + Threads posts."""
+def api_automation_weekly_post(request: Request, dry_run: bool = False):
+    """Called by GitHub Actions on Tue/Wed/Thu to auto-generate and publish X + Threads posts.
+
+    Pass ?dry_run=true to generate and save as draft only — skips Typefully push entirely.
+    """
     key = request.headers.get("X-Automation-Key", "")
     if not key or not AUTOMATION_SECRET or key != AUTOMATION_SECRET:
         raise HTTPException(status_code=401, detail="Unauthorized")
-    if not TYPEFULLY_API_KEY:
+    if not dry_run and not TYPEFULLY_API_KEY:
         raise HTTPException(400, "Typefully not configured — add TYPEFULLY_API_KEY to .env")
 
     from src.thought_leadership import generate_random_x_post
@@ -1534,7 +1578,7 @@ def api_automation_weekly_post(request: Request):
 
     _MARKETS = ["SG", "MY", "PH", None]
 
-    # Generate and publish X post
+    # Generate X post
     x_market = random.choice(_MARKETS)
     x_data = generate_random_x_post(market=x_market, brand="hitpay")
     x_content = "\n\n---\n\n".join(x_data["tweets"])
@@ -1544,11 +1588,15 @@ def api_automation_weekly_post(request: Request):
         editor_email="automation@hit-pay.com",
         brand="hitpay",
     )
-    log_x_audit(x_id, "automation@hit-pay.com", "created", {"source": "weekly_automation", "market": x_data.get("market") or ""})
-    x_result = _do_push_x_post(x_id, post_now=True, schedule_date=None)
-    log_x_audit(x_id, "automation@hit-pay.com", "pushed_to_typefully", {"mode": "now", "typefully_url": x_result["typefully_url"]})
+    log_x_audit(x_id, "automation@hit-pay.com", "created", {"source": "weekly_automation", "market": x_data.get("market") or "", "dry_run": dry_run})
 
-    # Generate and publish Threads post
+    if not dry_run:
+        x_result = _do_push_x_post(x_id, post_now=True, schedule_date=None)
+        log_x_audit(x_id, "automation@hit-pay.com", "pushed_to_typefully", {"mode": "now", "typefully_url": x_result["typefully_url"]})
+    else:
+        x_result = {"typefully_url": ""}
+
+    # Generate Threads post
     t_market = random.choice(_MARKETS)
     t_data = generate_threads_story(market=t_market, brand="hitpay")
     raw_posts = t_data["posts"]
@@ -1560,11 +1608,16 @@ def api_automation_weekly_post(request: Request):
         editor_email="automation@hit-pay.com",
         brand="hitpay",
     )
-    log_threads_audit(t_id, "automation@hit-pay.com", "created", {"source": "weekly_automation", "market": t_data.get("market") or ""})
-    t_result = _do_push_threads_post(t_id, post_now=True, schedule_date=None)
-    log_threads_audit(t_id, "automation@hit-pay.com", "pushed_to_typefully", {"mode": "now", "typefully_url": t_result["typefully_url"]})
+    log_threads_audit(t_id, "automation@hit-pay.com", "created", {"source": "weekly_automation", "market": t_data.get("market") or "", "dry_run": dry_run})
+
+    if not dry_run:
+        t_result = _do_push_threads_post(t_id, post_now=True, schedule_date=None)
+        log_threads_audit(t_id, "automation@hit-pay.com", "pushed_to_typefully", {"mode": "now", "typefully_url": t_result["typefully_url"]})
+    else:
+        t_result = {"typefully_url": ""}
 
     return {
+        "dry_run": dry_run,
         "x_post_id": x_id,
         "x_typefully_url": x_result["typefully_url"],
         "threads_post_id": t_id,

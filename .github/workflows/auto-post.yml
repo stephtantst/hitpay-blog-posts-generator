@@ -4,6 +4,12 @@ on:
   schedule:
     # Tue/Wed/Thu at 02:00 UTC = 10:00am SGT (UTC+8)
     - cron: '0 2 * * 2,3,4'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run — generate & save as draft only, skip Typefully'
+        type: boolean
+        default: false
 jobs:
   auto-post:
     runs-on: ubuntu-latest
@@ -14,6 +20,6 @@ jobs:
 
       - name: Trigger weekly auto-post
         run: |
-          curl -sf -X POST "${{ secrets.APP_BASE_URL }}/api/automation/weekly-post" \
+          curl -sf -X POST "${{ secrets.APP_BASE_URL }}/api/automation/weekly-post?dry_run=${{ inputs.dry_run || 'false' }}" \
             -H "X-Automation-Key: ${{ secrets.AUTOMATION_SECRET }}" \
             -H "Content-Type: application/json"
