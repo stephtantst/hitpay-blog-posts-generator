@@ -432,51 +432,70 @@ def _build_stat_hook_prompt(thread_size: int) -> str:
     slugs = _fetch_live_blog_slugs()
     urls_list = "\n".join(f"  {s}" for s in slugs)
     example = json.dumps({
-        "topic": "invoice payment delays",
+        "topic": "DuitNow QR vs card terminal cost",
         "tweets": [
-            "Finance teams in SEA spend 14 hours a week chasing overdue invoices. "
-            "That is 2 full workdays lost to follow-up, not growth. "
-            "HitPay payment links get you paid in one click: [URL]"
+            "Accepting DuitNow QR via HitPay costs 1.2%. "
+            "A RM 500 sale costs you RM 6.00 in fees — nothing else. "
+            "No terminal rental. No monthly minimum. No setup fee. "
+            "Just scan and get paid: [URL]"
         ],
-        "link_url": "https://hitpayapp.com/blog/payment-link",
-        "visual_note": "High-contrast stat graphic: 14 hours/week lost to invoice chasing",
+        "link_url": "https://hitpayapp.com/blog/hitpay-rates",
+        "visual_note": "Side-by-side: HitPay DuitNow QR 1.2% vs traditional card terminal monthly fee + MDR",
     }, ensure_ascii=False)
-    return f"""You are the @hitpay_app content writer for X (Twitter) — Tuesday slot: Did You Know? stat post.
-Write a single tweet that opens with a surprising, data-backed insight about payments or B2B commerce in Southeast Asia.
+    return f"""You are the @hitpay_app content writer for X (Twitter) — Tuesday slot: Did You Know? fact post.
+Write a single tweet that surfaces a concrete, verifiable fact about payment costs or merchant operations — using only HitPay's own published rates and features.
 
 BRAND: HitPay — MAS-licensed (SG), BNM-approved (MY), BSP OPS-licensed (PH). No monthly fees. 50+ payment methods. Next business day payouts.
-TONE: Sharp, factual, slightly alarming. The stat should make a merchant stop scrolling.
+TONE: Sharp, factual, practical. Make a merchant think "I didn't know that."
 AUDIENCE: SME founders, merchants, and finance managers in Southeast Asia.
 
-CONTENT FORMAT: Single data-driven tweet
+CONTENT FORMAT: Single tweet
 - Exactly 1 tweet, no numbering
-- 200-280 chars
-- Open with a surprising stat or data point that feels specific and credible
-- Follow with a one-line implication: what that stat costs the merchant
-- End with HitPay as the practical fix + [URL] as a literal placeholder
-- Suggest a visual in visual_note: "High-contrast statistic graphic" or "Poll: [question]"
+- 200-270 chars (leave room — do not pad to the limit)
+- Lead with a concrete cost or operational fact
+- Follow with one line on what that means for the merchant
+- End with HitPay as the fix + [URL] as a literal placeholder
+- Suggest a visual in visual_note
 
-STAT TOPICS - pick the sharpest angle if no hint is given:
-- Time lost to manual payment reconciliation per week
-- QR payment adoption in SEA (PayNow, DuitNow, QR Ph stats)
-- Average days to receive invoice payment from B2B buyers in SEA
-- Percentage of SMB payments still made by cash or cheque
-- Cost difference between card MDR and real-time payment fees
+APPROVED FACTS — use only these, pick whichever fits the angle best:
+MALAYSIA (MY):
+  - DuitNow QR: 1.2% per transaction, no monthly fee, BNM-approved
+  - FPX online banking: 1.8% + RM 0.40 per transaction
+  - Visa/Mastercard card: 2.8% + RM 0.50 per transaction
+  - HitPay: no setup fee, no monthly fee, no terminal rental
+  - Accepts 30+ payment methods including DuitNow QR, FPX, GrabPay, TnG eWallet, Shopee Pay
+  - Next business day payouts to Malaysian bank accounts
 
-STAT ACCURACY RULES — STRICTLY ENFORCED:
-- Only use stats you are highly confident are accurate and sourced (e.g., from central banks, industry bodies, or widely-cited research)
-- NEVER invent or estimate SEA-specific checkout abandonment percentages — this is a known hallucination risk
-- The widely-cited ~70% cart abandonment figure is a global average from Baymard Institute covering ALL abandonment reasons (price, UX, account creation, etc.) — do NOT reframe it as a payment-method-availability stat or a SEA-specific stat
-- Prefer conservative, well-established figures: PayNow/DuitNow transaction volumes, central bank-published QR adoption rates, SME survey data from MAS/BNM/BSP reports
-- If you are unsure of the exact figure, use a range ("1 in 3", "up to 40%") with an obviously conservative framing, or drop the stat and use operational pain (time, steps, cost) instead
-- A wrong stat damages brand credibility far more than a vague one
+SINGAPORE (SG):
+  - PayNow: 0.65% + S$0.30 per transaction, MAS-licensed
+  - Visa/Mastercard card: 2.8% + S$0.50 per transaction
+  - HitPay: no setup fee, no monthly fee
+  - Accepts 50+ payment methods including PayNow, GrabPay, PayLah!, NETS
+  - Next business day payouts
+
+PHILIPPINES (PH):
+  - QR Ph: 1.0% per transaction or ₱20 minimum, BSP OPS-licensed
+  - GCash: 2.3% per transaction
+  - HitPay: no setup fee, no monthly fee
+  - Accepts 30+ payment methods including GCash, Maya, QR Ph
+
+ANGLES that work well (pick one):
+  - Cost comparison: DuitNow QR 1.2% vs cards 2.8%+RM0.50 — on RM 10,000/month that is RM X saved
+  - Fee transparency: what a merchant actually pays per RM 500 / S$500 sale
+  - Setup friction eliminated: no terminal, no application, start today
+  - Payout speed: next business day vs typical 3–5 day bank settlement
+  - Multi-method: one integration covers QR, e-wallets, cards, online banking
+
+DO NOT INVENT any adoption rates, market share figures, abandonment percentages, or SMB statistics.
+Do not use any external research numbers — only the approved facts above.
+A wrong stat damages brand credibility; a precise product fact builds it.
 
 STYLE RULES:
-- Stat must feel specific: "14 hours/week", "1 in 3 SMBs", "RM 2.4B lost annually"
-- Implication is one direct sentence: "That is X - not Y, just Z"
+- Numbers must be exact from the approved list above: "1.2%", "RM 0.40", not "roughly 1%"
+- Implication is one direct sentence
 - No hashtags, no @ mentions
 - Banned words: seamlessly, unlock, revolutionise, game-changer, cutting-edge, empower, leverage, utilise, transformative, innovative, robust
-- [URL] is a literal placeholder - never substitute the real URL
+- [URL] is a literal placeholder — never substitute the real URL
 
 LINK URL RULE:
 Set link_url to https://hitpayapp.com/blog/{{slug}} using the most topically relevant slug.
