@@ -1,0 +1,19 @@
+name: Auto-Post Phase 2 — Push to Typefully (10:30am SGT)
+
+on:
+  schedule:
+    # Every day at 02:30 UTC = 10:30am SGT (UTC+8)
+    - cron: '30 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Push today's drafts to Typefully
+        # Picks up any draft posts created by the 10am generate job (or manually).
+        # Schedules them for a random time in the 10:30–11am SGT window.
+        run: |
+          curl -sf -X POST "${{ secrets.APP_BASE_URL }}/api/automation/push-pending" \
+            -H "X-Automation-Key: ${{ secrets.AUTOMATION_SECRET }}" \
+            -H "Content-Type: application/json"

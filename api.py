@@ -1562,10 +1562,11 @@ def api_repurpose_to_x_drafts(post_id: int, body: RepurposeToXRequest,
 # ── Automation ────────────────────────────────────────────────────────────────
 
 @app.post("/api/automation/weekly-post")
-def api_automation_weekly_post(request: Request, dry_run: bool = False):
-    """Called by GitHub Actions on Tue/Wed/Thu to auto-generate and publish X + Threads posts.
+def api_automation_weekly_post(request: Request, dry_run: bool = True):
+    """Phase 1 — called by GitHub Actions at 10am SGT (daily) to generate and save draft posts.
 
-    Pass ?dry_run=true to generate and save as draft only — skips Typefully push entirely.
+    Always dry_run=True from the schedule trigger. Pass ?dry_run=false only for legacy
+    single-step runs (generate + post immediately, no review window).
     """
     key = request.headers.get("X-Automation-Key", "")
     if not key or not AUTOMATION_SECRET or key != AUTOMATION_SECRET:
@@ -1624,6 +1625,85 @@ def api_automation_weekly_post(request: Request, dry_run: bool = False):
         "threads_post_id": t_id,
         "threads_typefully_url": t_result["typefully_url"],
     }
+
+
+@app.post("/api/automation/push-pending")
+def api_automation_push_pending(request: Request):
+    """Phase 2 — called by GitHub Actions at 10:30am SGT (daily).
+
+    Finds today's auto-generated draft posts and schedules them in Typefully
+    for a random time in the 10:30–11am SGT window (02:30–03:00 UTC).
+    Skips any post that was already pushed or deleted during the review window.
+    """
+    key = request.headers.get("X-Automation-Key", "")
+    if not key or not AUTOMATION_SECRET or key != AUTOMATION_SECRET:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    if not TYPEFULLY_API_KEY:
+        raise HTTPException(400, "Typefully not configured — add TYPEFULLY_API_KEY to .env")
+
+    from datetime import datetime, timezone, timedelta
+
+    now_utc = datetime.now(timezone.utc)
+
+    # Publish window: 10:30–11:00am SGT = 02:30–03:00 UTC
+    today = now_utc.date()
+    window_start = datetime(today.year, today.month, today.day, 2, 30, tzinfo=timezone.utc)
+    window_end   = datetime(today.year, today.month, today.day, 3,  0, tzinfo=timezone.utc)
+
+    # Must be at least 5 min in the future; if window has passed use +5 min fallback
+    earliest = max(now_utc + timedelta(minutes=5), window_start)
+    if earliest >= window_end:
+        schedule_time = now_utc + timedelta(minutes=5)
+    else:
+        spread_secs = int((window_end - earliest).total_seconds())
+        schedule_time = earliest + timedelta(seconds=random.randint(0, spread_secs))
+    schedule_str = schedule_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    # Posts created in the last 6 hours by automation (handles timezone edge cases)
+    cutoff = now_utc - timedelta(hours=6)
+
+    def _is_today_auto_draft(p: dict) -> bool:
+        if p.get("editor_email") != "automation@hit-pay.com":
+            return False
+        if p.get("status") != "draft":
+            return False
+        created = p.get("created_at")
+        if created is None:
+            return False
+        # pg8000 returns aware or naive datetimes; normalise to UTC
+        if hasattr(created, "tzinfo") and created.tzinfo is None:
+            created = created.replace(tzinfo=timezone.utc)
+        return created >= cutoff
+
+    results = {"schedule_time": schedule_str, "x_posts": [], "threads_posts": []}
+
+    # ── X posts ──────────────────────────────────────────────────────────────
+    for p in list_x_posts(status="draft"):
+        if not _is_today_auto_draft(p):
+            continue
+        try:
+            result = _do_push_x_post(p["id"], post_now=False, schedule_date=schedule_str)
+            log_x_audit(p["id"], "automation@hit-pay.com", "pushed_to_typefully", {
+                "mode": "scheduled", "typefully_url": result["typefully_url"], "schedule_date": schedule_str,
+            })
+            results["x_posts"].append({"id": p["id"], "typefully_url": result["typefully_url"]})
+        except Exception as exc:
+            results["x_posts"].append({"id": p["id"], "error": str(exc)})
+
+    # ── Threads posts ─────────────────────────────────────────────────────────
+    for p in list_threads_posts(status="draft"):
+        if not _is_today_auto_draft(p):
+            continue
+        try:
+            result = _do_push_threads_post(p["id"], post_now=False, schedule_date=schedule_str)
+            log_threads_audit(p["id"], "automation@hit-pay.com", "pushed_to_typefully", {
+                "mode": "scheduled", "typefully_url": result["typefully_url"], "schedule_date": schedule_str,
+            })
+            results["threads_posts"].append({"id": p["id"], "typefully_url": result["typefully_url"]})
+        except Exception as exc:
+            results["threads_posts"].append({"id": p["id"], "error": str(exc)})
+
+    return results
 
 
 if __name__ == "__main__":
