@@ -1,6 +1,9 @@
-name: Auto-Post Phase 2 — Push to Typefully (manual only)
+name: Auto-Post Phase 2 — Push to Typefully
 
 on:
+  schedule:
+    # Daily at 01:00 UTC = 09:00 SGT, before the earliest scheduled post time
+    - cron: '0 1 * * *'
   workflow_dispatch:
 
 jobs:

@@ -16,6 +16,22 @@ _blog_slugs_cache: list[str] | None = None
 _blog_slugs_cache_ts: float = 0
 _SLUG_CACHE_TTL = 3600  # 1 hour
 
+_WRITING_STYLE_RULES = """PROSE ANTI-PATTERNS — avoid all of these:
+- Marketing language, startup jargon, corporate phrasing, inspirational tone
+- Performative vulnerability, forced relatability, fake conversational fillers
+- Overwritten hooks, one-line paragraph spam, overuse of em dashes, constant rhetorical contrast
+- Banned openers and structures: "Honestly…", "The truth is…", "Let that sink in.", "Here's the thing.", "It turns out…", "You're not alone.", "In a world where…", "Everything changed when…", "I used to think… now I…", "This isn't just about X. It's about Y.", "Most people don't realize…", "Read that again."
+- Do not manufacture emotion or tension where none exists
+
+PROSE STYLE:
+- Use normal sentence structure. Full paragraphs are fine.
+- Vary rhythm naturally, not intentionally.
+- Prefer clarity over punchiness.
+- Let observations stand without over-explaining them.
+- Use concrete language and real examples. Keep transitions subtle.
+- Allow mild imperfections in flow — they sound human.
+- The writing can have personality, but should not constantly signal personality."""
+
 
 def _fetch_live_blog_slugs() -> list[str]:
     """Return all live blog post slugs from the sitemap. Cached for 1 hour."""
@@ -875,6 +891,10 @@ CONTENT_TYPE_CONFIGS: dict[str, dict] = {
 
 
 
+# Monday and Tuesday use a published blog post as source instead of a random topic.
+_BLOG_REPURPOSE_CONTENT_TYPES = {"educational_breakdown", "stat_hook"}
+
+
 def generate_random_x_post(
     market: str = None,
     topic_hint: str = None,
@@ -882,6 +902,10 @@ def generate_random_x_post(
     content_type: str | None = None,
 ) -> dict:
     """Generate an X post using day-of-week content type (hitpay) or random variant (other brands).
+
+    Monday (educational_breakdown) and Tuesday (stat_hook) repurpose a published blog post
+    and mark it as used so it won't be repeated. Falls back to topic-pool generation if no
+    unpublished posts are available.
 
     Pass content_type to override day-of-week detection (useful for testing specific formats).
     Returns dict with keys: topic, tweets, link_url, visual_note, style, thread_size, market, content_type
@@ -900,6 +924,22 @@ def generate_random_x_post(
         content_type = None
 
     chosen_market = market if market is not None else random.choice(_AUTOMATION_MARKETS)
+
+    if brand == "hitpay" and content_type in _BLOG_REPURPOSE_CONTENT_TYPES:
+        from src.database import get_unrepurposed_published_post, mark_post_x_repurposed
+        from src.repurposer import repurpose_post_as_thread
+        post = get_unrepurposed_published_post(brand=brand)
+        if post:
+            result = repurpose_post_as_thread(post, thread_size)
+            mark_post_x_repurposed(post["id"])
+            result["style"] = style
+            result["thread_size"] = thread_size
+            result["market"] = post.get("country") or chosen_market
+            result["content_type"] = content_type
+            result["source_post_id"] = post["id"]
+            return result
+        # No published posts left — fall through to topic-pool generation
+
     result = generate_thought_leadership_thread(
         market=chosen_market,
         topic_hint=topic_hint,
@@ -991,7 +1031,7 @@ def generate_thought_leadership_thread(
         client,
         model=CLAUDE_MODEL,
         max_tokens=2500,
-        system=prompt_builder(thread_size),
+        system=prompt_builder(thread_size) + "\n\n" + _WRITING_STYLE_RULES,
         messages=[{"role": "user", "content": user_message}],
         metadata={"user_id": "x-generation"}
     )

@@ -1281,6 +1281,43 @@
     }
     .btn-bulk-clear:hover { border-color: var(--accent); color: var(--text); }
 
+    .bulk-status-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.14);
+      z-index: 500;
+      min-width: 180px;
+      overflow: hidden;
+    }
+    .bulk-status-menu button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 9px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      text-align: left;
+      font-family: var(--font);
+      transition: background 0.1s;
+    }
+    .bulk-status-menu button:hover { background: var(--surface2); }
+    .bsm-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .bsm-dot.generated { background: var(--yellow); }
+    .bsm-dot.editing { background: #f97316; }
+    .bsm-dot.ready_to_publish { background: var(--blue); }
+    .bsm-dot.published { background: var(--green); }
+
     /* ── List view ─────────────────────────────────── */
     .overview-content { flex: 1; overflow-y: auto; }
     .posts-table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -2404,6 +2441,15 @@
     <button class="btn-bulk" onclick="bulkExportSelected()">↓ Export CSV for Framer</button>
     <button class="btn-bulk" onclick="bulkRepurpose('x')">𝕏 Repurpose for X</button>
     <button class="btn-bulk" onclick="bulkRepurpose('threads')">⊕ Repurpose for Threads</button>
+    <div class="bulk-status-wrap" style="position:relative;">
+      <button class="btn-bulk" onclick="toggleBulkStatusMenu(event)">⇄ Change Status ▾</button>
+      <div class="bulk-status-menu" id="bulkStatusMenu" style="display:none;">
+        <button onclick="bulkChangeStatus('generated')"><span class="bsm-dot generated"></span> Generated</button>
+        <button onclick="bulkChangeStatus('editing')"><span class="bsm-dot editing"></span> Editing</button>
+        <button onclick="bulkChangeStatus('ready_to_publish')"><span class="bsm-dot ready_to_publish"></span> Ready to Publish</button>
+        <button onclick="bulkChangeStatus('published')"><span class="bsm-dot published"></span> Published</button>
+      </div>
+    </div>
     <button class="btn-bulk" style="background:var(--red);" onclick="bulkDeleteSelected()">✕ Delete Selected</button>
     <button class="btn-bulk-clear" onclick="clearSelection()">✕ Clear selection</button>
   </div>
@@ -2841,7 +2887,6 @@
           <select class="status-select" id="xStatusSelect" onchange="handleXStatusChange(this.value)">
             <option value="draft">📝 Draft</option>
             <option value="scheduled">🕐 Scheduled</option>
-            <option value="posted">✅ Posted</option>
           </select>
           <div id="xScheduledSection" style="display:none; margin-top:10px;">
             <div class="field-label">Scheduled date &amp; time</div>
@@ -3072,7 +3117,6 @@
           <select class="status-select" id="thrStatusSelect" onchange="handleThrStatusChange(this.value)">
             <option value="draft">📝 Draft</option>
             <option value="scheduled">🕐 Scheduled</option>
-            <option value="posted">✅ Posted</option>
           </select>
           <div id="thrScheduledSection" style="display:none; margin-top:10px;">
             <div class="field-label">Scheduled date &amp; time</div>
@@ -4067,6 +4111,47 @@ function bulkDeleteSelected() {
     `Delete ${count} selected post${count !== 1 ? 's' : ''}? This cannot be undone.`,
     { type: 'bulk', ids: [...selectedPostIds] }
   );
+}
+
+function toggleBulkStatusMenu(e) {
+  e.stopPropagation();
+  const menu = document.getElementById('bulkStatusMenu');
+  const isOpen = menu.style.display !== 'none';
+  menu.style.display = isOpen ? 'none' : 'block';
+  if (!isOpen) {
+    const close = () => { menu.style.display = 'none'; document.removeEventListener('click', close); };
+    document.addEventListener('click', close);
+  }
+}
+
+async function bulkChangeStatus(newStatus) {
+  document.getElementById('bulkStatusMenu').style.display = 'none';
+  const ids = [...selectedPostIds];
+  if (ids.length === 0) return;
+
+  const STATUS_LABELS = { generated: 'Generated', editing: 'Editing', ready_to_publish: 'Ready to Publish', published: 'Published' };
+  const label = STATUS_LABELS[newStatus] || newStatus;
+
+  const ok = confirm(`Move ${ids.length} post${ids.length !== 1 ? 's' : ''} to "${label}"?`);
+  if (!ok) return;
+
+  try {
+    const res = await fetch('/api/posts/bulk-status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ post_ids: ids, status: newStatus }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      showToast(`Moved ${data.updated} post${data.updated !== 1 ? 's' : ''} to "${label}"`, 'success');
+      clearSelection();
+      await loadPosts();
+    } else {
+      showToast('Status change failed', 'error');
+    }
+  } catch {
+    showToast('Status change failed', 'error');
+  }
 }
 
 // ── Export ────────────────────────────────────────────────────────────────────
@@ -5525,7 +5610,7 @@ function renderFormatCard(key) {
         <textarea class="tweet-bubble-input" id="${tId}" oninput="updateTweetCharCount('${tId}','${cId}'); repurposeTrackEdit('hook_variants')">${escHtml(v.tweet)}</textarea>
         <div class="tweet-char-count" id="${cId}">${v.tweet.length} / 280</div>
         <div class="tweet-link-reply-wrap" style="margin-top:6px;">
-          <textarea id="${lrId}" rows="1" oninput="repurposeTrackEdit('hook_variants')">${escHtml(v.link_reply || '')}</textarea>
+          <textarea id="${lrId}" rows="1" oninput="repurposeTrackEdit('hook_variants')">${escHtml((v.link_reply || '').replace('[URL]', _getBlogUrl()))}</textarea>
         </div>
         <div class="tweet-card-actions" style="margin-top:8px;">
           <button class="btn btn-primary" style="font-size:12px;" onclick="addHookVariantToXDraft(${i})">＋ Add to X Drafts</button>
@@ -5592,7 +5677,7 @@ function renderFormatCard(key) {
   html += `<div class="tweet-card">
     <div class="tweet-card-label">Link Reply</div>
     <div class="tweet-link-reply-wrap">
-      <textarea id="${lrId}" rows="2" oninput="repurposeTrackEdit('${key}')">${escHtml(linkReply)}</textarea>
+      <textarea id="${lrId}" rows="2" oninput="repurposeTrackEdit('${key}')">${escHtml(linkReply.replace('[URL]', _getBlogUrl()))}</textarea>
     </div>
   </div>`;
 
@@ -5751,7 +5836,7 @@ function renderCardContent(card, i) {
         <textarea class="tweet-input" rows="2" oninput="rp2TrackEdit(${i})"
           data-card="${i}" data-tweet="link_reply"
           style="width:100%;font-size:12px;resize:vertical;"
-        >${escHtml(card.link_reply)}</textarea></div>` : '') +
+        >${escHtml(card.link_reply.replace('[URL]', _getBlogUrl()))}</textarea></div>` : '') +
       visualNote;
   } else {
     const tw = card.tweet || '';
@@ -5765,7 +5850,7 @@ function renderCardContent(card, i) {
         <textarea class="tweet-input" rows="2" oninput="rp2TrackEdit(${i})"
           data-card="${i}" data-tweet="link_reply"
           style="width:100%;font-size:12px;resize:vertical;"
-        >${escHtml(card.link_reply)}</textarea></div>` : ''}
+        >${escHtml(card.link_reply.replace('[URL]', _getBlogUrl()))}</textarea></div>` : ''}
       ${visualNote}
     </div>`;
   }
@@ -7288,7 +7373,6 @@ function populateXEditor(post) {
   }
 
   document.getElementById('xMarket').value = post.market || '';
-  document.getElementById('xStatusSelect').value = post.status || 'draft';
   toggleXStatusFields(post.status || 'draft');
   if (post.scheduled_at) {
     const dt = new Date(post.scheduled_at);
@@ -7303,6 +7387,14 @@ function populateXEditor(post) {
   const labels = { draft: '📝 Draft', scheduled: '🕐 Scheduled', posted: '✅ Posted' };
   badge.textContent = labels[post.status] || post.status;
   badge.className = `x-status-badge ${post.status || 'draft'}`;
+  // Hide the dropdown for posted tweets — status can only reach "posted" via Typefully push
+  const xSelectEl = document.getElementById('xStatusSelect');
+  if (post.status === 'posted') {
+    xSelectEl.style.display = 'none';
+  } else {
+    xSelectEl.style.display = '';
+    xSelectEl.value = post.status || 'draft';
+  }
 
   loadXAuditLog(post.id);
 
@@ -7923,7 +8015,6 @@ function populateThrEditor(post) {
   }
 
   document.getElementById('thrMarket').value = post.market || '';
-  document.getElementById('thrStatusSelect').value = post.status || 'draft';
   toggleThrStatusFields(post.status || 'draft');
   if (post.scheduled_at) {
     const dt = new Date(post.scheduled_at);
@@ -7937,6 +8028,14 @@ function populateThrEditor(post) {
   const labels = { draft: '📝 Draft', scheduled: '🕐 Scheduled', posted: '✅ Posted' };
   badge.textContent = labels[post.status] || post.status;
   badge.className = `x-status-badge ${post.status || 'draft'}`;
+  // Hide the dropdown for posted threads — status can only reach "posted" via Typefully push
+  const thrSelectEl = document.getElementById('thrStatusSelect');
+  if (post.status === 'posted') {
+    thrSelectEl.style.display = 'none';
+  } else {
+    thrSelectEl.style.display = '';
+    thrSelectEl.value = post.status || 'draft';
+  }
 
   loadThrAuditLog(post.id);
 

@@ -6,7 +6,7 @@ import anthropic
 
 from config import ANTHROPIC_API_KEY, CLAUDE_MODEL
 from src.generator import _messages_create_with_retry
-from src.thought_leadership import _fetch_live_blog_slugs
+from src.thought_leadership import _fetch_live_blog_slugs, _WRITING_STYLE_RULES
 
 _FALLBACK_URL = "https://hitpayapp.com/blog/hitpay-rates"
 _SME_FALLBACK_URL = "https://smegrowthhub.com/blog"
@@ -301,7 +301,7 @@ def generate_threads_story(
         client,
         model=CLAUDE_MODEL,
         max_tokens=2000,
-        system=system,
+        system=system + "\n\n" + _WRITING_STYLE_RULES,
         messages=[{"role": "user", "content": prompt}],
         metadata={"user_id": "threads-generation"}
     )

@@ -39,6 +39,7 @@ from src.database import (
     get_repurposed_content,
     init_db,
     migrate_brand_column,
+    migrate_x_repurposed_column,
     list_feedback,
     list_logins,
     list_posts,
@@ -68,10 +69,11 @@ GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
-    try:
-        migrate_brand_column()
-    except Exception:
-        pass  # column may already exist; non-fatal
+    for migrate in (migrate_brand_column, migrate_x_repurposed_column):
+        try:
+            migrate()
+        except Exception:
+            pass  # column may already exist; non-fatal
     for d in ["generated", "editing", "ready_to_publish", "published", "exports"]:
         try:
             Path(POSTS_DIR, d).mkdir(parents=True, exist_ok=True)
@@ -411,6 +413,42 @@ def api_bulk_export(body: BulkExportRequest, _: str = Depends(require_auth)):
     csv_path = export_bulk_to_csv(posts_with_paths)
     filename = f"bulk-export-{_date.today().isoformat()}.csv"
     return FileResponse(csv_path, media_type="text/csv", filename=filename)
+
+
+# ── Bulk Status Change ───────────────────────────────────────────────────────
+
+class BulkStatusRequest(BaseModel):
+    post_ids: list[int]
+    status: str
+
+
+@app.post("/api/posts/bulk-status")
+def api_bulk_status(body: BulkStatusRequest, user_email: str = Depends(require_auth)):
+    valid = ["generated", "editing", "ready_to_publish", "published"]
+    if body.status not in valid:
+        raise HTTPException(400, f"Invalid status. Must be one of: {valid}")
+    if not body.post_ids:
+        raise HTTPException(400, "No post IDs provided")
+
+    updated = 0
+    for pid in body.post_ids:
+        post = get_post(pid)
+        if not post:
+            continue
+        old_file = post.get("file_path", "")
+        old_status = post.get("status", "")
+        slug = post["slug"]
+
+        if old_file and os.path.exists(old_file):
+            new_file = move_post_file(old_file, body.status, slug)
+        else:
+            new_file = str(Path(POSTS_DIR) / body.status / f"{slug}.md")
+
+        update_post_status(pid, body.status, old_file, new_file)
+        log_audit(pid, user_email, "status_changed", {"from": old_status, "to": body.status})
+        updated += 1
+
+    return {"ok": True, "updated": updated}
 
 
 # ── Bulk Delete ──────────────────────────────────────────────────────────────
@@ -1742,11 +1780,11 @@ def api_generate_weekly_drafts(request: Request):
 
 @app.post("/api/automation/push-pending")
 def api_automation_push_pending(request: Request):
-    """Phase 2 — called by GitHub Actions at 10:30am SGT (daily).
+    """Phase 2 — called by GitHub Actions daily at 01:00 UTC (09:00 SGT).
 
-    Finds today's auto-generated draft posts and schedules them in Typefully
-    for a random time in the 10:30–11am SGT window (02:30–03:00 UTC).
-    Skips any post that was already pushed or deleted during the review window.
+    Pushes ALL scheduled posts (status=scheduled, typefully_url IS NULL) whose
+    scheduled_at falls within the next 26 hours to Typefully using their exact
+    scheduled_at time. Covers both automation-generated and manually-created posts.
     """
     key = request.headers.get("X-Automation-Key", "")
     if not key or not AUTOMATION_SECRET or key != AUTOMATION_SECRET:
@@ -1757,62 +1795,57 @@ def api_automation_push_pending(request: Request):
     from datetime import datetime, timezone, timedelta
 
     now_utc = datetime.now(timezone.utc)
+    horizon = now_utc + timedelta(hours=26)  # look ahead ~1 day
 
-    # Publish window: 10:30–11:00am SGT = 02:30–03:00 UTC
-    today = now_utc.date()
-    window_start = datetime(today.year, today.month, today.day, 2, 30, tzinfo=timezone.utc)
-    window_end   = datetime(today.year, today.month, today.day, 3,  0, tzinfo=timezone.utc)
+    def _normalize_dt(dt):
+        if dt is None:
+            return None
+        if hasattr(dt, "tzinfo") and dt.tzinfo is None:
+            return dt.replace(tzinfo=timezone.utc)
+        return dt
 
-    # Must be at least 5 min in the future; if window has passed use +5 min fallback
-    earliest = max(now_utc + timedelta(minutes=5), window_start)
-    if earliest >= window_end:
-        schedule_time = now_utc + timedelta(minutes=5)
-    else:
-        spread_secs = int((window_end - earliest).total_seconds())
-        schedule_time = earliest + timedelta(seconds=random.randint(0, spread_secs))
-    schedule_str = schedule_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+    def _should_push(p: dict) -> str | None:
+        """Return ISO schedule string if post should be pushed, else None."""
+        if p.get("typefully_url"):
+            return None  # already in Typefully
+        if p.get("status") != "scheduled":
+            return None
+        scheduled_at = _normalize_dt(p.get("scheduled_at"))
+        if scheduled_at is None:
+            return None
+        # Must be in the future (at least 5 min) and within our look-ahead window
+        earliest = now_utc + timedelta(minutes=5)
+        if scheduled_at < earliest or scheduled_at > horizon:
+            return None
+        return scheduled_at.strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    # Posts created in the last 6 hours by automation (handles timezone edge cases)
-    cutoff = now_utc - timedelta(hours=6)
-
-    def _is_today_auto_draft(p: dict) -> bool:
-        if p.get("editor_email") != "automation@hit-pay.com":
-            return False
-        if p.get("status") != "draft":
-            return False
-        created = p.get("created_at")
-        if created is None:
-            return False
-        # pg8000 returns aware or naive datetimes; normalise to UTC
-        if hasattr(created, "tzinfo") and created.tzinfo is None:
-            created = created.replace(tzinfo=timezone.utc)
-        return created >= cutoff
-
-    results = {"schedule_time": schedule_str, "x_posts": [], "threads_posts": []}
+    results = {"x_posts": [], "threads_posts": []}
 
     # ── X posts ──────────────────────────────────────────────────────────────
-    for p in list_x_posts(status="draft"):
-        if not _is_today_auto_draft(p):
+    for p in list_x_posts(status="scheduled"):
+        schedule_str = _should_push(p)
+        if not schedule_str:
             continue
         try:
             result = _do_push_x_post(p["id"], post_now=False, schedule_date=schedule_str)
             log_x_audit(p["id"], "automation@hit-pay.com", "pushed_to_typefully", {
                 "mode": "scheduled", "typefully_url": result["typefully_url"], "schedule_date": schedule_str,
             })
-            results["x_posts"].append({"id": p["id"], "typefully_url": result["typefully_url"]})
+            results["x_posts"].append({"id": p["id"], "typefully_url": result["typefully_url"], "schedule_date": schedule_str})
         except Exception as exc:
             results["x_posts"].append({"id": p["id"], "error": str(exc)})
 
     # ── Threads posts ─────────────────────────────────────────────────────────
-    for p in list_threads_posts(status="draft"):
-        if not _is_today_auto_draft(p):
+    for p in list_threads_posts(status="scheduled"):
+        schedule_str = _should_push(p)
+        if not schedule_str:
             continue
         try:
             result = _do_push_threads_post(p["id"], post_now=False, schedule_date=schedule_str)
             log_threads_audit(p["id"], "automation@hit-pay.com", "pushed_to_typefully", {
                 "mode": "scheduled", "typefully_url": result["typefully_url"], "schedule_date": schedule_str,
             })
-            results["threads_posts"].append({"id": p["id"], "typefully_url": result["typefully_url"]})
+            results["threads_posts"].append({"id": p["id"], "typefully_url": result["typefully_url"], "schedule_date": schedule_str})
         except Exception as exc:
             results["threads_posts"].append({"id": p["id"], "error": str(exc)})
 

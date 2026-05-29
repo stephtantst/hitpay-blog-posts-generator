@@ -218,6 +218,39 @@ def get_repurposed_content(post_id: int) -> dict | None:
     return val if isinstance(val, dict) else json.loads(val)
 
 
+def get_unrepurposed_published_post(brand: str = "hitpay") -> dict | None:
+    """Return a random published post that has not yet been repurposed for X."""
+    conn = get_connection()
+    safe = brand.replace("'", "''")
+    rows = conn.run(
+        f"""SELECT * FROM posts
+            WHERE status = 'published'
+            AND x_repurposed_at IS NULL
+            AND (brand = '{safe}' OR brand IS NULL)
+            ORDER BY RANDOM()
+            LIMIT 1"""
+    )
+    result = _rows_to_dicts(conn, rows)
+    return result[0] if result else None
+
+
+def mark_post_x_repurposed(post_id: int):
+    """Record that a post has been repurposed into an X draft."""
+    conn = get_connection()
+    conn.run(
+        "UPDATE posts SET x_repurposed_at = NOW(), updated_at = NOW() WHERE id = :id",
+        id=post_id,
+    )
+
+
+def migrate_x_repurposed_column():
+    """Add x_repurposed_at column to posts if missing."""
+    conn = get_connection()
+    conn.run(
+        "ALTER TABLE posts ADD COLUMN IF NOT EXISTS x_repurposed_at TIMESTAMPTZ"
+    )
+
+
 def update_repurposed_content(post_id: int, platform: str | None,
                               data: dict, replace_all: bool = False):
     conn = get_connection()
