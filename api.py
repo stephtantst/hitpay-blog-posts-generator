@@ -1704,11 +1704,13 @@ def api_generate_weekly_drafts(request: Request):
         raise HTTPException(status_code=401, detail="Unauthorized")
 
     import threading
-    from src.thought_leadership import generate_random_x_post, HITPAY_TOPIC_POOL, CONTENT_TYPE_CONFIGS
+    from src.thought_leadership import generate_random_x_post, HITPAY_TOPIC_POOL, CONTENT_TYPE_BY_WEEKDAY
     from src.threads_thought_leadership import generate_threads_story
 
     _MARKETS = ["SG", "MY", "PH", None]
-    content_types = list(CONTENT_TYPE_CONFIGS.keys())  # all 7 types
+    # One post per day (Mon–Sun) following the day-of-week schedule:
+    # product_focus × 3 (Mon/Thu/Sun), thought_leadership × 3 (Tue/Fri/Sat), merchant_story × 1 (Wed)
+    content_types = list(CONTENT_TYPE_BY_WEEKDAY.values())
     # Varied thread sizes: 2 singles, 3 three-post, 2 five-post
     _THREAD_SIZES = [1, 1, 3, 3, 3, 5, 5]
 
