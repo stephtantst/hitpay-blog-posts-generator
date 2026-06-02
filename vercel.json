@@ -5,9 +5,18 @@
       "src": "api.py",
       "use": "@vercel/python",
       "config": { "maxDuration": 300 }
+    },
+    {
+      "src": "hitpay_content_reference_mcp.py",
+      "use": "@vercel/python",
+      "config": { "maxDuration": 60 }
     }
   ],
   "routes": [
+    {
+      "src": "/api/mcp(.*)",
+      "dest": "hitpay_content_reference_mcp.py"
+    },
     {
       "src": "/(.*)",
       "dest": "api.py"
