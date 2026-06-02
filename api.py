@@ -1553,10 +1553,11 @@ def api_push_typefully(post_id: int, body: TypefullyRequest,
             brand=post.get("brand", "hitpay"),
         )
         typefully_url = result.get("typefully_url") or result.get("share_url") or ""
+        x_status = "posted" if body.post_now else ("scheduled" if schedule_date else "draft")
         _change_x_status(
             xid,
-            "scheduled" if schedule_date else "draft",
-            scheduled_at=schedule_date,
+            x_status,
+            scheduled_at=schedule_date if not body.post_now else None,
             post_url=typefully_url,
         )
         log_x_audit(xid, user_email, "created", {
