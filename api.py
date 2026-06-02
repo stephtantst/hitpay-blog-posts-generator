@@ -1535,6 +1535,36 @@ def api_push_typefully(post_id: int, body: TypefullyRequest,
         check_content += " " + body.link_reply
     result["link_warning"] = _check_link_url(check_content)
     log_audit(post_id, user_email, "pushed_to_typefully", {"format": body.format_key})
+
+    # Mirror the post into x_posts so it shows in the X list and calendar.
+    # Build the content string from whatever was actually sent to Typefully.
+    tweets_sent = body.tweets or []
+    if body.link_reply:
+        tweets_sent = list(tweets_sent) + [body.link_reply]
+    if tweets_sent:
+        THREAD_SEP = "\n\n---\n\n"
+        x_content = THREAD_SEP.join(t.replace("[URL]", body.blog_url or "") for t in tweets_sent)
+        xid = create_x_post(
+            content=x_content,
+            market=post.get("country") or None,
+            scheduled_at=schedule_date or None,
+            editor_email=user_email,
+            source_blog_post_id=post_id,
+            brand=post.get("brand", "hitpay"),
+        )
+        typefully_url = result.get("typefully_url") or result.get("share_url") or ""
+        _change_x_status(
+            xid,
+            "scheduled" if schedule_date else "draft",
+            scheduled_at=schedule_date,
+            post_url=typefully_url,
+        )
+        log_x_audit(xid, user_email, "created", {
+            "source": f"repurpose:{body.format_key}",
+            "typefully_url": typefully_url,
+        })
+        result["x_post_id"] = xid
+
     return result
 
 
