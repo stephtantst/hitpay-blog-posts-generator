@@ -978,6 +978,45 @@ def api_x_post_typefully(post_id: int, body: XTypefullyRequest,
     return result
 
 
+class UpdateAndSyncXRequest(BaseModel):
+    content: str
+    market: str | None = None
+    scheduled_at: str | None = None
+
+
+@app.post("/api/x-posts/{post_id}/update-and-sync")
+def api_update_and_sync_x_post(post_id: int, body: UpdateAndSyncXRequest,
+                                user_email: str = Depends(require_auth)):
+    """Save edits to DB then re-push to Typefully, preserving the existing schedule."""
+    if not TYPEFULLY_API_KEY:
+        raise HTTPException(400, "Typefully not configured — add TYPEFULLY_API_KEY to .env")
+    post = get_x_post(post_id)
+    if not post:
+        raise HTTPException(404, "X post not found")
+
+    # Persist the edited content
+    fields: dict = {"content": body.content.strip()}
+    if body.market is not None:
+        fields["market"] = body.market or None
+    if body.scheduled_at is not None:
+        fields["scheduled_at"] = body.scheduled_at or None
+    update_x_post(post_id, fields)
+    log_x_audit(post_id, user_email, "edited", {"fields": list(fields.keys()), "source": "update_and_sync"})
+
+    # Re-push with the existing or updated schedule
+    schedule_date = body.scheduled_at or post.get("scheduled_at")
+    if schedule_date and hasattr(schedule_date, "isoformat"):
+        schedule_date = schedule_date.isoformat()
+    result = _do_push_x_post(post_id, post_now=False, schedule_date=schedule_date)
+    log_x_audit(post_id, user_email, "pushed_to_typefully", {
+        "mode": "resync",
+        "typefully_url": result["typefully_url"],
+    })
+    result.pop("mode", None)
+    result["resync_warning"] = "A new Typefully draft was created with your edits. Delete the old draft in Typefully to avoid duplicates."
+    return result
+
+
 class GenerateThoughtLeadershipRequest(BaseModel):
     market: str | None = None
     topic_hint: str | None = None
@@ -1036,6 +1075,48 @@ def api_generate_random_x_post(
             raise HTTPException(503, "Claude API is busy right now — please try again in a few seconds")
         raise HTTPException(500, f"Generation error: {e}")
     return result
+
+
+class GenerateChangelogXRequest(BaseModel):
+    market: str | None = None
+    limit: int = 10
+    brand: str = "hitpay"
+
+
+@app.post("/api/x-posts/generate-from-changelog")
+def api_generate_x_from_changelog(
+    body: GenerateChangelogXRequest,
+    user_email: str = Depends(require_auth),
+):
+    from src.changelog_social import generate_x_from_changelog
+    try:
+        result = generate_x_from_changelog(market=body.market, limit=body.limit, brand=body.brand)
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+    except Exception as e:
+        if "overloaded_error" in str(e):
+            raise HTTPException(503, "Claude API is busy right now — please try again in a few seconds")
+        raise HTTPException(500, f"Generation error: {e}")
+
+    created = []
+
+    roundup = result["roundup"]
+    link = roundup.get("link_url") or ""
+    roundup_tweets = roundup.get("tweets", [])
+    roundup_content = "\n\n---\n\n".join(_cap_tweet(t.replace("[URL]", link)) for t in roundup_tweets)
+    roundup_id = create_x_post(content=roundup_content, market=body.market, editor_email=user_email, brand=body.brand)
+    log_x_audit(roundup_id, user_email, "created", {"source": "changelog_roundup"})
+    created.append({"id": roundup_id, "type": "roundup", "preview": roundup_tweets[0][:100] if roundup_tweets else ""})
+
+    for item in result["individual"]:
+        tweet = item.get("tweet", "")
+        item_link = item.get("link_url") or ""
+        content = _cap_tweet(tweet.replace("[URL]", item_link))
+        post_id = create_x_post(content=content, market=body.market, editor_email=user_email, brand=body.brand)
+        log_x_audit(post_id, user_email, "created", {"source": "changelog_individual", "title": item.get("title", "")})
+        created.append({"id": post_id, "type": "individual", "title": item.get("title", ""), "preview": content[:100]})
+
+    return {"created": created, "total": len(created), "market": body.market}
 
 
 # ── Threads Posts ─────────────────────────────────────────────────────────────
@@ -1203,6 +1284,48 @@ def api_generate_threads_story(body: GenerateThreadsStoryRequest, _: str = Depen
             raise HTTPException(503, "Claude API is busy right now — please try again in a few seconds")
         raise HTTPException(500, f"Generation error: {e}")
     return result
+
+
+class GenerateChangelogThreadsRequest(BaseModel):
+    market: str | None = None
+    limit: int = 10
+    brand: str = "hitpay"
+
+
+@app.post("/api/threads-posts/generate-from-changelog")
+def api_generate_threads_from_changelog(
+    body: GenerateChangelogThreadsRequest,
+    user_email: str = Depends(require_auth),
+):
+    from src.changelog_social import generate_threads_from_changelog
+    try:
+        result = generate_threads_from_changelog(market=body.market, limit=body.limit, brand=body.brand)
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+    except Exception as e:
+        if "overloaded_error" in str(e):
+            raise HTTPException(503, "Claude API is busy right now — please try again in a few seconds")
+        raise HTTPException(500, f"Generation error: {e}")
+
+    created = []
+
+    roundup = result["roundup"]
+    roundup_posts = roundup.get("posts", [])
+    roundup_link = roundup.get("link_url") or ""
+    roundup_content = "\n\n---\n\n".join(p.replace("[URL]", roundup_link) for p in roundup_posts)
+    roundup_id = create_threads_post(content=roundup_content, market=body.market, editor_email=user_email, brand=body.brand)
+    log_threads_audit(roundup_id, user_email, "created", {"source": "changelog_roundup"})
+    created.append({"id": roundup_id, "type": "roundup", "preview": roundup_posts[0][:100] if roundup_posts else ""})
+
+    for item in result["individual"]:
+        post_text = item.get("post", "")
+        item_link = item.get("link_url") or ""
+        content = post_text.replace("[URL]", item_link)
+        post_id = create_threads_post(content=content, market=body.market, editor_email=user_email, brand=body.brand)
+        log_threads_audit(post_id, user_email, "created", {"source": "changelog_individual", "title": item.get("title", "")})
+        created.append({"id": post_id, "type": "individual", "title": item.get("title", ""), "preview": content[:100]})
+
+    return {"created": created, "total": len(created), "market": body.market}
 
 
 def _do_push_threads_post(post_id: int, post_now: bool, schedule_date: str | None) -> dict:
@@ -1839,16 +1962,16 @@ def api_automation_push_pending(request: Request):
 
     def _should_push(p: dict) -> str | None:
         """Return ISO schedule string if post should be pushed, else None."""
-        if p.get("typefully_url"):
-            return None  # already in Typefully
+        if p.get("post_url"):
+            return None  # already pushed to Typefully
         if p.get("status") != "scheduled":
             return None
         scheduled_at = _normalize_dt(p.get("scheduled_at"))
         if scheduled_at is None:
             return None
-        # Must be in the future (at least 5 min) and within our look-ahead window
+        # Must be at least 5 minutes in the future
         earliest = now_utc + timedelta(minutes=5)
-        if scheduled_at < earliest or scheduled_at > horizon:
+        if scheduled_at < earliest:
             return None
         return scheduled_at.strftime("%Y-%m-%dT%H:%M:%SZ")
 

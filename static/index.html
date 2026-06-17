@@ -2698,6 +2698,7 @@
       <button class="nav-btn" id="xNavEditor" onclick="switchXView('editor')">Editor</button>
     </div>
     <div style="flex:1"></div>
+    <button class="btn" style="font-size:12px;padding:5px 10px;margin-right:6px;" onclick="openChangelogModal('x')" title="Generate posts from HitPay changelog">📋 From Changelog</button>
     <button class="btn-new-post" onclick="openCreateXModal()">＋ New Post</button>
   </div>
 
@@ -2887,6 +2888,7 @@
           <select class="status-select" id="xStatusSelect" onchange="handleXStatusChange(this.value)">
             <option value="draft">📝 Draft</option>
             <option value="scheduled">🕐 Scheduled</option>
+            <option value="posted">✅ Posted</option>
           </select>
           <div id="xScheduledSection" style="display:none; margin-top:10px;">
             <div class="field-label">Scheduled date &amp; time</div>
@@ -2914,6 +2916,8 @@
             <button class="btn btn-primary" id="xSaveBtn" onclick="saveXPost()">↑ Save Changes</button>
             <button class="btn btn-danger" onclick="deleteXPost()">✕ Delete Post</button>
           </div>
+          <button class="btn" id="xSaveAndSyncBtn" onclick="saveAndSyncXPost()" style="display:none;width:100%;margin-top:8px;font-size:13px;" title="Save edits and create a new Typefully draft with updated content">↑ Save &amp; sync to Typefully ↗</button>
+          <div id="xSyncResult" style="display:none;font-size:12px;font-weight:500;padding:6px 8px;border-radius:6px;margin-top:8px;"></div>
         </div>
 
         <div class="meta-section" id="xTypefullySection" style="display:none;">
@@ -2951,6 +2955,7 @@
       <button class="nav-btn" id="thrNavEditor" onclick="switchThrView('editor')">Editor</button>
     </div>
     <div style="flex:1"></div>
+    <button class="btn" style="font-size:12px;padding:5px 10px;margin-right:6px;" onclick="openChangelogModal('threads')" title="Generate posts from HitPay changelog">📋 From Changelog</button>
     <button class="btn-new-post" onclick="openCreateThrModal()">＋ New Story</button>
   </div>
 
@@ -3117,6 +3122,7 @@
           <select class="status-select" id="thrStatusSelect" onchange="handleThrStatusChange(this.value)">
             <option value="draft">📝 Draft</option>
             <option value="scheduled">🕐 Scheduled</option>
+            <option value="posted">✅ Posted</option>
           </select>
           <div id="thrScheduledSection" style="display:none; margin-top:10px;">
             <div class="field-label">Scheduled date &amp; time</div>
@@ -3536,6 +3542,35 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Changelog Generation Modal -->
+<div class="modal-overlay" id="changelogModal">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-title" id="changelogModalTitle">Generate from Changelog</div>
+    <div style="margin-bottom:14px;font-size:13px;color:var(--text-secondary);">Fetches the latest HitPay product updates and saves a roundup thread + individual post per entry as drafts.</div>
+    <div style="margin-bottom:14px;">
+      <label class="modal-field-label">Market (optional)</label>
+      <select class="modal-input" id="changelogMarket" style="height:38px;">
+        <option value="">All markets</option>
+        <option value="SG">Singapore</option>
+        <option value="MY">Malaysia</option>
+        <option value="PH">Philippines</option>
+      </select>
+    </div>
+    <div style="margin-bottom:18px;">
+      <label class="modal-field-label">Entries to fetch</label>
+      <select class="modal-input" id="changelogLimit" style="height:38px;">
+        <option value="5">5 entries</option>
+        <option value="10" selected>10 entries</option>
+      </select>
+    </div>
+    <div id="changelogActions" style="display:flex;gap:8px;">
+      <button class="btn" style="flex:1;" onclick="closeChangelogModal()">Cancel</button>
+      <button class="btn btn-primary" id="changelogGenerateBtn" style="flex:2;" onclick="runChangelogGenerate()">Generate drafts</button>
+    </div>
+    <div id="changelogLoading" style="display:none;text-align:center;padding:12px 0;font-size:13px;color:var(--text-secondary);">Fetching changelog &amp; generating posts…</div>
   </div>
 </div>
 
@@ -7387,14 +7422,7 @@ function populateXEditor(post) {
   const labels = { draft: '📝 Draft', scheduled: '🕐 Scheduled', posted: '✅ Posted' };
   badge.textContent = labels[post.status] || post.status;
   badge.className = `x-status-badge ${post.status || 'draft'}`;
-  // Hide the dropdown for posted tweets — status can only reach "posted" via Typefully push
-  const xSelectEl = document.getElementById('xStatusSelect');
-  if (post.status === 'posted') {
-    xSelectEl.style.display = 'none';
-  } else {
-    xSelectEl.style.display = '';
-    xSelectEl.value = post.status || 'draft';
-  }
+  document.getElementById('xStatusSelect').value = post.status || 'draft';
 
   loadXAuditLog(post.id);
 
@@ -7403,6 +7431,13 @@ function populateXEditor(post) {
     typefullySection.style.display = window._config.typefully_enabled ? '' : 'none';
     document.getElementById('xTypefullyResult').style.display = 'none';
     document.getElementById('xTypefullyScheduleDate').value = '';
+  }
+
+  const syncBtn = document.getElementById('xSaveAndSyncBtn');
+  const syncResult = document.getElementById('xSyncResult');
+  if (syncBtn) {
+    syncBtn.style.display = (window._config.typefully_enabled && post.status === 'scheduled') ? '' : 'none';
+    syncResult.style.display = 'none';
   }
 }
 
@@ -7557,6 +7592,65 @@ async function deleteXPost() {
   showToast('Post deleted');
 }
 
+// ── X Save & Sync ─────────────────────────────────────────────────────────────
+async function saveAndSyncXPost() {
+  if (!currentXPost) return;
+  const content = _getXContent().trim();
+  if (!content) { showToast('Content cannot be empty', 'error'); return; }
+
+  const market = document.getElementById('xMarket').value;
+  const scheduledAt = document.getElementById('xScheduledAt').value || null;
+  const btn = document.getElementById('xSaveAndSyncBtn');
+  const resultEl = document.getElementById('xSyncResult');
+
+  btn.disabled = true;
+  btn.textContent = 'Syncing…';
+  resultEl.style.display = 'none';
+
+  try {
+    const res = await fetch(`/api/x-posts/${currentXPost.id}/update-and-sync`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content, market: market || null, scheduled_at: scheduledAt }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      resultEl.textContent = data.detail || 'Sync failed — try again';
+      resultEl.style.background = 'var(--danger-bg, #fee2e2)';
+      resultEl.style.color = 'var(--danger, #dc2626)';
+      resultEl.style.display = 'block';
+      return;
+    }
+    xIsDirty = false;
+    currentXPost = { ...currentXPost, content, market: market || null };
+    const idx = xPosts.findIndex(p => p.id === currentXPost.id);
+    if (idx !== -1) xPosts[idx] = { ...xPosts[idx], ...currentXPost };
+    renderXPostList();
+    if (xCurrentView === 'overview') renderXOverview();
+    loadXAuditLog(currentXPost.id);
+
+    resultEl.style.background = 'var(--success-bg, #dcfce7)';
+    resultEl.style.color = 'var(--success, #16a34a)';
+    let html = 'Saved &amp; synced ✓';
+    if (data.typefully_url) {
+      html += ` — <a href="${escHtml(data.typefully_url)}" target="_blank" style="color:inherit;">view new draft ↗</a>`;
+    }
+    if (data.resync_warning) {
+      html += `<br><span style="font-weight:400;opacity:0.85;">${escHtml(data.resync_warning)}</span>`;
+    }
+    resultEl.innerHTML = html;
+    resultEl.style.display = 'block';
+  } catch (e) {
+    resultEl.textContent = 'Network error — try again';
+    resultEl.style.background = 'var(--danger-bg, #fee2e2)';
+    resultEl.style.color = 'var(--danger, #dc2626)';
+    resultEl.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '↑ Save & sync to Typefully ↗';
+  }
+}
+
 // ── X Audit log ───────────────────────────────────────────────────────────────
 async function loadXAuditLog(postId) {
   const res = await fetch(`/api/x-posts/${postId}/audit-log`);
@@ -7620,6 +7714,58 @@ function setThreadFormat(n) {
   });
   const genBtn = document.getElementById('createXGenerateBtn');
   if (genBtn) genBtn.textContent = n === 1 ? 'Generate tweet' : `Generate ${n}-tweet thread`;
+}
+
+let _changelogPlatform = 'x';
+
+function openChangelogModal(platform) {
+  _changelogPlatform = platform || 'x';
+  const title = platform === 'threads' ? 'Generate Threads Posts from Changelog' : 'Generate X Posts from Changelog';
+  document.getElementById('changelogModalTitle').textContent = title;
+  document.getElementById('changelogActions').style.display = 'flex';
+  document.getElementById('changelogLoading').style.display = 'none';
+  document.getElementById('changelogGenerateBtn').disabled = false;
+  document.getElementById('changelogModal').classList.add('open');
+}
+
+function closeChangelogModal() {
+  document.getElementById('changelogModal').classList.remove('open');
+}
+
+async function runChangelogGenerate() {
+  const market = document.getElementById('changelogMarket').value;
+  const limit = parseInt(document.getElementById('changelogLimit').value, 10);
+  const endpoint = _changelogPlatform === 'threads'
+    ? '/api/threads-posts/generate-from-changelog'
+    : '/api/x-posts/generate-from-changelog';
+
+  document.getElementById('changelogActions').style.display = 'none';
+  document.getElementById('changelogLoading').style.display = 'block';
+
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ market: market || null, limit, brand: activeBrand }),
+    });
+    if (!res.ok) {
+      let msg = 'Generation failed — try again';
+      try { const e = await res.json(); if (e.detail) msg = e.detail; } catch (_) {}
+      throw new Error(msg);
+    }
+    const data = await res.json();
+    closeChangelogModal();
+    showToast(`${data.total} drafts created from changelog`, 'success');
+    if (_changelogPlatform === 'threads') {
+      loadThrPosts();
+    } else {
+      loadXPosts();
+    }
+  } catch (e) {
+    document.getElementById('changelogLoading').style.display = 'none';
+    document.getElementById('changelogActions').style.display = 'flex';
+    showToast(e.message || 'Generation failed', 'error');
+  }
 }
 
 function openCreateXModal() {
@@ -8028,14 +8174,7 @@ function populateThrEditor(post) {
   const labels = { draft: '📝 Draft', scheduled: '🕐 Scheduled', posted: '✅ Posted' };
   badge.textContent = labels[post.status] || post.status;
   badge.className = `x-status-badge ${post.status || 'draft'}`;
-  // Hide the dropdown for posted threads — status can only reach "posted" via Typefully push
-  const thrSelectEl = document.getElementById('thrStatusSelect');
-  if (post.status === 'posted') {
-    thrSelectEl.style.display = 'none';
-  } else {
-    thrSelectEl.style.display = '';
-    thrSelectEl.value = post.status || 'draft';
-  }
+  document.getElementById('thrStatusSelect').value = post.status || 'draft';
 
   loadThrAuditLog(post.id);
 
