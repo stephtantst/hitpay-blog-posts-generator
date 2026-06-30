@@ -110,8 +110,10 @@ def repurpose_and_schedule(post: dict, user_email: str, override_date: datetime 
     threads_id = None
     try:
         r = generate_threads_story(market=market, topic_hint=topic_hint, thread_size=3, brand=brand)
-        ps = r.get("posts") or []
-        content = THREAD_SEP.join(ps) if len(ps) > 1 else (ps[0] if ps else "")
+        ps = [p for p in (r.get("posts") or []) if p and p.strip()]
+        if not ps:
+            raise ValueError("generate_threads_story returned empty posts")
+        content = THREAD_SEP.join(ps) if len(ps) > 1 else ps[0]
         content = _ensure_url(content, blog_url)
         threads_id = create_threads_post(
             content=content,

@@ -7752,13 +7752,13 @@ function closeXEditorModal() {
   pane.classList.remove('as-modal');
   pane.style.display = 'none';
   backdrop.style.display = 'none';
-  const platDiv = document.getElementById('xPlatform');
-  if (platDiv && platDiv.dataset.fromSocialCal) {
-    delete platDiv.dataset.fromSocialCal;
-    platDiv.style.display = 'none';
-    document.getElementById('socialCalPlatform').style.display = 'flex';
+  if (pane.dataset.fromSocialCal) {
+    _closeSocialCalModal(pane, backdrop);
     renderSocialCalView();
-  } else if (platDiv && platDiv.dataset.fromBlogView) {
+    return;
+  }
+  const platDiv = document.getElementById('xPlatform');
+  if (platDiv && platDiv.dataset.fromBlogView) {
     delete platDiv.dataset.fromBlogView;
     platDiv.style.display = 'none';
   } else if (xOverviewViewMode === 'calendar') {
@@ -8710,13 +8710,13 @@ function closeThrEditorModal() {
   pane.classList.remove('as-modal');
   pane.style.display = 'none';
   backdrop.style.display = 'none';
-  const platDiv = document.getElementById('threadsPlatform');
-  if (platDiv && platDiv.dataset.fromSocialCal) {
-    delete platDiv.dataset.fromSocialCal;
-    platDiv.style.display = 'none';
-    document.getElementById('socialCalPlatform').style.display = 'flex';
+  if (pane.dataset.fromSocialCal) {
+    _closeSocialCalModal(pane, backdrop);
     renderSocialCalView();
-  } else if (platDiv && platDiv.dataset.fromBlogView) {
+    return;
+  }
+  const platDiv = document.getElementById('threadsPlatform');
+  if (platDiv && platDiv.dataset.fromBlogView) {
     delete platDiv.dataset.fromBlogView;
     platDiv.style.display = 'none';
   } else if (thrOverviewViewMode === 'calendar') {
@@ -9417,13 +9417,13 @@ function closeLiEditorModal() {
   pane.classList.remove('as-modal');
   pane.style.display = 'none';
   backdrop.style.display = 'none';
-  const platDiv = document.getElementById('linkedinPlatform');
-  if (platDiv && platDiv.dataset.fromSocialCal) {
-    delete platDiv.dataset.fromSocialCal;
-    platDiv.style.display = 'none';
-    document.getElementById('socialCalPlatform').style.display = 'flex';
+  if (pane.dataset.fromSocialCal) {
+    _closeSocialCalModal(pane, backdrop);
     renderSocialCalView();
-  } else if (platDiv && platDiv.dataset.fromBlogView) {
+    return;
+  }
+  const platDiv = document.getElementById('linkedinPlatform');
+  if (platDiv && platDiv.dataset.fromBlogView) {
     delete platDiv.dataset.fromBlogView;
     platDiv.style.display = 'none';
   } else if (liOverviewViewMode === 'calendar') {
@@ -9924,16 +9924,33 @@ function socialCalUpdateNavLabel() {
 }
 
 // Open an editor modal from the Social Calendar without leaving the calendar tab.
-function _openSocialCalModal(platformDivId, openFn, id) {
-  document.getElementById('socialCalPlatform').style.display = 'none';
-  const platDiv = document.getElementById(platformDivId);
-  platDiv.style.display = 'flex';
-  platDiv.dataset.fromSocialCal = '1';
+// We physically move the pane + backdrop to <body> so display:none on the parent
+// platform div can never interfere, and the social calendar stays visible underneath.
+function _openSocialCalModal(paneId, backdropId, openFn, id) {
+  const pane     = document.getElementById(paneId);
+  const backdrop = document.getElementById(backdropId);
+  if (!pane || !backdrop) return;
+  // Stash original parent so we can restore on close
+  pane._scOrigParent     = pane.parentElement;
+  backdrop._scOrigParent = backdrop.parentElement;
+  document.body.appendChild(backdrop);
+  document.body.appendChild(pane);
+  pane.dataset.fromSocialCal = '1';
   openFn(id);
 }
-function openXFromSocialCal(id)   { _openSocialCalModal('xPlatform',       openXPostFromOverview,   id); }
-function openThrFromSocialCal(id) { _openSocialCalModal('threadsPlatform',  openThrPostFromOverview, id); }
-function openLiFromSocialCal(id)  { _openSocialCalModal('linkedinPlatform', openLiPostFromOverview,  id); }
+function _closeSocialCalModal(pane, backdrop) {
+  const origParent = pane._scOrigParent;
+  if (origParent) {
+    origParent.appendChild(backdrop);
+    origParent.appendChild(pane);
+    delete pane._scOrigParent;
+    delete backdrop._scOrigParent;
+  }
+  delete pane.dataset.fromSocialCal;
+}
+function openXFromSocialCal(id)   { _openSocialCalModal('xEditorPane',   'xEditorModalBackdrop',   openXPostFromOverview,   id); }
+function openThrFromSocialCal(id) { _openSocialCalModal('thrEditorPane', 'thrEditorModalBackdrop', openThrPostFromOverview, id); }
+function openLiFromSocialCal(id)  { _openSocialCalModal('liEditorPane',  'liEditorModalBackdrop',  openLiPostFromOverview,  id); }
 
 function socialCalEventChipHtml(p) {
   const labels     = { x: '𝕏', thr: 'Th', li: 'in' };
