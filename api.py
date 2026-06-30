@@ -11,7 +11,7 @@ from pathlib import Path
 
 import httpx
 import uvicorn
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -322,7 +322,12 @@ class EditorRequest(BaseModel):
 
 
 @app.post("/api/posts/{post_id}/status")
-def api_change_status(post_id: int, body: StatusRequest, user_email: str = Depends(require_auth)):
+def api_change_status(
+    post_id: int,
+    body: StatusRequest,
+    background_tasks: BackgroundTasks,
+    user_email: str = Depends(require_auth),
+):
     valid = ["generated", "editing", "ready_to_publish", "published"]
     if body.status not in valid:
         raise HTTPException(400, f"Invalid status. Must be one of: {valid}")
@@ -343,6 +348,22 @@ def api_change_status(post_id: int, body: StatusRequest, user_email: str = Depen
     editor_email = body.editor_email if body.status == "editing" else None
     update_post_status(post_id, body.status, old_file, new_file, editor_email=editor_email)
     log_audit(post_id, user_email, "status_changed", {"from": old_status, "to": body.status})
+
+    # Auto-repurpose when a post is published for the first time
+    if body.status == "published" and old_status != "published":
+        def _bg_repurpose():
+            from src.repurpose_scheduler import repurpose_and_schedule
+            updated_post = get_post(post_id) or post
+            result = repurpose_and_schedule(updated_post, user_email)
+            log_audit(post_id, user_email, "auto_repurposed", {
+                "date": result["date"].isoformat() if result.get("date") else None,
+                "x_id": result.get("x_id"),
+                "threads_id": result.get("threads_id"),
+                "linkedin_id": result.get("linkedin_id"),
+                "errors": result.get("errors") or None,
+            })
+        background_tasks.add_task(_bg_repurpose)
+
     return {"ok": True, "file_path": new_file}
 
 

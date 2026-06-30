@@ -7753,7 +7753,12 @@ function closeXEditorModal() {
   pane.style.display = 'none';
   backdrop.style.display = 'none';
   const platDiv = document.getElementById('xPlatform');
-  if (platDiv && platDiv.dataset.fromBlogView) {
+  if (platDiv && platDiv.dataset.fromSocialCal) {
+    delete platDiv.dataset.fromSocialCal;
+    platDiv.style.display = 'none';
+    document.getElementById('socialCalPlatform').style.display = 'flex';
+    renderSocialCalView();
+  } else if (platDiv && platDiv.dataset.fromBlogView) {
     delete platDiv.dataset.fromBlogView;
     platDiv.style.display = 'none';
   } else if (xOverviewViewMode === 'calendar') {
@@ -8706,7 +8711,12 @@ function closeThrEditorModal() {
   pane.style.display = 'none';
   backdrop.style.display = 'none';
   const platDiv = document.getElementById('threadsPlatform');
-  if (platDiv && platDiv.dataset.fromBlogView) {
+  if (platDiv && platDiv.dataset.fromSocialCal) {
+    delete platDiv.dataset.fromSocialCal;
+    platDiv.style.display = 'none';
+    document.getElementById('socialCalPlatform').style.display = 'flex';
+    renderSocialCalView();
+  } else if (platDiv && platDiv.dataset.fromBlogView) {
     delete platDiv.dataset.fromBlogView;
     platDiv.style.display = 'none';
   } else if (thrOverviewViewMode === 'calendar') {
@@ -9408,7 +9418,12 @@ function closeLiEditorModal() {
   pane.style.display = 'none';
   backdrop.style.display = 'none';
   const platDiv = document.getElementById('linkedinPlatform');
-  if (platDiv && platDiv.dataset.fromBlogView) {
+  if (platDiv && platDiv.dataset.fromSocialCal) {
+    delete platDiv.dataset.fromSocialCal;
+    platDiv.style.display = 'none';
+    document.getElementById('socialCalPlatform').style.display = 'flex';
+    renderSocialCalView();
+  } else if (platDiv && platDiv.dataset.fromBlogView) {
     delete platDiv.dataset.fromBlogView;
     platDiv.style.display = 'none';
   } else if (liOverviewViewMode === 'calendar') {
@@ -9908,10 +9923,22 @@ function socialCalUpdateNavLabel() {
   }
 }
 
+// Open an editor modal from the Social Calendar without leaving the calendar tab.
+function _openSocialCalModal(platformDivId, openFn, id) {
+  document.getElementById('socialCalPlatform').style.display = 'none';
+  const platDiv = document.getElementById(platformDivId);
+  platDiv.style.display = 'flex';
+  platDiv.dataset.fromSocialCal = '1';
+  openFn(id);
+}
+function openXFromSocialCal(id)   { _openSocialCalModal('xPlatform',       openXPostFromOverview,   id); }
+function openThrFromSocialCal(id) { _openSocialCalModal('threadsPlatform',  openThrPostFromOverview, id); }
+function openLiFromSocialCal(id)  { _openSocialCalModal('linkedinPlatform', openLiPostFromOverview,  id); }
+
 function socialCalEventChipHtml(p) {
-  const labels  = { x: '𝕏', thr: 'Th', li: 'in' };
-  const colors  = { x: '#1D9BF0', thr: '#8B5CF6', li: '#0A66C2' };
-  const openFns = { x: 'openXPostFromOverview', thr: 'openThrPostFromOverview', li: 'openLiPostFromOverview' };
+  const labels     = { x: '𝕏', thr: 'Th', li: 'in' };
+  const colors     = { x: '#1D9BF0', thr: '#8B5CF6', li: '#0A66C2' };
+  const fromCalFns = { x: 'openXFromSocialCal', thr: 'openThrFromSocialCal', li: 'openLiFromSocialCal' };
   const plat = p._platform || 'x';
   const mkt = p.market ? xMarketFlag(p.market) + ' ' : '';
   const preview = escHtml((p.content || '').slice(0, 45));
@@ -9919,7 +9946,7 @@ function socialCalEventChipHtml(p) {
   const blogTag = p.source_blog_post_id ? ' <span style="font-size:8px;font-weight:700;opacity:0.8;">↗</span>' : '';
   return `<span class="cal-event ${escHtml(p.status)}"
     style="border-left:3px solid ${color};padding-left:4px;"
-    onclick="event.stopPropagation();switchPlatform('${plat === 'x' ? 'x' : plat === 'thr' ? 'threads' : 'linkedin'}');${openFns[plat]}(${p.id})"
+    onclick="event.stopPropagation();${fromCalFns[plat]}(${p.id})"
     title="${escHtml((p.content||'').slice(0,200))}${p.source_blog_post_id ? ' [repurposed from blog]' : ''}"
   ><span style="font-size:9px;opacity:0.6;font-weight:700;">${labels[plat]}</span> ${mkt}${preview}${blogTag}</span>`;
 }
@@ -9943,11 +9970,10 @@ function renderSocialCalDraftSidebar() {
     const preview = escHtml((p.content || '').slice(0, 90));
     const mkt = p.market ? `<div class="cal-draft-card-market">${xMarketFlag(p.market)} ${p.market}</div>` : '';
     const color = colors[plat] || '#888';
-    const fn = openFns[plat];
-    const switchPl = plat === 'x' ? 'x' : plat === 'thr' ? 'threads' : 'linkedin';
+    const fromCalFns2 = { x: 'openXFromSocialCal', thr: 'openThrFromSocialCal', li: 'openLiFromSocialCal' };
     const blogBadge = p.source_blog_post_id ? '<span class="blog-source-badge">↗ blog</span>' : '';
     return `<div class="cal-draft-card" style="border-left:3px solid ${color};"
-      onclick="switchPlatform('${switchPl}');${fn}(${p.id})">
+      onclick="${fromCalFns2[plat]}(${p.id})">
       <div style="font-size:9px;font-weight:700;color:${color};margin-bottom:3px;">${labels[plat]}${blogBadge}</div>
       <div class="cal-draft-card-preview">${preview}</div>
       ${mkt}

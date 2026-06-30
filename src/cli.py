@@ -614,6 +614,62 @@ def factcheck(post_id):
     _run_and_display_fact_check(post, content)
 
 
+@cli.command("repurpose-schedule")
+@click.argument("post_id", type=int, required=False, default=None)
+@click.option("--all-published", is_flag=True, help="Repurpose all published posts with no existing social drafts.")
+@click.option("--email", default="steph@hit-pay.com", show_default=True, help="Editor email for audit log.")
+def repurpose_schedule(post_id, all_published, email):
+    """Repurpose a blog post and schedule X + Threads + LinkedIn on the next free weekday.
+
+    If POST_ID is given, repurpose that post.
+    If --all-published is set, repurpose every published post that has no social drafts yet.
+    """
+    from src.repurpose_scheduler import repurpose_and_schedule
+    from src.x_database import get_x_posts_by_blog_post_id
+
+    def _repurpose_one(post):
+        with Progress(SpinnerColumn(), TextColumn("{task.description}"), transient=True, console=console) as progress:
+            progress.add_task(f"Generating for [{post['id']}] {post.get('title','')[:50]}…")
+            result = repurpose_and_schedule(post, email)
+        date_str = result["date"].strftime("%A, %b %-d %Y")
+        if result["ok"]:
+            console.print(f"[green]✓[/] Scheduled on [bold]{date_str}[/]")
+        else:
+            console.print(f"[yellow]⚠ Partial success — {date_str}[/]")
+        if result["x_id"]:
+            console.print(f"  X        #{result['x_id']}")
+        if result["threads_id"]:
+            console.print(f"  Threads  #{result['threads_id']}")
+        if result["linkedin_id"]:
+            console.print(f"  LinkedIn #{result['linkedin_id']}")
+        for platform, err in result.get("errors", {}).items():
+            console.print(f"  [red]! {platform}: {err}[/]")
+
+    if all_published:
+        posts = [p for p in list_posts(status="published")
+                 if not get_x_posts_by_blog_post_id(p["id"])]
+        if not posts:
+            console.print("[dim]No published posts without social drafts found.[/]")
+            return
+        console.print(f"\n[bold]Repurposing {len(posts)} post(s):[/]\n")
+        for post in posts:
+            console.print(f"  [bold]•[/] [{post['id']}] {post.get('title','')[:70]}")
+        console.print()
+        for post in posts:
+            _repurpose_one(post)
+            console.print()
+    elif post_id:
+        post = get_post(post_id)
+        if not post:
+            console.print(f"[red]Post #{post_id} not found.[/]")
+            raise click.Abort()
+        console.print(f"\n[bold]Repurposing:[/] [{post_id}] {post.get('title','')[:70]}\n")
+        _repurpose_one(post)
+    else:
+        console.print("[red]Provide a POST_ID or use --all-published.[/]")
+        raise click.Abort()
+
+
 @cli.command()
 @click.argument("post_id", type=int)
 def delete(post_id):
