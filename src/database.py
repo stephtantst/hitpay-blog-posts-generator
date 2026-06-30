@@ -46,6 +46,15 @@ def migrate_brand_column():
         )
 
 
+def migrate_source_blog_post_id():
+    """Add source_blog_post_id FK to social post tables if missing."""
+    conn = get_connection()
+    for table in ("x_posts", "threads_posts", "linkedin_posts"):
+        conn.run(
+            f"ALTER TABLE {table} ADD COLUMN IF NOT EXISTS source_blog_post_id INTEGER"
+        )
+
+
 def save_feedback(user_email: str, message: str) -> int:
     conn = get_connection()
     rows = conn.run(

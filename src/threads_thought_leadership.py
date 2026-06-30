@@ -315,11 +315,24 @@ def generate_threads_story(
     if not isinstance(posts, list) or not posts:
         raise ValueError(f"Expected posts array, got: {posts!r}")
 
-    data["posts"] = [_cap_post(p) for p in posts]
+    def _to_str(p) -> str:
+        if isinstance(p, str):
+            return p
+        if isinstance(p, dict):
+            return p.get("text") or p.get("content") or p.get("post") or ""
+        return str(p)
+
+    data["posts"] = [_cap_post(_to_str(p)) for p in posts]
 
     link_url = data.get("link_url") or fallback
-    if url_pattern and not re.match(url_pattern, link_url):
-        link_url = fallback
+    if url_pattern:
+        if not re.match(url_pattern, link_url):
+            link_url = fallback
+        else:
+            # Verify slug exists in live sitemap
+            from src.thought_leadership import _is_valid_blog_url
+            if not _is_valid_blog_url(link_url):
+                link_url = fallback
     data["link_url"] = link_url
 
     return data

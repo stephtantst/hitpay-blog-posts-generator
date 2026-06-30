@@ -5,6 +5,8 @@ from config import (
     TYPEFULLY_THREADS_SOCIAL_SET_ID,
     TYPEFULLY_SME_SOCIAL_SET_ID,
     TYPEFULLY_SME_THREADS_SOCIAL_SET_ID,
+    TYPEFULLY_LINKEDIN_SOCIAL_SET_ID,
+    TYPEFULLY_SME_LINKEDIN_SOCIAL_SET_ID,
     SME_BLOG_BASE_URL,
 )
 
@@ -19,6 +21,7 @@ class BrandConfig:
     sitemap_url: str | None
     typefully_social_set_id: str | None
     typefully_threads_social_set_id: str | None
+    typefully_linkedin_social_set_id: str | None = None
 
 
 HITPAY = BrandConfig(
@@ -30,6 +33,7 @@ HITPAY = BrandConfig(
     sitemap_url="https://hitpayapp.com/sitemap_en.xml",
     typefully_social_set_id=TYPEFULLY_SOCIAL_SET_ID or None,
     typefully_threads_social_set_id=TYPEFULLY_THREADS_SOCIAL_SET_ID or None,
+    typefully_linkedin_social_set_id=TYPEFULLY_LINKEDIN_SOCIAL_SET_ID or None,
 )
 
 SME_GROWTH_HUB = BrandConfig(
@@ -41,6 +45,7 @@ SME_GROWTH_HUB = BrandConfig(
     sitemap_url=None,
     typefully_social_set_id=TYPEFULLY_SME_SOCIAL_SET_ID or None,
     typefully_threads_social_set_id=TYPEFULLY_SME_THREADS_SOCIAL_SET_ID or None,
+    typefully_linkedin_social_set_id=TYPEFULLY_SME_LINKEDIN_SOCIAL_SET_ID or None,
 )
 
 _REGISTRY: dict[str, BrandConfig] = {

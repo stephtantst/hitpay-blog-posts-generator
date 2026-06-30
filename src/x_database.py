@@ -33,6 +33,15 @@ def get_x_post(post_id: int) -> dict | None:
     return result[0] if result else None
 
 
+def get_x_posts_by_blog_post_id(blog_post_id: int) -> list:
+    conn = get_connection()
+    # Use simple query protocol (no named params) to avoid PgBouncer prepared-statement conflicts.
+    rows = conn.run(
+        f"SELECT * FROM x_posts WHERE source_blog_post_id = {int(blog_post_id)} ORDER BY created_at DESC"
+    )
+    return _rows_to_dicts(conn, rows)
+
+
 def create_x_post(content: str, market: str = None, scheduled_at=None,
                   editor_email: str = None, source_blog_post_id: int = None,
                   brand: str = "hitpay") -> int:

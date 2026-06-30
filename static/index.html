@@ -1802,6 +1802,35 @@
     @keyframes repurpose-spin { to { transform: rotate(360deg); } }
     .repurpose-generating .spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: repurpose-spin 0.8s linear infinite; margin-bottom: 12px; }
     .repurpose-status-log { font-size: 12px; color: var(--text-muted); margin-top: 8px; }
+
+    /* ── EDM Repurpose Modal ──────────────────────────── */
+    .edm-modal { width: 960px; max-width: 96vw; height: 84vh; max-height: 860px; padding: 0; display: flex; flex-direction: column; overflow: hidden; }
+    .edm-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 22px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .edm-modal-header h2 { font-size: 15px; font-weight: 600; margin: 0; }
+    .edm-input-body { flex: 1; overflow: hidden; display: flex; flex-direction: column; padding: 20px 22px; gap: 12px; }
+    .edm-input-body label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+    .edm-input-body textarea { flex: 1; font-family: inherit; font-size: 13px; padding: 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); resize: none; line-height: 1.6; }
+    .edm-input-footer { display: flex; gap: 8px; align-items: center; justify-content: flex-end; flex-shrink: 0; }
+    .edm-results-toolbar { display: flex; gap: 8px; padding: 10px 22px; border-bottom: 1px solid var(--border); flex-shrink: 0; align-items: center; }
+    .edm-results-body { flex: 1; overflow: hidden; display: flex; gap: 0; }
+    .edm-col { flex: 1; overflow-y: auto; padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; }
+    .edm-col + .edm-col { border-left: 1px solid var(--border); }
+    .edm-col-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 2px; display: flex; align-items: center; justify-content: space-between; }
+    .edm-x-tabs { display: flex; gap: 4px; flex-shrink: 0; }
+    .edm-tab { padding: 4px 11px; font-size: 12px; border: 1px solid var(--border); border-radius: 4px; background: transparent; color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all 0.12s; }
+    .edm-tab:hover { color: var(--text); border-color: var(--accent); }
+    .edm-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 500; }
+    .edm-tweet-card { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--surface); }
+    .edm-tweet-header { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: var(--surface2); font-size: 11px; color: var(--text-muted); gap: 8px; }
+    .edm-tweet-header .char-count { font-variant-numeric: tabular-nums; }
+    .edm-tweet-header .char-count.over { color: var(--red); font-weight: 600; }
+    .edm-tweet-card textarea { width: 100%; border: none; outline: none; padding: 10px 12px; font-size: 13px; font-family: inherit; resize: vertical; background: var(--surface); color: var(--text); min-height: 72px; line-height: 1.55; box-sizing: border-box; }
+    .edm-link-reply-row { padding: 7px 10px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); display: flex; gap: 6px; align-items: center; background: var(--surface); }
+    .edm-link-reply-row input { flex: 1; font-size: 12px; padding: 4px 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); color: var(--text); font-family: inherit; }
+    .edm-visual-note { font-size: 12px; color: var(--text-muted); background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; }
+    .edm-threads-textarea { width: 100%; font-family: inherit; font-size: 13px; padding: 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); resize: none; line-height: 1.6; box-sizing: border-box; }
+    .edm-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; flex: 1; padding: 60px 20px; color: var(--text-muted); font-size: 13px; }
+    .edm-loading .spinner { width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: repurpose-spin 0.8s linear infinite; }
     .tweet-card { background: var(--sidebar-bg, #fafafa); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
     .tweet-card-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 8px; }
     .tweet-bubble-input { width: 100%; min-height: 72px; resize: vertical; border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; font-size: 13.5px; line-height: 1.55; font-family: inherit; background: var(--bg); color: var(--text); box-sizing: border-box; }
@@ -1910,7 +1939,8 @@
     -webkit-backdrop-filter: blur(2px);
   }
   #xEditorPane.as-modal,
-  #thrEditorPane.as-modal {
+  #thrEditorPane.as-modal,
+  #liEditorPane.as-modal {
     position: fixed;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
@@ -1932,7 +1962,8 @@
   }
   .editor-modal-close-btn:hover { color: var(--text); background: var(--surface2); }
   #xEditorPane.as-modal .editor-modal-close-btn,
-  #thrEditorPane.as-modal .editor-modal-close-btn { display: block; }
+  #thrEditorPane.as-modal .editor-modal-close-btn,
+  #liEditorPane.as-modal .editor-modal-close-btn { display: block; }
 
   /* ── Calendar View ─────────────────────────────────────────────────────────── */
   .cal-wrap { display: flex; flex: 1; overflow: hidden; }
@@ -2035,6 +2066,33 @@
   .cal-event.draft    { background: #fef3c7; color: #b45309; }
   .cal-event.scheduled { background: #dbeafe; color: #1d4ed8; }
   .cal-event.posted   { background: #dcfce7; color: #16a34a; }
+
+  .blog-source-badge {
+    display: inline-flex; align-items: center; gap: 2px;
+    font-size: 10px; font-weight: 600; padding: 1px 5px;
+    background: #eff6ff; color: #3b82f6;
+    border: 1px solid #bfdbfe; border-radius: 4px;
+    vertical-align: middle; margin-left: 5px; cursor: default;
+    white-space: nowrap; flex-shrink: 0;
+  }
+
+  .social-post-chip {
+    display: flex; align-items: center; gap: 6px; padding: 6px 8px;
+    border-radius: 6px; background: var(--sidebar-bg, #f8f9fa);
+    margin-bottom: 5px; cursor: pointer; font-size: 12px;
+    border: 1px solid var(--border); transition: background 0.1s;
+  }
+  .social-post-chip:hover { background: var(--hover-bg, #f0f0f0); }
+  .social-chip-plat { font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .social-chip-status {
+    font-size: 10px; padding: 1px 5px; border-radius: 4px; flex-shrink: 0;
+    font-weight: 600; text-transform: capitalize;
+  }
+  .social-chip-status.status-draft { background: #fef3c7; color: #b45309; }
+  .social-chip-status.status-scheduled { background: #dbeafe; color: #1d4ed8; }
+  .social-chip-status.status-posted { background: #dcfce7; color: #16a34a; }
+  .social-chip-preview { color: var(--text-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }
+
   .cal-event-overflow {
     display: block; font-size: 10px; font-weight: 600; color: var(--text-dim);
     padding: 1px 4px; cursor: pointer;
@@ -2353,6 +2411,18 @@
 
 <!-- Platform sidebar -->
 <nav id="platformSidebar">
+  <button class="platform-btn" id="platformBtnSocialCal" onclick="switchPlatform('socialcal')" title="Social Calendar">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" xmlns="http://www.w3.org/2000/svg" width="18" height="18">
+      <rect x="2" y="4" width="16" height="14" rx="2"/>
+      <line x1="2" y1="8" x2="18" y2="8"/>
+      <line x1="6" y1="2" x2="6" y2="6"/>
+      <line x1="14" y1="2" x2="14" y2="6"/>
+      <line x1="6" y1="12" x2="6" y2="12" stroke-width="2" stroke-linecap="round"/>
+      <line x1="10" y1="12" x2="10" y2="12" stroke-width="2" stroke-linecap="round"/>
+      <line x1="14" y1="12" x2="14" y2="12" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span class="platform-btn-label">Calendar</span>
+  </button>
   <button class="platform-btn active" id="platformBtnBlog" onclick="switchPlatform('blog')" title="Blog Posts">
     <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" xmlns="http://www.w3.org/2000/svg">
       <rect x="3" y="3" width="14" height="14" rx="2"/>
@@ -2369,6 +2439,10 @@
   <button class="platform-btn" id="platformBtnThreads" onclick="switchPlatform('threads')" title="Threads">
     <svg viewBox="0 0 192 192" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="18" height="18"><path d="M141.537 88.988a66.667 66.667 0 0 0-2.518-1.143c-1.482-27.307-16.403-42.94-41.457-43.1h-.34c-14.986 0-27.449 6.396-35.12 18.036l13.779 9.452c5.73-8.695 14.724-10.548 21.348-10.548h.229c8.249.053 14.474 2.452 18.503 7.129 2.932 3.405 4.893 8.111 5.864 14.05-7.314-1.243-15.224-1.626-23.68-1.14-23.82 1.371-39.134 15.264-38.105 34.568.522 9.792 5.4 18.216 13.735 23.719 7.047 4.652 16.124 6.927 25.557 6.412 12.458-.683 22.231-5.436 29.049-14.127 5.178-6.6 8.453-15.153 9.899-25.93 5.937 3.583 10.337 8.298 12.767 13.966 4.132 9.635 4.373 25.468-8.546 38.376-11.319 11.308-24.925 16.2-45.488 16.351-22.809-.169-40.06-7.484-51.275-21.742C35.236 139.966 29.808 120.682 29.605 96c.203-24.682 5.63-43.966 16.133-57.317C56.954 24.425 74.206 17.11 97.015 16.94c22.975.17 40.526 7.52 52.171 21.847 5.71 7.026 10.015 15.86 12.853 26.162l16.147-4.308c-3.44-12.68-8.853-23.606-16.219-32.668C147.036 9.607 125.202.195 97.105 0h-.2C68.789.195 47.179 9.642 32.8 28.08 19.931 44.492 13.244 67.544 13.01 96v.04c.234 28.456 6.921 51.508 19.79 67.92C47.18 182.358 68.79 191.805 96.905 192h.2c24.96-.173 42.554-6.708 57.048-21.189 18.963-18.945 18.392-42.692 12.142-57.27-4.484-10.454-13.033-18.945-24.758-24.553z"/></svg>
     <span class="platform-btn-label">Threads</span>
+  </button>
+  <button class="platform-btn" id="platformBtnLinkedIn" onclick="switchPlatform('linkedin')" title="LinkedIn">
+    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="18" height="18"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+    <span class="platform-btn-label">LinkedIn</span>
   </button>
 </nav>
 
@@ -2668,6 +2742,9 @@
         <button class="btn btn-secondary" id="repurposeBtn" onclick="openRepurposeModal()">
           𝕏  Repurpose for X
         </button>
+        <button class="btn btn-secondary" id="repurposeAllBtn" onclick="repurposeAll()">
+          ↗  Repurpose All
+        </button>
         <button class="btn btn-secondary" onclick="exportPost()">
           ↓  Export CSV for Framer
         </button>
@@ -2675,6 +2752,12 @@
           ✕  Delete Post
         </button>
       </div>
+    </div>
+
+    <!-- Social Posts (linked drafts) -->
+    <div class="meta-section" id="socialPostsSection" style="display:none;">
+      <div class="meta-section-title">Social Drafts</div>
+      <div id="socialPostsList"></div>
     </div>
 
     <!-- Audit Log -->
@@ -2698,6 +2781,7 @@
       <button class="nav-btn" id="xNavEditor" onclick="switchXView('editor')">Editor</button>
     </div>
     <div style="flex:1"></div>
+    <button class="btn" style="font-size:12px;padding:5px 10px;margin-right:6px;" onclick="openEdmModal()" title="Generate social posts from an email newsletter">✉ From EDM</button>
     <button class="btn" style="font-size:12px;padding:5px 10px;margin-right:6px;" onclick="openChangelogModal('x')" title="Generate posts from HitPay changelog">📋 From Changelog</button>
     <button class="btn-new-post" onclick="openCreateXModal()">＋ New Post</button>
   </div>
@@ -2940,6 +3024,13 @@
           <div id="xAuditLog"></div>
         </div>
 
+        <div class="meta-section" id="xSourcePostSection" style="display:none;">
+          <div class="meta-section-title">Source Blog Post</div>
+          <a href="#" id="xSourcePostLink" onclick="event.preventDefault();switchToSourcePost('x')" style="font-size:13px;color:var(--accent);text-decoration:none;word-break:break-word;">
+            <span id="xSourcePostTitle"></span>
+          </a>
+        </div>
+
       </aside>
     </div>
 
@@ -3167,11 +3258,301 @@
           <div class="meta-section-title">History</div>
           <div id="thrAuditLog"></div>
         </div>
+
+        <div class="meta-section" id="thrSourcePostSection" style="display:none;">
+          <div class="meta-section-title">Source Blog Post</div>
+          <a href="#" id="thrSourcePostLink" onclick="event.preventDefault();switchToSourcePost('threads')" style="font-size:13px;color:var(--accent);text-decoration:none;word-break:break-word;">
+            <span id="thrSourcePostTitle"></span>
+          </a>
+        </div>
+
       </aside>
     </div>
   </div><!-- /thrEditorPane -->
 
 </div><!-- /threadsPlatform -->
+
+<!-- LinkedIn Platform -->
+<div id="linkedinPlatform" style="display:none; flex:1; overflow:hidden; flex-direction:column;">
+
+  <div class="x-platform-nav">
+    <div class="x-platform-nav-tabs">
+      <button class="nav-btn active" id="liNavOverview" onclick="switchLiView('overview')">Overview</button>
+      <button class="nav-btn" id="liNavEditor" onclick="switchLiView('editor')">Editor</button>
+    </div>
+    <div style="flex:1"></div>
+    <button class="btn" style="font-size:12px;padding:5px 10px;margin-right:6px;" onclick="openChangelogModal('linkedin')" title="Generate posts from HitPay changelog">📋 From Changelog</button>
+    <button class="btn-new-post" onclick="openCreateLiModal()">＋ New Post</button>
+  </div>
+
+  <!-- LinkedIn Overview Pane -->
+  <div id="liOverviewPane" style="display:flex; flex:1; overflow:hidden; flex-direction:column;">
+    <div class="x-ov-toolbar">
+      <div class="x-ov-toolbar-left">
+        <div class="filter-chips" id="liOverviewChips">
+          <button class="chip active" data-status="all" onclick="setLiOverviewFilter(this)">All <span class="chip-count" id="liovchip-all">0</span></button>
+          <button class="chip" data-status="draft" onclick="setLiOverviewFilter(this)">📝 Draft <span class="chip-count" id="liovchip-draft">0</span></button>
+          <button class="chip" data-status="scheduled" onclick="setLiOverviewFilter(this)">🕐 Scheduled <span class="chip-count" id="liovchip-scheduled">0</span></button>
+          <button class="chip" data-status="posted" onclick="setLiOverviewFilter(this)">✅ Posted <span class="chip-count" id="liovchip-posted">0</span></button>
+        </div>
+      </div>
+      <div class="x-ov-toolbar-right">
+        <button class="btn btn-secondary" id="liBulkSelectToggle" style="font-size:12px;padding:5px 12px;" onclick="liToggleSelectMode()">☑ Select</button>
+        <div class="view-switch">
+          <button class="view-switch-btn" id="liOvsw-list" onclick="setLiOverviewView('list')">☰ List</button>
+          <button class="view-switch-btn" id="liOvsw-board" onclick="setLiOverviewView('board')">⊞ Board</button>
+          <button class="view-switch-btn active" id="liOvsw-cal" onclick="setLiOverviewView('calendar')">&#9632; Cal</button>
+        </div>
+      </div>
+    </div>
+    <div class="x-ov-filters">
+      <input class="overview-search" id="liOvSearch" type="text" placeholder="🔍 Search posts…" oninput="renderLiOverview()" />
+      <select class="filter-select" id="liOvMarket" onchange="renderLiOverview()">
+        <option value="all">All Markets</option>
+        <option value="SG">🇸🇬 Singapore</option>
+        <option value="MY">🇲🇾 Malaysia</option>
+        <option value="PH">🇵🇭 Philippines</option>
+      </select>
+    </div>
+    <div class="x-ov-content">
+      <div id="liOverviewListView" style="display:none;">
+        <div id="liBulkBar" class="x-bulk-bar" style="display:none;">
+          <span id="liBulkCount">0 selected</span>
+          <button class="x-bulk-danger" onclick="liBulkDelete()">✕ Delete selected</button>
+          <button onclick="liClearSelection()">Clear</button>
+        </div>
+        <table class="posts-table">
+          <thead>
+            <tr>
+              <th class="x-cb-col" id="liCbHeaderCell" style="display:none;"><input type="checkbox" class="x-select-cb" id="liSelectAllCb" onchange="liToggleSelectAll(this.checked)"></th>
+              <th>Content</th>
+              <th style="width:90px;">Market</th>
+              <th style="width:120px;">Status</th>
+              <th style="width:100px;">Scheduled</th>
+              <th style="width:100px;">Created</th>
+              <th style="width:110px;">Editor</th>
+              <th style="width:70px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="liListBody"></tbody>
+        </table>
+      </div>
+      <div id="liOverviewBoardView" style="display:none;" class="board-wrap">
+        <div class="board-columns">
+          <div class="board-col" id="liBCol-draft">
+            <div class="board-col-header">📝 Draft <span class="board-col-count" id="liBCount-draft">0</span></div>
+            <div class="board-cards" id="liBCards-draft"></div>
+          </div>
+          <div class="board-col" id="liBCol-scheduled">
+            <div class="board-col-header">🕐 Scheduled <span class="board-col-count" id="liBCount-scheduled">0</span></div>
+            <div class="board-cards" id="liBCards-scheduled"></div>
+          </div>
+          <div class="board-col" id="liBCol-posted">
+            <div class="board-col-header">✅ Posted <span class="board-col-count" id="liBCount-posted">0</span></div>
+            <div class="board-cards" id="liBCards-posted"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Calendar View -->
+      <div id="liOverviewCalView" style="display:flex;" class="cal-wrap">
+        <div class="cal-draft-sidebar">
+          <div class="cal-draft-sidebar-header">
+            Unscheduled Drafts
+            <span class="cal-draft-count" id="liCalDraftCount">0</span>
+          </div>
+          <div class="cal-draft-list" id="liCalDraftList"></div>
+        </div>
+        <div class="cal-main">
+          <div class="cal-nav">
+            <button class="cal-nav-btn" onclick="calToday('li')">Today</button>
+            <button class="cal-nav-btn" onclick="calPrev('li')">&#8249;</button>
+            <button class="cal-nav-btn" onclick="calNext('li')">&#8250;</button>
+            <span class="cal-nav-label" id="liCalNavLabel"></span>
+            <div class="cal-nav-spacer"></div>
+            <div class="view-switch">
+              <button class="view-switch-btn active" id="liCalSw-month" onclick="setLiCalViewMode('month')">Month</button>
+              <button class="view-switch-btn" id="liCalSw-week" onclick="setLiCalViewMode('week')">Week</button>
+            </div>
+          </div>
+          <div class="cal-grid-wrap">
+            <div id="liCalMonthGrid" class="cal-month-grid"></div>
+            <div id="liCalWeekGrid" class="cal-week-grid" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /liOverviewPane -->
+
+  <!-- LinkedIn Editor Modal Backdrop -->
+  <div id="liEditorModalBackdrop" class="editor-modal-backdrop" style="display:none;" onclick="closeLiEditorModal()"></div>
+
+  <!-- LinkedIn Editor Pane -->
+  <div id="liEditorPane" style="display:none; flex:1; overflow:hidden; flex-direction:column;">
+    <div class="x-toolbar">
+      <div class="x-toolbar-left">
+        <div class="x-status-chips" id="liStatusChips">
+          <button class="chip active" data-status="all" onclick="setLiFilter(this)">All <span class="chip-count" id="lichip-all">0</span></button>
+          <button class="chip" data-status="draft" onclick="setLiFilter(this)">📝 Draft <span class="chip-count" id="lichip-draft">0</span></button>
+          <button class="chip" data-status="scheduled" onclick="setLiFilter(this)">🕐 Scheduled <span class="chip-count" id="lichip-scheduled">0</span></button>
+          <button class="chip" data-status="posted" onclick="setLiFilter(this)">✅ Posted <span class="chip-count" id="lichip-posted">0</span></button>
+        </div>
+      </div>
+      <div class="x-toolbar-right">
+        <button class="editor-modal-close-btn" onclick="closeLiEditorModal()" title="Close">✕</button>
+      </div>
+    </div>
+
+    <div class="x-layout">
+      <aside class="x-sidebar">
+        <div class="x-sidebar-top">
+          <input class="search-box" id="liSearchBox" type="text" placeholder="Search posts…" oninput="renderLiPostList()" />
+        </div>
+        <div class="x-sidebar-bulk-bar" id="liSidebarBulkBar">
+          <span id="liSidebarBulkCount" style="font-size:12px;color:#fff;font-weight:600;flex:1;">0 selected</span>
+          <button class="x-bulk-danger" onclick="liBulkDelete()" style="margin-right:4px;">✕ Delete</button>
+          <button onclick="liClearSelection()">Clear</button>
+        </div>
+        <div class="x-status-tabs">
+          <button class="x-status-tab active" data-status="all" onclick="setLiSidebarFilter(this)">All</button>
+          <button class="x-status-tab" data-status="draft" onclick="setLiSidebarFilter(this)">Draft</button>
+          <button class="x-status-tab" data-status="scheduled" onclick="setLiSidebarFilter(this)">Scheduled</button>
+          <button class="x-status-tab" data-status="posted" onclick="setLiSidebarFilter(this)">Posted</button>
+        </div>
+        <div class="x-post-list" id="liPostList"></div>
+      </aside>
+
+      <main class="x-editor-area">
+        <div class="x-no-post" id="liNoPostState">
+          <div class="icon" style="font-size:28px;">
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="32" height="32"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </div>
+          <p>Select a post or create a new one</p>
+          <button class="btn btn-primary" onclick="openCreateLiModal()">＋ New Post</button>
+        </div>
+        <div id="liEditorContent" style="display:none; flex:1; flex-direction:column; overflow:auto; padding:24px; gap:12px;">
+          <div id="liSingleMode">
+            <div class="x-editor-header" style="margin-bottom:8px;">
+              <span>Post content</span>
+              <span class="x-char-count" id="liCharCount">0 / 1500</span>
+            </div>
+            <textarea class="x-textarea" id="liContentInput" placeholder="Write a professional insight for LinkedIn…" oninput="liMarkDirty(); updateLiCharCount(); autoResizeTa(this)" style="min-height:180px;"></textarea>
+          </div>
+        </div>
+      </main>
+
+      <aside class="x-meta-panel" id="liMetaPanel" style="display:none;">
+        <div class="meta-section">
+          <div class="meta-section-title">Status</div>
+          <div id="liStatusBadge" class="x-status-badge draft">📝 Draft</div>
+          <select class="status-select" id="liStatusSelect" onchange="handleLiStatusChange(this.value)">
+            <option value="draft">📝 Draft</option>
+            <option value="scheduled">🕐 Scheduled</option>
+            <option value="posted">✅ Posted</option>
+          </select>
+          <div id="liScheduledSection" style="display:none; margin-top:10px;">
+            <div class="field-label">Scheduled date &amp; time</div>
+            <input class="field-input" id="liScheduledAt" type="datetime-local" oninput="liMarkDirty()" />
+          </div>
+          <div id="liPostedSection" style="display:none; margin-top:10px;">
+            <div class="field-label">Post URL (optional)</div>
+            <input class="field-input" id="liPostUrl" type="url" placeholder="https://www.linkedin.com/posts/…" oninput="liMarkDirty()" />
+          </div>
+        </div>
+        <div class="meta-section">
+          <div class="meta-section-title">Market</div>
+          <select class="field-input" id="liMarket" onchange="liMarkDirty()" style="cursor:pointer;">
+            <option value="">All Markets</option>
+            <option value="SG">🇸🇬 Singapore</option>
+            <option value="MY">🇲🇾 Malaysia</option>
+            <option value="PH">🇵🇭 Philippines</option>
+          </select>
+        </div>
+        <div class="meta-section">
+          <div class="meta-section-title">Actions</div>
+          <div class="action-buttons">
+            <button class="btn btn-primary" id="liSaveBtn" onclick="saveLiPost()">↑ Save Changes</button>
+            <button class="btn btn-danger" onclick="deleteLiPost()">✕ Delete Post</button>
+          </div>
+        </div>
+        <div class="meta-section" id="liTypefullySection" style="display:none;">
+          <div class="meta-section-title">Publish via Typefully</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;gap:6px;">
+              <button class="btn" id="liSaveDraftBtn" onclick="liPushToTypefully('draft')" style="flex:1;font-size:13px;">Save Draft</button>
+              <button class="btn btn-primary" id="liPostNowBtn" onclick="liPushToTypefully('now')" style="flex:1;font-size:13px;">Post Now ↗</button>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <input type="datetime-local" id="liTypefullyScheduleDate" class="field-input" style="flex:1;font-size:12px;padding:4px 8px;" />
+              <button class="btn" id="liScheduleBtn" onclick="liPushToTypefully('schedule')" style="white-space:nowrap;font-size:13px;">Schedule ↗</button>
+            </div>
+            <div id="liTypefullyResult" style="display:none;font-size:12px;font-weight:500;padding:6px 8px;border-radius:6px;"></div>
+          </div>
+        </div>
+        <div class="meta-section" id="liAuditSection" style="display:none;">
+          <div class="meta-section-title">History</div>
+          <div id="liAuditLog"></div>
+        </div>
+
+        <div class="meta-section" id="liSourcePostSection" style="display:none;">
+          <div class="meta-section-title">Source Blog Post</div>
+          <a href="#" id="liSourcePostLink" onclick="event.preventDefault();switchToSourcePost('linkedin')" style="font-size:13px;color:var(--accent);text-decoration:none;word-break:break-word;">
+            <span id="liSourcePostTitle"></span>
+          </a>
+        </div>
+
+      </aside>
+    </div>
+  </div><!-- /liEditorPane -->
+
+</div><!-- /linkedinPlatform -->
+
+<!-- Social Calendar Platform -->
+<div id="socialCalPlatform" style="display:none; flex:1; overflow:hidden; flex-direction:column;">
+
+  <div class="x-platform-nav">
+    <div class="x-platform-nav-tabs">
+      <span style="font-size:14px;font-weight:600;color:var(--text);padding:0 4px;">Social Calendar</span>
+    </div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-dim);">
+      <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#1D9BF0;display:inline-block;"></span>X</span>
+      <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#8B5CF6;display:inline-block;"></span>Threads</span>
+      <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#0A66C2;display:inline-block;"></span>LinkedIn</span>
+    </div>
+  </div>
+
+  <div style="display:flex; flex:1; overflow:hidden; flex-direction:column;">
+    <div class="x-ov-content" style="flex:1;">
+      <div id="socialCalOverviewCalView" style="display:flex; height:100%;" class="cal-wrap">
+        <div class="cal-draft-sidebar">
+          <div class="cal-draft-sidebar-header">
+            Unscheduled Drafts
+            <span class="cal-draft-count" id="socialCalDraftCount">0</span>
+          </div>
+          <div class="cal-draft-list" id="socialCalDraftList"></div>
+        </div>
+        <div class="cal-main">
+          <div class="cal-nav">
+            <button class="cal-nav-btn" onclick="socialCalToday()">Today</button>
+            <button class="cal-nav-btn" onclick="socialCalPrev()">&#8249;</button>
+            <button class="cal-nav-btn" onclick="socialCalNext()">&#8250;</button>
+            <span class="cal-nav-label" id="socialCalNavLabel"></span>
+            <div class="cal-nav-spacer"></div>
+            <div class="view-switch">
+              <button class="view-switch-btn active" id="socialCalSw-month" onclick="setSocialCalViewMode('month')">Month</button>
+              <button class="view-switch-btn" id="socialCalSw-week" onclick="setSocialCalViewMode('week')">Week</button>
+            </div>
+          </div>
+          <div class="cal-grid-wrap">
+            <div id="socialCalMonthGrid" class="cal-month-grid"></div>
+            <div id="socialCalWeekGrid" class="cal-week-grid" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /socialCalPlatform -->
 
 </div><!-- /mainContent -->
 
@@ -3359,6 +3740,69 @@
   </div>
 </div>
 
+<!-- EDM → Social Modal -->
+<div class="modal-overlay" id="edmModal">
+  <div class="modal edm-modal">
+    <div class="edm-modal-header">
+      <h2>Social Posts from EDM</h2>
+      <button class="repurpose-modal-close" onclick="closeEdmModal()">✕</button>
+    </div>
+
+    <!-- Input view -->
+    <div id="edmInputView" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
+      <div class="edm-input-body">
+        <label>Paste your email / EDM content</label>
+        <textarea id="edmContent" placeholder="Hey First Name,&#10;&#10;We shipped…"></textarea>
+        <div class="edm-input-footer">
+          <select id="edmMarket" class="filter-select" style="font-size:12px;padding:5px 8px;width:auto;">
+            <option value="">Market: General</option>
+            <option value="SG">🇸🇬 Singapore</option>
+            <option value="MY">🇲🇾 Malaysia</option>
+            <option value="PH">🇵🇭 Philippines</option>
+          </select>
+          <button class="btn btn-primary" onclick="generateEdmPosts()">Generate Posts</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading view -->
+    <div id="edmLoadingView" style="display:none;flex:1;overflow:hidden;display:none;flex-direction:column;">
+      <div class="edm-loading">
+        <div class="spinner"></div>
+        <div id="edmLoadingStatus">Generating X posts and Threads post…</div>
+      </div>
+    </div>
+
+    <!-- Results view -->
+    <div id="edmResultsView" style="display:none;flex:1;overflow:hidden;flex-direction:column;">
+      <div class="edm-results-toolbar">
+        <button class="btn btn-secondary" style="font-size:12px;" onclick="edmBackToInput()">← Edit EDM</button>
+        <button class="btn btn-secondary" style="font-size:12px;" onclick="generateEdmPosts()">↺ Regenerate</button>
+      </div>
+      <div class="edm-results-body">
+        <!-- X column -->
+        <div class="edm-col">
+          <div class="edm-col-title">𝕏 &nbsp;X Posts</div>
+          <div class="edm-x-tabs" id="edmXTabs">
+            <button class="edm-tab active" data-tab="quick_win" onclick="switchEdmXTab('quick_win', this)">Quick Win</button>
+            <button class="edm-tab" data-tab="thread" onclick="switchEdmXTab('thread', this)">Thread</button>
+            <button class="edm-tab" data-tab="contextual" onclick="switchEdmXTab('contextual', this)">How-to</button>
+          </div>
+          <div id="edmXContent"></div>
+        </div>
+        <!-- Threads column -->
+        <div class="edm-col">
+          <div class="edm-col-title">
+            <span>Threads</span>
+            <button class="btn btn-secondary" style="font-size:11px;padding:3px 8px;font-weight:400;" onclick="edmCopyThreads()">Copy</button>
+          </div>
+          <textarea id="edmThreadsContent" class="edm-threads-textarea" rows="14" placeholder="Threads post will appear here…"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Delete Confirmation Modal -->
 <div class="modal-overlay" id="deleteModal">
   <div class="modal">
@@ -3539,6 +3983,68 @@
         <div style="display:flex;gap:8px;">
           <button class="btn" onclick="runThrStoryGenerate()" style="flex:1;font-size:13px;">Regenerate</button>
           <button class="btn btn-primary" onclick="useThrGeneratedStory()" style="flex:2;font-size:13px;">Use this story →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LinkedIn Create Modal -->
+<div class="modal-overlay" id="createLiModal">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-title">New LinkedIn Post</div>
+    <div style="display:flex;gap:6px;margin-bottom:16px;">
+      <button id="createLiTabWrite" class="btn" style="flex:1;font-size:13px;" onclick="switchCreateLiTab('write')">✏️ Write</button>
+      <button id="createLiTabGenerate" class="btn btn-primary" style="flex:1;font-size:13px;" onclick="switchCreateLiTab('generate')">✨ Generate post</button>
+    </div>
+    <!-- Write mode -->
+    <div id="createLiWritePane">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <label class="modal-field-label" style="margin-bottom:0;">Content</label>
+        <span class="x-char-count" id="createLiCharCount">0 / 1500</span>
+      </div>
+      <textarea class="modal-input" id="createLiContent" rows="7"
+        placeholder="Write a professional insight for LinkedIn…"
+        oninput="updateCreateLiCharCount()" style="resize:vertical;"></textarea>
+      <label class="modal-field-label">Market</label>
+      <select class="modal-select" id="createLiMarket">
+        <option value="">All Markets</option>
+        <option value="SG">🇸🇬 Singapore</option>
+        <option value="MY">🇲🇾 Malaysia</option>
+        <option value="PH">🇵🇭 Philippines</option>
+      </select>
+      <div class="modal-actions">
+        <button class="btn btn-cancel" onclick="closeCreateLiModal()">Cancel</button>
+        <button class="btn btn-primary" id="createLiBtn" onclick="submitCreateLiPost()">Create Post</button>
+      </div>
+    </div>
+    <!-- Generate mode -->
+    <div id="createLiGeneratePane" style="display:none;">
+      <label class="modal-field-label">Topic hint <span style="font-weight:400;color:var(--text-dim)">(optional)</span></label>
+      <input class="modal-input" id="createLiTopicHint" type="text"
+        placeholder="e.g. PayNow adoption, payment fees, cross-border payments…"
+        style="margin-bottom:12px;" />
+      <label class="modal-field-label">Market</label>
+      <select class="modal-select" id="createLiGenerateMarket" style="margin-bottom:16px;">
+        <option value="">All Markets (SEA)</option>
+        <option value="SG">🇸🇬 Singapore</option>
+        <option value="MY">🇲🇾 Malaysia</option>
+        <option value="PH">🇵🇭 Philippines</option>
+      </select>
+      <div id="createLiGenerateActions" style="display:flex;gap:8px;margin-bottom:16px;">
+        <button class="btn btn-cancel" onclick="closeCreateLiModal()" style="flex:1;">Cancel</button>
+        <button class="btn btn-primary" id="createLiGenerateBtn" onclick="runLiPostGenerate()" style="flex:2;">Generate post</button>
+      </div>
+      <div id="createLiGenerateLoading" style="display:none;text-align:center;padding:24px 0;color:var(--text-dim);font-size:13px;">
+        <div style="margin-bottom:8px;">Generating post…</div>
+        <div style="font-size:11px;">This usually takes 5–10 seconds</div>
+      </div>
+      <div id="createLiGenerateResult" style="display:none;">
+        <div style="font-size:12px;font-weight:600;color:var(--text-dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em;" id="createLiGenerateTopic"></div>
+        <div id="createLiGeneratePost" style="background:var(--bg-alt,#f7f7f7);border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.6;white-space:pre-wrap;max-height:320px;overflow-y:auto;margin-bottom:14px;"></div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn" onclick="runLiPostGenerate()" style="flex:1;font-size:13px;">Regenerate</button>
+          <button class="btn btn-primary" onclick="useLiGeneratedPost()" style="flex:2;font-size:13px;">Use this post →</button>
         </div>
       </div>
     </div>
@@ -3818,6 +4324,7 @@ async function openPost(id) {
   await loadAuditLog(id);
 
   updateRepurposeBtn();
+  loadSocialPostsForBlog(id);
 }
 
 // ── Editor ────────────────────────────────────────────────────────────────────
@@ -5485,6 +5992,113 @@ function updateRepurposeBtn() {
   btn.textContent = hasTwitter ? '𝕏  Repurposed ✓' : '𝕏  Repurpose for X';
 }
 
+// ── Social Post Linkage ───────────────────────────────────────────────────────
+
+function blogSourceBadge(p) {
+  if (!p.source_blog_post_id) return '';
+  return `<span class="blog-source-badge" title="Repurposed from blog post #${p.source_blog_post_id}">↗ blog</span>`;
+}
+
+async function loadSocialPostsForBlog(postId) {
+  try {
+    const res = await fetch(`/api/posts/${postId}/social-posts`);
+    if (!res.ok) return;
+    const data = await res.json();
+    renderSocialPostsForBlog(data);
+  } catch (_) { /* non-fatal */ }
+}
+
+function renderSocialPostsForBlog(data) {
+  const section = document.getElementById('socialPostsSection');
+  const list = document.getElementById('socialPostsList');
+  if (!section || !list) return;
+  const all = [
+    ...(data.x || []).map(p => ({...p, _plat: 'x'})),
+    ...(data.threads || []).map(p => ({...p, _plat: 'threads'})),
+    ...(data.linkedin || []).map(p => ({...p, _plat: 'linkedin'})),
+  ];
+  if (!all.length) { section.style.display = 'none'; return; }
+  section.style.display = '';
+  const colors = { x: '#1D9BF0', threads: '#8B5CF6', linkedin: '#0A66C2' };
+  const labels = { x: '𝕏', threads: 'Th', linkedin: 'in' };
+  list.innerHTML = all.map(p => {
+    const preview = escHtml((p.content || '').slice(0, 60));
+    const statusLabel = p.status || 'draft';
+    return `<div class="social-post-chip" style="border-left:3px solid ${colors[p._plat]}"
+      onclick="openSocialPostFromBlogView('${p._plat}', ${p.id})">
+      <span class="social-chip-plat" style="color:${colors[p._plat]}">${labels[p._plat]}</span>
+      <span class="social-chip-status status-${statusLabel}">${statusLabel}</span>
+      <span class="social-chip-preview">${preview}</span>
+    </div>`;
+  }).join('');
+}
+
+async function repurposeAll() {
+  if (!currentPost) return;
+  const btn = document.getElementById('repurposeAllBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Generating…'; }
+  try {
+    const res = await fetch(`/api/posts/${currentPost.id}/repurpose-all`, { method: 'POST' });
+    const data = await res.json();
+    if (data.errors && Object.keys(data.errors).length) {
+      const failed = Object.keys(data.errors).join(', ');
+      showToast(`Partial: ${failed} failed — check console`, 'error');
+    } else {
+      showToast('Created drafts for X, Threads, and LinkedIn', 'success');
+    }
+    await loadSocialPostsForBlog(currentPost.id);
+  } catch (e) {
+    showToast('Repurpose All failed', 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '↗  Repurpose All'; }
+  }
+}
+
+async function loadSourcePostForSocialPost(platform, sourceId) {
+  if (!sourceId) {
+    const pfx = { x: 'x', threads: 'thr', linkedin: 'li' }[platform];
+    const s = document.getElementById(`${pfx}SourcePostSection`);
+    if (s) s.style.display = 'none';
+    return;
+  }
+  try {
+    const res = await fetch(`/api/posts/${sourceId}`);
+    if (!res.ok) return;
+    const post = await res.json();
+    const pfx = { x: 'x', threads: 'thr', linkedin: 'li' }[platform];
+    const section = document.getElementById(`${pfx}SourcePostSection`);
+    const titleEl = document.getElementById(`${pfx}SourcePostTitle`);
+    if (section && titleEl && post && post.title) {
+      titleEl.textContent = post.title;
+      titleEl.dataset.postId = String(sourceId);
+      section.style.display = '';
+    }
+  } catch (_) { /* non-fatal */ }
+}
+
+function switchToSourcePost(platform) {
+  const pfx = { x: 'x', threads: 'thr', linkedin: 'li' }[platform];
+  const titleEl = document.getElementById(`${pfx}SourcePostTitle`);
+  const id = titleEl && titleEl.dataset.postId ? parseInt(titleEl.dataset.postId, 10) : null;
+  if (!id) return;
+  switchPlatform('blog');
+  openPost(id);
+}
+
+function openSocialPostFromBlogView(platform, id) {
+  const platIds = { x: 'xPlatform', threads: 'threadsPlatform', linkedin: 'linkedinPlatform' };
+  const platDiv = document.getElementById(platIds[platform]);
+  // Temporarily un-hide the platform div so the position:fixed modal pane can render.
+  // The backdrop (z-index:400) covers the overview content behind it.
+  if (platDiv && platDiv.style.display === 'none') {
+    platDiv.dataset.fromBlogView = '1';
+    platDiv.style.display = 'flex';
+  }
+  if (platform === 'x') openXPostFromOverview(id);
+  else if (platform === 'threads') openThrPostFromOverview(id);
+  else if (platform === 'linkedin') openLiPostFromOverview(id);
+}
+
 function _isNewSchema(data) {
   return !!(data && Array.isArray(data.choices));
 }
@@ -6957,14 +7571,22 @@ function switchPlatform(platform) {
   const isBlog = platform === 'blog';
   const isX = platform === 'x';
   const isThreads = platform === 'threads';
-  document.getElementById('blogPlatform').style.display    = isBlog    ? 'flex' : 'none';
-  document.getElementById('xPlatform').style.display       = isX       ? 'flex' : 'none';
-  document.getElementById('threadsPlatform').style.display = isThreads ? 'flex' : 'none';
+  const isLinkedIn = platform === 'linkedin';
+  const isSocialCal = platform === 'socialcal';
+  document.getElementById('blogPlatform').style.display       = isBlog      ? 'flex' : 'none';
+  document.getElementById('xPlatform').style.display          = isX         ? 'flex' : 'none';
+  document.getElementById('threadsPlatform').style.display    = isThreads   ? 'flex' : 'none';
+  document.getElementById('linkedinPlatform').style.display   = isLinkedIn  ? 'flex' : 'none';
+  document.getElementById('socialCalPlatform').style.display  = isSocialCal ? 'flex' : 'none';
   document.getElementById('platformBtnBlog').classList.toggle('active', isBlog);
   document.getElementById('platformBtnX').classList.toggle('active', isX);
   document.getElementById('platformBtnThreads').classList.toggle('active', isThreads);
+  document.getElementById('platformBtnLinkedIn').classList.toggle('active', isLinkedIn);
+  document.getElementById('platformBtnSocialCal').classList.toggle('active', isSocialCal);
   if (isX) { loadXPosts(); switchXView('overview'); }
   if (isThreads) { loadThrPosts(); switchThrView('overview'); }
+  if (isLinkedIn) { loadLiPosts(); switchLiView('overview'); }
+  if (isSocialCal) { loadSocialCalPosts(); }
 }
 
 // ── X View switching ──────────────────────────────────────────────────────────
@@ -7058,7 +7680,7 @@ function renderXListView() {
     const rowBg = xSelectedIds.has(p.id) ? 'background:var(--surface2);' : '';
     return `<tr style="cursor:pointer;${rowBg}" ${rowClick}>
       ${cbCell}
-      <td style="max-width:340px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px;">${escHtml(preview)}${threadBadge}</td>
+      <td style="max-width:340px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px;">${escHtml(preview)}${threadBadge}${blogSourceBadge(p)}</td>
       <td style="font-size:13px;">${market}</td>
       <td><span class="x-status-badge ${p.status}" style="font-size:11px; padding:3px 9px;">${statusLabel}</span></td>
       <td style="font-size:12px; color:var(--text-dim);">${scheduled}</td>
@@ -7107,6 +7729,7 @@ function renderXBoardView() {
         <div class="x-board-card-meta">
           ${market ? `<span>${market}</span>` : ''}
           ${isThread ? '<span>🧵 Thread</span>' : ''}
+          ${p.source_blog_post_id ? '<span class="blog-source-badge">↗ blog</span>' : ''}
           <span>${p.created_at ? fmtDate(p.created_at) : ''}</span>
         </div>
       </div>`;
@@ -7129,7 +7752,13 @@ function closeXEditorModal() {
   pane.classList.remove('as-modal');
   pane.style.display = 'none';
   backdrop.style.display = 'none';
-  if (xOverviewViewMode === 'calendar') renderCalView('x');
+  const platDiv = document.getElementById('xPlatform');
+  if (platDiv && platDiv.dataset.fromBlogView) {
+    delete platDiv.dataset.fromBlogView;
+    platDiv.style.display = 'none';
+  } else if (xOverviewViewMode === 'calendar') {
+    renderCalView('x');
+  }
 }
 
 // ── X Bulk Select ─────────────────────────────────────────────────────────────
@@ -7439,6 +8068,8 @@ function populateXEditor(post) {
     syncBtn.style.display = (window._config.typefully_enabled && post.status === 'scheduled') ? '' : 'none';
     syncResult.style.display = 'none';
   }
+
+  loadSourcePostForSocialPost('x', post.source_blog_post_id);
 }
 
 async function xPushToTypefully(mode) {  // mode: 'draft' | 'now' | 'schedule'
@@ -7720,7 +8351,8 @@ let _changelogPlatform = 'x';
 
 function openChangelogModal(platform) {
   _changelogPlatform = platform || 'x';
-  const title = platform === 'threads' ? 'Generate Threads Posts from Changelog' : 'Generate X Posts from Changelog';
+  const titles = { threads: 'Generate Threads Posts from Changelog', linkedin: 'Generate LinkedIn Post from Changelog' };
+  const title = titles[platform] || 'Generate X Posts from Changelog';
   document.getElementById('changelogModalTitle').textContent = title;
   document.getElementById('changelogActions').style.display = 'flex';
   document.getElementById('changelogLoading').style.display = 'none';
@@ -7735,9 +8367,8 @@ function closeChangelogModal() {
 async function runChangelogGenerate() {
   const market = document.getElementById('changelogMarket').value;
   const limit = parseInt(document.getElementById('changelogLimit').value, 10);
-  const endpoint = _changelogPlatform === 'threads'
-    ? '/api/threads-posts/generate-from-changelog'
-    : '/api/x-posts/generate-from-changelog';
+  const endpointMap = { threads: '/api/threads-posts/generate-from-changelog', linkedin: '/api/linkedin-posts/generate-from-changelog' };
+  const endpoint = endpointMap[_changelogPlatform] || '/api/x-posts/generate-from-changelog';
 
   document.getElementById('changelogActions').style.display = 'none';
   document.getElementById('changelogLoading').style.display = 'block';
@@ -7758,6 +8389,8 @@ async function runChangelogGenerate() {
     showToast(`${data.total} drafts created from changelog`, 'success');
     if (_changelogPlatform === 'threads') {
       loadThrPosts();
+    } else if (_changelogPlatform === 'linkedin') {
+      loadLiPosts();
     } else {
       loadXPosts();
     }
@@ -8008,7 +8641,7 @@ function renderThrListView() {
     const rowBg = thrSelectedIds.has(p.id) ? 'background:var(--surface2);' : '';
     return `<tr style="cursor:pointer;${rowBg}" ${rowClick}>
       ${cbCell}
-      <td style="max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;">${escHtml(preview)}${threadBadge}</td>
+      <td style="max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;">${escHtml(preview)}${threadBadge}${blogSourceBadge(p)}</td>
       <td style="font-size:13px;">${market}</td>
       <td><span class="x-status-badge ${p.status}" style="font-size:11px;padding:3px 9px;">${statusLabel}</span></td>
       <td style="font-size:12px;color:var(--text-dim);">${scheduled}</td>
@@ -8049,6 +8682,7 @@ function renderThrBoardView() {
         <div class="x-board-card-meta">
           ${market ? `<span>${market}</span>` : ''}
           ${isThread ? '<span>🧵 Thread</span>' : ''}
+          ${p.source_blog_post_id ? '<span class="blog-source-badge">↗ blog</span>' : ''}
           <span>${p.created_at ? fmtDate(p.created_at) : ''}</span>
         </div>
       </div>`;
@@ -8071,7 +8705,13 @@ function closeThrEditorModal() {
   pane.classList.remove('as-modal');
   pane.style.display = 'none';
   backdrop.style.display = 'none';
-  if (thrOverviewViewMode === 'calendar') renderCalView('thr');
+  const platDiv = document.getElementById('threadsPlatform');
+  if (platDiv && platDiv.dataset.fromBlogView) {
+    delete platDiv.dataset.fromBlogView;
+    platDiv.style.display = 'none';
+  } else if (thrOverviewViewMode === 'calendar') {
+    renderCalView('thr');
+  }
 }
 
 // ── Chip counts ───────────────────────────────────────────────────────────────
@@ -8184,6 +8824,8 @@ function populateThrEditor(post) {
     document.getElementById('thrTypefullyResult').style.display = 'none';
     document.getElementById('thrTypefullyScheduleDate').value = '';
   }
+
+  loadSourcePostForSocialPost('threads', post.source_blog_post_id);
 }
 
 function _renderThrSingleEditor(content) {
@@ -8600,23 +9242,805 @@ document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
   if (document.getElementById('xEditorPane')?.classList.contains('as-modal')) closeXEditorModal();
   if (document.getElementById('thrEditorPane')?.classList.contains('as-modal')) closeThrEditorModal();
+  if (document.getElementById('liEditorPane')?.classList.contains('as-modal')) closeLiEditorModal();
 });
+
+// ── LinkedIn Posts ────────────────────────────────────────────────────────────
+let liPosts = [];
+let currentLiPost = null;
+let liStatusFilter = 'all';
+let liIsDirty = false;
+let liSelectedIds = new Set();
+let liSelectMode = false;
+let liCurrentView = 'overview';
+let liOverviewViewMode = 'calendar';
+
+async function loadLiPosts() {
+  const res = await fetch(`/api/linkedin-posts?brand=${activeBrand}`);
+  if (!res.ok) return;
+  liPosts = await res.json();
+  renderLiPostList();
+  renderLiChipCounts();
+  if (liCurrentView === 'overview') renderLiOverview();
+}
+
+function switchLiView(view) {
+  liCurrentView = view;
+  // If editor pane is open as a modal, close it cleanly before switching view
+  const liPane = document.getElementById('liEditorPane');
+  if (view === 'overview' && liPane && liPane.classList.contains('as-modal')) {
+    closeLiEditorModal();
+    return;
+  }
+  document.getElementById('liOverviewPane').style.display = view === 'overview' ? 'flex' : 'none';
+  liPane.style.display   = view === 'editor'   ? 'flex' : 'none';
+  document.getElementById('liNavOverview').classList.toggle('active', view === 'overview');
+  document.getElementById('liNavEditor').classList.toggle('active', view === 'editor');
+  if (view === 'overview') renderLiOverview();
+}
+
+function setLiOverviewView(v) {
+  liOverviewViewMode = v;
+  const isCal = v === 'calendar';
+  document.getElementById('liOvsw-list').classList.toggle('active', v === 'list');
+  document.getElementById('liOvsw-board').classList.toggle('active', v === 'board');
+  document.getElementById('liOvsw-cal').classList.toggle('active', isCal);
+  document.getElementById('liOverviewListView').style.display  = v === 'list'  ? 'block' : 'none';
+  document.getElementById('liOverviewBoardView').style.display = v === 'board' ? 'flex'  : 'none';
+  document.getElementById('liOverviewCalView').style.display   = isCal         ? 'flex'  : 'none';
+  const filters = document.querySelector('#liOverviewPane .x-ov-filters');
+  const bulkBtn = document.getElementById('liBulkSelectToggle');
+  if (filters) filters.style.display = isCal ? 'none' : '';
+  if (bulkBtn) bulkBtn.style.display = isCal ? 'none' : '';
+  renderLiOverview();
+}
+
+function setLiOverviewFilter(btn) {
+  document.querySelectorAll('#liOverviewChips .chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  liStatusFilter = btn.dataset.status;
+  document.querySelectorAll('#liStatusChips .chip').forEach(c => c.classList.remove('active'));
+  const ec = document.querySelector(`#liStatusChips .chip[data-status="${liStatusFilter}"]`);
+  if (ec) ec.classList.add('active');
+  setLiSidebarFilterByStatus(liStatusFilter);
+  liSelectedIds.clear(); liUpdateBulkBar();
+  renderLiOverview();
+}
+
+function renderLiOverview() {
+  renderLiChipCounts();
+  if (liOverviewViewMode === 'list') renderLiListView();
+  else if (liOverviewViewMode === 'board') renderLiBoardView();
+  else if (liOverviewViewMode === 'calendar') renderCalView('li');
+}
+
+function _liOvFiltered() {
+  const search = (document.getElementById('liOvSearch')?.value || '').toLowerCase();
+  const mkt = document.getElementById('liOvMarket')?.value || 'all';
+  return liPosts.filter(p => {
+    if (liStatusFilter !== 'all' && p.status !== liStatusFilter) return false;
+    if (mkt !== 'all' && (p.market || '') !== mkt) return false;
+    if (search && !(p.content || '').toLowerCase().includes(search)) return false;
+    return true;
+  });
+}
+
+function renderLiListView() {
+  const filtered = _liOvFiltered();
+  const tbody = document.getElementById('liListBody');
+  const colspan = liSelectMode ? '8' : '7';
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align:center;padding:40px;color:var(--text-dim);">No posts found</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = filtered.map(p => {
+    const preview = (p.content || '').slice(0, 120);
+    const statusLabel = { draft: '📝 Draft', scheduled: '🕐 Scheduled', posted: '✅ Posted' }[p.status] || p.status;
+    const market = p.market ? xMarketFlag(p.market) + ' ' + p.market : '—';
+    const scheduled = p.scheduled_at ? fmtDate(p.scheduled_at) : '—';
+    const editor = p.editor_email ? escHtml(p.editor_email.split('@')[0]) : '—';
+    const checked = liSelectedIds.has(p.id) ? ' checked' : '';
+    const cbCell = liSelectMode ? `<td class="x-cb-col" onclick="event.stopPropagation();"><input type="checkbox" class="x-select-cb" data-id="${p.id}"${checked} onchange="liToggleSelect(${p.id}, this.checked)"></td>` : '';
+    const rowClick = liSelectMode ? `onclick="liRowClick(${p.id})"` : `onclick="openLiPostFromOverview(${p.id})"`;
+    const rowBg = liSelectedIds.has(p.id) ? 'background:var(--surface2);' : '';
+    return `<tr style="cursor:pointer;${rowBg}" ${rowClick}>
+      ${cbCell}
+      <td style="max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;">${escHtml(preview)}${blogSourceBadge(p)}</td>
+      <td style="font-size:13px;">${market}</td>
+      <td><span class="x-status-badge ${p.status}" style="font-size:11px;padding:3px 9px;">${statusLabel}</span></td>
+      <td style="font-size:12px;color:var(--text-dim);">${scheduled}</td>
+      <td style="font-size:12px;color:var(--text-dim);">${p.created_at ? fmtDate(p.created_at) : '—'}</td>
+      <td style="font-size:12px;color:var(--text-dim);">${editor}</td>
+      <td><button class="btn btn-secondary" style="font-size:12px;padding:4px 10px;" onclick="event.stopPropagation();openLiPostFromOverview(${p.id})">Edit</button></td>
+    </tr>`;
+  }).join('');
+  const allCb = document.getElementById('liSelectAllCb');
+  if (allCb) {
+    const ids = filtered.map(p => p.id);
+    allCb.checked = ids.length > 0 && ids.every(id => liSelectedIds.has(id));
+    allCb.indeterminate = !allCb.checked && ids.some(id => liSelectedIds.has(id));
+  }
+}
+
+function renderLiBoardView() {
+  const search = (document.getElementById('liOvSearch')?.value || '').toLowerCase();
+  const mkt = document.getElementById('liOvMarket')?.value || 'all';
+  ['draft', 'scheduled', 'posted'].forEach(status => {
+    const countEl = document.getElementById(`liBCount-${status}`);
+    const cardsEl = document.getElementById(`liBCards-${status}`);
+    const filtered = liPosts.filter(p => {
+      if (p.status !== status) return false;
+      if (mkt !== 'all' && (p.market || '') !== mkt) return false;
+      if (search && !(p.content || '').toLowerCase().includes(search)) return false;
+      return true;
+    });
+    if (countEl) countEl.textContent = filtered.length;
+    if (!cardsEl) return;
+    if (!filtered.length) { cardsEl.innerHTML = '<div style="padding:12px;font-size:12px;color:var(--text-dim);">No posts</div>'; return; }
+    cardsEl.innerHTML = filtered.map(p => {
+      const preview = (p.content || '').slice(0, 120);
+      const market = p.market ? xMarketFlag(p.market) + ' ' + p.market : '';
+      return `<div class="x-board-card" onclick="openLiPostFromOverview(${p.id})">
+        <div class="x-board-card-preview">${escHtml(preview)}</div>
+        <div class="x-board-card-meta">
+          ${market ? `<span>${market}</span>` : ''}
+          ${p.source_blog_post_id ? '<span class="blog-source-badge">↗ blog</span>' : ''}
+          <span>${p.created_at ? fmtDate(p.created_at) : ''}</span>
+        </div>
+      </div>`;
+    }).join('');
+  });
+}
+
+function openLiPostFromOverview(id) {
+  const pane = document.getElementById('liEditorPane');
+  const backdrop = document.getElementById('liEditorModalBackdrop');
+  pane.classList.add('as-modal');
+  pane.style.display = 'flex';
+  backdrop.style.display = 'block';
+  openLiPost(id);
+}
+
+function closeLiEditorModal() {
+  const pane = document.getElementById('liEditorPane');
+  const backdrop = document.getElementById('liEditorModalBackdrop');
+  pane.classList.remove('as-modal');
+  pane.style.display = 'none';
+  backdrop.style.display = 'none';
+  const platDiv = document.getElementById('linkedinPlatform');
+  if (platDiv && platDiv.dataset.fromBlogView) {
+    delete platDiv.dataset.fromBlogView;
+    platDiv.style.display = 'none';
+  } else if (liOverviewViewMode === 'calendar') {
+    renderCalView('li');
+  }
+}
+
+function renderLiChipCounts() {
+  const counts = { all: liPosts.length, draft: 0, scheduled: 0, posted: 0 };
+  liPosts.forEach(p => { if (counts[p.status] !== undefined) counts[p.status]++; });
+  Object.entries(counts).forEach(([status, count]) => {
+    const el = document.getElementById(`lichip-${status}`);
+    if (el) el.textContent = count;
+    const ov = document.getElementById(`liovchip-${status}`);
+    if (ov) ov.textContent = count;
+  });
+}
+
+function renderLiPostList() {
+  const search = (document.getElementById('liSearchBox')?.value || '').toLowerCase();
+  const list = document.getElementById('liPostList');
+  const filtered = liPosts.filter(p => {
+    if (liStatusFilter !== 'all' && p.status !== liStatusFilter) return false;
+    if (search && !(p.content || '').toLowerCase().includes(search)) return false;
+    return true;
+  });
+  if (!filtered.length) { list.innerHTML = '<div style="padding:20px 14px;font-size:13px;color:var(--text-dim);">No posts found</div>'; return; }
+  list.innerHTML = filtered.map(p => {
+    const isActive = currentLiPost && currentLiPost.id === p.id ? ' active' : '';
+    const statusLabel = { draft: '📝', scheduled: '🕐', posted: '✅' }[p.status] || '';
+    const market = p.market ? `<span style="color:var(--text-dim);">${xMarketFlag(p.market)}</span>` : '';
+    const preview = (p.content || '').slice(0, 120);
+    return `<div class="x-post-item${isActive}" onclick="openLiPost(${p.id})">
+      <div class="x-post-item-preview">${escHtml(preview)}</div>
+      <div class="x-post-item-meta">${statusLabel} ${market} <span>${p.created_at ? fmtDate(p.created_at) : ''}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function setLiFilter(btn) {
+  document.querySelectorAll('#liStatusChips .chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  liStatusFilter = btn.dataset.status;
+  setLiSidebarFilterByStatus(liStatusFilter);
+  renderLiPostList();
+}
+
+function setLiSidebarFilter(btn) {
+  document.querySelectorAll('#liEditorPane .x-status-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  liStatusFilter = btn.dataset.status;
+  document.querySelectorAll('#liStatusChips .chip').forEach(c => c.classList.remove('active'));
+  const chip = document.querySelector(`#liStatusChips .chip[data-status="${liStatusFilter}"]`);
+  if (chip) chip.classList.add('active');
+  renderLiPostList();
+}
+
+function setLiSidebarFilterByStatus(status) {
+  document.querySelectorAll('#liEditorPane .x-status-tab').forEach(t => t.classList.remove('active'));
+  const tab = document.querySelector(`#liEditorPane .x-status-tab[data-status="${status}"]`);
+  if (tab) tab.classList.add('active');
+}
+
+async function openLiPost(id) {
+  if (liIsDirty && currentLiPost) {
+    if (!confirm('You have unsaved changes. Discard them?')) return;
+  }
+  const res = await fetch(`/api/linkedin-posts/${id}`);
+  if (!res.ok) return;
+  currentLiPost = await res.json();
+  liIsDirty = false;
+  populateLiEditor(currentLiPost);
+  renderLiPostList();
+}
+
+function populateLiEditor(post) {
+  document.getElementById('liNoPostState').style.display = 'none';
+  document.getElementById('liEditorContent').style.display = 'flex';
+  document.getElementById('liMetaPanel').style.display = '';
+
+  const ta = document.getElementById('liContentInput');
+  ta.value = post.content || '';
+  autoResizeTa(ta);
+  updateLiCharCount();
+
+  document.getElementById('liMarket').value = post.market || '';
+  toggleLiStatusFields(post.status || 'draft');
+  if (post.scheduled_at) {
+    const dt = new Date(post.scheduled_at);
+    document.getElementById('liScheduledAt').value = new Date(dt.getTime() - dt.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  } else {
+    document.getElementById('liScheduledAt').value = '';
+  }
+  document.getElementById('liPostUrl').value = post.post_url || '';
+
+  const badge = document.getElementById('liStatusBadge');
+  const labels = { draft: '📝 Draft', scheduled: '🕐 Scheduled', posted: '✅ Posted' };
+  badge.textContent = labels[post.status] || post.status;
+  badge.className = `x-status-badge ${post.status || 'draft'}`;
+  document.getElementById('liStatusSelect').value = post.status || 'draft';
+
+  loadLiAuditLog(post.id);
+
+  const typefullySection = document.getElementById('liTypefullySection');
+  if (typefullySection) {
+    typefullySection.style.display = window._config.typefully_enabled ? '' : 'none';
+    document.getElementById('liTypefullyResult').style.display = 'none';
+    document.getElementById('liTypefullyScheduleDate').value = '';
+  }
+
+  loadSourcePostForSocialPost('linkedin', post.source_blog_post_id);
+}
+
+function liMarkDirty() { liIsDirty = true; }
+
+function updateLiCharCount() {
+  const len = (document.getElementById('liContentInput')?.value || '').length;
+  const el = document.getElementById('liCharCount');
+  if (!el) return;
+  el.textContent = `${len} / 1500`;
+  el.className = 'x-char-count' + (len > 1500 ? ' over' : len > 1350 ? ' warn' : '');
+}
+
+function updateCreateLiCharCount() {
+  const len = (document.getElementById('createLiContent')?.value || '').length;
+  const el = document.getElementById('createLiCharCount');
+  if (!el) return;
+  el.textContent = `${len} / 1500`;
+  el.className = 'x-char-count' + (len > 1500 ? ' over' : len > 1350 ? ' warn' : '');
+}
+
+function toggleLiStatusFields(status) {
+  document.getElementById('liScheduledSection').style.display = status === 'scheduled' ? 'block' : 'none';
+  document.getElementById('liPostedSection').style.display = status === 'posted' ? 'block' : 'none';
+}
+
+function handleLiStatusChange(status) {
+  toggleLiStatusFields(status);
+  liMarkDirty();
+}
+
+async function saveLiPost() {
+  if (!currentLiPost) return;
+  const content = (document.getElementById('liContentInput').value || '').trim();
+  if (!content) { showToast('Content cannot be empty', 'error'); return; }
+  const status = document.getElementById('liStatusSelect').value;
+  const market = document.getElementById('liMarket').value;
+  const scheduledAt = document.getElementById('liScheduledAt').value || null;
+  const postUrl = document.getElementById('liPostUrl').value.trim() || null;
+
+  const updateRes = await fetch(`/api/linkedin-posts/${currentLiPost.id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content, market: market || null, scheduled_at: scheduledAt }),
+  });
+  if (!updateRes.ok) { showToast('Save failed', 'error'); return; }
+
+  if (status !== currentLiPost.status) {
+    const statusRes = await fetch(`/api/linkedin-posts/${currentLiPost.id}/status`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status, scheduled_at: scheduledAt, post_url: postUrl }),
+    });
+    if (!statusRes.ok) { showToast('Status update failed', 'error'); return; }
+  }
+
+  liIsDirty = false;
+  currentLiPost = { ...currentLiPost, content, market: market || null, status, scheduled_at: scheduledAt, post_url: postUrl };
+  const idx = liPosts.findIndex(p => p.id === currentLiPost.id);
+  if (idx !== -1) liPosts[idx] = { ...liPosts[idx], ...currentLiPost };
+  renderLiPostList();
+  renderLiChipCounts();
+  if (liCurrentView === 'overview') renderLiOverview();
+  showToast('Saved');
+  loadLiAuditLog(currentLiPost.id);
+}
+
+async function deleteLiPost() {
+  if (!currentLiPost) return;
+  if (!confirm('Delete this LinkedIn post? This cannot be undone.')) return;
+  const res = await fetch(`/api/linkedin-posts/${currentLiPost.id}`, { method: 'DELETE' });
+  if (!res.ok) { showToast('Delete failed', 'error'); return; }
+  liPosts = liPosts.filter(p => p.id !== currentLiPost.id);
+  currentLiPost = null;
+  liIsDirty = false;
+  document.getElementById('liNoPostState').style.display = '';
+  document.getElementById('liEditorContent').style.display = 'none';
+  document.getElementById('liMetaPanel').style.display = 'none';
+  renderLiPostList();
+  renderLiChipCounts();
+  renderLiOverview();
+  showToast('Post deleted');
+}
+
+async function loadLiAuditLog(postId) {
+  const res = await fetch(`/api/linkedin-posts/${postId}/audit-log`);
+  if (!res.ok) return;
+  const entries = await res.json();
+  const section = document.getElementById('liAuditSection');
+  const logEl = document.getElementById('liAuditLog');
+  if (!entries.length) { section.style.display = 'none'; return; }
+  section.style.display = '';
+  logEl.innerHTML = entries.map(e => {
+    const ts = e.timestamp ? new Date(e.timestamp).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+    const actor = (e.user_email || '').split('@')[0];
+    const actionLabel = { created: 'Created', edited: 'Edited', status_changed: 'Status changed', deleted: 'Deleted', pushed_to_typefully: 'Pushed to Typefully' }[e.action] || e.action;
+    let detail = '';
+    if (e.action === 'status_changed' && e.details) {
+      try { const d = typeof e.details === 'string' ? JSON.parse(e.details) : e.details; detail = `${d.from} → ${d.to}`; } catch {}
+    }
+    return `<div style="padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+      <div style="color:var(--text);font-weight:500;">${actionLabel}${detail ? ': ' + escHtml(detail) : ''}</div>
+      <div style="color:var(--text-dim);margin-top:2px;">${escHtml(actor)} · ${ts}</div>
+    </div>`;
+  }).join('');
+}
+
+async function liPushToTypefully(mode) {
+  if (!currentLiPost) return;
+  const resultEl = document.getElementById('liTypefullyResult');
+  const saveDraftBtn = document.getElementById('liSaveDraftBtn');
+  const postNowBtn = document.getElementById('liPostNowBtn');
+  const scheduleBtn = document.getElementById('liScheduleBtn');
+
+  let scheduleDate = null;
+  if (mode === 'schedule') {
+    const val = document.getElementById('liTypefullyScheduleDate').value;
+    if (!val) { showToast('Pick a date and time to schedule', 'error'); return; }
+    scheduleDate = new Date(val).toISOString();
+  }
+
+  [saveDraftBtn, postNowBtn, scheduleBtn].forEach(b => b && (b.disabled = true));
+  resultEl.style.display = 'none';
+
+  try {
+    const res = await fetch(`/api/linkedin-posts/${currentLiPost.id}/push-to-typefully`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ schedule_date: scheduleDate, post_now: mode === 'now' }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      resultEl.textContent = data.detail || 'Failed to push to Typefully';
+      resultEl.style.background = 'var(--danger-bg,#fee2e2)';
+      resultEl.style.color = 'var(--danger,#dc2626)';
+      resultEl.style.display = 'block';
+      return;
+    }
+    const msg = mode === 'now' ? 'Posted ✓' : mode === 'schedule' ? 'Scheduled ✓' : 'Saved as draft ✓';
+    const linkLabel = mode === 'draft' ? 'open & publish in Typefully ↗' : 'view in Typefully ↗';
+    resultEl.style.background = 'var(--success-bg,#dcfce7)';
+    resultEl.style.color = 'var(--success,#16a34a)';
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = data.typefully_url
+      ? `${msg} — <a href="${escHtml(data.typefully_url)}" target="_blank" style="color:inherit;">${linkLabel}</a>`
+      : msg;
+    await loadLiPosts();
+  } catch (e) {
+    resultEl.textContent = 'Network error — try again';
+    resultEl.style.background = 'var(--danger-bg,#fee2e2)';
+    resultEl.style.color = 'var(--danger,#dc2626)';
+    resultEl.style.display = 'block';
+  } finally {
+    [saveDraftBtn, postNowBtn, scheduleBtn].forEach(b => b && (b.disabled = false));
+  }
+}
+
+function liToggleSelectMode() {
+  liSelectMode = !liSelectMode;
+  if (!liSelectMode) liSelectedIds.clear();
+  const btn = document.getElementById('liBulkSelectToggle');
+  if (btn) {
+    btn.textContent = liSelectMode ? '✕ Cancel' : '☑ Select';
+    btn.style.background = liSelectMode ? 'var(--accent)' : '';
+    btn.style.color = liSelectMode ? '#fff' : '';
+    btn.style.borderColor = liSelectMode ? 'var(--accent)' : '';
+  }
+  const cbHeader = document.getElementById('liCbHeaderCell');
+  if (cbHeader) cbHeader.style.display = liSelectMode ? '' : 'none';
+  liUpdateBulkBar();
+  renderLiListView();
+}
+
+function liRowClick(id) { liToggleSelect(id, !liSelectedIds.has(id)); renderLiListView(); }
+function liToggleSelect(id, checked) { if (checked) liSelectedIds.add(id); else liSelectedIds.delete(id); liUpdateBulkBar(); }
+
+function liToggleSelectAll(checked) {
+  _liOvFiltered().forEach(p => { if (checked) liSelectedIds.add(p.id); else liSelectedIds.delete(p.id); });
+  liUpdateBulkBar();
+  renderLiListView();
+}
+
+function liUpdateBulkBar() {
+  const n = liSelectedIds.size;
+  const bar = document.getElementById('liBulkBar');
+  const count = document.getElementById('liBulkCount');
+  if (bar) bar.style.display = (liSelectMode && n > 0) ? 'flex' : 'none';
+  if (count) count.textContent = `${n} selected`;
+  const sbar = document.getElementById('liSidebarBulkBar');
+  const scount = document.getElementById('liSidebarBulkCount');
+  if (sbar) sbar.style.display = n > 0 ? 'flex' : 'none';
+  if (scount) scount.textContent = `${n} selected`;
+}
+
+function liClearSelection() {
+  liSelectedIds.clear();
+  liUpdateBulkBar();
+  if (liSelectMode) renderLiListView();
+  renderLiPostList();
+}
+
+async function liBulkDelete() {
+  const ids = [...liSelectedIds];
+  if (!ids.length) return;
+  if (!confirm(`Delete ${ids.length} LinkedIn post${ids.length > 1 ? 's' : ''}? This cannot be undone.`)) return;
+  try {
+    const res = await fetch('/api/linkedin-posts/bulk-delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids }),
+    });
+    if (!res.ok) { showToast('Bulk delete failed', 'error'); return; }
+    const result = await res.json();
+    const deleted = new Set(result.deleted);
+    liPosts = liPosts.filter(p => !deleted.has(p.id));
+    if (currentLiPost && deleted.has(currentLiPost.id)) {
+      currentLiPost = null; liIsDirty = false;
+      document.getElementById('liNoPostState').style.display = '';
+      document.getElementById('liEditorContent').style.display = 'none';
+      document.getElementById('liMetaPanel').style.display = 'none';
+    }
+    liSelectedIds.clear(); liSelectMode = false;
+    const btn = document.getElementById('liBulkSelectToggle');
+    if (btn) { btn.textContent = '☑ Select'; btn.style.background = ''; btn.style.color = ''; btn.style.borderColor = ''; }
+    const cbHeader = document.getElementById('liCbHeaderCell');
+    if (cbHeader) cbHeader.style.display = 'none';
+    liUpdateBulkBar();
+    renderLiPostList(); renderLiChipCounts(); renderLiOverview();
+    showToast(`Deleted ${result.deleted.length} post${result.deleted.length > 1 ? 's' : ''}`, 'success');
+  } catch (e) { showToast('Error during bulk delete', 'error'); }
+}
+
+// ── LinkedIn Create Modal ────────────────────────────────────────────────────
+let _liGeneratedPost = null;
+
+function openCreateLiModal() {
+  document.getElementById('createLiContent').value = '';
+  document.getElementById('createLiMarket').value = '';
+  document.getElementById('createLiCharCount').textContent = '0 / 1500';
+  document.getElementById('createLiTopicHint').value = '';
+  document.getElementById('createLiGenerateMarket').value = '';
+  _liGeneratedPost = null;
+  switchCreateLiTab('generate');
+  document.getElementById('createLiModal').classList.add('open');
+}
+
+function closeCreateLiModal() {
+  document.getElementById('createLiModal').classList.remove('open');
+}
+
+function switchCreateLiTab(tab) {
+  const isWrite = tab === 'write';
+  document.getElementById('createLiWritePane').style.display = isWrite ? '' : 'none';
+  document.getElementById('createLiGeneratePane').style.display = isWrite ? 'none' : '';
+  document.getElementById('createLiTabWrite').className = isWrite ? 'btn btn-primary' : 'btn';
+  document.getElementById('createLiTabGenerate').className = isWrite ? 'btn' : 'btn btn-primary';
+  if (!isWrite) {
+    document.getElementById('createLiGenerateActions').style.display = 'flex';
+    document.getElementById('createLiGenerateLoading').style.display = 'none';
+    document.getElementById('createLiGenerateResult').style.display = 'none';
+    setTimeout(() => document.getElementById('createLiTopicHint').focus(), 50);
+  }
+}
+
+async function runLiPostGenerate() {
+  const topicHint = document.getElementById('createLiTopicHint').value.trim();
+  const market = document.getElementById('createLiGenerateMarket').value;
+
+  document.getElementById('createLiGenerateActions').style.display = 'none';
+  document.getElementById('createLiGenerateResult').style.display = 'none';
+  document.getElementById('createLiGenerateLoading').style.display = 'block';
+
+  try {
+    const res = await fetch('/api/linkedin-posts/generate-thought-leadership', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ market: market || null, topic_hint: topicHint || null, brand: activeBrand }),
+    });
+    if (!res.ok) {
+      let errMsg = 'Generation failed — try again';
+      try { const e = await res.json(); if (e.detail) errMsg = e.detail; } catch (_) {}
+      throw new Error(errMsg);
+    }
+    const data = await res.json();
+    _liGeneratedPost = data;
+
+    document.getElementById('createLiGenerateTopic').textContent = data.topic || 'Generated post';
+    document.getElementById('createLiGeneratePost').textContent = data.content || '';
+
+    document.getElementById('createLiGenerateLoading').style.display = 'none';
+    document.getElementById('createLiGenerateResult').style.display = 'block';
+  } catch (e) {
+    document.getElementById('createLiGenerateLoading').style.display = 'none';
+    document.getElementById('createLiGenerateActions').style.display = 'flex';
+    showToast(e.message || 'Generation failed — try again', 'error');
+  }
+}
+
+function useLiGeneratedPost() {
+  if (!_liGeneratedPost) return;
+  const content = (_liGeneratedPost.content || '').replace(/\[URL\]/g, _liGeneratedPost.link_url || '');
+  document.getElementById('createLiContent').value = content;
+  document.getElementById('createLiMarket').value = document.getElementById('createLiGenerateMarket').value;
+  updateCreateLiCharCount();
+  switchCreateLiTab('write');
+}
+
+async function submitCreateLiPost() {
+  const content = document.getElementById('createLiContent').value.trim();
+  if (!content) { showToast('Content cannot be empty', 'error'); return; }
+  const market = document.getElementById('createLiMarket').value;
+  const btn = document.getElementById('createLiBtn');
+  btn.disabled = true; btn.textContent = 'Creating…';
+  const res = await fetch('/api/linkedin-posts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content, market: market || null, brand: activeBrand }),
+  });
+  btn.disabled = false; btn.textContent = 'Create Post';
+  if (!res.ok) { showToast('Failed to create post', 'error'); return; }
+  const { id } = await res.json();
+  closeCreateLiModal();
+  await loadLiPosts();
+  openLiPostFromOverview(id);
+  showToast('Post created');
+}
+
+// ── Social Calendar ────────────────────────────────────────────────────────────
+let socialCalViewMode = 'month';
+let socialCalDate = new Date();
+
+function socialCalGetAllPosts() {
+  return [
+    ...xPosts.map(p => ({ ...p, _platform: 'x' })),
+    ...thrPosts.map(p => ({ ...p, _platform: 'thr' })),
+    ...liPosts.map(p => ({ ...p, _platform: 'li' })),
+  ];
+}
+
+async function loadSocialCalPosts() {
+  await Promise.all([
+    fetch(`/api/x-posts?brand=${activeBrand}`).then(r => r.ok ? r.json() : []).then(d => { xPosts = d; }),
+    fetch(`/api/threads-posts?brand=${activeBrand}`).then(r => r.ok ? r.json() : []).then(d => { thrPosts = d; }),
+    fetch(`/api/linkedin-posts?brand=${activeBrand}`).then(r => r.ok ? r.json() : []).then(d => { liPosts = d; }),
+  ]);
+  renderSocialCalView();
+  renderSocialCalDraftSidebar();
+}
+
+function setSocialCalViewMode(v) {
+  socialCalViewMode = v;
+  document.getElementById('socialCalSw-month').classList.toggle('active', v === 'month');
+  document.getElementById('socialCalSw-week').classList.toggle('active', v === 'week');
+  document.getElementById('socialCalMonthGrid').style.display = v === 'month' ? 'grid' : 'none';
+  document.getElementById('socialCalWeekGrid').style.display  = v === 'week'  ? 'grid' : 'none';
+  renderSocialCalView();
+}
+
+function socialCalPrev() {
+  socialCalDate = socialCalViewMode === 'month'
+    ? new Date(socialCalDate.getFullYear(), socialCalDate.getMonth() - 1, 1)
+    : new Date(socialCalDate.getFullYear(), socialCalDate.getMonth(), socialCalDate.getDate() - 7);
+  renderSocialCalView();
+}
+
+function socialCalNext() {
+  socialCalDate = socialCalViewMode === 'month'
+    ? new Date(socialCalDate.getFullYear(), socialCalDate.getMonth() + 1, 1)
+    : new Date(socialCalDate.getFullYear(), socialCalDate.getMonth(), socialCalDate.getDate() + 7);
+  renderSocialCalView();
+}
+
+function socialCalToday() {
+  socialCalDate = new Date();
+  renderSocialCalView();
+}
+
+function socialCalUpdateNavLabel() {
+  const el = document.getElementById('socialCalNavLabel');
+  if (!el) return;
+  if (socialCalViewMode === 'month') {
+    el.textContent = socialCalDate.toLocaleDateString('en-SG', { month: 'long', year: 'numeric' });
+  } else {
+    const ws = new Date(socialCalDate); ws.setDate(socialCalDate.getDate() - socialCalDate.getDay());
+    const we = new Date(ws); we.setDate(ws.getDate() + 6);
+    el.textContent = `${ws.toLocaleDateString('en-SG', { day: 'numeric', month: 'short' })} – ${we.toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' })}`;
+  }
+}
+
+function socialCalEventChipHtml(p) {
+  const labels  = { x: '𝕏', thr: 'Th', li: 'in' };
+  const colors  = { x: '#1D9BF0', thr: '#8B5CF6', li: '#0A66C2' };
+  const openFns = { x: 'openXPostFromOverview', thr: 'openThrPostFromOverview', li: 'openLiPostFromOverview' };
+  const plat = p._platform || 'x';
+  const mkt = p.market ? xMarketFlag(p.market) + ' ' : '';
+  const preview = escHtml((p.content || '').slice(0, 45));
+  const color = colors[plat] || '#888';
+  const blogTag = p.source_blog_post_id ? ' <span style="font-size:8px;font-weight:700;opacity:0.8;">↗</span>' : '';
+  return `<span class="cal-event ${escHtml(p.status)}"
+    style="border-left:3px solid ${color};padding-left:4px;"
+    onclick="event.stopPropagation();switchPlatform('${plat === 'x' ? 'x' : plat === 'thr' ? 'threads' : 'linkedin'}');${openFns[plat]}(${p.id})"
+    title="${escHtml((p.content||'').slice(0,200))}${p.source_blog_post_id ? ' [repurposed from blog]' : ''}"
+  ><span style="font-size:9px;opacity:0.6;font-weight:700;">${labels[plat]}</span> ${mkt}${preview}${blogTag}</span>`;
+}
+
+function renderSocialCalDraftSidebar() {
+  const allPosts = socialCalGetAllPosts();
+  const drafts = allPosts.filter(p => p.status === 'draft' && !p.scheduled_at);
+  const countEl = document.getElementById('socialCalDraftCount');
+  const listEl = document.getElementById('socialCalDraftList');
+  if (countEl) countEl.textContent = drafts.length;
+  if (!listEl) return;
+  const labels  = { x: '𝕏', thr: 'Th', li: 'in' };
+  const colors  = { x: '#1D9BF0', thr: '#8B5CF6', li: '#0A66C2' };
+  const openFns = { x: 'openXPostFromOverview', thr: 'openThrPostFromOverview', li: 'openLiPostFromOverview' };
+  if (!drafts.length) {
+    listEl.innerHTML = `<div style="padding:12px;font-size:12px;color:var(--text-dim);">No unscheduled drafts</div>`;
+    return;
+  }
+  listEl.innerHTML = drafts.map(p => {
+    const plat = p._platform || 'x';
+    const preview = escHtml((p.content || '').slice(0, 90));
+    const mkt = p.market ? `<div class="cal-draft-card-market">${xMarketFlag(p.market)} ${p.market}</div>` : '';
+    const color = colors[plat] || '#888';
+    const fn = openFns[plat];
+    const switchPl = plat === 'x' ? 'x' : plat === 'thr' ? 'threads' : 'linkedin';
+    const blogBadge = p.source_blog_post_id ? '<span class="blog-source-badge">↗ blog</span>' : '';
+    return `<div class="cal-draft-card" style="border-left:3px solid ${color};"
+      onclick="switchPlatform('${switchPl}');${fn}(${p.id})">
+      <div style="font-size:9px;font-weight:700;color:${color};margin-bottom:3px;">${labels[plat]}${blogBadge}</div>
+      <div class="cal-draft-card-preview">${preview}</div>
+      ${mkt}
+    </div>`;
+  }).join('');
+}
+
+function renderSocialCalView() {
+  socialCalUpdateNavLabel();
+  renderSocialCalDraftSidebar();
+
+  const allPosts = socialCalGetAllPosts();
+  const postMap = new Map();
+  allPosts.forEach(p => {
+    const ts = p.scheduled_at || p.posted_at;
+    if (!ts) return;
+    const key = calDateKey(new Date(ts));
+    if (!postMap.has(key)) postMap.set(key, []);
+    postMap.get(key).push(p);
+  });
+
+  if (socialCalViewMode === 'month') {
+    renderSocialCalMonthGrid(postMap);
+    document.getElementById('socialCalMonthGrid').style.display = 'grid';
+    document.getElementById('socialCalWeekGrid').style.display  = 'none';
+  } else {
+    renderSocialCalWeekGrid(postMap);
+    document.getElementById('socialCalMonthGrid').style.display = 'none';
+    document.getElementById('socialCalWeekGrid').style.display  = 'grid';
+  }
+}
+
+function renderSocialCalMonthGrid(postMap) {
+  const anchor = socialCalDate;
+  const firstDay = new Date(anchor.getFullYear(), anchor.getMonth(), 1);
+  const lastDay  = new Date(anchor.getFullYear(), anchor.getMonth() + 1, 0);
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let html = days.map(d => `<div class="cal-day-header">${d}</div>`).join('');
+  for (let i = 0; i < firstDay.getDay(); i++) html += '<div class="cal-day cal-day-empty"></div>';
+  const today = calDateKey(new Date());
+  for (let d = 1; d <= lastDay.getDate(); d++) {
+    const dateObj = new Date(anchor.getFullYear(), anchor.getMonth(), d);
+    const key = calDateKey(dateObj);
+    const posts = postMap.get(key) || [];
+    const isToday = key === today;
+    const chips = posts.slice(0, 3).map(p => socialCalEventChipHtml(p)).join('');
+    const more = posts.length > 3 ? `<span class="cal-more">+${posts.length - 3} more</span>` : '';
+    html += `<div class="cal-day${isToday ? ' today' : ''}">
+      <div class="cal-day-num">${d}</div>
+      ${chips}${more}
+    </div>`;
+  }
+  const el = document.getElementById('socialCalMonthGrid');
+  if (el) el.innerHTML = html;
+}
+
+function renderSocialCalWeekGrid(postMap) {
+  const anchor = socialCalDate;
+  const ws = new Date(anchor); ws.setDate(anchor.getDate() - anchor.getDay());
+  const today = calDateKey(new Date());
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let html = days.map((d, i) => {
+    const dateObj = new Date(ws); dateObj.setDate(ws.getDate() + i);
+    const key = calDateKey(dateObj);
+    const posts = postMap.get(key) || [];
+    const isToday = key === today;
+    const chips = posts.map(p => socialCalEventChipHtml(p)).join('');
+    return `<div class="cal-week-day-col${isToday ? ' today' : ''}">
+      <div class="cal-week-day-header">${d} ${dateObj.getDate()}</div>
+      <div class="cal-week-day-events">${chips}</div>
+    </div>`;
+  }).join('');
+  const el = document.getElementById('socialCalWeekGrid');
+  if (el) el.innerHTML = html;
+}
 
 // ── Calendar View ─────────────────────────────────────────────────────────────
 let xCalViewMode = 'month';
 let xCalDate = new Date();
 let thrCalViewMode = 'month';
 let thrCalDate = new Date();
+let liCalViewMode = 'month';
+let liCalDate = new Date();
 let _calDragPostId = null;
 let _calDragPlatform = null;
 let _calDropDateKey = null;
 
 // Platform helpers
-function calGetPosts(p)      { return p === 'x' ? xPosts : thrPosts; }
-function calGetDate(p)       { return p === 'x' ? xCalDate : thrCalDate; }
-function calSetDate(p, d)    { if (p === 'x') xCalDate = d; else thrCalDate = d; }
-function calGetViewMode(p)   { return p === 'x' ? xCalViewMode : thrCalViewMode; }
-function calPfx(p)           { return p === 'x' ? 'x' : 'thr'; }
+function calGetPosts(p)      { return p === 'x' ? xPosts : p === 'thr' ? thrPosts : liPosts; }
+function calGetDate(p)       { return p === 'x' ? xCalDate : p === 'thr' ? thrCalDate : liCalDate; }
+function calSetDate(p, d)    { if (p === 'x') xCalDate = d; else if (p === 'thr') thrCalDate = d; else liCalDate = d; }
+function calGetViewMode(p)   { return p === 'x' ? xCalViewMode : p === 'thr' ? thrCalViewMode : liCalViewMode; }
+function calPfx(p)           { return p === 'x' ? 'x' : p === 'thr' ? 'thr' : 'li'; }
 
 function calDateKey(d) {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -8635,12 +10059,14 @@ function calBuildPostMap(posts) {
 }
 
 function calEventChipHtml(p, platform) {
-  const fn = platform === 'x' ? 'openXPostFromOverview' : 'openThrPostFromOverview';
+  const fns = { x: 'openXPostFromOverview', thr: 'openThrPostFromOverview', li: 'openLiPostFromOverview' };
+  const fn = fns[platform] || 'openXPostFromOverview';
   const mkt = p.market ? xMarketFlag(p.market) + ' ' : '';
   const preview = escHtml((p.content || '').slice(0, 50));
+  const blogTag = p.source_blog_post_id ? ' <span style="font-size:8px;font-weight:700;opacity:0.8;">↗</span>' : '';
   return `<span class="cal-event ${escHtml(p.status)}"
     onclick="event.stopPropagation();${fn}(${p.id})"
-    title="${escHtml((p.content||'').slice(0,200))}">${mkt}${preview}</span>`;
+    title="${escHtml((p.content||'').slice(0,200))}${p.source_blog_post_id ? ' [repurposed from blog]' : ''}">${mkt}${preview}${blogTag}</span>`;
 }
 
 function calUpdateNavLabel(platform) {
@@ -8675,6 +10101,7 @@ function calNext(p) {
 function calToday(p) { calSetDate(p, new Date()); renderCalView(p); }
 function setXCalViewMode(v)   { xCalViewMode  = v; renderCalView('x'); }
 function setThrCalViewMode(v) { thrCalViewMode = v; renderCalView('thr'); }
+function setLiCalViewMode(v)  { liCalViewMode  = v; renderCalView('li'); }
 
 function renderCalDraftSidebar(platform) {
   const pfx = calPfx(platform);
@@ -8692,11 +10119,12 @@ function renderCalDraftSidebar(platform) {
     const mkt = p.market ? `<div class="cal-draft-card-market">${xMarketFlag(p.market)} ${p.market}</div>` : '';
     const dateStr = p.created_at ? fmtDate(p.created_at) : '';
     const dateLine = dateStr ? `<div class="cal-draft-card-date">${escHtml(dateStr)}</div>` : '';
-    const openFn = platform === 'x' ? 'openXPostFromOverview' : 'openThrPostFromOverview';
+    const openFn = platform === 'x' ? 'openXPostFromOverview' : platform === 'li' ? 'openLiPostFromOverview' : 'openThrPostFromOverview';
+    const blogBadge = p.source_blog_post_id ? '<span class="blog-source-badge">↗ blog</span>' : '';
     return `<div class="cal-draft-card" draggable="true"
       ondragstart="calDragStart(event,${p.id},'${platform}')"
       ondragend="calDragEnd(event)"
-      onclick="${openFn}(${p.id})"><div class="cal-draft-card-preview">${preview}</div>${mkt}${dateLine}</div>`;
+      onclick="${openFn}(${p.id})"><div class="cal-draft-card-preview">${preview}</div>${mkt}${dateLine}${blogBadge}</div>`;
   }).join('');
 }
 
@@ -8832,7 +10260,8 @@ async function calConfirmSchedule() {
   if (!postId || !dateKey) return;
   // Convert local SGT time to UTC ISO using +08:00 offset
   const scheduledAt = new Date(`${dateKey}T${timeVal}:00+08:00`).toISOString();
-  const base = platform === 'x' ? '/api/x-posts' : '/api/threads-posts';
+  const baseMap = { x: '/api/x-posts', thr: '/api/threads-posts', li: '/api/linkedin-posts' };
+  const base = baseMap[platform] || '/api/x-posts';
   try {
     const r1 = await fetch(`${base}/${postId}`, {
       method: 'PUT', headers: { 'Content-Type': 'application/json' },
@@ -8850,10 +10279,187 @@ async function calConfirmSchedule() {
     if (idx !== -1) posts[idx] = { ...posts[idx], scheduled_at: scheduledAt, status: 'scheduled' };
     renderCalView(platform);
     if (platform === 'x') { renderXChipCounts(); renderXPostList(); }
+    else if (platform === 'li') { renderLiChipCounts(); renderLiPostList(); }
     else { renderThrChipCounts(); renderThrPostList(); }
     const disp = new Date(scheduledAt).toLocaleString('en-SG', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
     showToast(`Scheduled for ${disp}`);
   } catch { showToast('Network error — could not schedule', 'error'); }
+}
+
+// ── EDM → Social ─────────────────────────────────────────────────────────────
+
+let _edmData = null;
+let _edmActiveXTab = 'quick_win';
+let _edmAbortController = null;
+
+function openEdmModal() {
+  document.getElementById('edmModal').classList.add('open');
+  _showEdmView('input');
+}
+
+function closeEdmModal() {
+  if (_edmAbortController) { _edmAbortController.abort(); _edmAbortController = null; }
+  document.getElementById('edmModal').classList.remove('open');
+}
+
+function edmBackToInput() { _showEdmView('input'); }
+
+function _showEdmView(view) {
+  document.getElementById('edmInputView').style.display = view === 'input' ? 'flex' : 'none';
+  document.getElementById('edmLoadingView').style.display = view === 'loading' ? 'flex' : 'none';
+  document.getElementById('edmResultsView').style.display = view === 'results' ? 'flex' : 'none';
+}
+
+async function generateEdmPosts() {
+  const edm = document.getElementById('edmContent').value.trim();
+  if (!edm) { showToast('Paste your EDM content first'); return; }
+  const market = document.getElementById('edmMarket').value || null;
+
+  if (_edmAbortController) _edmAbortController.abort();
+  _edmAbortController = new AbortController();
+
+  _showEdmView('loading');
+  document.getElementById('edmLoadingStatus').textContent = 'Generating X posts and Threads post…';
+
+  try {
+    const res = await fetch('/api/repurpose/edm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ edm_content: edm, market }),
+      signal: _edmAbortController.signal,
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buf = '';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value, { stream: true });
+      const parts = buf.split('\n\n');
+      buf = parts.pop();
+      for (const part of parts) {
+        if (!part.startsWith('data: ')) continue;
+        let msg;
+        try { msg = JSON.parse(part.slice(6)); } catch (_) { continue; }
+        if (msg.type === 'status') {
+          document.getElementById('edmLoadingStatus').textContent = msg.message;
+        } else if (msg.type === 'done') {
+          _edmData = msg.result;
+          _renderEdmResults(_edmData);
+          if (msg.usage) {
+            const cost = (msg.usage.input_tokens * 3 + msg.usage.output_tokens * 15) / 1_000_000;
+            showToast(`Generated — cost ~$${cost.toFixed(3)}`);
+          }
+        } else if (msg.type === 'error') {
+          throw new Error(msg.message);
+        }
+      }
+    }
+  } catch (e) {
+    if (e.name === 'AbortError') return;
+    _showEdmView('input');
+    showToast('Generation failed: ' + (e.message || 'Unknown error'), 'error');
+  }
+}
+
+function _renderEdmResults(data) {
+  document.getElementById('edmThreadsContent').value = data.threads || '';
+  _edmActiveXTab = 'quick_win';
+  document.querySelectorAll('#edmXTabs .edm-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === 'quick_win'));
+  _renderEdmXTab();
+  _showEdmView('results');
+}
+
+function switchEdmXTab(tab, btn) {
+  _edmActiveXTab = tab;
+  document.querySelectorAll('#edmXTabs .edm-tab').forEach(b => b.classList.toggle('active', b === btn));
+  _renderEdmXTab();
+}
+
+function _renderEdmXTab() {
+  const wrap = document.getElementById('edmXContent');
+  if (!_edmData || !_edmData.x) return;
+  const choices = (_edmData.x.choices || []);
+  const choice = choices.find(c => c.type === _edmActiveXTab) || choices[0];
+  if (!choice) { wrap.innerHTML = '<div class="repurpose-empty">No content for this tab.</div>'; return; }
+
+  let html = '';
+
+  if (choice.type === 'quick_win') {
+    const tweet = choice.tweet || '';
+    html += _edmTweetCard(tweet, choice.label || 'Quick Win', true);
+    if (choice.link_reply) html += _edmLinkReplyRow(choice.link_reply);
+    if (choice.visual_note) html += `<div class="edm-visual-note">💡 ${escHtml(choice.visual_note)}</div>`;
+  } else {
+    const tweets = choice.tweets || [];
+    tweets.forEach((tweet, i) => {
+      html += _edmTweetCard(tweet, `Tweet ${i + 1}`, false);
+    });
+    if (choice.link_reply) html += _edmLinkReplyRow(choice.link_reply);
+    if (choice.visual_note) html += `<div class="edm-visual-note">💡 ${escHtml(choice.visual_note)}</div>`;
+  }
+
+  wrap.innerHTML = html;
+}
+
+function _edmTweetCard(tweet, label, isSingle) {
+  const len = tweet.length;
+  const overClass = len > 280 ? ' over' : '';
+  const copyBtn = isSingle
+    ? `<button class="btn btn-secondary" style="font-size:11px;padding:2px 7px;" onclick="edmCopySingleCard(this)">Copy</button>`
+    : `<button class="btn btn-secondary" style="font-size:11px;padding:2px 7px;" onclick="edmCopySingleCard(this)">Copy</button>`;
+  return `<div class="edm-tweet-card" style="margin-bottom:8px;">
+    <div class="edm-tweet-header">
+      <span>${escHtml(label)}</span>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <span class="char-count${overClass}">${len}/280</span>
+        ${copyBtn}
+      </div>
+    </div>
+    <textarea rows="3" oninput="edmUpdateCharCount(this)">${escHtml(tweet)}</textarea>
+  </div>`;
+}
+
+function _edmLinkReplyRow(linkReply) {
+  return `<div class="edm-link-reply-row">
+    <span style="white-space:nowrap;">Link reply:</span>
+    <input type="text" value="${escHtml(linkReply)}" placeholder="Full post: https://…" />
+    <button class="btn btn-secondary" style="font-size:11px;padding:2px 7px;white-space:nowrap;" onclick="edmCopyThread(this)">Copy all</button>
+  </div>`;
+}
+
+function edmUpdateCharCount(textarea) {
+  const card = textarea.closest('.edm-tweet-card');
+  const counter = card?.querySelector('.char-count');
+  if (counter) {
+    const len = textarea.value.length;
+    counter.textContent = `${len}/280`;
+    counter.classList.toggle('over', len > 280);
+  }
+}
+
+function edmCopySingleCard(btn) {
+  const card = btn.closest('.edm-tweet-card');
+  const textarea = card?.querySelector('textarea');
+  if (!textarea) return;
+  navigator.clipboard.writeText(textarea.value).then(() => showToast('Copied!'));
+}
+
+function edmCopyThread(btn) {
+  const xCol = document.getElementById('edmXContent');
+  const textareas = Array.from(xCol.querySelectorAll('.edm-tweet-card textarea'));
+  const linkInput = document.querySelector('#edmXContent .edm-link-reply-row input');
+  let text = textareas.map(t => t.value).join('\n\n');
+  const link = linkInput?.value?.trim();
+  if (link && !link.includes('[URL]')) text += '\n\n' + link;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied!'));
+}
+
+function edmCopyThreads() {
+  const text = document.getElementById('edmThreadsContent').value;
+  navigator.clipboard.writeText(text).then(() => showToast('Threads post copied!'));
 }
 </script>
 

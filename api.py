@@ -30,6 +30,7 @@ from config import (
     TYPEFULLY_API_KEY,
     TYPEFULLY_SOCIAL_SET_ID,
     TYPEFULLY_THREADS_SOCIAL_SET_ID,
+    TYPEFULLY_LINKEDIN_SOCIAL_SET_ID,
 )
 from src.database import (
     delete_post,
@@ -40,6 +41,7 @@ from src.database import (
     init_db,
     migrate_brand_column,
     migrate_x_repurposed_column,
+    migrate_source_blog_post_id,
     list_feedback,
     list_logins,
     list_posts,
@@ -69,7 +71,7 @@ GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
-    for migrate in (migrate_brand_column, migrate_x_repurposed_column):
+    for migrate in (migrate_brand_column, migrate_x_repurposed_column, migrate_source_blog_post_id):
         try:
             migrate()
         except Exception:
@@ -593,10 +595,11 @@ async def api_rewrite(body: RewriteRequest, user_email: str = Depends(require_au
             for msg in messages:
                 yield f"data: {json.dumps({'type': 'status', 'message': msg})}\n\n"
 
-            existing = get_post_by_slug(post_data["slug"])
-            if existing:
-                import time
-                post_data["slug"] = f"{post_data['slug']}-rewrite-{int(time.time())}"
+            # Always use the slug from the original URL so the permalink doesn't change.
+            from urllib.parse import urlparse
+            url_slug = urlparse(body.url).path.rstrip("/").split("/")[-1]
+            if url_slug:
+                post_data["slug"] = url_slug
 
             post_data["editor_email"] = user_email
             file_path = write_post_file(post_data)
@@ -722,6 +725,7 @@ async def api_test_post(user_email: str = Depends(require_auth)):
 from src.x_database import (
     list_x_posts,
     get_x_post,
+    get_x_posts_by_blog_post_id,
     create_x_post,
     update_x_post,
     change_x_post_status as _change_x_status,
@@ -1124,6 +1128,7 @@ def api_generate_x_from_changelog(
 from src.threads_database import (
     list_threads_posts,
     get_threads_post,
+    get_threads_posts_by_blog_post_id,
     create_threads_post,
     update_threads_post,
     change_threads_post_status as _change_thr_status,
@@ -1408,9 +1413,294 @@ def api_threads_post_typefully(post_id: int, body: ThreadsTypefullyRequest,
     return result
 
 
+# ── LinkedIn Posts ────────────────────────────────────────────────────────────
+
+from src.linkedin_database import (
+    list_linkedin_posts,
+    get_linkedin_post,
+    get_linkedin_posts_by_blog_post_id,
+    create_linkedin_post,
+    update_linkedin_post,
+    change_linkedin_post_status as _change_li_status,
+    delete_linkedin_post,
+    log_linkedin_audit,
+    get_linkedin_audit_log,
+)
+
+
+class CreateLinkedInPostRequest(BaseModel):
+    content: str
+    market: str | None = None
+    scheduled_at: str | None = None
+    brand: str = "hitpay"
+
+
+class UpdateLinkedInPostRequest(BaseModel):
+    content: str | None = None
+    market: str | None = None
+    scheduled_at: str | None = None
+
+
+class LinkedInStatusRequest(BaseModel):
+    status: str
+    scheduled_at: str | None = None
+    post_url: str | None = None
+
+
+class LinkedInBulkDeleteRequest(BaseModel):
+    ids: list[int]
+
+
+class GenerateLinkedInPostRequest(BaseModel):
+    market: str | None = None
+    topic_hint: str | None = None
+    brand: str = "hitpay"
+
+
+class LinkedInTypefullyRequest(BaseModel):
+    schedule_date: str | None = None
+    post_now: bool = False
+
+
+class GenerateChangelogLinkedInRequest(BaseModel):
+    market: str | None = None
+    limit: int = 10
+    brand: str = "hitpay"
+
+
+def _get_typefully_linkedin_social_set_id(brand: str = "hitpay") -> str:
+    from src.brand_config import get_brand_config
+    bc = get_brand_config(brand)
+    if bc.typefully_linkedin_social_set_id:
+        return bc.typefully_linkedin_social_set_id
+    if TYPEFULLY_LINKEDIN_SOCIAL_SET_ID:
+        return TYPEFULLY_LINKEDIN_SOCIAL_SET_ID
+    return _get_typefully_social_set_id()
+
+
+@app.get("/api/linkedin-posts")
+def api_list_linkedin_posts(status: str = None, market: str = None, brand: str = None, _: str = Depends(require_auth)):
+    return list_linkedin_posts(
+        status if status and status != "all" else None,
+        market if market and market != "all" else None,
+        brand if brand else None,
+    )
+
+
+@app.post("/api/linkedin-posts")
+def api_create_linkedin_post(body: CreateLinkedInPostRequest, user_email: str = Depends(require_auth)):
+    if not body.content.strip():
+        raise HTTPException(400, "Content cannot be empty")
+    post_id = create_linkedin_post(
+        content=body.content.strip(),
+        market=body.market or None,
+        scheduled_at=body.scheduled_at or None,
+        editor_email=user_email,
+        brand=body.brand or "hitpay",
+    )
+    log_linkedin_audit(post_id, user_email, "created", {"market": body.market or ""})
+    return {"id": post_id}
+
+
+@app.get("/api/linkedin-posts/{post_id}")
+def api_get_linkedin_post(post_id: int, _: str = Depends(require_auth)):
+    post = get_linkedin_post(post_id)
+    if not post:
+        raise HTTPException(404, "LinkedIn post not found")
+    return post
+
+
+@app.put("/api/linkedin-posts/{post_id}")
+def api_update_linkedin_post(post_id: int, body: UpdateLinkedInPostRequest, user_email: str = Depends(require_auth)):
+    post = get_linkedin_post(post_id)
+    if not post:
+        raise HTTPException(404, "LinkedIn post not found")
+    fields, changed = {}, []
+    if body.content is not None:
+        fields["content"] = body.content.strip()
+        changed.append("content")
+    if body.market is not None:
+        fields["market"] = body.market or None
+        changed.append("market")
+    if body.scheduled_at is not None:
+        fields["scheduled_at"] = body.scheduled_at or None
+        changed.append("scheduled_at")
+    if fields:
+        update_linkedin_post(post_id, fields)
+        log_linkedin_audit(post_id, user_email, "edited", {"fields": changed})
+    return {"ok": True}
+
+
+@app.post("/api/linkedin-posts/{post_id}/status")
+def api_change_linkedin_post_status(post_id: int, body: LinkedInStatusRequest, user_email: str = Depends(require_auth)):
+    valid = ["draft", "scheduled", "posted"]
+    if body.status not in valid:
+        raise HTTPException(400, f"Invalid status. Must be one of: {valid}")
+    post = get_linkedin_post(post_id)
+    if not post:
+        raise HTTPException(404, "LinkedIn post not found")
+    _change_li_status(post_id, body.status, scheduled_at=body.scheduled_at, post_url=body.post_url)
+    log_linkedin_audit(post_id, user_email, "status_changed", {"from": post.get("status"), "to": body.status})
+    return {"ok": True}
+
+
+@app.delete("/api/linkedin-posts/{post_id}")
+def api_delete_linkedin_post(post_id: int, user_email: str = Depends(require_auth)):
+    post = get_linkedin_post(post_id)
+    if not post:
+        raise HTTPException(404, "LinkedIn post not found")
+    log_linkedin_audit(post_id, user_email, "deleted", {"content_preview": (post.get("content") or "")[:60]})
+    delete_linkedin_post(post_id)
+    return {"ok": True}
+
+
+@app.post("/api/linkedin-posts/bulk-delete")
+def api_bulk_delete_linkedin_posts(body: LinkedInBulkDeleteRequest, user_email: str = Depends(require_auth)):
+    deleted = []
+    for pid in body.ids:
+        post = get_linkedin_post(pid)
+        if post:
+            log_linkedin_audit(pid, user_email, "deleted", {"content_preview": (post.get("content") or "")[:60]})
+            delete_linkedin_post(pid)
+            deleted.append(pid)
+    return {"deleted": deleted}
+
+
+@app.get("/api/linkedin-posts/{post_id}/audit-log")
+def api_get_linkedin_audit_log(post_id: int, _: str = Depends(require_auth)):
+    return get_linkedin_audit_log(post_id)
+
+
+@app.post("/api/linkedin-posts/generate-thought-leadership")
+def api_generate_linkedin_post(body: GenerateLinkedInPostRequest, _: str = Depends(require_auth)):
+    from src.linkedin_generator import generate_linkedin_post
+    try:
+        result = generate_linkedin_post(
+            market=body.market or None,
+            topic_hint=body.topic_hint or None,
+            brand=body.brand,
+        )
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+    except Exception as e:
+        if "overloaded_error" in str(e):
+            raise HTTPException(503, "Claude API is busy right now — please try again in a few seconds")
+        raise HTTPException(500, f"Generation error: {e}")
+    return result
+
+
+@app.post("/api/linkedin-posts/generate-from-changelog")
+def api_generate_linkedin_from_changelog(
+    body: GenerateChangelogLinkedInRequest,
+    user_email: str = Depends(require_auth),
+):
+    from src.mcp_client import get_changelog
+    from src.changelog_social import _extract_changelog_text
+    from src.linkedin_generator import generate_linkedin_from_changelog
+    try:
+        mcp_result = get_changelog(limit=body.limit)
+        changelog_text = _extract_changelog_text(mcp_result)
+        if not changelog_text.strip():
+            raise HTTPException(422, "No changelog entries found — check HITPAY_MCP_URL is configured.")
+        result = generate_linkedin_from_changelog(changelog_text=changelog_text, brand=body.brand)
+    except HTTPException:
+        raise
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+    except Exception as e:
+        if "overloaded_error" in str(e):
+            raise HTTPException(503, "Claude API is busy right now — please try again in a few seconds")
+        raise HTTPException(500, f"Generation error: {e}")
+
+    content = result.get("content", "")
+    link_url = result.get("link_url", "")
+    full_content = content.replace("[URL]", link_url) if "[URL]" in content else content
+
+    post_id = create_linkedin_post(content=full_content, market=body.market, editor_email=user_email, brand=body.brand)
+    log_linkedin_audit(post_id, user_email, "created", {"source": "changelog"})
+    return {"created": [{"id": post_id, "preview": full_content[:100]}], "total": 1, "market": body.market}
+
+
+def _do_push_linkedin_post(post_id: int, post_now: bool, schedule_date: str | None, brand: str = "hitpay") -> dict:
+    """Push a LinkedIn post to Typefully. Returns the Typefully response dict."""
+    post = get_linkedin_post(post_id)
+    if not post:
+        raise HTTPException(404, "LinkedIn post not found")
+    content = (post.get("content") or "").strip()
+    if not content:
+        raise HTTPException(400, "Post has no content")
+
+    payload: dict = {
+        "platforms": {
+            "linkedin": {
+                "enabled": True,
+                "posts": [{"text": content}],
+            }
+        }
+    }
+    if schedule_date:
+        payload["publish_at"] = schedule_date
+    elif post_now:
+        from datetime import datetime, timezone, timedelta
+        payload["publish_at"] = (datetime.now(timezone.utc) + timedelta(minutes=2)).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    social_set_id = _get_typefully_linkedin_social_set_id(post.get("brand") or brand)
+
+    try:
+        resp = httpx.post(
+            f"https://api.typefully.com/v2/social-sets/{social_set_id}/drafts",
+            headers={"Authorization": f"Bearer {TYPEFULLY_API_KEY}", "Content-Type": "application/json"},
+            json=payload,
+            timeout=15,
+        )
+        resp.raise_for_status()
+    except httpx.HTTPStatusError as e:
+        if e.response.status_code in (401, 403):
+            raise HTTPException(400, "Typefully API key is invalid — check TYPEFULLY_API_KEY")
+        elif e.response.status_code == 429:
+            raise HTTPException(429, "Typefully rate limit — wait a minute and retry")
+        else:
+            raise HTTPException(500, f"Typefully error {e.response.status_code}: {e.response.text[:200]}")
+    except httpx.TimeoutException:
+        raise HTTPException(504, "Typefully request timed out")
+
+    data = resp.json()
+    typefully_url = data.get("share_url") or data.get("private_url") or data.get("url") or ""
+    mode = "now" if post_now else ("scheduled" if schedule_date else "draft")
+
+    if post_now:
+        _change_li_status(post_id, "posted")
+    elif schedule_date:
+        _change_li_status(post_id, "scheduled", scheduled_at=schedule_date)
+    else:
+        _change_li_status(post_id, "scheduled")
+
+    return {
+        "typefully_url": typefully_url,
+        "posted": post_now,
+        "scheduled": bool(schedule_date),
+        "mode": mode,
+    }
+
+
+@app.post("/api/linkedin-posts/{post_id}/push-to-typefully")
+def api_linkedin_post_typefully(post_id: int, body: LinkedInTypefullyRequest,
+                                user_email: str = Depends(require_auth)):
+    if not TYPEFULLY_API_KEY:
+        raise HTTPException(400, "Typefully not configured — add TYPEFULLY_API_KEY to .env")
+    result = _do_push_linkedin_post(post_id, body.post_now, body.schedule_date)
+    log_linkedin_audit(post_id, user_email, "pushed_to_typefully", {
+        "mode": result["mode"],
+        "schedule_date": body.schedule_date,
+        "typefully_url": result["typefully_url"],
+    })
+    result.pop("mode", None)
+    return result
+
+
 # ── Repurpose for Social ─────────────────────────────────────────────────────
 
-from src.repurposer import repurpose_for_platform, push_to_typefully, _cap_tweet, _move_url_to_reply, repurpose_post_as_thread
+from src.repurposer import repurpose_for_platform, push_to_typefully, _cap_tweet, _cap_tweet_post_url, _move_url_to_reply, repurpose_post_as_thread, repurpose_edm
 
 
 class RepurposeRequest(BaseModel):
@@ -1438,6 +1728,11 @@ class RepurposeToXRequest(BaseModel):
 class RepurposeCardRequest(BaseModel):
     card_type: str   # "quick_hit" | "thread" | "contextual" | "market"
     hook_style: str  # "Curiosity" | "Contrarian" | "Result" | "Mistake" | "List"
+
+
+class RepurposeEDMRequest(BaseModel):
+    edm_content: str
+    market: str | None = None
 
 
 @app.get("/api/config")
@@ -1606,6 +1901,25 @@ async def api_bulk_repurpose(body: BulkRepurposeRequest,
     return StreamingResponse(stream(), media_type="text/event-stream")
 
 
+@app.post("/api/repurpose/edm")
+async def api_repurpose_edm(body: RepurposeEDMRequest, user_email: str = Depends(require_auth)):
+    async def stream():
+        loop = asyncio.get_event_loop()
+        try:
+            yield f"data: {json.dumps({'type': 'status', 'message': 'Generating X posts…'})}\n\n"
+            result = await loop.run_in_executor(
+                None, lambda: repurpose_edm(body.edm_content, body.market)
+            )
+            usage = result.pop("usage", None)
+            yield f"data: {json.dumps({'type': 'done', 'result': result, 'usage': usage})}\n\n"
+        except Exception as e:
+            _err = str(e)
+            _msg = "Claude API is busy right now — please try again in a few seconds" if "overloaded_error" in _err else _err
+            yield f"data: {json.dumps({'type': 'error', 'message': _msg})}\n\n"
+
+    return StreamingResponse(stream(), media_type="text/event-stream")
+
+
 @app.get("/api/posts/{post_id}/repurposed")
 def api_get_repurposed(post_id: int, _: str = Depends(require_auth)):
     post = get_post(post_id)
@@ -1758,6 +2072,120 @@ def api_repurpose_to_x_drafts(post_id: int, body: RepurposeToXRequest,
     })
     log_audit(post_id, user_email, "added_to_x_drafts", {"format": body.format_key, "count": 1})
     return {"ok": True, "created_ids": [xid]}
+
+
+@app.get("/api/posts/{post_id}/social-posts")
+def api_get_social_posts(post_id: int, user_email: str = Depends(require_auth)):
+    """Return all X, Threads, and LinkedIn drafts linked to a blog post."""
+    def safe(fn, *args):
+        try:
+            return fn(*args)
+        except Exception:
+            return []
+    return {
+        "x": safe(get_x_posts_by_blog_post_id, post_id),
+        "threads": safe(get_threads_posts_by_blog_post_id, post_id),
+        "linkedin": safe(get_linkedin_posts_by_blog_post_id, post_id),
+    }
+
+
+@app.post("/api/posts/{post_id}/repurpose-all")
+def api_repurpose_all(post_id: int, user_email: str = Depends(require_auth)):
+    """Generate X, Threads, and LinkedIn drafts from a blog post in parallel."""
+    import concurrent.futures
+    from src.threads_thought_leadership import generate_threads_story
+    from src.linkedin_generator import generate_linkedin_post as _gen_li
+
+    post = get_post(post_id)
+    if not post:
+        raise HTTPException(404, "Post not found")
+
+    market = (post.get("country") or "SG") or "SG"
+    brand = post.get("brand", "hitpay")
+    slug = (post.get("slug") or "").strip()
+    topic_hint = (post.get("title") or "")[:150]
+
+    THREAD_SEP = "\n\n---\n\n"
+
+    def gen_x():
+        thread_size = random.choice([1, 3, 5])
+        result = repurpose_post_as_thread(post, thread_size)
+        blog_url = result.get("link_url", "")
+        tweets = [_cap_tweet_post_url(t.replace("[URL]", blog_url)) for t in (result.get("tweets") or [])]
+        content = THREAD_SEP.join(tweets)
+        xid = create_x_post(
+            content=content,
+            market=market,
+            editor_email=user_email,
+            source_blog_post_id=post_id,
+            brand=brand,
+        )
+        log_x_audit(xid, user_email, "created", {"source": "repurpose-all"})
+        return xid
+
+    def gen_threads():
+        result = generate_threads_story(market=market, topic_hint=topic_hint, thread_size=3, brand=brand)
+        posts = result.get("posts") or []
+        content = THREAD_SEP.join(posts) if len(posts) > 1 else (posts[0] if posts else "")
+        tid = create_threads_post(
+            content=content,
+            market=market,
+            editor_email=user_email,
+            source_blog_post_id=post_id,
+            brand=brand,
+        )
+        log_threads_audit(tid, user_email, "created", {"source": "repurpose-all"})
+        return tid
+
+    def gen_linkedin():
+        result = _gen_li(market=market, topic_hint=topic_hint, brand=brand)
+        content = result.get("content", "")
+        lid = create_linkedin_post(
+            content=content,
+            market=market,
+            editor_email=user_email,
+            source_blog_post_id=post_id,
+            brand=brand,
+        )
+        log_linkedin_audit(lid, user_email, "created", {"source": "repurpose-all"})
+        return lid
+
+    errors = {}
+    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+        futures = {
+            "x": executor.submit(gen_x),
+            "threads": executor.submit(gen_threads),
+            "linkedin": executor.submit(gen_linkedin),
+        }
+        results = {}
+        for key, future in futures.items():
+            try:
+                results[key] = future.result()
+            except Exception as exc:
+                errors[key] = str(exc)
+                results[key] = None
+
+    log_audit(post_id, user_email, "repurposed_all", {
+        "x_id": results.get("x"),
+        "threads_id": results.get("threads"),
+        "linkedin_id": results.get("linkedin"),
+        "errors": errors or None,
+    })
+
+    if errors:
+        return {
+            "ok": False,
+            "x_id": results.get("x"),
+            "threads_id": results.get("threads"),
+            "linkedin_id": results.get("linkedin"),
+            "errors": errors,
+        }
+    return {
+        "ok": True,
+        "x_id": results["x"],
+        "threads_id": results["threads"],
+        "linkedin_id": results["linkedin"],
+    }
 
 
 # ── Automation ────────────────────────────────────────────────────────────────

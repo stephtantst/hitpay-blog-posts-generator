@@ -21,6 +21,22 @@ def _strip_url_from_body(text: str) -> str:
     return re.sub(r'[\s\-—.,]+$', '', cleaned).strip()
 
 
+def _cap_tweet_post_url(text: str, limit: int = 280) -> str:
+    """Cap a tweet after URL substitution. X counts all URLs as 23 chars (t.co),
+    so if the tweet ends with a URL, trim the text before it rather than the URL."""
+    if len(text) <= limit:
+        return text
+    url_match = re.search(r'https?://\S+\s*$', text)
+    if url_match:
+        url = url_match.group(0).strip()
+        before = text[:url_match.start()].rstrip()
+        # Reserve 23 chars for X's t.co URL + 1 space
+        available = limit - 24
+        before_capped = _cap_tweet(before, available)
+        return before_capped + " " + url
+    return _cap_tweet(text, limit)
+
+
 def _cap_all_tweets(data: dict) -> None:
     """Strip URLs then apply 280-char cap in-place to every tweet field."""
     for choice in data.get("choices") or []:
@@ -1042,5 +1058,86 @@ def repurpose_post_as_thread(post: dict, thread_size: int) -> dict:
         "usage": {
             "input_tokens": msg.usage.input_tokens,
             "output_tokens": msg.usage.output_tokens,
+        },
+    }
+
+
+EDM_THREADS_SYSTEM_PROMPT = """You are a content writer for HitPay, a regulated payments FinTech for Southeast Asian SMEs and developers.
+
+Your task: repurpose an email newsletter (EDM) into a Threads post.
+
+VOICE:
+- Warm, direct, human. First person plural ("We shipped", "We built", "Our team").
+- Short paragraphs with line breaks for readability.
+- Specific and concrete — name features, numbers, and outcomes from the email.
+- Understated. Let the content speak, not adjectives.
+
+FORMAT:
+- 2–4 short paragraphs, each max 400 chars.
+- Blank line between paragraphs.
+- End with a short CTA or question if natural — otherwise end on the content itself.
+- Return ONLY the post text. No labels, no preamble, no JSON.
+
+DO NOT include: hashtags, @ mentions, marketing buzzwords (seamlessly, empower, innovative, cutting-edge, robust, unlock, leverage, transformative), or unsubscribe/footer copy from the email."""
+
+
+def repurpose_edm(edm_content: str, market: str | None = None) -> dict:
+    """Repurpose an EDM email into X posts (3 choices) and a Threads post.
+
+    Returns: {"x": {choices, hook_variants}, "threads": str}
+    """
+    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+    market_line = f"\nMARKET: {market}" if market else "\nMARKET: General (SG/MY/PH)"
+
+    x_user_msg = (
+        f"Repurpose the following HitPay email newsletter (EDM) into 3 Twitter/X choices + 5 hook variants.\n\n"
+        f"SOURCE TYPE: Email newsletter (EDM)\n"
+        f"{market_line}\n"
+        f"TARGET AUDIENCE: Merchants, developers, and founders in Southeast Asia\n\n"
+        f"EMAIL CONTENT:\n{edm_content}\n\n"
+        f"Return the JSON object following all schema rules.\n"
+        f"- choices: exactly 3 items in order: quick_win, thread, contextual\n"
+        f"- hook_variants: exactly 5 items in order: Curiosity, Contrarian, Result, Mistake, List\n"
+        f"- visual_note: suggest a poll, chart, screenshot, or video — or null\n"
+        f"- Use [URL] as the literal placeholder in every link_reply field.\n"
+        f"- hook_variants[*].hook must be the opening line TEXT ONLY — no [URL], no URL, no link."
+    )
+
+    x_response = _messages_create_with_retry(
+        client,
+        model=CLAUDE_MODEL,
+        max_tokens=4000,
+        system=TWITTER_SYSTEM_PROMPT,
+        messages=[{"role": "user", "content": x_user_msg}],
+    )
+
+    raw = x_response.content[0].text.strip()
+    raw = re.sub(r"^```(?:json)?\s*", "", raw)
+    raw = re.sub(r"\s*```$", "", raw)
+    try:
+        x_data = json.loads(raw)
+    except json.JSONDecodeError:
+        try:
+            from json_repair import repair_json
+            x_data = json.loads(repair_json(raw))
+        except Exception as e:
+            raise ValueError(f"Could not parse EDM X response: {e}")
+    _cap_all_tweets(x_data)
+
+    threads_response = _messages_create_with_retry(
+        client,
+        model=CLAUDE_MODEL,
+        max_tokens=800,
+        system=EDM_THREADS_SYSTEM_PROMPT,
+        messages=[{"role": "user", "content": f"EMAIL CONTENT:\n{edm_content}"}],
+    )
+    threads_post = threads_response.content[0].text.strip()
+
+    return {
+        "x": x_data,
+        "threads": threads_post,
+        "usage": {
+            "input_tokens": x_response.usage.input_tokens + threads_response.usage.input_tokens,
+            "output_tokens": x_response.usage.output_tokens + threads_response.usage.output_tokens,
         },
     }

@@ -66,11 +66,13 @@ def _cap_tweet(text: str, limit: int = 280) -> str:
     return text[:cutoff] + "…"
 
 
-# Verified HitPay blog post URLs — only these are safe to use as link_url
+# Verified HitPay blog post URLs — used as fallback when sitemap is unavailable
 VALID_BLOG_URLS: list[tuple[str, str]] = [
     # General / SEA
     ("What is HitPay", "https://hitpayapp.com/blog/what-is-hitpay"),
     ("HitPay Rates & Pricing (fees, MDR, transaction costs)", "https://hitpayapp.com/blog/hitpay-rates"),
+    ("HitPay Transaction Fee Breakdown", "https://hitpayapp.com/blog/hitpay-transaction-fee"),
+    ("HitPay Payment Solutions Overview", "https://hitpayapp.com/blog/hitpay-payment-solutions"),
     ("Payment Gateway Guide SEA", "https://hitpayapp.com/blog/payment-gateway"),
     ("Payment Processing for Online Stores SEA", "https://hitpayapp.com/blog/payment-processing-online-store"),
     ("Payment Link — send & get paid instantly", "https://hitpayapp.com/blog/payment-link"),
@@ -78,22 +80,129 @@ VALID_BLOG_URLS: list[tuple[str, str]] = [
     ("Alternative Payment Methods in Southeast Asia", "https://hitpayapp.com/blog/alternative-payment-methods-southeast-asia"),
     ("Ecommerce Payment Solutions SEA", "https://hitpayapp.com/blog/ecommerce-payment-solutions-southeast-asia"),
     ("Credit Card Payment for Businesses SEA", "https://hitpayapp.com/blog/credit-card-payment"),
+    ("Invoice Payment for SMEs SEA", "https://hitpayapp.com/blog/invoice-payment"),
+    ("Tap to Pay on iPhone", "https://hitpayapp.com/blog/hitpay-now-offers-tap-to-pay-on-iphone-for-merchants-to-accept-contactless-payments"),
+    ("Tap to Pay Singapore", "https://hitpayapp.com/blog/tap-to-pay-singapore"),
+    ("HitPay Payout Guide", "https://hitpayapp.com/blog/hitpay-payout-guide"),
+    ("HitPay Scan to Pay", "https://hitpayapp.com/blog/hitpay-scan-to-pay"),
+    ("POS System Guide SEA", "https://hitpayapp.com/blog/pos-system"),
+    ("Point of Sale Southeast Asia", "https://hitpayapp.com/blog/point-of-sale-southeast-asia"),
+    ("How to Accept Payments Online", "https://hitpayapp.com/blog/how-to-accept-payments-online"),
+    ("Recurring Billing (How to Use)", "https://hitpayapp.com/blog/how-to-use-recurring-billing"),
+    ("Recurring Payment Link", "https://hitpayapp.com/blog/recurring-payment-link"),
+    ("Payment Link Explained (SEA)", "https://hitpayapp.com/blog/payment-links"),
+    ("Pass Transaction Fees to Customers", "https://hitpayapp.com/blog/pass-transaction-fees-to-customers"),
+    ("Credit Card Chargebacks Guide", "https://hitpayapp.com/blog/credit-card-chargebacks"),
+    ("B2B Payment Solutions SEA", "https://hitpayapp.com/blog/best-b2b-payment-solutions-southeast-asia"),
+    ("Multi-currency Payment Gateway SEA", "https://hitpayapp.com/blog/best-multi-currency-payment-gateway-sea-smbs"),
+    ("BNPL Singapore Buy Now Pay Later", "https://hitpayapp.com/blog/bnpl-singapore-buy-now-pay-later"),
+    ("HitPay App Features", "https://hitpayapp.com/blog/hitpay-app"),
+    ("HitPay POS Software", "https://hitpayapp.com/blog/hitpay-pos-software"),
+    ("Digital Wallet vs Payment Gateways", "https://hitpayapp.com/blog/digital-wallet-vs-payment-gateways"),
+    ("Cross-Border QR Acceptance", "https://hitpayapp.com/blog/cross-border-qr-acceptance-on-hitpay-terminals-serving-tourists-from-thailand-indonesia-and-beyond"),
+    ("Payment API Southeast Asia", "https://hitpayapp.com/blog/payment-api-southeast-asia"),
     # SG
     ("Payment Gateway Singapore", "https://hitpayapp.com/blog/payment-gateway-singapore"),
+    ("Best Payment Gateway Singapore", "https://hitpayapp.com/blog/best-payment-gateway-singapore"),
     ("HitPay Singapore Overview", "https://hitpayapp.com/blog/hitpay-singapore"),
     ("Recurring Billing Singapore", "https://hitpayapp.com/blog/recurring-billing-sg"),
+    ("Online Payment Singapore", "https://hitpayapp.com/blog/online-payment-singapore"),
+    ("Accept Online Payments Singapore", "https://hitpayapp.com/blog/accept-online-payments-singapore"),
+    ("PayNow Payment Gateway Singapore", "https://hitpayapp.com/blog/paynow-payment-gateway-singapore"),
+    ("PayNow QR Code Singapore", "https://hitpayapp.com/blog/paynow-qr-code-setup-singapore"),
+    ("Generate PayNow QR Code Singapore", "https://hitpayapp.com/blog/generate-paynow-qr-code-singapore"),
+    ("PayNow Shopify Gateway Singapore", "https://hitpayapp.com/blog/paynow-shopify-payment-gateway-singapore"),
+    ("Card Reader Singapore", "https://hitpayapp.com/blog/card-reader-singapore"),
+    ("Card Payment Singapore", "https://hitpayapp.com/blog/card-payment-singapore"),
+    ("Best Card Machine Singapore", "https://hitpayapp.com/blog/best-card-machine-singapore"),
+    ("POS System Singapore", "https://hitpayapp.com/blog/pos-system-singapore"),
+    ("Best POS System Singapore SME", "https://hitpayapp.com/blog/best-pos-system-singapore-sme"),
+    ("Cashless Payments Singapore", "https://hitpayapp.com/blog/cashless-payments-singapore-what-methods-to-accept"),
+    ("Popular Payment Methods Singapore", "https://hitpayapp.com/blog/popular-payment-methods-in-singapore"),
+    ("Invoicing Singapore", "https://hitpayapp.com/blog/invoicing-for-businesses-singapore"),
+    ("How to Create & Send Payment Link Singapore", "https://hitpayapp.com/blog/how-to-create-send-payment-link-singapore"),
+    ("Payment Links Singapore PayNow GrabPay", "https://hitpayapp.com/blog/payment-links-singapore-paynow-grabpay"),
+    ("Contactless Payments Singapore", "https://hitpayapp.com/blog/contactless-payments-singapore-setup-guide"),
+    ("Accept GrabPay Singapore", "https://hitpayapp.com/blog/how-to-accept-grabpay-payments-singapore"),
+    ("Shopify Payment Gateway Singapore", "https://hitpayapp.com/blog/shopify-payment-gateway-singapore"),
+    ("Stripe Alternatives Singapore", "https://hitpayapp.com/blog/stripe-alternatives-singapore"),
+    ("HitPay vs Stripe Singapore", "https://hitpayapp.com/blog/hitpay-vs-stripe-singapore"),
+    ("HitPay vs PayPal Singapore", "https://hitpayapp.com/blog/hitpay-vs-paypal-singapore"),
+    ("B2B Payment Solutions Singapore", "https://hitpayapp.com/blog/b2b-payment-solutions-singapore"),
+    ("B2B Multi-Currency Payments Singapore", "https://hitpayapp.com/blog/b2b-multi-currency-payments-singapore"),
+    ("Cross-Border Payouts Singapore", "https://hitpayapp.com/blog/cross-border-payouts-singapore-businesses"),
+    ("NFC Payment Singapore", "https://hitpayapp.com/blog/nfc-payment-singapore"),
+    ("SGQR Singapore Setup Guide", "https://hitpayapp.com/blog/sgqr-singapore-setup-guide"),
+    ("ShopeePay BNPL Singapore", "https://hitpayapp.com/blog/shopeepay-bnpl-singapore"),
+    ("Accept ShopeePay Singapore", "https://hitpayapp.com/blog/accept-shopeepay-singapore-business"),
+    ("GrabPay PayLater Singapore", "https://hitpayapp.com/blog/grab-paylater-merchant-singapore"),
+    ("Atome Singapore BNPL", "https://hitpayapp.com/blog/hitpay-atome-singapore"),
+    ("PSG Grant POS Singapore", "https://hitpayapp.com/blog/most-affordable-pos-system-psg-grant-for-singapore-businesses"),
+    ("Generate Free Payment Links Singapore", "https://hitpayapp.com/blog/generate-free-payment-links-singapore"),
+    ("Lower Payment Processing Fees Singapore", "https://hitpayapp.com/blog/lower-payment-processing-fees-singapore"),
+    ("Payment Service Provider Singapore", "https://hitpayapp.com/blog/payment-service-provider-singapore"),
+    ("Payment Gateway API Singapore", "https://hitpayapp.com/blog/payment-gateway-api-singapore"),
+    ("PayNow API Integration Singapore", "https://hitpayapp.com/blog/paynow-api-integration-singapore"),
     # MY
     ("Best Payment Gateway Malaysia", "https://hitpayapp.com/blog/best-payment-gateway-malaysia"),
+    ("Payment Gateway Malaysia", "https://hitpayapp.com/blog/payment-gateway-malaysia"),
     ("Best Online Payment Solution Malaysia", "https://hitpayapp.com/blog/best-online-payment-solution-malaysia"),
     ("Payment Link Malaysia", "https://hitpayapp.com/blog/payment-link-malaysia"),
     ("Recurring Billing Malaysia", "https://hitpayapp.com/blog/recurring-billing-my"),
+    ("FPX Payments Malaysia", "https://hitpayapp.com/blog/fpx-payments"),
+    ("Best FPX Payment Gateway Malaysia", "https://hitpayapp.com/blog/best-fpx-payment-gateway-malaysia"),
+    ("DuitNow API Integration Malaysia", "https://hitpayapp.com/blog/duitnow-api-integration-malaysia"),
+    ("DuitNow QR Gateway Shopify Xero", "https://hitpayapp.com/blog/duitnow-qr-payment-gateway-shopify-xero"),
+    ("Set Up DuitNow QR Malaysia", "https://hitpayapp.com/blog/how-to-set-up-duitnow-qr-malaysia-business"),
+    ("Accept GrabPay Malaysia", "https://hitpayapp.com/blog/how-to-accept-grabpay-malaysia"),
+    ("Touch n Go eWallet Malaysia", "https://hitpayapp.com/blog/touch-n-go-ewallet-merchant-malaysia"),
+    ("Accept ShopeePay Malaysia", "https://hitpayapp.com/blog/accept-shopeepay-payments-malaysia"),
+    ("Card Reader Malaysia", "https://hitpayapp.com/blog/card-reader-malaysia-business"),
+    ("Card Payments Malaysia", "https://hitpayapp.com/blog/card-payments-malaysia"),
+    ("Cashless Payment Methods Malaysia", "https://hitpayapp.com/blog/cashless-payment-methods-malaysia"),
+    ("Popular Payment Methods Malaysia", "https://hitpayapp.com/blog/popular-payment-methods-malaysia"),
+    ("POS System Malaysia", "https://hitpayapp.com/blog/best-pos-system-small-businesses-malaysia"),
+    ("Tap to Pay Malaysia", "https://hitpayapp.com/blog/tap-to-pay-malaysia"),
+    ("Contactless Payments Malaysia", "https://hitpayapp.com/blog/contactless-payments-malaysia"),
+    ("NFC Payments Malaysia", "https://hitpayapp.com/blog/nfc-payments-malaysia"),
+    ("Invoicing Malaysia", "https://hitpayapp.com/blog/invoicing-malaysia-business"),
+    ("Create & Send Payment Link Malaysia", "https://hitpayapp.com/blog/how-to-create-send-payment-link-malaysia"),
+    ("Stripe Alternatives Malaysia", "https://hitpayapp.com/blog/stripe-alternatives-malaysia"),
+    ("HitPay vs Stripe Malaysia", "https://hitpayapp.com/blog/hitpay-vs-stripe-malaysia"),
+    ("HitPay vs PayPal Malaysia", "https://hitpayapp.com/blog/hitpay-vs-paypal-malaysia"),
+    ("B2B Payment Solutions Malaysia", "https://hitpayapp.com/blog/b2b-payment-solutions-malaysia"),
+    ("Malaysia Payment Gateway Comparison", "https://hitpayapp.com/blog/malaysia-payment-gateway-comparison"),
+    ("Boost Wallet Malaysia", "https://hitpayapp.com/blog/boost-wallet-merchant-malaysia"),
+    ("Cross-Border Payments Malaysia", "https://hitpayapp.com/blog/cross-border-payments-malaysia"),
+    ("Payment Gateway API Malaysia", "https://hitpayapp.com/blog/payment-gateway-api-malaysia"),
+    ("BNPL Malaysia Businesses", "https://hitpayapp.com/blog/best-bnpl-options-malaysia-businesses"),
+    ("ShopeePay BNPL Malaysia", "https://hitpayapp.com/blog/shopeepay-bnpl-malaysia"),
     # PH
     ("Best Payment Gateway Philippines", "https://hitpayapp.com/blog/best-payment-gateway-philippines"),
+    ("Payment Gateway Philippines", "https://hitpayapp.com/blog/payment-gateway-philippines"),
     ("QR Code Payments Philippines", "https://hitpayapp.com/blog/how-to-accept-qr-code-payments-philippines"),
     ("QR Ph No Monthly Fee Comparison", "https://hitpayapp.com/blog/accept-qrph-with-no-monthly-fees-gateway-comparison-2025"),
+    ("How to Generate QR Ph", "https://hitpayapp.com/blog/how-to-generate-qrph"),
     ("Ecommerce Payment Gateways Philippines", "https://hitpayapp.com/blog/ecommerce-payment-gateways-philippines"),
     ("Recurring Billing Philippines", "https://hitpayapp.com/blog/recurring-billing-ph"),
     ("Payment Link Philippines", "https://hitpayapp.com/blog/how-to-create-payment-link-philippines"),
+    ("Accept GCash Philippines", "https://hitpayapp.com/blog/how-to-accept-gcash-payments-philippines"),
+    ("GCash Payment Gateway Philippines", "https://hitpayapp.com/blog/gcash-payment-gateway-philippines"),
+    ("GCash HitPay", "https://hitpayapp.com/blog/gcash-hitpay"),
+    ("GCash API Integration Philippines", "https://hitpayapp.com/blog/gcash-api-integration-philippines"),
+    ("HitPay Philippines Scan to Pay", "https://hitpayapp.com/blog/hitpay-philippines-scan-to-pay"),
+    ("QR Ph GCash Maya Payment Philippines", "https://hitpayapp.com/blog/qr-ph-gcash-maya-payment-methods-philippines"),
+    ("Cashless Payment Methods Philippines", "https://hitpayapp.com/blog/cashless-payment-methods-philippines"),
+    ("POS System Philippines", "https://hitpayapp.com/blog/best-pos-system-small-businesses-philippines"),
+    ("Best Card Terminal Philippines", "https://hitpayapp.com/blog/best-card-terminal-philippines-smes"),
+    ("Accept InstaPay Philippines", "https://hitpayapp.com/blog/accept-instapay-payments-philippines"),
+    ("Accept GrabPay Philippines", "https://hitpayapp.com/blog/accept-grabpay-philippines"),
+    ("HitPay vs PayMongo Philippines", "https://hitpayapp.com/blog/hitpay-vs-paymongo-fees-in-2025-which-payment-gateway-saves-philippine-smes-more"),
+    ("Philippines Payment Gateway Comparison", "https://hitpayapp.com/blog/philippines-payment-gateway-comparison"),
+    ("Recurring Billing Philippines Subscriptions", "https://hitpayapp.com/blog/recurring-billing-philippines-subscription-payments"),
+    ("QR Payment Soundbox Philippines", "https://hitpayapp.com/blog/qr-payment-soundbox-philippines"),
+    ("Create Invoice Philippines", "https://hitpayapp.com/blog/create-invoice-philippines"),
+    ("QRPH Payment Guide", "https://hitpayapp.com/blog/qrph-payment"),
 ]
 
 _FALLBACK_URL = "https://hitpayapp.com/blog/hitpay-rates"
@@ -101,8 +210,15 @@ _SME_FALLBACK_URL = "https://smegrowthhub.com/blog"
 
 
 def _is_valid_blog_url(url: str) -> bool:
-    """Accept any hitpayapp.com/blog/{slug} URL — not just the old hardcoded 22."""
-    return bool(re.match(r"^https://hitpayapp\.com/blog/[a-zA-Z0-9_\-()]+$", url))
+    """Accept hitpayapp.com/blog/<slug> URLs — validates against the live sitemap cache."""
+    if not re.match(r"^https://hitpayapp\.com/blog/[^\s]+$", url):
+        return False
+    slug = url.replace("https://hitpayapp.com/blog/", "")
+    live_slugs = _fetch_live_blog_slugs()
+    if live_slugs:
+        return slug in live_slugs
+    # Fallback: accept any well-formed slug when sitemap unavailable
+    return bool(re.match(r"^[a-zA-Z0-9_\-()/%.]+$", slug))
 
 
 def _build_merchant_story_prompt(thread_size: int) -> str:
@@ -454,14 +570,14 @@ STYLE RULES:
 - NEVER disparage card terminals, POS hardware, or any payment method HitPay offers
 
 LINK URL RULE:
-Set link_url to https://hitpayapp.com/blog/{{slug}} using the most topically relevant slug.
+Set link_url to https://hitpayapp.com/blog/<slug> using the most topically relevant slug from the list below.
 If no clear match, default to: hitpay-rates
 
 LIVE BLOG SLUGS:
-{{urls_list}}
+{urls_list}
 
 OUTPUT: Return a raw JSON object only. No markdown fences, no preamble.
-{{json.dumps(example, ensure_ascii=False)}}
+{json.dumps(example, ensure_ascii=False)}
 
 IMPORTANT: [URL] is a literal placeholder — never substitute the real URL."""
 
