@@ -319,7 +319,7 @@ def generate_threads_story(
         if isinstance(p, str):
             return p
         if isinstance(p, dict):
-            return p.get("text") or p.get("content") or p.get("post") or ""
+            return p.get("text") or p.get("content") or p.get("post") or p.get("body") or ""
         return str(p)
 
     data["posts"] = [_cap_post(_to_str(p)) for p in posts]
