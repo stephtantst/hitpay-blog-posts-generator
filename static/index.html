@@ -1724,6 +1724,7 @@
     .x-char-count.over { color: var(--red); }
     .x-textarea {
       flex: 1;
+      width: 100%; box-sizing: border-box;
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 14px;
       font-size: 15px; font-family: var(--font); color: var(--text);
@@ -8169,6 +8170,16 @@ function updateCreateXCharCount() {
   }
 }
 
+// Convert a <input type="datetime-local"> value (naive, in the browser's local
+// timezone) back to a proper UTC ISO string for the API. Inverts the offset
+// applied when populating the field (see populateLiEditor/populateThrEditor/
+// populateXEditor), otherwise every save silently shifts scheduled_at by the
+// browser's UTC offset and the post can appear to vanish from its calendar day.
+function localDatetimeToISO(value) {
+  if (!value) return null;
+  return new Date(value).toISOString();
+}
+
 // ── X Save ────────────────────────────────────────────────────────────────────
 async function saveXPost() {
   if (!currentXPost) return;
@@ -8177,7 +8188,7 @@ async function saveXPost() {
 
   const status = document.getElementById('xStatusSelect').value;
   const market = document.getElementById('xMarket').value;
-  const scheduledAt = document.getElementById('xScheduledAt').value || null;
+  const scheduledAt = localDatetimeToISO(document.getElementById('xScheduledAt').value);
   const postUrl = document.getElementById('xPostUrl').value.trim() || null;
 
   // Save content + metadata
@@ -8235,7 +8246,7 @@ async function saveAndSyncXPost() {
   if (!content) { showToast('Content cannot be empty', 'error'); return; }
 
   const market = document.getElementById('xMarket').value;
-  const scheduledAt = document.getElementById('xScheduledAt').value || null;
+  const scheduledAt = localDatetimeToISO(document.getElementById('xScheduledAt').value);
   const btn = document.getElementById('xSaveAndSyncBtn');
   const resultEl = document.getElementById('xSyncResult');
 
@@ -8933,7 +8944,7 @@ async function saveThrPost() {
   if (!content) { showToast('Content cannot be empty', 'error'); return; }
   const status = document.getElementById('thrStatusSelect').value;
   const market = document.getElementById('thrMarket').value;
-  const scheduledAt = document.getElementById('thrScheduledAt').value || null;
+  const scheduledAt = localDatetimeToISO(document.getElementById('thrScheduledAt').value);
   const postUrl = document.getElementById('thrPostUrl').value.trim() || null;
 
   const updateRes = await fetch(`/api/threads-posts/${currentThrPost.id}`, {
@@ -9571,7 +9582,7 @@ async function saveLiPost() {
   if (!content) { showToast('Content cannot be empty', 'error'); return; }
   const status = document.getElementById('liStatusSelect').value;
   const market = document.getElementById('liMarket').value;
-  const scheduledAt = document.getElementById('liScheduledAt').value || null;
+  const scheduledAt = localDatetimeToISO(document.getElementById('liScheduledAt').value);
   const postUrl = document.getElementById('liPostUrl').value.trim() || null;
 
   const updateRes = await fetch(`/api/linkedin-posts/${currentLiPost.id}`, {

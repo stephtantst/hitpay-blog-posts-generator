@@ -11,6 +11,16 @@ from src.thought_leadership import _fetch_live_blog_slugs, _WRITING_STYLE_RULES
 _FALLBACK_URL = "https://hitpayapp.com/blog/hitpay-rates"
 _SME_FALLBACK_URL = "https://smegrowthhub.com/blog"
 
+_URL_RE = re.compile(r"https?://\S+")
+
+
+def _strip_url_from_body(text: str) -> str:
+    """Remove any stray URL from post content. The link is rendered separately
+    via link_url (the "Source Blog Post" panel), so an inline URL is redundant
+    and just eats into the character budget, risking truncation."""
+    cleaned = _URL_RE.sub("", text)
+    return re.sub(r"[\s\-—.,]+$", "", cleaned).strip()
+
 _LINKEDIN_TOPICS: dict[str, list[str]] = {
     "SG": [
         "Why PayNow works for Singapore SMEs",
@@ -58,10 +68,11 @@ VOICE:
 
 FORMAT:
 - Single post. No thread separators.
-- 900–1,400 characters. Long enough to develop an idea; short enough to read in under 90 seconds.
+- 900–1,400 characters, HARD LIMIT 1,450. The app truncates anything past 1,500 characters mid-sentence, so treat 1,400 as the safe ceiling and stop there — do not use the full budget on every post.
 - Structure: Hook (1-2 lines) → Specific insight or tension (2-3 lines) → What it means for the business owner (2-3 lines) → Quiet CTA linking to a relevant blog post.
 - 2–3 relevant hashtags at the very end (e.g. #PayNow #SME #Singapore). No more.
 - No emojis except one optional at the very start of the hook line.
+- NEVER write out the URL itself inside content. The app displays link_url separately as its own "Source Blog Post" element — the CTA sentence must read naturally with no URL text (e.g. "HitPay's breakdown of this covers what to check before switching." not "...covers what to check: https://...").
 
 CONTENT RULES:
 - Ground every post in a specific market: SG, MY, or PH — never generic "businesses everywhere"
@@ -90,6 +101,7 @@ FORMAT (pattern observed across HitPay's actual announcement posts):
 6. Targeted closing CTA — address the specific merchant segment who should act now (e.g. "If you're a HitPay merchant partner in Malaysia running Bukku, this is worth setting up today.").
 - Length: 550–1,200 characters. This matches HitPay's actual published announcement posts (measured 577–1,182 characters) — do not run longer than this range.
 - No hashtags required (HitPay's real announcement posts often skip them) — include 0–3 only if they read naturally.
+- NEVER write out the URL itself inside content. The app displays link_url separately as its own "Source Blog Post" element — the CTA sentence must read naturally with no URL text.
 
 CONTENT RULES:
 - Ground every post in what actually shipped — never invent capabilities not in the changelog/brief provided.
@@ -185,9 +197,10 @@ VOICE:
 - No buzzwords, no superlatives, no marketing language.
 
 FORMAT:
-- Single post. 900–1,400 characters.
+- Single post. 900–1,400 characters, HARD LIMIT 1,450. The app truncates anything past 1,500 characters mid-sentence, so treat 1,400 as the safe ceiling.
 - Structure: Reframe hook → Specific evidence or scenario → What it means practically → Quiet CTA.
 - 2–3 relevant hashtags at the end. No emojis except one optional opener.
+- NEVER write out the URL itself inside content. The app displays link_url separately — the CTA sentence must read naturally with no URL text.
 
 CONTENT RULES:
 - Topics: cash flow, invoicing, payroll, hiring, accounting, payment processing, e-commerce setup, business registration
@@ -254,12 +267,13 @@ def _build_linkedin_prompt(market: str | None, topic_hint: str | None, brand: st
 {mkt_ctx}
 
 FORMAT:
-- Single post, 900–1,400 characters
+- Single post, 900–1,400 characters. Anything past 1,500 gets truncated mid-sentence by the app — stay under 1,400.
 - Hook (1-2 lines, insight-first) → Specific scenario or evidence (2-3 lines) → Practical implication (2-3 lines) → Quiet CTA with blog link
 - End with 2–3 relevant hashtags
 
 LINK RULE:
 {link_rule}
+Do not write the URL inside "content" — the app renders link_url as its own separate element. End the CTA sentence naturally with no URL text.
 
 LIVE BLOG SLUGS (use one of these — do not invent slugs):
 {urls_list}
@@ -300,13 +314,14 @@ def _build_sme_linkedin_prompt(market: str | None, topic_hint: str | None) -> st
 {mkt_ctx}
 
 FORMAT:
-- Single post, 900–1,400 characters
+- Single post, 900–1,400 characters. Anything past 1,500 gets truncated mid-sentence by the app — stay under 1,400.
 - Hook (insight that reframes the problem) → Specific scenario → Practical implication → Quiet CTA
 - End with 2–3 relevant hashtags
 - Do not mention HitPay unless the topic is specifically about payment methods
 
 LINK RULE:
 Set link_url to {bc.blog_base_url} (no specific slug needed).
+Do not write the URL inside "content" — the app renders link_url as its own separate element. End the CTA sentence naturally with no URL text.
 
 Return raw JSON only — no markdown fences:
 {{"topic": "...", "content": "...", "link_url": "{bc.blog_base_url}"}}"""
@@ -357,7 +372,7 @@ def generate_linkedin_post(
     if not content:
         raise ValueError(f"Expected content string, got: {content!r}")
 
-    data["content"] = _cap_post(content)
+    data["content"] = _cap_post(_strip_url_from_body(content))
 
     link_url = data.get("link_url") or fallback
     if url_pattern:
@@ -398,6 +413,7 @@ FORMAT:
 LINK RULE:
 Set link_url to {bc.blog_base_url}/{{slug}} using the most relevant slug.
 If no clear match, use: {fallback}
+Do not write the URL inside "content" — the app renders link_url as its own separate element. End the CTA sentence naturally with no URL text.
 
 LIVE BLOG SLUGS:
 {urls_list}
@@ -421,6 +437,6 @@ Return raw JSON only:
     raw = re.sub(r"^```(?:json)?\s*", "", raw)
     raw = re.sub(r"\s*```$", "", raw)
     data = json.loads(raw)
-    data["content"] = _cap_post(data.get("content", ""), limit=length_cap)
+    data["content"] = _cap_post(_strip_url_from_body(data.get("content", "")), limit=length_cap)
     data.setdefault("link_url", fallback)
     return data
